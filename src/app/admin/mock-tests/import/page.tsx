@@ -1,0 +1,59 @@
+import { getSession } from "@/lib/auth/session";
+import { redirect } from "next/navigation";
+import { Sidebar } from "@/components/layout/Sidebar";
+import { Topbar } from "@/components/layout/Topbar";
+import Link from "next/link";
+import { ArrowLeft } from "lucide-react";
+import { TestImporterContent } from "./content";
+
+export default async function AdminTestImporterPage() {
+  const session = await getSession();
+
+  // Verify admin access
+  if (!session || session.role !== "ADMIN") {
+    redirect("/login");
+  }
+
+  return (
+    <div className="min-h-screen bg-white dark:bg-[#131313]">
+      <Sidebar username={session.username} role={session.role} />
+
+      <div className="lg:ml-64">
+        <Topbar
+          title="Import SAT Tests"
+          breadcrumbs={[
+            { label: "Admin" },
+            { label: "Mock Tests" },
+            { label: "Import" },
+          ]}
+          userName={session.username}
+          userRole={session.role}
+        />
+
+        <main className="pt-24 px-6 pb-12">
+          <div className="max-w-6xl mx-auto">
+            <Link
+              href="/admin/mock-tests/create"
+              className="inline-flex items-center gap-2 text-slate-900 dark:text-yellow-500 hover:text-yellow-500 font-medium mb-6 text-sm transition-colors"
+            >
+              <ArrowLeft className="w-4 h-4" />
+              Back to Test Creation Hub
+            </Link>
+
+            <div className="mb-6">
+              <h1 className="text-3xl font-bold text-yellow-400 mb-2">
+                AI-Powered Test Importer
+              </h1>
+              <p className="text-slate-500 dark:text-slate-400">
+                Convert PDF, Word, and text files into structured SAT mock tests
+                with one click
+              </p>
+            </div>
+
+            <TestImporterContent />
+          </div>
+        </main>
+      </div>
+    </div>
+  );
+}

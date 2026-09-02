@@ -1,0 +1,417 @@
+<!DOCTYPE html>
+
+<html lang="en"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>SAT-ALFA Administrator Dashboard</title>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Manrope:wght@400;700;800&amp;display=swap" rel="stylesheet"/>
+<script id="tailwind-config">
+  tailwind.config = {
+    darkMode: "class",
+    theme: {
+      extend: {
+        "colors": {
+                "secondary-container": "#e2e2e2",
+                "on-tertiary": "#ffffff",
+                "on-surface": "#1c1c0f",
+                "on-primary-fixed-variant": "#454a00",
+                "error-container": "#ffdad6",
+                "on-primary-fixed": "#1b1d00",
+                "on-surface-variant": "#404040",
+                "surface-dim": "#f5f5f5",
+                "secondary-fixed-dim": "#c6c6c6",
+                "on-tertiary-fixed-variant": "#2b4c50",
+                "tertiary-container": "#d6faff",
+                "neon-yellow": "#efff00",
+                "on-tertiary-fixed": "#001f23",
+                "outline": "#78795f",
+                "surface-container": "#f0efd9",
+                "on-secondary": "#ffffff",
+                "surface-tint": "#5c6300",
+                "error": "#ff0000",
+                "surface-container-lowest": "#ffffff",
+                "tertiary": "#436468",
+                "inverse-on-surface": "#f3f2dc",
+                "on-tertiary-container": "#537479",
+                "border-heavy": "#000000",
+                "secondary-fixed": "#e2e2e2",
+                "on-background": "#1c1c0f",
+                "on-error-container": "#93000a",
+                "tertiary-fixed": "#c5e9ee",
+                "primary": "#5c6300",
+                "on-secondary-container": "#646464",
+                "on-primary": "#ffffff",
+                "surface-container-high": "#eae9d4",
+                "background": "#fcfae4",
+                "outline-variant": "#c8c8ab",
+                "tertiary-fixed-dim": "#aacdd2",
+                "surface-container-low": "#f6f5df",
+                "primary-fixed": "#deed00",
+                "on-error": "#ffffff",
+                "on-secondary-fixed": "#1b1b1b",
+                "surface": "#ffffff",
+                "primary-fixed-dim": "#c3d000",
+                "on-primary-container": "#6d7400",
+                "inverse-primary": "#c3d000",
+                "surface-variant": "#e5e4ce",
+                "on-secondary-fixed-variant": "#474747",
+                "border-muted": "#e5e5e5",
+                "primary-container": "#efff00",
+                "secondary": "#5e5e5e",
+                "surface-container-highest": "#e5e4ce",
+                "surface-bright": "#fcfae4",
+                "inverse-surface": "#313123"
+        },
+        "borderRadius": {
+                "DEFAULT": "0.125rem",
+                "lg": "0.25rem",
+                "xl": "0.5rem",
+                "full": "0.75rem"
+        },
+        "spacing": {
+                "container-margin": "24px",
+                "sm": "8px",
+                "gutter": "16px",
+                "base": "4px",
+                "xl": "40px",
+                "lg": "24px",
+                "xs": "4px",
+                "md": "16px"
+        },
+        "fontFamily": {
+                "label-bold": [
+                        "Manrope"
+                ],
+                "body-lg": [
+                        "Manrope"
+                ],
+                "display-lg": [
+                        "Manrope"
+                ],
+                "headline-lg": [
+                        "Manrope"
+                ],
+                "headline-md": [
+                        "Manrope"
+                ],
+                "headline-lg-mobile": [
+                        "Manrope"
+                ],
+                "body-md": [
+                        "Manrope"
+                ]
+        },
+        "fontSize": {
+                "label-bold": [
+                        "14px",
+                        {
+                                "lineHeight": "20px",
+                                "letterSpacing": "0.05em",
+                                "fontWeight": "700"
+                        }
+                ],
+                "body-lg": [
+                        "18px",
+                        {
+                                "lineHeight": "28px",
+                                "fontWeight": "400"
+                        }
+                ],
+                "display-lg": [
+                        "48px",
+                        {
+                                "lineHeight": "56px",
+                                "letterSpacing": "-0.02em",
+                                "fontWeight": "800"
+                        }
+                ],
+                "headline-lg": [
+                        "32px",
+                        {
+                                "lineHeight": "40px",
+                                "letterSpacing": "-0.01em",
+                                "fontWeight": "800"
+                        }
+                ],
+                "headline-md": [
+                        "24px",
+                        {
+                                "lineHeight": "32px",
+                                "fontWeight": "700"
+                        }
+                ],
+                "headline-lg-mobile": [
+                        "28px",
+                        {
+                                "lineHeight": "36px",
+                                "letterSpacing": "-0.01em",
+                                "fontWeight": "800"
+                        }
+                ],
+                "body-md": [
+                        "16px",
+                        {
+                                "lineHeight": "24px",
+                                "fontWeight": "400"
+                        }
+                ]
+        }
+},
+    },
+  }
+</script>
+<style>
+        body { font-family: 'Manrope', sans-serif; }
+    </style>
+</head>
+<body class="min-h-screen bg-background font-body-md text-on-surface">
+<!-- Top Navigation Bar -->
+<header class="bg-surface/80 backdrop-blur-md border-b border-border-muted sticky top-0 z-50">
+<div class="flex justify-between items-center w-full px-lg py-sm max-w-full">
+<div class="flex items-center gap-md">
+<img alt="SAT-ALFA Logo" class="h-10 w-10 rounded-full border border-border-muted object-cover" src="https://lh3.googleusercontent.com/aida-public/AB6AXuDbqJ1nTXQI7DARMSLA7vThRoUlS0m-GQolg1c5SIZxpL1GczKpRs9zTmVRAwl4dAF686Czacq9wHyDqPoE6dF_95-ANUX1vJ_mF6nDNlo1hQxcAHWryqmeRumWlOwGqDV-MuyszjPpKlKeJFXs8uN2lUIIROF4hPsA5LjZfiSYydPgLctwTzD0DNR_acU9QldAOeBYirWOAiiJA22zSpGlIqMjOmMhq4zZP3oxoDuu7MUnjFNnDm7x4qOSE-F2vjlmcZw"/>
+<span class="font-headline-md text-headline-md font-black text-primary tracking-tighter">SAT-ALFA</span>
+</div>
+<nav class="hidden md:flex gap-md items-center">
+<div class="relative group">
+<button class="text-primary border-b-2 border-primary pb-1 font-bold font-body-md text-body-md flex items-center gap-xs">
+                        Main <span class="material-symbols-outlined text-sm">expand_more</span>
+</button>
+<div class="absolute left-0 mt-2 w-48 bg-surface border border-border-muted rounded-lg shadow-xl opacity-0 invisible group-hover:opacity-100 group-hover:visible transition-all duration-200 z-50">
+<a class="block px-4 py-2 text-primary bg-surface-container font-bold" href="#">Dashboard</a>
+<a class="block px-4 py-2 text-on-surface hover:text-primary hover:bg-surface-container transition-colors" href="#">Students</a>
+<a class="block px-4 py-2 text-on-surface hover:text-primary hover:bg-surface-container transition-colors" href="#">Groups</a>
+<a class="block px-4 py-2 text-on-surface hover:text-primary hover:bg-surface-container transition-colors" href="#">Payments</a>
+<a class="block px-4 py-2 text-on-surface hover:text-primary hover:bg-surface-container transition-colors" href="#">Attendance</a>
+</div>
+</div>
+<div class="relative group">
+<button class="text-on-surface-variant hover:text-primary transition-colors font-body-md text-body-md flex items-center gap-xs">
+                        Academics <span class="material-symbols-outlined text-sm">expand_more</span>
+</button>
+<div class="absolute left-0 mt-2 w-48 bg-surface border border-border-muted rounded-lg shadow-xl opacity-0 invisible group-hover:opacity-100 group-hover:visible transition-all duration-200 z-50">
+<a class="block px-4 py-2 text-on-surface hover:text-primary hover:bg-surface-container transition-colors" href="#">Topics &amp; Lessons</a>
+<a class="block px-4 py-2 text-on-surface hover:text-primary hover:bg-surface-container transition-colors" href="#">Test Bank</a>
+<a class="block px-4 py-2 text-on-surface hover:text-primary hover:bg-surface-container transition-colors" href="#">Proctoring</a>
+<a class="block px-4 py-2 text-on-surface hover:text-primary hover:bg-surface-container transition-colors" href="#">Analytics</a>
+</div>
+</div>
+<div class="relative group">
+<button class="text-on-surface-variant hover:text-primary transition-colors font-body-md text-body-md flex items-center gap-xs">
+                        Content &amp; Reviews <span class="material-symbols-outlined text-sm">expand_more</span>
+</button>
+<div class="absolute right-0 mt-2 w-48 bg-surface border border-border-muted rounded-lg shadow-xl opacity-0 invisible group-hover:opacity-100 group-hover:visible transition-all duration-200 z-50">
+<a class="block px-4 py-2 text-on-surface hover:text-primary hover:bg-surface-container transition-colors" href="#">Articles &amp; Reading</a>
+</div>
+</div>
+</nav>
+<div class="flex items-center gap-md">
+<button class="text-on-surface-variant hover:text-primary transition-colors"><span class="material-symbols-outlined">notifications</span></button>
+<button class="text-on-surface-variant hover:text-primary transition-colors"><span class="material-symbols-outlined">account_circle</span></button>
+</div>
+</div>
+</header>
+<!-- Main Content Canvas -->
+<main class="max-w-7xl mx-auto px-lg py-xl flex flex-col gap-xl">
+<!-- Header & Global Actions -->
+<div class="flex flex-col md:flex-row justify-between items-start md:items-center gap-md">
+<div>
+<h1 class="font-headline-lg text-headline-lg md:text-display-lg font-bold text-on-surface mb-sm">Dashboard</h1>
+<p class="font-body-md text-body-md text-on-surface-variant">Welcome back, Admin. Here is today's platform summary. • Tuesday, September 1, 2026</p>
+</div>
+<div class="flex gap-md">
+<button class="bg-transparent border border-outline text-on-surface px-md py-sm rounded-DEFAULT font-label-bold text-label-bold hover:border-primary hover:text-primary transition-colors flex items-center gap-xs">
+<span class="material-symbols-outlined text-sm">person_add</span> Add Student
+                </button>
+<button class="bg-primary-container text-on-surface px-md py-sm rounded-DEFAULT font-label-bold text-label-bold hover:bg-primary hover:text-on-primary transition-colors flex items-center gap-xs font-bold">
+<span class="material-symbols-outlined text-sm">add</span> Create Mock Test
+                </button>
+</div>
+</div>
+<!-- Metric Cards Grid -->
+<div class="grid grid-cols-1 md:grid-cols-3 lg:grid-cols-5 gap-md">
+<!-- Card 1 -->
+<div class="bg-surface border border-border-muted rounded-xl p-md flex flex-col justify-between hover:border-primary transition-colors duration-300 shadow-sm">
+<div class="flex justify-between items-start mb-lg">
+<div class="flex items-center gap-xs text-on-surface-variant font-label-bold text-label-bold uppercase">
+<span class="material-symbols-outlined text-sm">group</span> Students
+                    </div>
+<span class="bg-primary-container text-on-surface px-2 py-1 rounded-sm text-xs font-bold">+12% this month</span>
+</div>
+<div>
+<span class="font-headline-lg text-headline-lg font-bold text-on-surface block">5</span>
+<span class="text-on-surface-variant text-sm">total profiles</span>
+</div>
+</div>
+<!-- Card 2 -->
+<div class="bg-surface border border-border-muted rounded-xl p-md flex flex-col justify-between hover:border-primary transition-colors duration-300 shadow-sm">
+<div class="flex justify-between items-start mb-lg">
+<div class="flex items-center gap-xs text-on-surface-variant font-label-bold text-label-bold uppercase">
+<span class="material-symbols-outlined text-sm">folder_open</span> Groups
+                    </div>
+<span class="bg-surface-container border border-border-muted text-on-surface px-2 py-1 rounded-sm text-xs font-bold">Active</span>
+</div>
+<div>
+<span class="font-headline-lg text-headline-lg font-bold text-on-surface block">4</span>
+<span class="text-on-surface-variant text-sm">in progress</span>
+</div>
+</div>
+<!-- Card 3 -->
+<div class="bg-surface border border-border-muted rounded-xl p-md flex flex-col justify-between hover:border-primary transition-colors duration-300 shadow-sm">
+<div class="flex justify-between items-start mb-lg">
+<div class="flex items-center gap-xs text-on-surface-variant font-label-bold text-label-bold uppercase">
+<span class="material-symbols-outlined text-sm">workspace_premium</span> Avg Score
+                    </div>
+</div>
+<div>
+<span class="font-headline-lg text-headline-lg font-bold text-on-surface block">-- <span class="text-sm font-normal text-on-surface-variant">/ 1600</span></span>
+<span class="text-on-surface-variant text-sm block mt-1">M: -- | RW: --</span>
+</div>
+</div>
+<!-- Card 4 -->
+<div class="bg-surface border border-border-muted rounded-xl p-md flex flex-col justify-between hover:border-primary transition-colors duration-300 shadow-sm">
+<div class="flex justify-between items-start mb-lg">
+<div class="flex items-center gap-xs text-on-surface-variant font-label-bold text-label-bold uppercase">
+<span class="material-symbols-outlined text-sm">payments</span> Revenue
+                    </div>
+</div>
+<div>
+<span class="font-headline-lg text-headline-lg font-bold text-primary block">1,500,000 <span class="text-sm font-normal text-on-surface-variant">UZS</span></span>
+</div>
+</div>
+<!-- Card 5 -->
+<div class="bg-surface border border-border-muted rounded-xl p-md flex flex-col justify-between hover:border-primary transition-colors duration-300 shadow-sm">
+<div class="flex justify-between items-start mb-lg">
+<div class="flex items-center gap-xs text-on-surface-variant font-label-bold text-label-bold uppercase">
+<span class="material-symbols-outlined text-sm">monitoring</span> Proctor
+                    </div>
+<span class="bg-error-container text-on-error-container border border-error px-2 py-1 rounded-sm text-xs font-bold flex items-center gap-xs">
+<span class="w-2 h-2 rounded-full bg-error block"></span> Live
+                    </span>
+</div>
+<div>
+<span class="font-headline-lg text-headline-lg font-bold text-on-surface block">0</span>
+<span class="text-on-surface-variant text-sm">active</span>
+</div>
+</div>
+</div>
+<!-- Bento Grid Layout for Main Content -->
+<div class="grid grid-cols-1 lg:grid-cols-3 gap-md">
+<!-- SAT Score Progression Chart (Col Span 2) -->
+<div class="lg:col-span-2 bg-surface border border-border-muted rounded-xl p-lg flex flex-col min-h-[400px] shadow-sm">
+<div class="flex items-center gap-sm mb-lg">
+<span class="material-symbols-outlined text-on-surface-variant">insert_chart</span>
+<h2 class="font-headline-md text-headline-md font-bold text-on-surface">SAT Score Progression</h2>
+</div>
+<div class="flex-1 bg-surface-container-lowest border border-border-muted rounded-lg flex items-center justify-center relative overflow-hidden">
+<!-- Placeholder for Chart -->
+<div class="absolute inset-0 opacity-10 bg-[radial-gradient(ellipse_at_center,_var(--tw-gradient-stops))] from-primary to-transparent"></div>
+<div class="bg-surface border border-border-muted px-lg py-sm rounded-DEFAULT z-10 shadow-lg text-center">
+<p class="font-body-md text-body-md text-on-surface-variant">Analytics will calibrate as students complete tests</p>
+</div>
+</div>
+</div>
+<!-- Right Column: System Monitor & Pending Topics -->
+<div class="flex flex-col gap-md">
+<!-- System Monitor -->
+<div class="bg-surface border border-border-muted rounded-xl p-lg shadow-sm">
+<div class="flex items-center gap-sm mb-lg">
+<span class="material-symbols-outlined text-primary">troubleshoot</span>
+<h2 class="font-headline-md text-headline-md font-bold text-on-surface">System Monitor</h2>
+</div>
+<div class="flex flex-col gap-sm">
+<div class="flex justify-between items-center bg-surface-container-lowest border border-border-muted p-md rounded-lg">
+<span class="font-body-md text-body-md text-on-surface">Database</span>
+<span class="text-sm font-label-bold text-primary flex items-center gap-xs"><span class="w-2 h-2 rounded-full bg-primary block"></span> Connected</span>
+</div>
+<div class="flex justify-between items-center bg-surface-container-lowest border border-border-muted p-md rounded-lg">
+<span class="font-body-md text-body-md text-on-surface">API &amp; Auth</span>
+<span class="text-sm font-label-bold text-primary flex items-center gap-xs"><span class="w-2 h-2 rounded-full bg-primary block"></span> Operational</span>
+</div>
+<div class="flex justify-between items-center bg-surface-container-lowest border border-border-muted p-md rounded-lg">
+<span class="font-body-md text-body-md text-on-surface">Active Test Takers</span>
+<span class="text-sm font-label-bold text-outline flex items-center gap-xs"><span class="w-2 h-2 rounded-full bg-outline block"></span> 0 Online</span>
+</div>
+</div>
+</div>
+<!-- Pending Topics -->
+<div class="bg-surface border border-border-muted rounded-xl p-lg flex-1 shadow-sm">
+<div class="flex items-center justify-between mb-lg">
+<div class="flex items-center gap-sm">
+<span class="material-symbols-outlined text-on-surface-variant">event_note</span>
+<h2 class="font-headline-md text-headline-md font-bold text-on-surface">Pending Topics</h2>
+</div>
+<span class="bg-surface-container text-on-surface text-xs px-2 py-1 rounded-sm border border-border-muted">3 Tasks</span>
+</div>
+<div class="flex flex-col gap-sm">
+<div class="bg-surface-container-lowest border border-border-muted p-md rounded-lg flex justify-between items-center hover:border-primary transition-colors group">
+<div>
+<h3 class="font-label-bold text-label-bold text-on-surface">Pre sat</h3>
+<p class="text-sm text-on-surface-variant mt-1">Liner eqution</p>
+</div>
+<button class="bg-transparent border border-primary text-primary px-3 py-1 rounded-sm text-xs font-bold group-hover:bg-primary-container group-hover:text-on-surface transition-colors">Approve</button>
+</div>
+<div class="bg-surface-container-lowest border border-border-muted p-md rounded-lg flex justify-between items-center hover:border-primary transition-colors group">
+<div>
+<h3 class="font-label-bold text-label-bold text-on-surface">Pre sat</h3>
+<p class="text-sm text-on-surface-variant mt-1">Punctuation</p>
+</div>
+<button class="bg-transparent border border-primary text-primary px-3 py-1 rounded-sm text-xs font-bold group-hover:bg-primary-container group-hover:text-on-surface transition-colors">Approve</button>
+</div>
+<div class="bg-surface-container-lowest border border-border-muted p-md rounded-lg flex justify-between items-center hover:border-primary transition-colors group">
+<div>
+<h3 class="font-label-bold text-label-bold text-on-surface">Sat summer advanced</h3>
+<p class="text-sm text-on-surface-variant mt-1">Quadratics</p>
+</div>
+<button class="bg-transparent border border-primary text-primary px-3 py-1 rounded-sm text-xs font-bold group-hover:bg-primary-container group-hover:text-on-surface transition-colors">Approve</button>
+</div>
+</div>
+</div>
+</div>
+</div>
+<!-- Recent Approved Tests Table -->
+<div class="bg-surface border border-border-muted rounded-xl p-lg shadow-sm">
+<div class="flex items-center justify-between mb-lg">
+<div class="flex items-center gap-sm">
+<span class="material-symbols-outlined text-on-surface-variant">receipt_long</span>
+<h2 class="font-headline-md text-headline-md font-bold text-on-surface">Recent Approved Tests</h2>
+</div>
+<button class="text-on-surface-variant hover:text-primary text-sm font-bold transition-colors">View All</button>
+</div>
+<div class="overflow-x-auto">
+<table class="w-full text-left border-collapse">
+<thead>
+<tr class="border-b border-border-muted text-on-surface-variant font-label-bold text-label-bold text-xs uppercase tracking-wider">
+<th class="py-sm px-md font-medium">Student</th>
+<th class="py-sm px-md font-medium">Test</th>
+<th class="py-sm px-md font-medium text-center">Math</th>
+<th class="py-sm px-md font-medium text-center">R&amp;W</th>
+<th class="py-sm px-md font-medium text-center">Total</th>
+<th class="py-sm px-md font-medium text-right">Action</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td class="py-xl text-center text-on-surface-variant font-body-md text-body-md" colspan="6">
+                                No recent approved tests found.
+                            </td>
+</tr>
+</tbody>
+</table>
+</div>
+</div>
+</main>
+<!-- Footer -->
+<footer class="bg-surface border-t border-border-muted full-width py-xl mt-auto">
+<div class="flex flex-col md:flex-row justify-between items-center px-lg max-w-7xl mx-auto gap-md">
+<div class="font-headline-sm text-headline-sm text-primary font-bold">SAT-ALFA</div>
+<div class="text-on-surface-variant text-sm text-center md:text-left">© 2026 SAT-ALFA. High-Performance Education Systems.</div>
+<div class="flex gap-md">
+<a class="text-on-surface-variant hover:text-primary transition-colors text-sm" href="#">Support</a>
+<a class="text-on-surface-variant hover:text-primary transition-colors text-sm" href="#">Documentation</a>
+</div>
+</div>
+</footer>
+</body></html>

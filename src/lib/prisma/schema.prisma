@@ -1,0 +1,635 @@
+// This is your Prisma schema file,
+// learn more about it in the docs: https://pris.ly/d/prisma-schema
+
+generator client {
+  provider       = "prisma-client-js"
+  output         = "../src/lib/prisma"
+  generateClient = true
+}
+
+datasource db {
+  provider = "postgresql"
+}
+
+enum Role {
+  ADMIN
+  STUDENT
+}
+
+enum StudentStatus {
+  ACTIVE
+  BLOCKED
+  INACTIVE
+}
+
+enum AttendanceStatus {
+  PRESENT
+  ABSENT
+  LATE
+  EXCUSED
+}
+
+enum PaymentType {
+  CASH
+  CARD
+  BANK_TRANSFER
+}
+
+enum Subject {
+  MATH
+  ENGLISH
+}
+
+enum MockTestSource {
+  STUDENT_UPLOADED
+  ADMIN_ENTERED
+}
+
+enum MockTestStatus {
+  PENDING
+  AI_PROPOSED
+  CONFIRMED
+  REJECTED
+}
+
+enum SmsStatus {
+  PENDING
+  SENT
+  FAILED
+}
+
+// SAT Testing System Enums
+enum MockTestFormat {
+  MCQ
+  FILL_IN
+}
+
+enum MockTestModule {
+  MODULE_1
+  MODULE_2
+  MODULE_3
+  MODULE_4
+}
+
+enum QuestionDifficulty {
+  EASY
+  MEDIUM
+  HARD
+}
+
+enum ProctoredSessionStatus {
+  ACTIVE
+  COMPLETED
+  REVOKED
+}
+
+enum ScoringStatus {
+  PUBLISHED
+  PENDING_REVIEW
+  SCORED
+}
+
+enum ParticipantStatus {
+  WAITING
+  TAKING
+  PAUSED
+  COMPLETED
+  DISQUALIFIED
+}
+
+model User {
+  id           String          @id @default(uuid())
+  username     String          @unique
+  passwordHash String
+  role         Role
+  student      StudentProfile?
+  createdAt    DateTime        @default(now())
+  updatedAt    DateTime        @updatedAt
+}
+
+model Group {
+  id              String               @id @default(uuid())
+  name            String               @unique
+  course          String?
+  subject         String?
+  teacher         String?
+  classroom       String?
+  maxStudents     Int?
+  startDate       DateTime?
+  endDate         DateTime?
+  price           Float?
+  monthlyFee      Int                  @default(0)
+  description     String?
+  status          String               @default("ACTIVE")
+  schedule        String? // JSON array of schedules
+  studentProfiles StudentProfile[]
+  attendance      Attendance[]
+  groupProgress   GroupTopicProgress[]
+  payments        Payment[]
+  createdAt       DateTime             @default(now())
+  updatedAt       DateTime             @updatedAt
+}
+
+model StudentProfile {
+  id             String        @id @default(uuid())
+  userId         String        @unique
+  user           User          @relation(fields: [userId], references: [id], onDelete: Cascade)
+  firstName      String
+  lastName       String
+  phone          String
+  groupId        String?
+  group          Group?        @relation(fields: [groupId], references: [id], onDelete: SetNull)
+  enrollmentDate DateTime      @default(now())
+  status         StudentStatus @default(ACTIVE)
+  monthlyFee     Float         @default(0)
+  paid           Float         @default(0)
+  debt           Float         @default(0)
+
+  parent         ParentGuardian?
+  mockTests      MockTest[]
+  monthlyResults MonthlyResult[]
+  attendance     Attendance[]
+  payments       Payment[]
+  notes          StudentNote[]
+  sms            SmsNotification[]
+
+  // SAT Testing System relations
+  testAttempts        StudentTestAttempt[]
+  proctorParticipants ProctoredParticipant[]
+  bugReports          BugReport[]
+  referralCode        String?
+  referredByUserId    String?
+
+  createdAt DateTime   @default(now())
+  updatedAt DateTime   @updatedAt
+  referrals Referral[]
+}
+
+model MonthlyResult {
+  id           String         @id @default(uuid())
+  studentId    String
+  student      StudentProfile @relation(fields: [studentId], references: [id], onDelete: Cascade)
+  month        String // Format: YYYY-MM
+  mathScore    Float?
+  englishScore Float?
+  createdAt    DateTime       @default(now())
+  updatedAt    DateTime       @updatedAt
+}
+
+model Attendance {
+  id         String           @id @default(uuid())
+  studentId  String
+  student    StudentProfile   @relation(fields: [studentId], references: [id], onDelete: Cascade)
+  groupId    String?
+  group      Group?           @relation(fields: [groupId], references: [id], onDelete: SetNull)
+  date       DateTime
+  status     AttendanceStatus
+  note       String?
+  recordedBy String?
+  createdAt  DateTime         @default(now())
+  updatedAt  DateTime         @updatedAt
+
+  @@unique([studentId, groupId, date])
+  @@index([studentId])
+  @@index([groupId])
+  @@index([date])
+}
+
+model Payment {
+  id         String   @id @default(cuid())
+  studentId  String
+  groupId    String
+  amountPaid Int      @default(0) // Paid amount in UZS
+  month      String // Format: "YYYY-MM" e.g. "2026-08"
+  status     String   @default("UNPAID") // "PAID" | "PARTIAL" | "UNPAID"
+  notes      String?
+  paidAt     DateTime @default(now())
+  createdAt  DateTime @default(now())
+  updatedAt  DateTime @updatedAt
+
+  student StudentProfile @relation(fields: [studentId], references: [id], onDelete: Cascade)
+  group   Group          @relation(fields: [groupId], references: [id], onDelete: Cascade)
+
+  @@unique([studentId, groupId, month])
+}
+
+model StudentNote {
+  id        String         @id @default(uuid())
+  studentId String
+  student   StudentProfile @relation(fields: [studentId], references: [id], onDelete: Cascade)
+  note      String
+  createdAt DateTime       @default(now())
+  updatedAt DateTime       @updatedAt
+}
+
+model Topic {
+  id          String  @id @default(uuid())
+  title       String
+  subject     String // "MATH", "READING_WRITING"
+  description String?
+  bookTitle   String?
+  bookPdfPath String?
+  videoPath   String?
+  orderIndex  Int     @default(0)
+  isActive    Boolean @default(true)
+
+  performances  TopicPerformance[]
+  groupProgress GroupTopicProgress[]
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  @@unique([subject, title])
+}
+
+model GroupTopicProgress {
+  id         String    @id @default(uuid())
+  groupId    String
+  topicId    String
+  isApproved Boolean   @default(false)
+  approvedAt DateTime?
+  order      Int
+
+  group Group @relation(fields: [groupId], references: [id], onDelete: Cascade)
+  topic Topic @relation(fields: [topicId], references: [id], onDelete: Cascade)
+
+  @@unique([groupId, topicId])
+}
+
+model MockTest {
+  id          String          @id @default(uuid())
+  studentId   String?
+  student     StudentProfile? @relation(fields: [studentId], references: [id], onDelete: Cascade)
+  subject     String // "Math", "English", "Combined"
+  testName    String
+  description String?
+  maxScore    Float           @default(100)
+  duration    Int // in minutes
+  score       Float?
+  answers     String? // JSON array of selected answers
+  questions   String // JSON array of questions
+  notes       String?
+  source      MockTestSource  @default(ADMIN_ENTERED)
+  createdById String?
+  status      MockTestStatus  @default(PENDING)
+
+  // Approval workflow fields
+  approvedAt        DateTime? // When admin approved
+  approvedBy        String? // Admin user ID who approved
+  isLockedInMetrics Boolean   @default(false) // True after approval, prevents re-analysis
+
+  // Bluebook-specific fields
+  uploadedFileName String? // Original uploaded file name
+  uploadedAt       DateTime? // When file was uploaded
+
+  // Extracted scores from Bluebook
+  mathScore    Float? // Math section score (200-800)
+  englishScore Float? // English section score (200-800)
+  totalScore   Float? // Total combined score (1200-1600)
+
+  performances TopicPerformance[]
+  attachments  MockTestAttachment[]
+  sms          SmsNotification[]
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+}
+
+model TopicPerformance {
+  id         String   @id @default(uuid())
+  mockTestId String
+  mockTest   MockTest @relation(fields: [mockTestId], references: [id], onDelete: Cascade)
+  topicId    String
+  topic      Topic    @relation(fields: [topicId], references: [id], onDelete: Cascade)
+  percentage Float // Topic performance percentage (0 to 100)
+  createdAt  DateTime @default(now())
+  updatedAt  DateTime @updatedAt
+
+  @@unique([mockTestId, topicId])
+}
+
+model MockTestAttachment {
+  id         String   @id @default(uuid())
+  mockTestId String
+  mockTest   MockTest @relation(fields: [mockTestId], references: [id], onDelete: Cascade)
+  fileName   String
+  fileType   String
+  fileSize   Int
+  storageKey String
+  uploadedAt DateTime @default(now())
+}
+
+model ParentGuardian {
+  id               String            @id @default(uuid())
+  studentId        String            @unique
+  student          StudentProfile    @relation(fields: [studentId], references: [id], onDelete: Cascade)
+  fullName         String
+  phone            String
+  smsNotifyEnabled Boolean           @default(true)
+  smsNotifications SmsNotification[]
+  createdAt        DateTime          @default(now())
+  updatedAt        DateTime          @updatedAt
+}
+
+model SmsNotification {
+  id                String         @id @default(uuid())
+  parentGuardianId  String
+  parentGuardian    ParentGuardian @relation(fields: [parentGuardianId], references: [id], onDelete: Cascade)
+  studentId         String
+  student           StudentProfile @relation(fields: [studentId], references: [id], onDelete: Cascade)
+  mockTestId        String?
+  mockTest          MockTest?      @relation(fields: [mockTestId], references: [id], onDelete: SetNull)
+  message           String
+  status            SmsStatus      @default(PENDING)
+  provider          String?
+  providerMessageId String?
+  errorMessage      String?
+  sentAt            DateTime?
+  createdAt         DateTime       @default(now())
+}
+
+// ==================== SAT TESTING SYSTEM MODELS ====================
+
+model SATMockTest {
+  id          String  @id @default(uuid())
+  name        String
+  description String?
+  createdById String // admin userId
+  status      String  @default("draft") // draft, published, archived
+
+  questions       SATQuestion[]
+  studentAttempts StudentTestAttempt[]
+  proctorSessions ProctoredSession[]
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  @@index([createdById])
+  @@index([status])
+}
+
+model SATQuestion {
+  id        String      @id @default(uuid())
+  satTestId String
+  satTest   SATMockTest @relation(fields: [satTestId], references: [id], onDelete: Cascade)
+
+  module         MockTestModule
+  format         MockTestFormat
+  questionNumber Int
+
+  prompt        String // HTML with KaTeX
+  passage       String? // stimulus text (optional)
+  imageUrl      String?
+  imagePosition String  @default("above") // "above" or "below"
+
+  options       Json // { A: "...", B: "...", C: "...", D: "..." }
+  correctAnswer String // "A" or "B" for MCQ, "0.75" or "3/4" for fill-in
+
+  // AI Verification and Answer Key Workflow
+  answerSource       String? @default("missing") // "test_pdf_answer_key", "separate_answer_key", "admin", "missing"
+  requiresReview     Boolean @default(true)
+  verificationStatus String? // "verified", "conflict", "unverified"
+
+  difficulty  QuestionDifficulty @default(MEDIUM)
+  domain      String // "Reading", "Grammar", "Algebra", etc.
+  skill       String // SAT skill taxonomy
+  explanation String? // HTML explanation (for results)
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  @@index([satTestId])
+  @@index([module])
+  @@index([domain])
+}
+
+model StudentTestAttempt {
+  id        String         @id @default(uuid())
+  studentId String
+  student   StudentProfile @relation(fields: [studentId], references: [id], onDelete: Cascade)
+
+  satTestId String
+  satTest   SATMockTest @relation(fields: [satTestId], references: [id], onDelete: Cascade)
+
+  startedAt   DateTime  @default(now())
+  completedAt DateTime?
+  totalTimeMs Int? // total time spent in milliseconds
+
+  // Scores
+  totalScore Int?
+  rwScore    Int?
+  mathScore  Int?
+  rwRaw      Int?
+  mathRaw    Int?
+  rwTotal    Int  @default(54) // always 54 for R&W
+  mathTotal  Int  @default(44) // always 44 for Math
+
+  // Answers and marking
+  userAnswers     Json // { [questionId]: "A" or "0.75", ... }
+  markedQuestions Json? // { [questionId]: true, ... }
+
+  // Proctoring
+  proctorCode      String? // linked to ProctoredSession if proctored
+  scoringStatus    ScoringStatus @default(PUBLISHED)
+  aiEstimatedScore Json? // { rwScore, mathScore, totalScore, confidence, explanation, ... }
+
+  // Tracking
+  fullscreenExitCount Int   @default(0)
+  reviewIndex         Json? // lightweight copy of questions for results page
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  @@unique([studentId, satTestId, proctorCode])
+  @@index([studentId])
+  @@index([satTestId])
+  @@index([scoringStatus])
+}
+
+model ProctoredSession {
+  id   String @id @default(uuid())
+  code String @unique // 6-digit code like "123456"
+
+  satTestId   String
+  satTest     SATMockTest @relation(fields: [satTestId], references: [id], onDelete: Cascade)
+  createdById String // admin userId
+
+  status           ProctoredSessionStatus @default(ACTIVE)
+  scoringStatus    ScoringStatus          @default(PENDING_REVIEW)
+  scoringStartedAt DateTime?
+  scoredAt         DateTime?
+  publishedAt      DateTime?
+  publishAfter     DateTime? // 12 hours after creation (for auto-publish)
+
+  scoredCount       Int @default(0)
+  totalParticipants Int @default(0)
+
+  participants ProctoredParticipant[]
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  @@index([createdById])
+  @@index([status])
+}
+
+model ProctoredParticipant {
+  id        String           @id @default(uuid())
+  sessionId String
+  session   ProctoredSession @relation(fields: [sessionId], references: [id], onDelete: Cascade)
+
+  studentId String
+  student   StudentProfile @relation(fields: [studentId], references: [id], onDelete: Cascade)
+
+  userName String
+  email    String
+  status   ParticipantStatus @default(WAITING)
+
+  startedAt           DateTime?
+  completedAt         DateTime?
+  currentModule       Int?
+  fullscreenExitCount Int       @default(0)
+  score               Int? // final score after AI scoring
+
+  // Live Proctoring Tracking
+  currentQuestionIndex Int?
+  timeRemaining        Int? // In seconds
+  lastHeartbeat        DateTime?
+  timeAdded            Int       @default(0) // Seconds added by admin
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  @@unique([sessionId, studentId])
+  @@index([sessionId])
+  @@index([studentId])
+}
+
+model BugReport {
+  id        String         @id @default(uuid())
+  studentId String
+  student   StudentProfile @relation(fields: [studentId], references: [id], onDelete: Cascade)
+
+  satTestId  String?
+  questionId String?
+
+  issueType  String // wrong-answer, typo, image-issue, other
+  message    String
+  screenshot String? // URL to uploaded image
+
+  status String @default("open") // open, acknowledged, resolved
+
+  // AI Analysis fields
+  priority     String? // LOW, MEDIUM, HIGH
+  aiAnalysis   String? // AI explanation of the bug
+  suggestedFix String? // Human readable explanation of the fix
+  fixPayload   Json? // Machine readable fix payload
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  @@index([studentId])
+  @@index([satTestId])
+}
+
+model Referral {
+  id                String         @id @default(uuid())
+  referrerId        String // admin who shared link
+  referredStudentId String
+  referredStudent   StudentProfile @relation(fields: [referredStudentId], references: [id], onDelete: Cascade)
+
+  completedAt   DateTime? // when referred student completes first test
+  satTestId     String?
+  testAttemptId String?
+
+  createdAt DateTime @default(now())
+
+  @@index([referrerId])
+  @@index([referredStudentId])
+}
+
+model StudyGroup {
+  id          String  @id @default(uuid())
+  name        String  @unique
+  description String?
+
+  createdById String // admin userId
+  memberIds   String[] // array of studentIds
+  testIds     String[] // array of satTestIds available to group
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  @@index([createdById])
+}
+
+// ==================== ARTICLES & READING ROOM ====================
+
+model Article {
+  id          String   @id @default(cuid())
+  title       String
+  slug        String   @unique
+  category    String // "SCIENCE" | "HISTORY" | "LITERATURE" | "STRATEGY" | "VOCABULARY"
+  summary     String?
+  content     String // Markdown with KaTeX math and embedded images
+  coverImage  String?
+  readTimeMin Int      @default(5)
+  published   Boolean  @default(false)
+  viewsCount  Int      @default(0)
+  vocabulary  Json? // [{ word: string, definition: string, context: string }]
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+}
+
+enum AIJobType {
+  MOCK_TEST_IMPORT
+  ARTICLE_IMPORT
+  BLUEBOOK_ANALYSIS
+  STUDENT_ANALYSIS
+}
+
+enum AIJobStatus {
+  QUEUED
+  PROCESSING
+  VALIDATING
+  REVIEW_REQUIRED
+  COMPLETED
+  FAILED
+  CANCELLED
+}
+
+model AIJob {
+  id     String      @id @default(uuid())
+  type   AIJobType
+  status AIJobStatus @default(QUEUED)
+
+  // Job context and data
+  userId       String?
+  sourceFileId String? // e.g., uploaded file ID or storage key
+
+  // Progress tracking
+  progress    Int     @default(0) // 0-100
+  currentStep String?
+
+  // Error handling & retry
+  attempts     Int     @default(0)
+  maxAttempts  Int     @default(3)
+  errorCode    String?
+  errorMessage String?
+
+  // Data
+  inputData  Json? // Input config, raw text, etc.
+  resultData Json? // Extracted JSON, parsed objects, etc.
+
+  // Auditing
+  provider String?
+  model    String?
+
+  createdAt   DateTime  @default(now())
+  startedAt   DateTime?
+  completedAt DateTime?
+  updatedAt   DateTime  @updatedAt
+
+  @@index([userId])
+  @@index([status])
+}

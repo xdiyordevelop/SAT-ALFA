@@ -1,0 +1,204 @@
+<!DOCTYPE html>
+
+<html class="dark" lang="en"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>SAT-ALFA Login</title>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<link href="https://fonts.googleapis.com/css2?family=Manrope:wght@400;700;800&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<script id="tailwind-config">
+        tailwind.config = {
+            darkMode: "class",
+            theme: {
+                extend: {
+                    colors: {
+                        "on-tertiary": "#313030",
+                        "on-secondary": "#2f3131",
+                        "tertiary-container": "#e5e2e1",
+                        "surface-variant": "#353534",
+                        "inverse-primary": "#5c6300",
+                        "on-secondary-fixed-variant": "#454747",
+                        "on-tertiary-container": "#656464",
+                        "on-tertiary-fixed-variant": "#474746",
+                        "background": "#131313",
+                        "surface-container-low": "#1c1b1b",
+                        "on-primary-fixed-variant": "#454a00",
+                        "error": "#ffb4ab",
+                        "surface-glass": "rgba(10, 10, 10, 0.8)",
+                        "secondary": "#c6c6c7",
+                        "on-secondary-fixed": "#1a1c1c",
+                        "error-container": "#93000a",
+                        "secondary-fixed-dim": "#c6c6c7",
+                        "on-primary-fixed": "#1b1d00",
+                        "tertiary-fixed": "#e5e2e1",
+                        "pure-black": "#000000",
+                        "surface-dark": "#0A0A0A",
+                        "secondary-fixed": "#e2e2e2",
+                        "neon-yellow": "#EFFF00",
+                        "on-surface": "#e5e2e1",
+                        "surface-container": "#201f1f",
+                        "inverse-surface": "#e5e2e1",
+                        "surface-tint": "#c3d000",
+                        "surface-container-lowest": "#0e0e0e",
+                        "primary-fixed-dim": "#c3d000",
+                        "surface-container-high": "#2a2a2a",
+                        "tertiary": "#ffffff",
+                        "surface-dim": "#131313",
+                        "on-primary-container": "#626900",
+                        "surface-container-highest": "#353534",
+                        "on-surface-variant": "#c8c8ab",
+                        "surface": "#131313",
+                        "surface-bright": "#3a3939",
+                        "on-error": "#690005",
+                        "primary-fixed": "#deed00",
+                        "on-secondary-container": "#b4b5b5",
+                        "outline-variant": "#474832",
+                        "secondary-container": "#454747",
+                        "on-primary": "#2f3300",
+                        "inverse-on-surface": "#313030",
+                        "outline": "#929277",
+                        "border-muted": "#262626",
+                        "tertiary-fixed-dim": "#c8c6c5",
+                        "primary-container": "#deed00",
+                        "on-tertiary-fixed": "#1c1b1b",
+                        "primary": "#ffffff",
+                        "on-background": "#e5e2e1",
+                        "on-error-container": "#ffdad6"
+                    },
+                    borderRadius: {
+                        "DEFAULT": "0.125rem",
+                        "lg": "0.25rem",
+                        "xl": "0.5rem",
+                        "full": "0.75rem"
+                    },
+                    spacing: {
+                        "lg": "24px",
+                        "md": "16px",
+                        "gutter": "16px",
+                        "sm": "8px",
+                        "xs": "4px",
+                        "xl": "40px",
+                        "base": "4px",
+                        "container-margin": "24px"
+                    },
+                    fontFamily: {
+                        "body-md": ["Manrope"],
+                        "headline-lg-mobile": ["Manrope"],
+                        "body-lg": ["Manrope"],
+                        "label-bold": ["Manrope"],
+                        "headline-lg": ["Manrope"],
+                        "headline-md": ["Manrope"],
+                        "display-lg": ["Manrope"]
+                    },
+                    fontSize: {
+                        "body-md": ["16px", { "lineHeight": "24px", "fontWeight": "400" }],
+                        "headline-lg-mobile": ["28px", { "lineHeight": "36px", "fontWeight": "800" }],
+                        "body-lg": ["18px", { "lineHeight": "28px", "fontWeight": "400" }],
+                        "label-bold": ["14px", { "lineHeight": "20px", "letterSpacing": "0.05em", "fontWeight": "700" }],
+                        "headline-lg": ["32px", { "lineHeight": "40px", "letterSpacing": "-0.01em", "fontWeight": "800" }],
+                        "headline-md": ["24px", { "lineHeight": "32px", "fontWeight": "700" }],
+                        "display-lg": ["48px", { "lineHeight": "56px", "letterSpacing": "-0.02em", "fontWeight": "800" }]
+                    }
+                },
+            },
+        }
+    </script>
+<style>
+        .neon-glow:focus {
+            box-shadow: 0 0 8px rgba(239, 255, 0, 0.3);
+            border-color: #EFFF00;
+        }
+        
+        /* Subtle geometric background pattern */
+        .bg-tech-pattern {
+            background-image: linear-gradient(30deg, #0A0A0A 12%, transparent 12.5%, transparent 87%, #0A0A0A 87.5%, #0A0A0A),
+                              linear-gradient(150deg, #0A0A0A 12%, transparent 12.5%, transparent 87%, #0A0A0A 87.5%, #0A0A0A),
+                              linear-gradient(30deg, #0A0A0A 12%, transparent 12.5%, transparent 87%, #0A0A0A 87.5%, #0A0A0A),
+                              linear-gradient(150deg, #0A0A0A 12%, transparent 12.5%, transparent 87%, #0A0A0A 87.5%, #0A0A0A),
+                              linear-gradient(60deg, #131313 25%, transparent 25.5%, transparent 75%, #131313 75%, #131313), 
+                              linear-gradient(60deg, #131313 25%, transparent 25.5%, transparent 75%, #131313 75%, #131313);
+            background-size: 80px 140px;
+            background-position: 0 0, 0 0, 40px 70px, 40px 70px, 0 0, 40px 70px;
+            background-color: #000000;
+            opacity: 0.8;
+        }
+    </style>
+</head>
+<body class="bg-pure-black text-on-surface font-body-md h-screen w-full flex items-center justify-center overflow-hidden">
+<!-- Background Pattern Wrapper -->
+<div class="absolute inset-0 bg-tech-pattern z-0"></div>
+<!-- Main Container -->
+<main class="relative z-10 w-full max-w-[1024px] mx-auto px-md md:px-lg flex flex-col md:flex-row rounded-lg overflow-hidden border border-border-muted bg-surface-dark/90 backdrop-blur-xl shadow-2xl">
+<!-- Branding / Visual Side (Hidden on small screens) -->
+<div class="hidden md:flex flex-col justify-between w-1/2 p-xl border-r border-border-muted relative overflow-hidden">
+<!-- Decorative Elements -->
+<div class="absolute -top-32 -left-32 w-64 h-64 bg-neon-yellow opacity-10 rounded-full blur-[100px]"></div>
+<div class="absolute -bottom-32 -right-32 w-96 h-96 bg-neon-yellow opacity-5 rounded-full blur-[120px]"></div>
+<div class="relative z-10">
+<img alt="SAT-ALFA Logo" class="w-16 h-16 object-contain mb-xl" src="https://lh3.googleusercontent.com/aida-public/AB6AXuBDdLYpCDSpC51rwQOcD4m5lhoggTD9e6BBa1FB-PnEP4Rwm5hkMFyuKoeMbA220G3YLZOLB_BvQIUvEehXmPaGa4IOwoLP1Jg9Mf07uxNjrq7v1xYpYeVX1gWREsMU3FF3QXdPMCXROoDxDEM7Q62U2AhEmNhPIOJhKEMFhAuVyBum0XJyd_oRh73hHrUZ47SgNjh3IVJG_YNeO3zeF1w7hpL6YbR_X5zCuzr6b_64XuSxcIMpwuvcrKOTZ0_G_HkSKSQ"/>
+<h1 class="font-display-lg text-display-lg text-white mb-sm">High-Performance <br/> Education Systems.</h1>
+<p class="font-body-lg text-body-lg text-on-surface-variant max-w-sm">
+                    Enter the elite platform designed for digital testing and AI-driven analytics.
+                </p>
+</div>
+<div class="relative z-10 mt-xl">
+<div class="flex items-center space-x-sm">
+<span class="material-symbols-outlined text-neon-yellow" style="font-variation-settings: 'FILL' 1;">speed</span>
+<span class="font-label-bold text-label-bold text-on-surface">SYSTEM STATUS: OPTIMAL</span>
+</div>
+</div>
+</div>
+<!-- Login Form Side -->
+<div class="w-full md:w-1/2 p-lg md:p-xl flex flex-col justify-center bg-surface-dark">
+<!-- Mobile Logo (Visible only on small screens) -->
+<div class="md:hidden flex justify-center mb-xl">
+<img alt="SAT-ALFA Logo" class="w-20 h-20 object-contain" src="https://lh3.googleusercontent.com/aida-public/AB6AXuAhRlDoeBBVKbuHJJf3Bn6CxOAaB8NXe2jDlgAIkYMipdcIMz8pMoFzN7gnTLWMhsgQ_1o8VDRYHzi0tdzcxKkeUMTTuaXWTCXd47pCLfn-w_re-9CERsnlUFUX2tfr_ZvTfej05F5inHtoGYBaLMAgh7Chf5aDHJ3lELYxYp8IxcJnnuR-avFVap4LeSEsWBKypEYWpsSNz94BmphLMt68y1Yh-wBrGFsMZcTmNYRgTjBx7DwQNAzipii-PPARLm_6E9U"/>
+</div>
+<div class="max-w-md w-full mx-auto">
+<div class="mb-xl">
+<h2 class="font-headline-lg text-headline-lg text-white mb-xs font-black tracking-tight">Welcome Back</h2>
+<p class="font-body-md text-body-md text-on-surface-variant">Log in to your student portal</p>
+</div>
+<form action="#" class="space-y-lg" method="POST">
+<div>
+<label class="block font-label-bold text-label-bold text-on-surface mb-xs" for="username">Username</label>
+<div class="relative">
+<div class="absolute inset-y-0 left-0 pl-sm flex items-center pointer-events-none">
+<span class="material-symbols-outlined text-on-surface-variant text-body-lg">person</span>
+</div>
+<input class="w-full bg-[#0A0A0A] border border-[#262626] rounded-DEFAULT py-sm pl-[40px] pr-sm text-white font-body-md focus:outline-none transition-all duration-300 neon-glow" id="username" name="username" placeholder="Enter your username" type="text"/>
+</div>
+</div>
+<div>
+<div class="flex justify-between items-center mb-xs">
+<label class="block font-label-bold text-label-bold text-on-surface" for="password">Password</label>
+<a class="font-label-bold text-label-bold text-neon-yellow hover:opacity-80 transition-opacity" href="#">Forgot?</a>
+</div>
+<div class="relative">
+<div class="absolute inset-y-0 left-0 pl-sm flex items-center pointer-events-none">
+<span class="material-symbols-outlined text-on-surface-variant text-body-lg">lock</span>
+</div>
+<input class="w-full bg-[#0A0A0A] border border-[#262626] rounded-DEFAULT py-sm pl-[40px] pr-sm text-white font-body-md focus:outline-none transition-all duration-300 neon-glow" id="password" name="password" placeholder="••••••••" type="password"/>
+</div>
+</div>
+<button class="w-full bg-neon-yellow text-pure-black font-label-bold text-label-bold py-md rounded-DEFAULT hover:opacity-90 transition-opacity flex justify-center items-center space-x-xs mt-xl" type="submit">
+<span>Tizimga kirish</span>
+<span class="material-symbols-outlined text-body-lg">arrow_forward</span>
+</button>
+</form>
+<div class="mt-xl text-center">
+<p class="font-body-md text-body-md text-on-surface-variant">
+                        Don't have an account? <a class="text-neon-yellow hover:underline font-label-bold text-label-bold" href="#">Sign up</a>
+</p>
+</div>
+</div>
+</div>
+</main>
+<!-- Bottom Left Tech Detail -->
+<div class="absolute bottom-md left-md hidden lg:flex items-center space-x-xs text-on-surface-variant opacity-50 select-none">
+<span class="material-symbols-outlined text-sm">terminal</span>
+<span class="font-label-bold text-xs">V.1.0.44 - SECURE CONNECTION</span>
+</div>
+</body></html>

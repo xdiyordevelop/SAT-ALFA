@@ -1,0 +1,93 @@
+import { getSession } from "@/lib/auth/session";
+import { redirect } from "next/navigation";
+import { prisma } from "@/lib/db/prisma";
+import { Sidebar } from "@/components/layout/Sidebar";
+import { Topbar } from "@/components/layout/Topbar";
+import {
+  AdminMockTestsRoom,
+  AdminSATTest,
+} from "@/components/admin/mock-tests/AdminMockTestsRoom";
+
+export default async function AdminMockTestsPage() {
+  const session = await getSession();
+
+  if (!session || session.role !== "ADMIN") {
+    redirect("/login");
+  }
+
+  // Fetch all SAT Mock Tests with questions and active sessions
+  const satTests = await prisma.sATMockTest.findMany({
+    include: {
+      questions: {
+        select: {
+          id: true,
+          module: true,
+        },
+      },
+      proctorSessions: {
+        where: { status: "ACTIVE" },
+        select: { id: true },
+      },
+    },
+    orderBy: { createdAt: "desc" },
+  });
+
+  const formattedTests: AdminSATTest[] = satTests.map((t) => {
+    let m1 = 0,
+      m2 = 0,
+      m3 = 0,
+      m4 = 0;
+    for (const q of t.questions) {
+      if (q.module === "MODULE_1") m1++;
+      else if (q.module === "MODULE_2") m2++;
+      else if (q.module === "MODULE_3") m3++;
+      else if (q.module === "MODULE_4") m4++;
+    }
+
+    return {
+      id: t.id,
+      name: t.name,
+      description: t.description,
+      status: t.status,
+      questionCount: t.questions.length,
+      activeSessionsCount: t.proctorSessions.length,
+      createdAt: t.createdAt.toISOString(),
+      updatedAt: t.updatedAt.toISOString(),
+      modulesSummary: { m1, m2, m3, m4 },
+    };
+  });
+
+  return (
+    <div className="min-h-screen bg-slate-50 dark:bg-[#0a0a0a] text-slate-900 dark:text-white">
+      <Sidebar username={session.username} role={session.role} />
+
+      <div className="lg:ml-64">
+        <Topbar
+          title="SAT Mock Tests Room"
+          breadcrumbs={[{ label: "Admin" }, { label: "Mock Tests" }]}
+          userName={session.username}
+          userRole={session.role}
+        />
+
+        <main className="pt-24 px-4 sm:px-6 lg:px-8 pb-12 max-w-7xl mx-auto">
+          <div className="mb-6 flex flex-col sm:flex-row sm:items-center justify-between gap-4">
+            <div>
+              <h1 className="text-2xl sm:text-3xl font-extrabold text-slate-900 dark:text-white tracking-tight flex items-center gap-2">
+                SAT Mock{" "}
+                <span className="text-slate-900 dark:text-yellow-500">
+                  Tests Room
+                </span>
+              </h1>
+              <p className="text-sm text-slate-500 dark:text-slate-400 mt-1 mb-4">
+                Manage, proctor live examination sessions, and publish digital
+                SAT tests
+              </p>
+            </div>
+          </div>
+
+          <AdminMockTestsRoom tests={formattedTests} />
+        </main>
+      </div>
+    </div>
+  );
+}

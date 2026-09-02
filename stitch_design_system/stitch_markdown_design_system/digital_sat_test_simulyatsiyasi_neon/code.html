@@ -1,0 +1,309 @@
+<!DOCTYPE html>
+
+<html class="dark" lang="en"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>SAT-ALFA - Test Interface</title>
+<!-- Material Symbols -->
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<!-- Google Fonts: Manrope -->
+<link href="https://fonts.googleapis.com" rel="preconnect"/>
+<link crossorigin="" href="https://fonts.gstatic.com" rel="preconnect"/>
+<link href="https://fonts.googleapis.com/css2?family=Manrope:wght@400;700;800&amp;display=swap" rel="stylesheet"/>
+<!-- Tailwind CSS -->
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<!-- KaTeX -->
+<link crossorigin="anonymous" href="https://cdn.jsdelivr.net/npm/katex@0.16.8/dist/katex.min.css" integrity="sha384-GvrOXuhMATgEsSwCs4smuz565X03f2wZ+cgRXm20e2aD//2+r4O492jR06i/G1Fk" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<script id="tailwind-config">
+        tailwind.config = {
+            darkMode: "class",
+            theme: {
+                extend: {
+                    "colors": {
+                            "secondary": "#c6c6c7",
+                            "neon-yellow": "#EFFF00",
+                            "on-secondary-container": "#b4b5b5",
+                            "on-surface-variant": "#c8c8ab",
+                            "surface-glass": "rgba(10, 10, 10, 0.8)",
+                            "inverse-surface": "#e5e2e1",
+                            "primary-fixed-dim": "#c3d000",
+                            "primary": "#ffffff",
+                            "surface-tint": "#c3d000",
+                            "on-secondary-fixed-variant": "#454747",
+                            "surface-dark": "#0A0A0A",
+                            "surface-container-highest": "#353534",
+                            "surface-variant": "#353534",
+                            "outline-variant": "#474832",
+                            "on-tertiary": "#313030",
+                            "on-tertiary-fixed-variant": "#474746",
+                            "on-primary-container": "#626900",
+                            "surface-container-high": "#2a2a2a",
+                            "tertiary-container": "#e5e2e1",
+                            "secondary-fixed": "#e2e2e2",
+                            "secondary-container": "#454747",
+                            "on-primary-fixed": "#1b1d00",
+                            "on-secondary": "#2f3131",
+                            "error": "#ffb4ab",
+                            "on-tertiary-container": "#656464",
+                            "on-error": "#690005",
+                            "on-error-container": "#ffdad6",
+                            "surface-bright": "#3a3939",
+                            "outline": "#929277",
+                            "on-surface": "#e5e2e1",
+                            "on-background": "#e5e2e1",
+                            "error-container": "#93000a",
+                            "primary-fixed": "#deed00",
+                            "border-muted": "#262626",
+                            "on-primary": "#2f3300",
+                            "on-secondary-fixed": "#1a1c1c",
+                            "inverse-primary": "#5c6300",
+                            "secondary-fixed-dim": "#c6c6c7",
+                            "tertiary-fixed-dim": "#c8c6c5",
+                            "on-primary-fixed-variant": "#454a00",
+                            "surface-container": "#201f1f",
+                            "surface-dim": "#131313",
+                            "tertiary-fixed": "#e5e2e1",
+                            "tertiary": "#ffffff",
+                            "background": "#131313",
+                            "surface-container-lowest": "#0e0e0e",
+                            "primary-container": "#deed00",
+                            "inverse-on-surface": "#313030",
+                            "surface-container-low": "#1c1b1b",
+                            "on-tertiary-fixed": "#1c1b1b",
+                            "surface": "#131313",
+                            "pure-black": "#000000"
+                    },
+                    "borderRadius": {
+                            "DEFAULT": "0.125rem",
+                            "lg": "0.25rem",
+                            "xl": "0.5rem",
+                            "full": "0.75rem"
+                    },
+                    "spacing": {
+                            "xl": "40px",
+                            "lg": "24px",
+                            "md": "16px",
+                            "gutter": "16px",
+                            "container-margin": "24px",
+                            "xs": "4px",
+                            "base": "4px",
+                            "sm": "8px"
+                    },
+                    "fontFamily": {
+                            "display-lg": ["Manrope"],
+                            "label-bold": ["Manrope"],
+                            "body-lg": ["Manrope"],
+                            "body-md": ["Manrope"],
+                            "headline-lg": ["Manrope"],
+                            "headline-md": ["Manrope"],
+                            "headline-lg-mobile": ["Manrope"]
+                    },
+                    "fontSize": {
+                            "display-lg": ["48px", {"lineHeight": "56px", "letterSpacing": "-0.02em", "fontWeight": "800"}],
+                            "label-bold": ["14px", {"lineHeight": "20px", "letterSpacing": "0.05em", "fontWeight": "700"}],
+                            "body-lg": ["18px", {"lineHeight": "28px", "fontWeight": "400"}],
+                            "body-md": ["16px", {"lineHeight": "24px", "fontWeight": "400"}],
+                            "headline-lg": ["32px", {"lineHeight": "40px", "letterSpacing": "-0.01em", "fontWeight": "800"}],
+                            "headline-md": ["24px", {"lineHeight": "32px", "fontWeight": "700"}],
+                            "headline-lg-mobile": ["28px", {"lineHeight": "36px", "fontWeight": "800"}]
+                    }
+                },
+            },
+        }
+    </script>
+<style>
+        /* Custom scrollbar for focus panels */
+        .test-panel-scroll::-webkit-scrollbar {
+            width: 8px;
+        }
+        .test-panel-scroll::-webkit-scrollbar-track {
+            background: #000000;
+        }
+        .test-panel-scroll::-webkit-scrollbar-thumb {
+            background: #262626;
+            border-radius: 4px;
+        }
+        .test-panel-scroll::-webkit-scrollbar-thumb:hover {
+            background: #353534;
+        }
+    </style>
+</head>
+<body class="bg-pure-black text-on-surface font-body-md min-h-screen flex flex-col antialiased selection:bg-neon-yellow selection:text-pure-black">
+<!-- Top Navigation Bar - Test Mode (Simplified/Focused) -->
+<header class="bg-surface-glass dark:bg-surface-glass docked full-width top-0 sticky backdrop-blur-md border-b border-border-muted z-50">
+<div class="flex justify-between items-center w-full px-lg py-sm max-w-full">
+<div class="flex items-center gap-md">
+<span class="font-headline-md text-headline-md font-black text-neon-yellow tracking-tighter">SAT-ALFA</span>
+<span class="font-label-bold text-label-bold text-on-surface-variant hidden md:inline-block ml-4 border-l border-border-muted pl-4">Math: Section 2</span>
+</div>
+<div class="flex items-center gap-xl">
+<!-- Countdown Timer -->
+<div class="flex items-center gap-sm bg-surface-container-high px-4 py-2 rounded border border-border-muted text-on-surface font-label-bold text-label-bold min-w-[120px] justify-center shadow-[0_0_8px_rgba(239,255,0,0.1)]">
+<span class="material-symbols-outlined text-[20px]" data-icon="timer">timer</span>
+<span id="test-timer">14:32</span>
+</div>
+<!-- Action -->
+<button class="font-label-bold text-label-bold text-on-surface-variant hover:text-error transition-colors flex items-center gap-sm">
+                    Exit Section
+                    <span class="material-symbols-outlined text-[18px]" data-icon="exit_to_app">exit_to_app</span>
+</button>
+</div>
+</div>
+</header>
+<!-- Main Content Area -->
+<main class="flex-grow flex flex-col md:flex-row overflow-hidden h-[calc(100vh-64px-72px)] relative">
+<!-- Left Panel: Context / Question Passage -->
+<section class="w-full md:w-1/2 h-full border-r border-border-muted bg-surface-dark test-panel-scroll overflow-y-auto p-container-margin md:p-xl relative">
+<div class="max-w-2xl mx-auto space-y-6">
+<!-- Context Info -->
+<div class="inline-flex items-center gap-2 px-3 py-1 bg-surface-container border border-border-muted rounded text-on-surface-variant font-label-bold text-label-bold uppercase tracking-widest text-[11px]">
+<span class="material-symbols-outlined text-[14px]" data-icon="calculate">calculate</span>
+                    Calculator Allowed
+                </div>
+<h1 class="font-headline-lg text-headline-lg-mobile md:text-headline-lg text-on-surface mt-4">Question 12</h1>
+<div class="font-body-lg text-body-lg text-on-surface space-y-6 leading-relaxed">
+<p>
+                        A researcher modeling the population of a certain species of bacteria over time finds that the population <span class="text-tertiary font-serif italic">P</span> after <span class="text-tertiary font-serif italic">t</span> hours can be described by the following exponential growth function:
+                    </p>
+<!-- KaTeX Block -->
+<div class="bg-surface-container-low border border-border-muted p-8 rounded-lg flex justify-center items-center my-8 shadow-inner relative overflow-hidden group">
+<!-- Decorative glow -->
+<div class="absolute inset-0 bg-neon-yellow/5 opacity-0 group-hover:opacity-100 transition-opacity duration-500 pointer-events-none"></div>
+<div class="text-[28px] text-tertiary font-serif relative z-10">
+                            P(t) = 150 <span class="text-neon-yellow">\cdot</span> e^{0.045t}
+                        </div>
+</div>
+<p>
+                        According to the model, which of the following is closest to the amount of time, in hours, it will take for the initial bacteria population to double?
+                    </p>
+</div>
+</div>
+</section>
+<!-- Right Panel: Interaction / Options -->
+<section class="w-full md:w-1/2 h-full bg-pure-black test-panel-scroll overflow-y-auto p-container-margin md:p-xl flex flex-col justify-center">
+<div class="max-w-xl mx-auto w-full">
+<div class="space-y-4">
+<!-- Option A -->
+<label class="block relative group cursor-pointer">
+<input class="peer sr-only" name="q12" type="radio"/>
+<div class="w-full flex items-center p-md bg-surface-dark border border-border-muted rounded-lg peer-checked:border-neon-yellow peer-checked:bg-surface-container transition-all duration-200 hover:border-outline">
+<div class="w-8 h-8 rounded border border-border-muted flex items-center justify-center font-label-bold text-label-bold text-on-surface-variant peer-checked:bg-neon-yellow peer-checked:text-pure-black peer-checked:border-neon-yellow mr-md transition-colors">
+                                A
+                            </div>
+<div class="font-body-md text-body-md text-on-surface flex-grow">
+                                11.6 hours
+                            </div>
+</div>
+<div class="absolute inset-0 rounded-lg ring-1 ring-neon-yellow ring-opacity-0 peer-focus-visible:ring-opacity-100 peer-focus-visible:ring-offset-2 peer-focus-visible:ring-offset-pure-black pointer-events-none transition-all"></div>
+</label>
+<!-- Option B -->
+<label class="block relative group cursor-pointer">
+<input class="peer sr-only" name="q12" type="radio"/>
+<div class="w-full flex items-center p-md bg-surface-dark border border-border-muted rounded-lg peer-checked:border-neon-yellow peer-checked:bg-surface-container transition-all duration-200 hover:border-outline">
+<div class="w-8 h-8 rounded border border-border-muted flex items-center justify-center font-label-bold text-label-bold text-on-surface-variant peer-checked:bg-neon-yellow peer-checked:text-pure-black peer-checked:border-neon-yellow mr-md transition-colors">
+                                B
+                            </div>
+<div class="font-body-md text-body-md text-on-surface flex-grow">
+                                15.4 hours
+                            </div>
+</div>
+</label>
+<!-- Option C -->
+<label class="block relative group cursor-pointer">
+<input class="peer sr-only" name="q12" type="radio"/>
+<div class="w-full flex items-center p-md bg-surface-dark border border-border-muted rounded-lg peer-checked:border-neon-yellow peer-checked:bg-surface-container transition-all duration-200 hover:border-outline">
+<div class="w-8 h-8 rounded border border-border-muted flex items-center justify-center font-label-bold text-label-bold text-on-surface-variant peer-checked:bg-neon-yellow peer-checked:text-pure-black peer-checked:border-neon-yellow mr-md transition-colors">
+                                C
+                            </div>
+<div class="font-body-md text-body-md text-on-surface flex-grow">
+                                22.2 hours
+                            </div>
+</div>
+</label>
+<!-- Option D -->
+<label class="block relative group cursor-pointer">
+<input class="peer sr-only" name="q12" type="radio"/>
+<div class="w-full flex items-center p-md bg-surface-dark border border-border-muted rounded-lg peer-checked:border-neon-yellow peer-checked:bg-surface-container transition-all duration-200 hover:border-outline">
+<div class="w-8 h-8 rounded border border-border-muted flex items-center justify-center font-label-bold text-label-bold text-on-surface-variant peer-checked:bg-neon-yellow peer-checked:text-pure-black peer-checked:border-neon-yellow mr-md transition-colors">
+                                D
+                            </div>
+<div class="font-body-md text-body-md text-on-surface flex-grow">
+                                33.3 hours
+                            </div>
+</div>
+</label>
+</div>
+<!-- Utilities -->
+<div class="mt-8 flex justify-end">
+<button class="text-on-surface-variant hover:text-neon-yellow font-label-bold text-label-bold flex items-center gap-2 transition-colors border border-transparent hover:border-border-muted px-3 py-1.5 rounded">
+<span class="material-symbols-outlined text-[18px]" data-icon="flag">flag</span>
+                        Mark for Review
+                    </button>
+</div>
+</div>
+</section>
+</main>
+<!-- Bottom Navigation Bar - Test Controls -->
+<footer class="bg-surface-dark border-t border-border-muted w-full fixed bottom-0 left-0 z-50 h-[72px] flex items-center px-lg">
+<div class="w-full max-w-7xl mx-auto flex justify-between items-center">
+<!-- Question Map Trigger -->
+<button class="flex items-center gap-2 text-on-surface hover:text-neon-yellow font-label-bold text-label-bold transition-colors" id="map-trigger">
+<span class="material-symbols-outlined" data-icon="grid_view">grid_view</span>
+<span class="hidden md:inline">Question 12 of 22</span>
+<span class="md:hidden">12/22</span>
+</button>
+<!-- Navigation Actions -->
+<div class="flex items-center gap-md">
+<button class="px-6 py-2 rounded border border-border-muted bg-transparent text-on-surface font-label-bold text-label-bold hover:border-outline transition-colors disabled:opacity-50 disabled:cursor-not-allowed flex items-center gap-2">
+<span class="material-symbols-outlined text-[18px]" data-icon="chevron_left">chevron_left</span>
+                    Back
+                </button>
+<button class="px-8 py-2 rounded bg-neon-yellow text-pure-black font-label-bold text-label-bold hover:bg-primary-fixed transition-colors flex items-center gap-2">
+                    Next
+                    <span class="material-symbols-outlined text-[18px]" data-icon="chevron_right">chevron_right</span>
+</button>
+</div>
+</div>
+</footer>
+<!-- Question Map Popover (Hidden by default, positioned above the trigger) -->
+<div class="fixed bottom-[80px] left-lg z-40 bg-surface-container-high border border-border-muted rounded-lg shadow-2xl p-md w-[320px] hidden flex-col" id="question-map-popover">
+<div class="flex justify-between items-center mb-md pb-sm border-b border-border-muted">
+<span class="font-label-bold text-label-bold text-on-surface">Section 2 Map</span>
+<button class="text-on-surface-variant hover:text-on-surface" id="close-map">
+<span class="material-symbols-outlined text-[18px]" data-icon="close">close</span>
+</button>
+</div>
+<div class="grid grid-cols-5 gap-2">
+<!-- Render grid of numbers. Completed = filled, Current = highlighted, Unanswered = outline -->
+<!-- Script will generate these for demonstration, here are a few static ones -->
+<div class="w-10 h-10 rounded border border-border-muted bg-surface-dark flex items-center justify-center font-label-bold text-label-bold text-on-surface-variant relative cursor-pointer hover:border-neon-yellow">1</div>
+<div class="w-10 h-10 rounded border border-border-muted bg-surface-dark flex items-center justify-center font-label-bold text-label-bold text-on-surface-variant relative cursor-pointer hover:border-neon-yellow">2</div>
+<!-- ... skipped for brevity, imagine a loop ... -->
+<!-- Current -->
+<div class="w-10 h-10 rounded border-2 border-neon-yellow bg-pure-black flex items-center justify-center font-label-bold text-label-bold text-neon-yellow relative cursor-default shadow-[0_0_8px_rgba(239,255,0,0.2)]">12</div>
+<div class="w-10 h-10 rounded border border-border-muted bg-transparent flex items-center justify-center font-label-bold text-label-bold text-on-surface-variant relative cursor-pointer hover:border-neon-yellow">13</div>
+<!-- Flagged Example -->
+<div class="w-10 h-10 rounded border border-border-muted bg-surface-dark flex items-center justify-center font-label-bold text-label-bold text-on-surface-variant relative cursor-pointer hover:border-neon-yellow">
+                14
+                <span class="material-symbols-outlined text-[12px] text-neon-yellow absolute -top-1 -right-1" data-icon="flag" data-weight="fill">flag</span>
+</div>
+</div>
+</div>
+<script>
+        // Simple Interaction for Map Toggle
+        const mapTrigger = document.getElementById('map-trigger');
+        const mapPopover = document.getElementById('question-map-popover');
+        const closeMap = document.getElementById('close-map');
+
+        mapTrigger.addEventListener('click', () => {
+            mapPopover.classList.toggle('hidden');
+            mapPopover.classList.toggle('flex');
+        });
+
+        closeMap.addEventListener('click', () => {
+            mapPopover.classList.add('hidden');
+            mapPopover.classList.remove('flex');
+        });
+    </script>
+</body></html>

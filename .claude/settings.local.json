@@ -1,0 +1,33 @@
+{
+  "permissions": {
+    "allow": [
+      "Bash(npm run *)",
+      "Bash(npx tsx *)",
+      "Bash(npx prisma *)",
+      "Bash(pkill -9 -f \"next dev\")",
+      "Bash(curl -s http://localhost:3000)",
+      "Bash(npm list *)",
+      "Bash(psql postgresql://postgres:postgres@localhost:5432/sat_alfa -c \"SELECT version\\(\\);\")",
+      "Bash(docker-compose up *)",
+      "Bash(sudo docker-compose up -d postgres)",
+      "Bash(sudo systemctl restart docker)",
+      "Bash(npm install *)",
+      "Bash(psql postgresql://postgres:postgres@localhost:5432/sat_alfa -f /tmp/seed.sql)",
+      "Bash(curl -s http://localhost:3001/login)",
+      "Bash(curl -s http://localhost:3000/login)",
+      "Bash(pkill -9 node)",
+      "Bash(NODE_OPTIONS=\"--max-old-space-size=512\" npm run dev)",
+      "Bash(sudo service postgresql start 2>&1)",
+      "Bash(docker run *)",
+      "Bash(curl -s http://localhost:3000/api/admin/groups)",
+      "Bash(awk '{print $2}')",
+      "Bash(xargs kill -9)",
+      "Bash(kill -9 48117)",
+      "Bash(curl -s -X POST http://localhost:3000 -d '{\"username\":\"student1\",\"password\":\"student123\"}')",
+      "Bash(pkill -f \"next dev\")",
+      "Bash(npm uninstall *)",
+      "Bash(grep -E \"\\\\.\\(ts|tsx\\)$\")",
+      "Bash(tee /tmp/server.log)"
+    ]
+  }
+}

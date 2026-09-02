@@ -1,0 +1,456 @@
+'use client'
+import React, { useState, useRef } from 'react'
+import { useRouter } from 'next/navigation'
+import { Card } from '@/components/ui/Card'
+import { Button } from '@/components/ui/Button'
+import { Upload, FileText, Loader2, CheckCircle, AlertCircle, Eye, EyeOff, Save, Trash2 } from 'lucide-react'
+
+// --- TYPES ---
+export interface ExtractedQuestion {
+ module: 'MODULE_1' | 'MODULE_2' | 'MODULE_3' | 'MODULE_4'
+ format: 'MCQ' | 'FILL_IN'
+ questionNumber: number
+ prompt: string
+ passage?: string | null
+ imageUrl?: string | null
+ options?: Record<string, string> | null
+ correctAnswer: string | null
+ answerSource?: 'test_pdf_answer_key' | 'separate_answer_key' | 'admin' | 'missing'
+ requiresReview?: boolean
+ verificationStatus?: 'verified' | 'conflict' | 'unverified'
+ difficulty: 'EASY' | 'MEDIUM' | 'HARD'
+ domain: string
+ skill: string
+ explanation?: string | null
+ aiGuessedAnswer?: string | null
+}
+
+let pdfjsPromise: Promise<any> | null = null
+
+async function loadPdfJs(): Promise<any> {
+ if (typeof window === 'undefined') return null
+ if ((window as any).pdfjsLib) return (window as any).pdfjsLib
+ if (pdfjsPromise) return pdfjsPromise
+
+ pdfjsPromise = new Promise((resolve, reject) => {
+ const existing = document.querySelector('script[src*="pdf.min.js"]')
+ if (existing) {
+ const checkInterval = setInterval(() => {
+ if ((window as any).pdfjsLib) {
+ clearInterval(checkInterval)
+ resolve((window as any).pdfjsLib)
+ }
+ }, 50)
+ return
+ }
+ const script = document.createElement('script')
+ script.src = 'https://cdnjs.cloudflare.com/ajax/libs/pdf.js/3.11.174/pdf.min.js'
+ script.onload = () => {
+ const pdfjsLib = (window as any).pdfjsLib
+ if (pdfjsLib) {
+ pdfjsLib.GlobalWorkerOptions.workerSrc = 'https://cdnjs.cloudflare.com/ajax/libs/pdf.js/3.11.174/pdf.worker.min.js'
+ resolve(pdfjsLib)
+ } else {
+ reject(new Error('pdf.js failed'))
+ }
+ }
+ document.head.appendChild(script)
+ })
+ return pdfjsPromise
+}
+
+async function extractTextFromPdfInBrowser(file: File, onProgress?: (p: number, t: number) => void): Promise<string> {
+ const pdfjsLib = await loadPdfJs()
+ const arrayBuffer = await file.arrayBuffer()
+ const loadingTask = pdfjsLib.getDocument({ data: arrayBuffer })
+ const pdfDoc = await loadingTask.promise
+ const numPages = pdfDoc.numPages
+ let fullText = ''
+
+ for (let pageNum = 1; pageNum <= numPages; pageNum++) {
+ if (onProgress) onProgress(pageNum, numPages)
+ const page = await pdfDoc.getPage(pageNum)
+ const textContent = await page.getTextContent()
+ const items = (textContent.items as any[]).filter((item) => item.str && item.str.trim() !== '')
+
+ let lastY: number | null = null
+ let pageLines: string[] = []
+ let currentLine: string[] = []
+
+ for (const item of items) {
+ const y = item.transform ? item.transform[5] : null
+ if (lastY !== null && y !== null && Math.abs(y - lastY) > 5) {
+ if (currentLine.length > 0) {
+ pageLines.push(currentLine.join(' '))
+ currentLine = []
+ }
+ lastY = y
+ } else if (lastY === null && y !== null) {
+ lastY = y
+ }
+ currentLine.push(item.str.trim())
+ }
+ if (currentLine.length > 0) pageLines.push(currentLine.join(' '))
+ fullText += `\n\n=== PAGE ${pageNum} ===\n` + pageLines.join('\n')
+ }
+ return fullText.trim()
+}
+
+export function TestImporterContent() {
+ const router = useRouter()
+ 
+ const [testName, setTestName] = useState('')
+ const [testFile, setTestFile] = useState<File | null>(null)
+ const [keyMode, setKeyMode] = useState<'auto'|'upload'|'manual'>('auto')
+ const [keyFile, setKeyFile] = useState<File | null>(null)
+ 
+ const [status, setStatus] = useState<'idle'|'processing'|'review'|'saving'|'success'>('idle')
+ const [progressText, setProgressText] = useState('')
+ const [progressPct, setProgressPct] = useState(0)
+ 
+ const [questions, setQuestions] = useState<ExtractedQuestion[]>([])
+ const [diagnostics, setDiagnostics] = useState<any>(null)
+ const [errorMsg, setErrorMsg] = useState('')
+
+ const handleProcess = async () => {
+ if (!testName) return setErrorMsg("Test name is required")
+ if (!testFile) return setErrorMsg("Test PDF is required")
+ if (keyMode === 'upload' && !keyFile) return setErrorMsg("Answer Key PDF is required")
+
+ setErrorMsg('')
+ setStatus('processing')
+ setProgressText('Extracting text from Test PDF...')
+ setProgressPct(10)
+
+ try {
+ const rawText = await extractTextFromPdfInBrowser(testFile)
+ 
+ let answerKeyMap: Record<string, string> | null = null;
+ let keySource: 'test_pdf_answer_key' | 'separate_answer_key' | 'manual' | 'missing' = 'missing';
+
+ setProgressText('Parsing questions with AI...')
+ setProgressPct(30)
+ 
+ const textChunks: string[] = []
+ const pages = rawText.split(/=== PAGE \d+ ===/).filter(p => p.trim().length > 0);
+ let currentChunk = "";
+ for (const pageText of pages) {
+ if (currentChunk.length + pageText.length > 12000 && currentChunk.length > 0) {
+ textChunks.push(currentChunk.trim());
+ currentChunk = pageText;
+ } else {
+ currentChunk += "\n\n" + pageText;
+ }
+ }
+ if (currentChunk.trim().length > 50) textChunks.push(currentChunk.trim());
+
+ let allChunkQuestions: ExtractedQuestion[] = []
+ let diag = { totalChunks: textChunks.length, failedChunks: 0, totalReturned: 0, valid: 0, rejected: 0, warnings: [] as string[] }
+
+ for (let i = 0; i < textChunks.length; i++) {
+ setProgressPct(30 + Math.round((i / textChunks.length) * 40))
+ setProgressText(`AI Processing part ${i + 1} of ${textChunks.length}...`)
+ 
+ const res = await fetch('/api/admin/mock-tests/parse-text', {
+ method: 'POST', headers: { 'Content-Type': 'application/json' },
+ body: JSON.stringify({ chunkText: textChunks[i], chunkIndex: i, totalChunks: textChunks.length })
+ })
+
+ if (!res.ok) {
+ diag.failedChunks++;
+ continue;
+ }
+ const data = await res.json()
+ if (data.diagnostics) {
+ diag.totalReturned += data.diagnostics.totalReturned || 0
+ diag.valid += data.diagnostics.validCount || 0
+ diag.rejected += data.diagnostics.rejectedCount || 0
+ }
+ if (data.success && data.questions) {
+ const normalize = (s: string) => (s || '').replace(/[^a-z0-9]/gi, '').toLowerCase();
+ const getFingerprint = (q: any) => {
+ const optString = q.options ? Object.values(q.options).map((v:any) => normalize(v)).join('') : '';
+ return normalize(q.prompt) + normalize(q.passage) + optString;
+ };
+ const existingFp = new Set(allChunkQuestions.map(getFingerprint));
+ const unique = data.questions.filter((q: any) => {
+ const fp = getFingerprint(q);
+ if (existingFp.has(fp)) return false;
+ existingFp.add(fp);
+ return true;
+ })
+ allChunkQuestions.push(...unique)
+ }
+ }
+
+ allChunkQuestions.forEach((q, idx) => { q.questionNumber = idx + 1 })
+
+ // Process Answer Key
+ if (keyMode === 'upload' && keyFile) {
+ setProgressText('Extracting Answer Key PDF...')
+ setProgressPct(80)
+ const keyText = await extractTextFromPdfInBrowser(keyFile)
+ const res = await fetch('/api/admin/mock-tests/parse-answer-key', {
+ method: 'POST', headers: { 'Content-Type': 'application/json' },
+ body: JSON.stringify({ text: keyText })
+ })
+ if (res.ok) {
+ const data = await res.json()
+ if (data.success) answerKeyMap = data.answers
+ keySource = 'separate_answer_key'
+ }
+ } else if (keyMode === 'auto') {
+ setProgressText('Detecting Answer Key in Test PDF...')
+ setProgressPct(80)
+ // Send the last chunk (where keys usually are) to the answer key parser
+ const lastChunk = textChunks[textChunks.length - 1]
+ const res = await fetch('/api/admin/mock-tests/parse-answer-key', {
+ method: 'POST', headers: { 'Content-Type': 'application/json' },
+ body: JSON.stringify({ text: lastChunk })
+ })
+ if (res.ok) {
+ const data = await res.json()
+ if (data.success && Object.keys(data.answers).length > 0) {
+ answerKeyMap = data.answers
+ keySource = 'test_pdf_answer_key'
+ }
+ }
+ }
+
+ // Match & Verify
+ setProgressText('Matching answers...')
+ setProgressPct(90)
+ 
+ const finalQuestions = allChunkQuestions.map(q => {
+ const aiCorrect = q.correctAnswer;
+ let definitiveAnswer: string | null = null;
+ let source = 'missing' as ExtractedQuestion['answerSource'];
+ let status = 'unverified' as ExtractedQuestion['verificationStatus'];
+ let reviewReq = true;
+
+ if (answerKeyMap && answerKeyMap[String(q.questionNumber)]) {
+ definitiveAnswer = answerKeyMap[String(q.questionNumber)].toUpperCase();
+ source = keySource;
+ reviewReq = false;
+
+ if (aiCorrect && aiCorrect !== definitiveAnswer) {
+ status = 'conflict';
+ reviewReq = true; // Admin must resolve conflict
+ } else {
+ status = 'verified';
+ }
+ } else if (keyMode === 'manual') {
+ definitiveAnswer = null;
+ source = 'missing';
+ reviewReq = true;
+ } else {
+ // Didn't find in key
+ definitiveAnswer = null;
+ source = 'missing';
+ reviewReq = true;
+ }
+
+ return {
+ ...q,
+ correctAnswer: definitiveAnswer,
+ aiGuessedAnswer: aiCorrect,
+ answerSource: source,
+ verificationStatus: status,
+ requiresReview: reviewReq
+ }
+ })
+
+ setQuestions(finalQuestions)
+ setDiagnostics(diag)
+ setStatus('review')
+
+ } catch (err: any) {
+ console.error(err)
+ setErrorMsg(err.message)
+ setStatus('idle')
+ }
+ }
+
+ const handleSaveDraft = async () => {
+ setStatus('saving')
+ try {
+ const res = await fetch('/api/admin/mock-tests/import', {
+ method: 'POST', headers: { 'Content-Type': 'application/json' },
+ body: JSON.stringify({ testName, questions })
+ })
+ if (!res.ok) {
+ const data = await res.json().catch(()=>({}))
+ throw new Error(data.error || 'Failed to save')
+ }
+ setStatus('success')
+ } catch(err: any) {
+ setErrorMsg(err.message)
+ setStatus('review')
+ }
+ }
+
+ const updateQuestionAnswer = (idx: number, ans: string) => {
+ const newQs = [...questions];
+ newQs[idx].correctAnswer = ans;
+ newQs[idx].answerSource = 'admin';
+ if (!ans || ans.trim() === '') {
+ newQs[idx].requiresReview = true;
+ } else {
+ newQs[idx].requiresReview = false;
+ newQs[idx].verificationStatus = 'verified';
+ }
+ setQuestions(newQs);
+ }
+
+ if (status === 'success') {
+ return (
+ <Card className="p-8 text-center space-y-4">
+ <CheckCircle className="w-16 h-16 text-emerald-500 mx-auto" />
+ <h2 className="text-2xl font-bold text-slate-900 dark:text-white">Import Successful!</h2>
+ <p className="text-slate-500 dark:text-slate-400">Your mock test "{testName}" has been saved as a draft.</p>
+ <Button onClick={() => router.push('/admin/mock-tests')}>Go to Mock Tests</Button>
+ </Card>
+ )
+ }
+
+ return (
+ <div className="space-y-6">
+ {status === 'idle' && (
+ <Card className="p-6 bg-white dark:bg-slate-900 border-slate-200 dark:border-slate-800">
+ <h2 className="text-xl font-bold text-slate-900 dark:text-white mb-6">Create New Test from PDF</h2>
+ {errorMsg && <div className="mb-4 p-3 bg-rose-900/50 text-rose-300 rounded">{errorMsg}</div>}
+ 
+ <div className="space-y-4">
+ <div>
+ <label className="block text-sm text-slate-700 dark:text-slate-300 mb-1">Test Name</label>
+ <input type="text" value={testName} onChange={e=>setTestName(e.target.value)} className="w-full bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 rounded p-2 text-slate-900 dark:text-white" placeholder="e.g. SAT Practice Test 1" />
+ </div>
+
+ <div>
+ <label className="block text-sm text-slate-700 dark:text-slate-300 mb-1">Test PDF</label>
+ <input type="file" accept="application/pdf" onChange={e=>setTestFile(e.target.files?.[0]||null)} className="w-full bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 rounded p-2 text-slate-700 dark:text-slate-300" />
+ </div>
+
+ <div>
+ <label className="block text-sm text-slate-700 dark:text-slate-300 mb-2">Answer Key Option</label>
+ <div className="space-y-2">
+ <label className="flex items-center gap-2 text-slate-700 dark:text-slate-300 cursor-pointer">
+ <input type="radio" name="keymode" checked={keyMode==='auto'} onChange={()=>setKeyMode('auto')} /> Automatically detect from Test PDF
+ </label>
+ <label className="flex items-center gap-2 text-slate-700 dark:text-slate-300 cursor-pointer">
+ <input type="radio" name="keymode" checked={keyMode==='upload'} onChange={()=>setKeyMode('upload')} /> Upload separate Answer Key PDF
+ </label>
+ <label className="flex items-center gap-2 text-slate-700 dark:text-slate-300 cursor-pointer">
+ <input type="radio" name="keymode" checked={keyMode==='manual'} onChange={()=>setKeyMode('manual')} /> Enter answers manually
+ </label>
+ </div>
+ </div>
+
+ {keyMode === 'upload' && (
+ <div>
+ <label className="block text-sm text-slate-700 dark:text-slate-300 mb-1">Answer Key PDF</label>
+ <input type="file" accept="application/pdf" onChange={e=>setKeyFile(e.target.files?.[0]||null)} className="w-full bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 rounded p-2 text-slate-700 dark:text-slate-300" />
+ </div>
+ )}
+
+ <Button onClick={handleProcess} className="w-full mt-4">Start Extraction</Button>
+ </div>
+ </Card>
+ )}
+
+ {status === 'processing' && (
+ <Card className="p-12 text-center space-y-4 bg-white dark:bg-slate-900">
+ <Loader2 className="w-12 h-12 text-yellow-500 animate-spin mx-auto" />
+ <h2 className="text-xl font-bold text-slate-900 dark:text-white">{progressText}</h2>
+ <div className="w-full bg-slate-100 dark:bg-slate-800 rounded-full h-2">
+ <div className="bg-yellow-500 h-2 rounded-full transition-all" style={{width: `${progressPct}%`}}></div>
+ </div>
+ </Card>
+ )}
+
+ {(status === 'review' || status === 'saving') && (
+ <Card className="p-6 bg-white dark:bg-slate-900 border-slate-200 dark:border-slate-800">
+ <div className="flex justify-between items-center mb-6 border-b border-slate-200 dark:border-slate-800 pb-4">
+ <div>
+ <h2 className="text-xl font-bold text-slate-900 dark:text-white">Extraction Complete</h2>
+ <div className="flex gap-4 text-sm mt-2 text-slate-500 dark:text-slate-400">
+ <span>Questions: {questions.length}</span>
+ <span className="text-emerald-600">✓ Auto-matched: {questions.filter(q => !q.requiresReview).length}</span>
+ <span className="text-yellow-400">⚠ Needs Review: {questions.filter(q => q.requiresReview).length}</span>
+ </div>
+ </div>
+ <Button onClick={handleSaveDraft} disabled={questions.some(q => q.requiresReview)} className={questions.some(q => q.requiresReview) ? 'opacity-50' : ''}>
+ {status === 'saving' ? <Loader2 className="w-4 h-4 animate-spin mr-2"/> : <Save className="w-4 h-4 mr-2"/>}
+ Publish Draft Test
+ </Button>
+ </div>
+
+ {errorMsg && <div className="mb-4 p-3 bg-rose-900/50 text-rose-300 rounded">{errorMsg}</div>}
+ 
+ {questions.some(q => q.requiresReview) && (
+ <div className="mb-6 p-4 bg-yellow-950/30 border border-yellow-700/50 rounded-lg text-yellow-200 text-sm">
+ You must resolve all conflicts and missing answers before saving.
+ </div>
+ )}
+
+ <div className="space-y-4 max-h-[70vh] overflow-y-auto pr-2">
+ {questions.map((q, idx) => (
+ <div key={idx} className={`p-4 rounded-lg border ${q.requiresReview ? 'bg-white dark:bg-slate-900 border-yellow-700/50' : 'bg-slate-50 dark:bg-slate-950 border-slate-200 dark:border-slate-800'}`}>
+ <div className="flex justify-between items-start mb-2">
+ <div className="font-bold text-slate-800 dark:text-slate-200">Question {q.questionNumber}</div>
+ {q.requiresReview ? (
+ <span className="text-xs bg-yellow-900/50 text-yellow-400 px-2 py-1 rounded">Needs Review</span>
+ ) : (
+ <span className="text-xs bg-emerald-900/50 text-emerald-600 px-2 py-1 rounded">✓ Ready</span>
+ )}
+ </div>
+
+ <div className="text-sm text-slate-500 dark:text-slate-400 mb-3" dangerouslySetInnerHTML={{__html: q.prompt}}></div>
+
+ {q.verificationStatus === 'conflict' && (
+ <div className="mb-3 p-2 bg-rose-950/30 border border-rose-800/50 rounded text-xs text-rose-300">
+ ⚠ <strong>Conflict:</strong> Answer Key says <strong>{q.correctAnswer}</strong> but AI guessed <strong>{q.aiGuessedAnswer}</strong>
+ </div>
+ )}
+ 
+ {q.answerSource === 'missing' && (
+ <div className="mb-3 p-2 bg-slate-100 dark:bg-slate-800 rounded text-xs text-slate-500 dark:text-slate-400">
+ Answer not found in key.
+ </div>
+ )}
+
+ {q.format === 'MCQ' ? (
+ <div className="flex gap-2">
+ {['A', 'B', 'C', 'D'].map(opt => (
+ <button
+ key={opt}
+ onClick={() => updateQuestionAnswer(idx, opt)}
+ className={`flex-1 py-2 rounded text-sm font-semibold transition-colors ${
+ q.correctAnswer === opt
+ ? 'bg-emerald-600 text-white'
+ : 'bg-slate-100 dark:bg-slate-800 text-slate-500 dark:text-slate-400 hover:bg-slate-700'
+ }`}
+ >
+ {opt}
+ </button>
+ ))}
+ </div>
+ ) : (
+ <div className="flex gap-2 items-center">
+ <input
+ type="text"
+ value={q.correctAnswer || ''}
+ onChange={(e) => updateQuestionAnswer(idx, e.target.value)}
+ placeholder="Enter correct numerical answer"
+ className="flex-1 bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 rounded p-2 text-slate-900 dark:text-white"
+ />
+ </div>
+ )}
+ </div>
+ ))}
+ </div>
+ </Card>
+ )}
+ </div>
+ )
+}

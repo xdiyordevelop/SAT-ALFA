@@ -1,0 +1,4 @@
+import { NextRequest, NextResponse } from"next/server";
+import { submitStudentMockTestAction } from"@/server/actions/mock-test.actions"; export async function POST( request: NextRequest, { params }: { params: Promise<{ id: string }> }
+) { try { const { id } = await params; const body = await request.json(); const { answers, timeSpent } = body; const result = await submitStudentMockTestAction( id, answers || [], timeSpent || 0 ); if (result.error) { return NextResponse.json( { message: result.error, error: result.error }, { status: result.error.includes("Unauthorized") ? 401 : 400 } ); } return NextResponse.json( { message: result.message, data: result, submissionId: result.submissionId, }, { status: 200 } ); } catch (error) { console.error("API error submitting test:", error); return NextResponse.json( { message:"Internal server error" }, { status: 500 } ); }
+}

@@ -1,0 +1,287 @@
+<!DOCTYPE html>
+
+<html class="dark" lang="en"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>Practice Tests - SAT-ALFA</title>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<link href="https://fonts.googleapis.com/css2?family=Manrope:wght@400;700;800&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<script id="tailwind-config">
+        tailwind.config = {
+            darkMode: "class",
+            theme: {
+                extend: {
+                    "colors": {
+                        "secondary": "#c6c6c7",
+                        "neon-yellow": "#EFFF00",
+                        "on-secondary-container": "#b4b5b5",
+                        "on-surface-variant": "#c8c8ab",
+                        "surface-glass": "rgba(10, 10, 10, 0.8)",
+                        "inverse-surface": "#e5e2e1",
+                        "primary-fixed-dim": "#c3d000",
+                        "primary": "#ffffff",
+                        "surface-tint": "#c3d000",
+                        "on-secondary-fixed-variant": "#454747",
+                        "surface-dark": "#0A0A0A",
+                        "surface-container-highest": "#353534",
+                        "surface-variant": "#353534",
+                        "outline-variant": "#474832",
+                        "on-tertiary": "#313030",
+                        "on-tertiary-fixed-variant": "#474746",
+                        "on-primary-container": "#626900",
+                        "surface-container-high": "#2a2a2a",
+                        "tertiary-container": "#e5e2e1",
+                        "secondary-fixed": "#e2e2e2",
+                        "secondary-container": "#454747",
+                        "on-primary-fixed": "#1b1d00",
+                        "on-secondary": "#2f3131",
+                        "error": "#ffb4ab",
+                        "on-tertiary-container": "#656464",
+                        "on-error": "#690005",
+                        "on-error-container": "#ffdad6",
+                        "surface-bright": "#3a3939",
+                        "outline": "#929277",
+                        "on-surface": "#e5e2e1",
+                        "on-background": "#e5e2e1",
+                        "error-container": "#93000a",
+                        "primary-fixed": "#deed00",
+                        "border-muted": "#262626",
+                        "on-primary": "#2f3300",
+                        "on-secondary-fixed": "#1a1c1c",
+                        "inverse-primary": "#5c6300",
+                        "secondary-fixed-dim": "#c6c6c7",
+                        "tertiary-fixed-dim": "#c8c6c5",
+                        "on-primary-fixed-variant": "#454a00",
+                        "surface-container": "#201f1f",
+                        "surface-dim": "#131313",
+                        "tertiary-fixed": "#e5e2e1",
+                        "tertiary": "#ffffff",
+                        "background": "#131313",
+                        "surface-container-lowest": "#0e0e0e",
+                        "primary-container": "#deed00",
+                        "inverse-on-surface": "#313030",
+                        "surface-container-low": "#1c1b1b",
+                        "on-tertiary-fixed": "#1c1b1b",
+                        "surface": "#131313",
+                        "pure-black": "#000000"
+                    },
+                    "borderRadius": {
+                        "DEFAULT": "0.125rem",
+                        "lg": "0.25rem",
+                        "xl": "0.5rem",
+                        "full": "0.75rem"
+                    },
+                    "spacing": {
+                        "xl": "40px",
+                        "lg": "24px",
+                        "md": "16px",
+                        "gutter": "16px",
+                        "container-margin": "24px",
+                        "xs": "4px",
+                        "base": "4px",
+                        "sm": "8px"
+                    },
+                    "fontFamily": {
+                        "display-lg": ["Manrope"],
+                        "label-bold": ["Manrope"],
+                        "body-lg": ["Manrope"],
+                        "body-md": ["Manrope"],
+                        "headline-lg": ["Manrope"],
+                        "headline-md": ["Manrope"],
+                        "headline-lg-mobile": ["Manrope"]
+                    },
+                    "fontSize": {
+                        "display-lg": ["48px", { "lineHeight": "56px", "letterSpacing": "-0.02em", "fontWeight": "800" }],
+                        "label-bold": ["14px", { "lineHeight": "20px", "letterSpacing": "0.05em", "fontWeight": "700" }],
+                        "body-lg": ["18px", { "lineHeight": "28px", "fontWeight": "400" }],
+                        "body-md": ["16px", { "lineHeight": "24px", "fontWeight": "400" }],
+                        "headline-lg": ["32px", { "lineHeight": "40px", "letterSpacing": "-0.01em", "fontWeight": "800" }],
+                        "headline-md": ["24px", { "lineHeight": "32px", "fontWeight": "700" }],
+                        "headline-lg-mobile": ["28px", { "lineHeight": "36px", "fontWeight": "800" }]
+                    }
+                }
+            }
+        }
+    </script>
+</head>
+<body class="bg-pure-black text-on-surface font-body-md h-screen flex overflow-hidden">
+<!-- SideNavBar (Desktop) -->
+<nav class="hidden lg:flex flex-col h-screen w-64 border-r border-border-muted bg-surface-container-lowest shrink-0 space-y-2">
+<div class="p-lg">
+<div class="font-headline-md text-headline-md text-neon-yellow font-black">SAT-ALFA</div>
+<div class="font-body-md text-body-md text-on-surface-variant mt-sm">Elite Beta Phase 1.0</div>
+</div>
+<div class="flex-1 flex flex-col space-y-sm px-sm">
+<a class="flex items-center space-x-md text-on-surface-variant hover:text-on-surface hover:bg-surface-container-high transition-colors px-4 py-3 rounded scale-102 hover:translate-x-1" href="#">
+<span class="material-symbols-outlined" data-icon="home">home</span>
+<span class="font-label-bold text-label-bold">Home</span>
+</a>
+<a class="flex items-center space-x-md text-on-surface-variant hover:text-on-surface hover:bg-surface-container-high transition-colors px-4 py-3 rounded scale-102 hover:translate-x-1" href="#">
+<span class="material-symbols-outlined" data-icon="edit_note">edit_note</span>
+<span class="font-label-bold text-label-bold">Practice</span>
+</a>
+<a class="flex items-center space-x-md bg-secondary-container text-neon-yellow border-l-4 border-neon-yellow px-4 py-3 rounded scale-102 transition-all" href="#">
+<span class="material-symbols-outlined" data-icon="history_edu">history_edu</span>
+<span class="font-label-bold text-label-bold">Mock Exams</span>
+</a>
+<a class="flex items-center space-x-md text-on-surface-variant hover:text-on-surface hover:bg-surface-container-high transition-colors px-4 py-3 rounded scale-102 hover:translate-x-1" href="#">
+<span class="material-symbols-outlined" data-icon="psychology">psychology</span>
+<span class="font-label-bold text-label-bold">AI Tutor</span>
+</a>
+<a class="flex items-center space-x-md text-on-surface-variant hover:text-on-surface hover:bg-surface-container-high transition-colors px-4 py-3 rounded scale-102 hover:translate-x-1" href="#">
+<span class="material-symbols-outlined" data-icon="settings">settings</span>
+<span class="font-label-bold text-label-bold">Settings</span>
+</a>
+</div>
+<div class="p-lg border-t border-border-muted space-y-md">
+<button class="w-full bg-surface-dark border border-neon-yellow text-neon-yellow font-label-bold text-label-bold py-sm px-md rounded-DEFAULT hover:bg-neon-yellow hover:text-pure-black transition-colors">
+                Upgrade to Pro
+            </button>
+<div class="flex flex-col space-y-sm">
+<a class="flex items-center space-x-md text-on-surface-variant hover:text-on-surface transition-colors" href="#">
+<span class="material-symbols-outlined text-sm" data-icon="help">help</span>
+<span class="font-label-bold text-label-bold">Help Center</span>
+</a>
+<a class="flex items-center space-x-md text-on-surface-variant hover:text-on-surface transition-colors" href="#">
+<span class="material-symbols-outlined text-sm" data-icon="logout">logout</span>
+<span class="font-label-bold text-label-bold">Sign Out</span>
+</a>
+</div>
+</div>
+</nav>
+<!-- Main Content Area -->
+<div class="flex-1 flex flex-col overflow-hidden relative">
+<!-- TopNavBar (Mobile / Unified Header) -->
+<header class="flex justify-between items-center w-full px-lg py-sm max-w-full bg-surface-glass border-b border-border-muted sticky top-0 backdrop-blur-md z-10 lg:hidden">
+<div class="font-headline-md text-headline-md font-black text-neon-yellow tracking-tighter">SAT-ALFA</div>
+<div class="flex items-center space-x-md">
+<button class="text-neon-yellow active:scale-95 transition-transform">
+<span class="material-symbols-outlined" data-icon="notifications">notifications</span>
+</button>
+<button class="text-neon-yellow active:scale-95 transition-transform">
+<span class="material-symbols-outlined" data-icon="account_circle">account_circle</span>
+</button>
+</div>
+</header>
+<!-- Canvas -->
+<main class="flex-1 overflow-y-auto p-lg lg:p-xl">
+<div class="max-w-7xl mx-auto space-y-xl">
+<!-- Page Header -->
+<div class="flex flex-col md:flex-row justify-between items-start md:items-end gap-md">
+<div>
+<h1 class="font-display-lg text-display-lg text-primary">Mock Exams</h1>
+<p class="font-body-lg text-body-lg text-on-surface-variant mt-sm">Select a practice test to begin or resume your progress.</p>
+</div>
+<div class="flex items-center space-x-md">
+<div class="bg-surface-dark border border-border-muted rounded-DEFAULT px-md py-sm flex items-center space-x-sm">
+<span class="material-symbols-outlined text-on-surface-variant" data-icon="filter_list">filter_list</span>
+<span class="font-label-bold text-label-bold text-on-surface">Filter</span>
+</div>
+</div>
+</div>
+<!-- Bento Grid / Cards -->
+<div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-lg">
+<!-- Card 1: Not Started -->
+<div class="bg-surface-dark border border-border-muted rounded-lg p-lg flex flex-col hover:border-neon-yellow transition-colors group relative overflow-hidden">
+<div class="absolute top-0 right-0 w-32 h-32 bg-neon-yellow opacity-5 blur-3xl group-hover:opacity-10 transition-opacity"></div>
+<div class="flex justify-between items-start mb-md">
+<span class="bg-surface-container-high border border-border-muted text-on-surface font-label-bold text-label-bold px-sm py-xs rounded-sm">Not Started</span>
+<span class="material-symbols-outlined text-on-surface-variant" data-icon="timer">timer</span>
+</div>
+<h2 class="font-headline-md text-headline-md text-primary mb-sm">Digital SAT Mock #4</h2>
+<div class="flex items-center space-x-sm text-on-surface-variant mb-xl">
+<span class="font-body-md text-body-md">2h 14m</span>
+<span>•</span>
+<span class="font-body-md text-body-md">154 Questions</span>
+</div>
+<div class="mt-auto">
+<button class="w-full bg-neon-yellow text-pure-black font-label-bold text-label-bold py-sm px-md rounded-DEFAULT hover:bg-primary-fixed transition-colors">
+                                Start Test
+                            </button>
+</div>
+</div>
+<!-- Card 2: In Progress -->
+<div class="bg-surface-dark border border-neon-yellow rounded-lg p-lg flex flex-col relative overflow-hidden">
+<div class="absolute top-0 right-0 w-32 h-32 bg-neon-yellow opacity-10 blur-3xl"></div>
+<div class="flex justify-between items-start mb-md">
+<span class="bg-surface-container-high border border-neon-yellow text-neon-yellow font-label-bold text-label-bold px-sm py-xs rounded-sm flex items-center space-x-xs">
+<span class="w-2 h-2 rounded-full bg-neon-yellow animate-pulse"></span>
+<span>In Progress</span>
+</span>
+<span class="material-symbols-outlined text-neon-yellow" data-icon="timer">timer</span>
+</div>
+<h2 class="font-headline-md text-headline-md text-primary mb-sm">Digital SAT Mock #3</h2>
+<div class="flex items-center space-x-sm text-on-surface-variant mb-md">
+<span class="font-body-md text-body-md">Module 2: Math</span>
+<span>•</span>
+<span class="font-body-md text-body-md">45m remaining</span>
+</div>
+<!-- Progress Bar -->
+<div class="w-full bg-surface-container-highest h-2 rounded-sm mb-lg">
+<div class="bg-neon-yellow h-2 rounded-sm w-1/2"></div>
+</div>
+<div class="mt-auto">
+<button class="w-full bg-transparent border border-neon-yellow text-neon-yellow font-label-bold text-label-bold py-sm px-md rounded-DEFAULT hover:bg-neon-yellow hover:text-pure-black transition-colors">
+                                Resume Test
+                            </button>
+</div>
+</div>
+<!-- Card 3: Completed -->
+<div class="bg-surface-container-low border border-border-muted rounded-lg p-lg flex flex-col opacity-80 hover:opacity-100 transition-opacity">
+<div class="flex justify-between items-start mb-md">
+<span class="bg-surface-container-high border border-border-muted text-on-surface-variant font-label-bold text-label-bold px-sm py-xs rounded-sm">Completed</span>
+<span class="material-symbols-outlined text-on-surface-variant" data-icon="check_circle">check_circle</span>
+</div>
+<h2 class="font-headline-md text-headline-md text-primary mb-sm">Digital SAT Mock #2</h2>
+<div class="flex items-center space-x-sm text-on-surface-variant mb-xl">
+<span class="font-body-md text-body-md">Score: 1450</span>
+<span>•</span>
+<span class="font-body-md text-body-md">Nov 12, 2023</span>
+</div>
+<div class="mt-auto">
+<button class="w-full bg-transparent border border-border-muted text-primary font-label-bold text-label-bold py-sm px-md rounded-DEFAULT hover:border-primary transition-colors">
+                                View Analytics
+                            </button>
+</div>
+</div>
+<!-- Card 4: Not Started -->
+<div class="bg-surface-dark border border-border-muted rounded-lg p-lg flex flex-col hover:border-neon-yellow transition-colors group relative overflow-hidden">
+<div class="absolute top-0 right-0 w-32 h-32 bg-neon-yellow opacity-5 blur-3xl group-hover:opacity-10 transition-opacity"></div>
+<div class="flex justify-between items-start mb-md">
+<span class="bg-surface-container-high border border-border-muted text-on-surface font-label-bold text-label-bold px-sm py-xs rounded-sm">Not Started</span>
+<span class="material-symbols-outlined text-on-surface-variant" data-icon="timer">timer</span>
+</div>
+<h2 class="font-headline-md text-headline-md text-primary mb-sm">Digital SAT Mock #1</h2>
+<div class="flex items-center space-x-sm text-on-surface-variant mb-xl">
+<span class="font-body-md text-body-md">2h 14m</span>
+<span>•</span>
+<span class="font-body-md text-body-md">154 Questions</span>
+</div>
+<div class="mt-auto">
+<button class="w-full bg-neon-yellow text-pure-black font-label-bold text-label-bold py-sm px-md rounded-DEFAULT hover:bg-primary-fixed transition-colors">
+                                Start Test
+                            </button>
+</div>
+</div>
+</div>
+</div>
+<!-- Footer -->
+<footer class="mt-xl py-xl border-t border-border-muted bg-pure-black w-full flex flex-col md:flex-row justify-between items-center px-lg max-w-7xl mx-auto">
+<div class="font-headline-sm text-headline-sm text-neon-yellow mb-md md:mb-0">
+                    SAT-ALFA
+                </div>
+<div class="flex flex-wrap justify-center gap-md font-body-md text-body-md text-on-tertiary-container">
+<a class="hover:text-neon-yellow transition-colors hover:opacity-80 transition-opacity duration-200" href="#">Privacy Policy</a>
+<a class="hover:text-neon-yellow transition-colors hover:opacity-80 transition-opacity duration-200" href="#">Terms of Service</a>
+<a class="hover:text-neon-yellow transition-colors hover:opacity-80 transition-opacity duration-200" href="#">API Documentation</a>
+<a class="hover:text-neon-yellow transition-colors hover:opacity-80 transition-opacity duration-200" href="#">Support</a>
+</div>
+<div class="font-body-md text-body-md text-on-tertiary-container mt-md md:mt-0">
+                    © 2024 SAT-ALFA. High-Performance Education Systems.
+                </div>
+</footer>
+</main>
+</div>
+</body></html>

@@ -1,0 +1,9 @@
+import { prisma } from"@/lib/db/prisma";
+import { getSession } from"@/lib/auth/session";
+import { NextResponse } from"next/server"; interface RouteParams { params: Promise<{ id: string }>;
+}
+export async function PUT(request: Request, { params }: RouteParams) { const session = await getSession(); if (!session || session.role !=="ADMIN") { return NextResponse.json({ error:"Unauthorized" }, { status: 401 }); } try { const { id } = await params; const { name, status, course, subject, teacher, classroom, maxStudents, price, startDate, endDate } = await request.json(); const updatedGroup = await prisma.group.update({ where: { id }, data: { ...(name && { name }), ...(status && { status }), ...(course && { course }), ...(subject && { subject }), ...(teacher && { teacher }), ...(classroom && { classroom }), ...(maxStudents && { maxStudents }), ...(price && { price }), ...(startDate && { startDate: new Date(startDate) }), ...(endDate && { endDate: new Date(endDate) }), }, }); return NextResponse.json(updatedGroup); } catch (error) { console.error("Error updating group:", error); return NextResponse.json( { error:"Failed to update group" }, { status: 500 } ); }
+}
+export async function DELETE(request: Request, { params }: RouteParams) { const session = await getSession(); if (!session || session.role !=="ADMIN") { return NextResponse.json({ error:"Unauthorized" }, { status: 401 }); } try { const { id } = await params; // Delete related records first await prisma.attendance.deleteMany({ where: { groupId: id }, }); // Remove group from students await prisma.studentProfile.updateMany({ where: { groupId: id }, data: { groupId: null }, }); // Delete the group
+const deletedGroup = await prisma.group.delete({ where: { id }, }); return NextResponse.json(deletedGroup); } catch (error) { console.error("Error deleting group:", error); return NextResponse.json( { error:"Failed to delete group" }, { status: 500 } ); }
+}
