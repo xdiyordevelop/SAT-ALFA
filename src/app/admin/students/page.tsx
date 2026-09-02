@@ -1,8 +1,7 @@
 import { prisma } from "@/lib/db/prisma";
 import { getSession } from "@/lib/auth/session";
 import { redirect } from "next/navigation";
-import { Sidebar } from "@/components/layout/Sidebar";
-import { Topbar } from "@/components/layout/Topbar";
+import { AdminLayout } from "@/components/admin/AdminLayout";
 import { StudentsListClient } from "@/components/admin/students/StudentsListClient";
 
 export default async function StudentsPage() {
@@ -35,22 +34,14 @@ export default async function StudentsPage() {
   }));
 
   return (
-    <div className="min-h-screen bg-slate-50 dark:bg-[#0a0a0a] transition-colors duration-300">
-      <Sidebar username={session.username} role={session.role} />
-
-      <div className="flex flex-col min-h-screen">
-        <Topbar
-          title="Talabalar"
-          breadcrumbs={[{ label: "Admin" }, { label: "Talabalar" }]}
-          userName={session.username}
-          userEmail={session.username || ""}
-          userRole={session.role}
-        />
-
-        <main className="flex-1 p-4 sm:p-6 lg:p-8 max-w-7xl mx-auto flex flex-col w-full">
-          <StudentsListClient students={students} groups={groups} />
-        </main>
-      </div>
-    </div>
+    <AdminLayout
+      title="Students"
+      breadcrumbs={[{ label: "Admin" }, { label: "Students" }]}
+      userName={session.username}
+      userEmail={session.username || ""}
+      userRole={session.role}
+    >
+      <StudentsListClient students={students} groups={groups} />
+    </AdminLayout>
   );
 }

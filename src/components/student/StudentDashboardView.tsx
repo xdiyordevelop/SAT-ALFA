@@ -76,10 +76,10 @@ export function StudentDashboardView({
       <div className="flex justify-between items-end mb-2">
         <div>
           <h2 className="text-3xl md:text-4xl font-black text-slate-900 dark:text-white mb-2 tracking-tight">
-            Xush kelibsiz, {studentName.split(" ")[0] || "Talaba"}.
+            Welcome, {studentName.split(" ")[0] || "Student"}.
           </h2>
           <p className="text-slate-500 dark:text-slate-400 font-medium text-lg">
-            Maqsadli ball: 1550 | <span className="text-slate-900 dark:text-[#EBFF00]">O'rtacha natija: {metrics.averageScore > 0 ? Math.round(metrics.averageScore) : '---'}</span>
+            Target Score: 1550 | <span className="text-slate-900 dark:text-[#EBFF00]">Average Score: {metrics.averageScore > 0 ? Math.round(metrics.averageScore) : '---'}</span>
           </p>
         </div>
       </div>
@@ -92,7 +92,7 @@ export function StudentDashboardView({
           <div className="absolute inset-0 bg-gradient-to-br from-[#EBFF00]/5 dark:from-[#EBFF00]/[0.02] to-transparent pointer-events-none"></div>
           
           <div className="flex justify-between items-center mb-8 z-10">
-            <h3 className="text-xl font-bold text-slate-900 dark:text-white">Natijalar Dinamikasi</h3>
+            <h3 className="text-xl font-bold text-slate-900 dark:text-white">Performance Trajectory</h3>
             <div className="flex gap-4">
               <span className="flex items-center gap-1.5 text-sm font-semibold text-slate-900 dark:text-[#EBFF00]">
                 <span className="w-2.5 h-2.5 rounded-full bg-slate-900 dark:bg-[#EBFF00]"></span> Math

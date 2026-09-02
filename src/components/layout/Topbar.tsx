@@ -32,8 +32,8 @@ interface Notification {
 export function Topbar({
   title,
   breadcrumbs = [],
-  userName = "Foydalanuvchi",
-  userEmail = "Foydalanuvchi emaili topilmadi",
+  userName = "User",
+  userEmail = "user@example.com",
   userAvatar,
   userRole = "STUDENT",
 }: TopbarProps) {
@@ -122,18 +122,18 @@ export function Topbar({
             {openDropdown === "notifications" && (
               <div className="absolute right-0 mt-2 w-80 bg-white dark:bg-[#131313] rounded-xl shadow-2xl border border-slate-200 dark:border-white/10 z-50 overflow-hidden transform origin-top-right transition-all">
                 <div className="p-4 border-b border-slate-200 dark:border-white/10 bg-slate-50 dark:bg-[#1c1b1b]">
-                  <h3 className="font-bold text-slate-900 dark:text-white">Xabarnomalar</h3>
+                  <h3 className="font-bold text-slate-900 dark:text-white">Notifications</h3>
                 </div>
                 <div className="max-h-[28rem] overflow-y-auto custom-scrollbar">
                   {isLoadingNotifs ? (
-                    <div className="p-6 text-center text-slate-500">Yuklanmoqda...</div>
+                    <div className="p-6 text-center text-slate-500">Loading...</div>
                   ) : (
                     <div className="p-8 flex flex-col items-center justify-center text-slate-500 dark:text-slate-400">
                       <div className="w-12 h-12 rounded-full bg-emerald-100 dark:bg-emerald-900/30 flex items-center justify-center mb-3">
                         <CheckCircle className="w-6 h-6 text-emerald-600 dark:text-emerald-400" />
                       </div>
-                      <p className="font-bold text-slate-900 dark:text-white">Yangi xabarlar yo'q</p>
-                      <p className="text-xs mt-1">Hamma narsa o'qilgan</p>
+                      <p className="font-bold text-slate-900 dark:text-white">No new notifications</p>
+                      <p className="text-xs mt-1">All caught up</p>
                     </div>
                   )}
                 </div>
@@ -166,13 +166,13 @@ export function Topbar({
                     onClick={() => setOpenDropdown(null)}
                     className="flex items-center gap-3 px-3 py-2 rounded-md text-sm font-semibold text-slate-700 dark:text-slate-300 hover:bg-slate-100 dark:hover:bg-[#1c1b1b] hover:text-slate-900 dark:hover:text-[#EBFF00] transition-colors"
                   >
-                    <User className="w-4 h-4" /> Profil
+                    <User className="w-4 h-4" /> Profile
                   </Link>
                   <button
                     onClick={() => { setOpenDropdown(null); handleLogout(); }}
                     className="flex items-center gap-3 px-3 py-2 rounded-md text-sm font-semibold text-rose-600 dark:text-rose-400 hover:bg-rose-50 dark:hover:bg-rose-950/30 transition-colors w-full text-left"
                   >
-                    <LogOut className="w-4 h-4" /> Chiqish
+                    <LogOut className="w-4 h-4" /> Sign Out
                   </button>
                 </div>
               </div>

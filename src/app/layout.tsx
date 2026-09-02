@@ -14,8 +14,8 @@ const geistMono = Geist_Mono({
 });
 
 export const metadata: Metadata = {
-  title: "SAT ALFA",
-  description: "Education Center Management System",
+  title: "SAT ALFA - Premium SAT Preparation",
+  description: "Your path to success with SAT ALFA premium preparation center",
 };
 
 export default function RootLayout({
@@ -29,7 +29,7 @@ export default function RootLayout({
       className={`${geistSans.variable} ${geistMono.variable} h-full antialiased`}
       suppressHydrationWarning
     >
-      <body className="min-h-full flex flex-col transition-colors duration-300 bg-slate-50 dark:bg-[#0a0a0a] text-slate-900 dark:text-white">
+      <body className="min-h-full flex flex-col transition-all duration-300 bg-slate-50 dark:bg-[#0a0a0a] text-slate-900 dark:text-white">
         <ThemeProvider
           attribute="class"
           defaultTheme="light"

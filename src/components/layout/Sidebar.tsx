@@ -35,7 +35,6 @@ export function Sidebar({ username, role }: SidebarProps) {
   const [isLoggingOut, setIsLoggingOut] = useState(false);
   const pathname = usePathname();
   const router = useRouter();
-  if (role === "ADMIN") return null;
 
   const handleLogout = async () => {
     setIsLoggingOut(true);
@@ -74,12 +73,12 @@ export function Sidebar({ username, role }: SidebarProps) {
     {
       label: "Study Portal",
       items: [
-        { href: "/student/dashboard", icon: LayoutDashboard, label: "Bosh sahifa" },
-        { href: "/student/topics", icon: BookOpen, label: "Amaliyot" },
-        { href: "/student/mock-tests", icon: PenTool, label: "Mock Imtihonlar" },
-        { href: "/student/articles", icon: FileText, label: "O'qish zali" },
-        { href: "/student/results", icon: History, label: "Natijalar" },
-        { href: "/student/payments", icon: CreditCard, label: "To'lovlar" },
+        { href: "/student/dashboard", icon: LayoutDashboard, label: "Dashboard" },
+        { href: "/student/topics", icon: BookOpen, label: "Practice" },
+        { href: "/student/mock-tests", icon: PenTool, label: "Mock Tests" },
+        { href: "/student/articles", icon: FileText, label: "Reading Library" },
+        { href: "/student/results", icon: History, label: "Results" },
+        { href: "/student/payments", icon: CreditCard, label: "Payments" },
       ],
     },
   ];
@@ -139,14 +138,14 @@ export function Sidebar({ username, role }: SidebarProps) {
                 {username}
               </p>
               <p className="text-[11px] text-slate-500 dark:text-slate-400 font-semibold uppercase tracking-wider">
-                {role === "ADMIN" ? "Administrator" : "Talaba"}
+                {role === "ADMIN" ? "Administrator" : "Student"}
               </p>
             </div>
           </div>
 
           {role === "STUDENT" && (
             <button className="w-full bg-[#EBFF00] text-black font-bold py-2.5 px-4 rounded-md hover:opacity-90 active:scale-[0.98] transition-all flex items-center justify-center gap-2 shadow-[0_0_10px_rgba(235,255,0,0.1)] hover:shadow-[0_0_15px_rgba(235,255,0,0.2)]">
-              <Zap className="w-4 h-4" /> Pro versiyaga o'tish
+              <Zap className="w-4 h-4" /> Upgrade to Pro
             </button>
           )}
         </div>
@@ -193,7 +192,7 @@ export function Sidebar({ username, role }: SidebarProps) {
                 className="px-4 py-3 flex items-center gap-3 text-slate-600 dark:text-slate-400 hover:text-slate-900 dark:hover:text-white hover:bg-slate-100 dark:hover:bg-[#131313] rounded-lg transition-colors font-semibold"
               >
                 <Settings className="w-5 h-5" />
-                <span className="text-sm">Sozlamalar</span>
+                <span className="text-sm">Settings</span>
               </Link>
             )}
             <Link
@@ -201,7 +200,7 @@ export function Sidebar({ username, role }: SidebarProps) {
               className="px-4 py-3 flex items-center gap-3 text-slate-600 dark:text-slate-400 hover:text-slate-900 dark:hover:text-white hover:bg-slate-100 dark:hover:bg-[#131313] rounded-lg transition-colors font-semibold"
             >
               <HelpCircle className="w-5 h-5" />
-              <span className="text-sm">Yordam Markazi</span>
+              <span className="text-sm">Help Center</span>
             </Link>
             <button
               onClick={handleLogout}
@@ -209,7 +208,7 @@ export function Sidebar({ username, role }: SidebarProps) {
               className="w-full px-4 py-3 flex items-center gap-3 text-rose-600 dark:text-rose-400 hover:bg-rose-50 dark:hover:bg-rose-950/30 rounded-lg transition-colors font-semibold text-left disabled:opacity-50"
             >
               <LogOut className="w-5 h-5" />
-              <span className="text-sm">{isLoggingOut ? "Chiqilmoqda..." : "Tizimdan chiqish"}</span>
+              <span className="text-sm">{isLoggingOut ? "Signing out..." : "Sign Out"}</span>
             </button>
           </div>
         </div>
