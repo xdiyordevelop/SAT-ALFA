@@ -1,8 +1,7 @@
 import { getSession } from "@/lib/auth/session";
 import { redirect } from "next/navigation";
 import { prisma } from "@/lib/db/prisma";
-import { Sidebar } from "@/components/layout/Sidebar";
-import { Topbar } from "@/components/layout/Topbar";
+import { AdminLayout } from "@/components/admin/AdminLayout";
 import Link from "next/link";
 import { FileText, Plus, FileUp, Edit, Trash2 } from "lucide-react";
 import { deleteArticle } from "@/server/actions/article.actions";
@@ -29,25 +28,24 @@ export default async function AdminArticlesPage({
   });
 
   return (
-    <div className="min-h-screen bg-white dark:bg-[#131313] text-slate-800 dark:text-slate-200">
-      <Sidebar username={session.username} role={session.role} />
-      <div className="lg:ml-64 flex-1 min-w-0 w-full lg:w-[calc(100%-16rem)]">
-        <Topbar
-          title="Articles"
-          breadcrumbs={[{ label: "Admin" }, { label: "Articles" }]}
-        />
-        <main className="pt-24 px-6 pb-12 max-w-7xl mx-auto">
-          <div className="flex flex-col md:flex-row md:items-center justify-between mb-8 gap-4">
-            <h1 className="text-3xl font-bold text-slate-900 dark:text-white">
-              Articles & Reading Room
-            </h1>
-            <div className="flex items-center gap-3">
-              <Link
-                href="/admin/articles/create"
-                className="flex items-center gap-2 bg-slate-100 dark:bg-[#1c1b1b] hover:bg-slate-700 text-slate-900 dark:text-white px-4 py-2 rounded-xl font-medium transition-colors"
-              >
-                <Plus className="w-4 h-4" />
-                Write Article
+    <AdminLayout
+      title="Articles & Reading"
+      breadcrumbs={[{ label: "Admin" }, { label: "Articles" }]}
+      userName={session.username}
+      userEmail={session.username || ""}
+      userRole={session.role}
+    >
+      <div className="flex flex-col md:flex-row md:items-center justify-between mb-8 gap-4">
+        <h1 className="text-3xl font-bold text-slate-900 dark:text-white">
+          Articles & Reading Room
+        </h1>
+        <div className="flex items-center gap-3">
+          <Link
+            href="/admin/articles/create"
+            className="flex items-center gap-2 bg-slate-100 dark:bg-[#1c1b1b] hover:bg-slate-700 text-slate-900 dark:text-white px-4 py-2 rounded-xl font-medium transition-colors"
+          >
+            <Plus className="w-4 h-4" />
+            Write Article
               </Link>
               <Link
                 href="/admin/articles/import"
@@ -163,8 +161,6 @@ export default async function AdminArticlesPage({
               </tbody>
             </table>
           </div>
-        </main>
-      </div>
-    </div>
+    </AdminLayout>
   );
 }
