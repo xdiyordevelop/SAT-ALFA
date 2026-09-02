@@ -2,8 +2,8 @@
 
 import { useState, useEffect, FormEvent, useRef, DragEvent } from "react";
 import { useRouter } from "next/navigation";
-import { Sidebar } from "@/components/layout/Sidebar";
-import { Topbar } from "@/components/layout/Topbar";
+
+
 import {
   ArrowLeft,
   UploadCloud,
@@ -13,6 +13,7 @@ import {
   CheckCircle2,
   AlertCircle,
 } from "lucide-react";
+import { AdminLayout } from "@/components/admin/AdminLayout";
 import Link from "next/link";
 
 interface Group {
@@ -186,41 +187,37 @@ export default function CreateTopicPage() {
   };
 
   return (
-    <div className="min-h-screen bg-slate-50 dark:bg-[#0a0a0a] ] text-slate-900 dark:text-white font-sans">
-      <Sidebar username="admin" role="ADMIN" />
+    <AdminLayout
+      title="Create Topic"
+      breadcrumbs={[
+        { label: "Admin" },
+        { label: "Topics" },
+        { label: "Create" },
+      ]}
+      userName="Admin"
+      userEmail="admin@satalfa.uz"
+      userRole="ADMIN"
+    >
+      {/* Header */}
+      <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 mb-8">
+        <div>
+          <Link
+            href="/admin/topics"
+            className="inline-flex items-center gap-2 text-slate-900 dark:text-[#EBFF00] hover:text-[#d9ff00] font-medium mb-2 transition-colors"
+          >
+            <ArrowLeft className="w-4 h-4" />
+            Back to Topics
+          </Link>
+          <h1 className="text-3xl font-bold text-slate-900 dark:text-white">
+            Create New Topic
+          </h1>
+        </div>
 
-      <div className="lg:ml-64">
-        <Topbar
-          title="Create Topic"
-          breadcrumbs={[
-            { label: "Admin" },
-            { label: "Topics" },
-            { label: "Create" },
-          ]}
-        />
-
-        <main className="pt-24 px-6 pb-16 max-w-7xl mx-auto">
-          {/* Header */}
-          <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 mb-8">
-            <div>
-              <Link
-                href="/admin/topics"
-                className="inline-flex items-center gap-2 text-slate-900 dark:text-yellow-500 hover:text-yellow-700 font-medium mb-2 transition-colors"
-              >
-                <ArrowLeft className="w-4 h-4" />
-                Back to Topics
-              </Link>
-              <h1 className="text-3xl font-bold text-slate-900 dark:text-white ">
-                Create New Topic
-              </h1>
-            </div>
-
-            <button
-              onClick={(e) => {
-                e.preventDefault();
-                // trigger form submit by dispatching event or simulating click
-                document.getElementById("submit-btn")?.click();
-              }}
+        <button
+          onClick={(e) => {
+            e.preventDefault();
+            document.getElementById("submit-btn")?.click();
+          }}
               disabled={loading}
               className="px-6 py-3 bg-yellow-600 hover:bg-yellow-700 text-slate-900 rounded-xl font-medium transition-all shadow-lg shadow-yellow-500/20 disabled:opacity-50 disabled:cursor-not-allowed flex items-center justify-center min-w-[150px]"
             >
@@ -568,8 +565,6 @@ export default function CreateTopicPage() {
               </div>
             </div>
           </form>
-        </main>
-      </div>
-    </div>
+    </AdminLayout>
   );
 }

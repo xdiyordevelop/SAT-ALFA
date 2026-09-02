@@ -1,8 +1,7 @@
 "use client";
 
 import { useState, useEffect } from "react";
-import { Sidebar } from "@/components/layout/Sidebar";
-import { Topbar } from "@/components/layout/Topbar";
+import { AdminLayout } from "@/components/admin/AdminLayout";
 import { MessageSquare, Send, CheckCircle, AlertCircle } from "lucide-react";
 import {
   sendTestResultNotification,
@@ -108,41 +107,38 @@ export default function SmsNotificationsPage() {
   ).length;
 
   return (
-    <div className="min-h-screen bg-slate-50 dark:bg-[#0a0a0a] ">
-      <Sidebar username="admin" role="ADMIN" />
+    <AdminLayout
+      title="SMS Notifications"
+      breadcrumbs={[{ label: "Admin" }, { label: "SMS Notifications" }]}
+      userName="Admin"
+      userEmail="admin@satalfa.uz"
+      userRole="ADMIN"
+    >
+      <div className="mb-8 animate-fade-in">
+        <h1 className="text-3xl font-bold text-slate-900 dark:text-white mb-2">
+          Parent Notifications
+        </h1>
+        <p className="text-slate-600 dark:text-slate-400">
+          Send SMS updates to parents about student progress
+        </p>
+      </div>
 
-      <div className="lg:ml-64">
-        <Topbar
-          title="SMS Notifications"
-          breadcrumbs={[{ label: "Admin" }, { label: "SMS Notifications" }]}
-        />
+      {error && (
+        <div className="mb-6 p-4 rounded-lg bg-red-100 border border-red-300 text-red-700 flex items-start gap-3">
+          <AlertCircle className="w-5 h-5 flex-shrink-0 mt-0.5" />
+          <span>{error}</span>
+        </div>
+      )}
 
-        <main className="pt-24 px-6 pb-12">
-          <div className="mb-8 animate-fade-in">
-            <h1 className="text-3xl font-bold text-slate-900 dark:text-white mb-2">
-              Parent Notifications
-            </h1>
-            <p className="text-slate-600 dark:text-slate-400 ">
-              Send SMS updates to parents about student progress
-            </p>
-          </div>
+      {success && (
+        <div className="mb-6 p-4 rounded-lg bg-green-100 border border-green-300 text-green-700 flex items-start gap-3">
+          <CheckCircle className="w-5 h-5 flex-shrink-0 mt-0.5" />
+          <span>{success}</span>
+        </div>
+      )}
 
-          {error && (
-            <div className="mb-6 p-4 rounded-lg bg-red-100 border border-red-300 text-red-700 flex items-start gap-3">
-              <AlertCircle className="w-5 h-5 flex-shrink-0 mt-0.5" />
-              <span>{error}</span>
-            </div>
-          )}
-
-          {success && (
-            <div className="mb-6 p-4 rounded-lg bg-green-100 border border-green-300 text-green-700 flex items-start gap-3">
-              <CheckCircle className="w-5 h-5 flex-shrink-0 mt-0.5" />
-              <span>{success}</span>
-            </div>
-          )}
-
-          {/* Stats */}
-          <div className="grid grid-cols-1 md:grid-cols-3 gap-6 mb-8">
+      {/* Stats */}
+      <div className="grid grid-cols-1 md:grid-cols-3 gap-6 mb-8">
             <div className="bg-white dark:bg-[#131313] rounded-2xl border border-slate-200 dark:border-white/10 p-6">
               <div className="flex items-center justify-between">
                 <div>
@@ -280,8 +276,6 @@ export default function SmsNotificationsPage() {
               </table>
             </div>
           </div>
-        </main>
-      </div>
-    </div>
+    </AdminLayout>
   );
 }
