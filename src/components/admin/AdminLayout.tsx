@@ -26,9 +26,9 @@ export function AdminLayout({
       {/* Fixed Sidebar */}
       <Sidebar username={userName || "Admin"} role={userRole} />
 
-      {/* Main Content Area with proper sidebar offset */}
-      <div className="lg:ml-72 transition-all duration-300 flex flex-col min-h-screen">
-        {/* Top Header - fixed, offset from sidebar */}
+      {/* Main Content Area - explicit offset from fixed sidebar */}
+      <div className="ml-0 lg:ml-72 transition-all duration-300 flex flex-col min-h-screen">
+        {/* Top Header */}
         <Topbar
           title={title}
           breadcrumbs={breadcrumbs}
@@ -37,8 +37,8 @@ export function AdminLayout({
           userRole={userRole}
         />
 
-        {/* Page Content - offset from fixed navbar */}
-        <main className="flex-1 p-4 sm:p-6 lg:p-8 w-full overflow-x-hidden mt-16">
+        {/* Page Content */}
+        <main className="flex-1 p-4 sm:p-6 lg:p-8 w-full overflow-x-hidden">
           <div className="max-w-6xl mx-auto w-full">
             {children}
           </div>
