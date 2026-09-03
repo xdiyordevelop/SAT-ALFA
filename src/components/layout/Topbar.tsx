@@ -76,7 +76,7 @@ export function Topbar({
 
   return (
     <div className="sticky top-0 z-[40] w-full bg-white/80 dark:bg-[#0a0a0a]/80 backdrop-blur-lg border-b border-slate-200 dark:border-white/10 shadow-sm">
-      <div className="flex h-16 items-center justify-between px-4 sm:px-6 lg:px-8 max-w-7xl mx-auto">
+      <div className="flex h-16 items-center justify-between px-4 sm:px-6 lg:px-8 w-full">
         
         {/* Left: Breadcrumbs (Hidden on very small screens) */}
         <div className="hidden sm:flex items-center gap-2 text-sm">

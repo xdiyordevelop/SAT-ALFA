@@ -140,10 +140,10 @@ export default function ProctorDashboardClient() {
         <div>
           <h2 className="text-2xl font-black flex items-center gap-2">
             <span className="w-2 h-2 rounded-full bg-emerald-500 animate-pulse shadow-[0_0_8px_rgba(16,185,129,0.6)]"></span>
-            Jonli Nazorat
+            Live Monitoring
           </h2>
           <p className="text-slate-500 dark:text-slate-400 text-sm mt-1 font-medium">
-            Talabalarning test jarayonini real vaqtda kuzating
+            Monitor student test progress in real-time
           </p>
           {sessions.length > 0 && (
              <div className="mt-4">
@@ -152,10 +152,10 @@ export default function ProctorDashboardClient() {
                   value={selectedSessionId}
                   onChange={(e) => setSelectedSessionId(e.target.value)}
                 >
-                  <option value="" disabled>Sessiyani tanlang...</option>
+                  <option value="" disabled>Select Session...</option>
                   {sessions.map((s) => (
                     <option key={s.id} value={s.id}>
-                      {s.satTest.name} (Kod: {s.code}) - {s._count.participants} o'quvchi
+                      {s.satTest.name} (Code: {s.code}) - {s._count.participants} students
                     </option>
                   ))}
                 </select>
@@ -164,7 +164,7 @@ export default function ProctorDashboardClient() {
         </div>
         <div className="flex flex-col items-end">
           <span className="text-[10px] uppercase font-bold text-slate-500 dark:text-slate-400 tracking-wider mb-1">
-            Sessiya Kodi (PIN)
+            Session Code (PIN)
           </span>
           <div className="flex items-center gap-4 bg-slate-100 dark:bg-[#1c1b1b] border border-slate-200 dark:border-white/5 rounded-lg p-3">
             <span className="font-mono text-3xl font-black tracking-[0.2em] text-slate-900 dark:text-[#EBFF00]">
@@ -173,7 +173,7 @@ export default function ProctorDashboardClient() {
             <button
               onClick={() => navigator.clipboard.writeText(sessionPin)}
               className="p-2 text-slate-500 hover:text-slate-900 dark:text-slate-400 dark:hover:text-[#EBFF00] bg-white dark:bg-[#2a2a2a] hover:bg-slate-50 dark:hover:bg-[#333] rounded transition-colors shadow-sm"
-              title="PIN kodni nusxalash"
+              title="Copy PIN code"
             >
               <Copy className="w-5 h-5" />
             </button>
@@ -187,10 +187,10 @@ export default function ProctorDashboardClient() {
             <Users className="w-8 h-8 text-slate-400 dark:text-slate-500" />
           </div>
           <h3 className="text-lg font-bold text-slate-900 dark:text-white mb-2">
-            Hozircha hech kim qo'shilmadi
+            No participants yet
           </h3>
           <p className="text-slate-500 dark:text-slate-400 max-w-sm mx-auto">
-            Talabalar testni boshlashlari uchun ekrandagi PIN kodni kiritishlari kerak.
+            Students need to enter the PIN code on their screen to join this test session.
           </p>
         </div>
       ) : selectedSessionId ? (
@@ -199,19 +199,19 @@ export default function ProctorDashboardClient() {
           <div className="grid grid-cols-1 md:grid-cols-4 gap-4">
             <div className="bg-white dark:bg-[#131313] border border-slate-200 dark:border-white/10 rounded-xl p-5 flex flex-col gap-2 relative overflow-hidden shadow-sm">
               <div className="absolute -right-4 -top-4 w-24 h-24 bg-emerald-500/10 dark:bg-[#EBFF00]/10 rounded-full blur-xl"></div>
-              <span className="font-bold text-[11px] uppercase tracking-wider text-slate-500 dark:text-slate-400">Faol Talabalar</span>
+              <span className="font-bold text-[11px] uppercase tracking-wider text-slate-500 dark:text-slate-400">Active Students</span>
               <span className="text-3xl font-black text-slate-900 dark:text-[#EBFF00]">{activeCount}</span>
             </div>
             <div className="bg-white dark:bg-[#131313] border border-slate-200 dark:border-white/10 rounded-xl p-5 flex flex-col gap-2 shadow-sm">
-              <span className="font-bold text-[11px] uppercase tracking-wider text-slate-500 dark:text-slate-400">Ogohlantirishlar (Tab chiqishlar)</span>
+              <span className="font-bold text-[11px] uppercase tracking-wider text-slate-500 dark:text-slate-400">Alerts (Tab Exits)</span>
               <span className="text-3xl font-black text-rose-600 dark:text-rose-500">{totalExits}</span>
             </div>
             <div className="bg-white dark:bg-[#131313] border border-slate-200 dark:border-white/10 rounded-xl p-5 flex flex-col gap-2 shadow-sm">
-              <span className="font-bold text-[11px] uppercase tracking-wider text-slate-500 dark:text-slate-400">Pauzada</span>
+              <span className="font-bold text-[11px] uppercase tracking-wider text-slate-500 dark:text-slate-400">Paused</span>
               <span className="text-3xl font-black text-yellow-600 dark:text-yellow-500">{pausedCount}</span>
             </div>
             <div className="bg-white dark:bg-[#131313] border border-slate-200 dark:border-white/10 rounded-xl p-5 flex flex-col gap-2 shadow-sm">
-              <span className="font-bold text-[11px] uppercase tracking-wider text-slate-500 dark:text-slate-400">Umumiy</span>
+              <span className="font-bold text-[11px] uppercase tracking-wider text-slate-500 dark:text-slate-400">Total</span>
               <span className="text-3xl font-black text-slate-900 dark:text-white">{participants.length}</span>
             </div>
           </div>
@@ -220,11 +220,11 @@ export default function ProctorDashboardClient() {
           <div className="bg-white dark:bg-[#131313] border border-slate-200 dark:border-white/10 rounded-xl flex flex-col flex-1 shadow-sm overflow-hidden">
             <div className="p-4 md:p-5 border-b border-slate-200 dark:border-white/10 flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4 bg-slate-50 dark:bg-[#1c1b1b]">
               <h2 className="text-lg font-black text-slate-900 dark:text-white flex items-center gap-2">
-                <ShieldAlert className="w-5 h-5 text-slate-900 dark:text-[#EBFF00]" /> O'quvchilar holati
+                <ShieldAlert className="w-5 h-5 text-slate-900 dark:text-[#EBFF00]" /> Student Status
               </h2>
               <div className="flex items-center gap-2 w-full sm:w-auto">
                 <div className="flex items-center gap-2 text-xs font-bold text-slate-500 dark:text-slate-400 uppercase tracking-wider px-3 py-1.5 bg-white dark:bg-[#131313] rounded-md border border-slate-200 dark:border-white/5">
-                  Avto-yangilanish <span className="w-1.5 h-1.5 rounded-full bg-emerald-500 animate-pulse"></span>
+                  Auto-refresh <span className="w-1.5 h-1.5 rounded-full bg-emerald-500 animate-pulse"></span>
                 </div>
               </div>
             </div>
@@ -233,12 +233,12 @@ export default function ProctorDashboardClient() {
               <table className="w-full text-left border-collapse">
                 <thead>
                   <tr className="border-b border-slate-200 dark:border-white/5 bg-white dark:bg-[#131313]">
-                    <th className="font-bold text-[11px] uppercase tracking-widest text-slate-500 dark:text-slate-400 p-4">O'quvchi</th>
-                    <th className="font-bold text-[11px] uppercase tracking-widest text-slate-500 dark:text-slate-400 p-4">Holat</th>
-                    <th className="font-bold text-[11px] uppercase tracking-widest text-slate-500 dark:text-slate-400 p-4">Modul / Savol</th>
-                    <th className="font-bold text-[11px] uppercase tracking-widest text-slate-500 dark:text-slate-400 p-4 text-center">Vaqt</th>
-                    <th className="font-bold text-[11px] uppercase tracking-widest text-slate-500 dark:text-slate-400 p-4 text-center">Tab chiqishlar</th>
-                    <th className="font-bold text-[11px] uppercase tracking-widest text-slate-500 dark:text-slate-400 p-4 text-right">Amallar</th>
+                    <th className="font-bold text-[11px] uppercase tracking-widest text-slate-500 dark:text-slate-400 p-4">Student</th>
+                    <th className="font-bold text-[11px] uppercase tracking-widest text-slate-500 dark:text-slate-400 p-4">Status</th>
+                    <th className="font-bold text-[11px] uppercase tracking-widest text-slate-500 dark:text-slate-400 p-4">Module / Question</th>
+                    <th className="font-bold text-[11px] uppercase tracking-widest text-slate-500 dark:text-slate-400 p-4 text-center">Time</th>
+                    <th className="font-bold text-[11px] uppercase tracking-widest text-slate-500 dark:text-slate-400 p-4 text-center">Tab Exits</th>
+                    <th className="font-bold text-[11px] uppercase tracking-widest text-slate-500 dark:text-slate-400 p-4 text-right">Actions</th>
                   </tr>
                 </thead>
                 <tbody className="text-sm font-medium divide-y divide-slate-100 dark:divide-white/5">
@@ -256,27 +256,27 @@ export default function ProctorDashboardClient() {
                       <td className="p-4">
                         {p.status === "TAKING" && (
                            <span className="inline-flex items-center gap-1.5 px-2.5 py-1 rounded bg-emerald-50 dark:bg-[#EBFF00]/10 border border-emerald-200 dark:border-[#EBFF00]/20 text-emerald-700 dark:text-[#EBFF00] text-[10px] font-black uppercase tracking-wider">
-                            <span className="w-1.5 h-1.5 rounded-full bg-emerald-500 dark:bg-[#EBFF00] animate-pulse"></span> Jarayonda
+                            <span className="w-1.5 h-1.5 rounded-full bg-emerald-500 dark:bg-[#EBFF00] animate-pulse"></span> In Progress
                           </span>
                         )}
                         {p.status === "PAUSED" && (
                            <span className="inline-flex items-center gap-1.5 px-2.5 py-1 rounded bg-yellow-50 dark:bg-yellow-900/30 border border-yellow-200 dark:border-yellow-700/50 text-yellow-700 dark:text-yellow-500 text-[10px] font-black uppercase tracking-wider">
-                            Pauza
+                            Paused
                           </span>
                         )}
                         {p.status === "COMPLETED" && (
                            <span className="inline-flex items-center gap-1.5 px-2.5 py-1 rounded bg-blue-50 dark:bg-blue-900/30 border border-blue-200 dark:border-blue-700/50 text-blue-700 dark:text-[#EBFF00] text-[10px] font-black uppercase tracking-wider">
-                            Tugatgan
+                            Completed
                           </span>
                         )}
                         {p.status === "WAITING" && (
                            <span className="inline-flex items-center gap-1.5 px-2.5 py-1 rounded bg-slate-100 dark:bg-[#2a2a2a] border border-slate-200 dark:border-white/10 text-slate-600 dark:text-slate-400 text-[10px] font-black uppercase tracking-wider">
-                            Kutmoqda
+                            Waiting
                           </span>
                         )}
                         {p.status === "DISQUALIFIED" && (
                            <span className="inline-flex items-center gap-1.5 px-2.5 py-1 rounded bg-rose-50 dark:bg-rose-900/30 border border-rose-200 dark:border-rose-700/50 text-rose-700 dark:text-rose-500 text-[10px] font-black uppercase tracking-wider">
-                            Chetlatilgan
+                            Disqualified
                           </span>
                         )}
                       </td>
@@ -313,13 +313,13 @@ export default function ProctorDashboardClient() {
                                   isOpen: true,
                                   participantId: p.id,
                                   action: "ADD_TIME",
-                                  title: "Qo'shimcha vaqt",
-                                  message: "Ushbu o'quvchiga 5 daqiqa qo'shasizmi?",
+                                  title: "Add Extra Time",
+                                  message: "Add 5 minutes to this student's test time?",
                                 })
                               }
                               disabled={actionLoading === p.id}
                               className="p-1.5 text-emerald-600 dark:text-[#EBFF00] bg-emerald-50 dark:bg-[#EBFF00]/10 hover:bg-emerald-100 dark:hover:bg-[#EBFF00]/20 rounded border border-emerald-200 dark:border-[#EBFF00]/20 transition-colors"
-                              title="+5 Daqiqa"
+                              title="+5 Minutes"
                             >
                               <Clock className="w-4 h-4" />
                             </button>
@@ -327,7 +327,7 @@ export default function ProctorDashboardClient() {
                               onClick={() => handleAction(p.id, "PAUSE_TEST")}
                               disabled={actionLoading === p.id}
                               className="p-1.5 text-yellow-600 dark:text-yellow-500 bg-yellow-50 dark:bg-yellow-900/20 hover:bg-yellow-100 dark:hover:bg-yellow-900/40 rounded border border-yellow-200 dark:border-yellow-700/30 transition-colors"
-                              title="Pauza"
+                              title="Pause"
                             >
                               <Pause className="w-4 h-4" />
                             </button>
@@ -338,7 +338,7 @@ export default function ProctorDashboardClient() {
                             onClick={() => handleAction(p.id, "RESUME_TEST")}
                             disabled={actionLoading === p.id}
                             className="p-1.5 text-emerald-600 dark:text-[#EBFF00] bg-emerald-50 dark:bg-[#EBFF00]/10 hover:bg-emerald-100 dark:hover:bg-[#EBFF00]/20 rounded border border-emerald-200 dark:border-[#EBFF00]/20 transition-colors"
-                            title="Davom ettirish"
+                            title="Resume"
                           >
                             <Play className="w-4 h-4" />
                           </button>
@@ -351,13 +351,13 @@ export default function ProctorDashboardClient() {
                                   isOpen: true,
                                   participantId: p.id,
                                   action: "FORCE_SUBMIT",
-                                  title: "Majburiy Yakunlash",
-                                  message: "Ushbu testni hozir yakunlashni tasdiqlaysizmi?",
+                                  title: "Force Submit",
+                                  message: "Submit this test now for this student?",
                                 })
                               }
                               disabled={actionLoading === p.id}
                               className="p-1.5 text-orange-600 dark:text-orange-400 bg-orange-50 dark:bg-orange-900/20 hover:bg-orange-100 dark:hover:bg-orange-900/40 rounded border border-orange-200 dark:border-orange-700/30 transition-colors"
-                              title="Majburiy Yakunlash"
+                              title="Force Submit"
                             >
                               <CheckCircle className="w-4 h-4" />
                             </button>
@@ -367,13 +367,13 @@ export default function ProctorDashboardClient() {
                                   isOpen: true,
                                   participantId: p.id,
                                   action: "DISQUALIFY",
-                                  title: "Chetlatish (Disqualify)",
-                                  message: "Qoidabuzarlik sababli ushbu o'quvchini testdan chetlatasizmi?",
+                                  title: "Disqualify",
+                                  message: "Disqualify this student from the test for rule violation?",
                                 })
                               }
                               disabled={actionLoading === p.id}
                               className="p-1.5 text-rose-600 dark:text-rose-400 bg-rose-50 dark:bg-rose-950/30 hover:bg-rose-100 dark:hover:bg-rose-900/50 rounded border border-rose-200 dark:border-rose-900/40 transition-colors"
-                              title="Chetlatish"
+                              title="Disqualify"
                             >
                               <StopCircle className="w-4 h-4" />
                             </button>
@@ -406,7 +406,7 @@ export default function ProctorDashboardClient() {
                 className="border-slate-300 dark:border-white/10 hover:bg-slate-50 dark:hover:bg-[#1c1b1b] dark:text-white"
                 onClick={() => setConfirmModal({ ...confirmModal, isOpen: false })}
               >
-                Bekor qilish
+                Cancel
               </Button>
               <Button
                 className={
@@ -422,7 +422,7 @@ export default function ProctorDashboardClient() {
                   )
                 }
               >
-                Tasdiqlash
+                Confirm
               </Button>
             </div>
           </div>
