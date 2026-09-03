@@ -111,41 +111,41 @@ export function Sidebar({ username, role }: SidebarProps) {
         }`}
       >
         {/* Top Header & Profile Area */}
-        <div className="px-6 py-4 border-b border-slate-200 dark:border-white/5 flex flex-col gap-4">
-          <Link href={role === "ADMIN" ? "/admin/dashboard" : "/student/dashboard"} className="flex items-center gap-3 group">
-             <div className="w-8 h-8 rounded-lg overflow-hidden bg-white dark:bg-slate-900 shadow-sm flex items-center justify-center shrink-0 border border-slate-200 dark:border-white/10">
+        <div className="px-4 py-3 border-b border-slate-200 dark:border-white/5 flex flex-col gap-3">
+          <Link href={role === "ADMIN" ? "/admin/dashboard" : "/student/dashboard"} className="flex items-center gap-2 group">
+             <div className="w-7 h-7 rounded-lg overflow-hidden bg-white dark:bg-slate-900 shadow-sm flex items-center justify-center shrink-0 border border-slate-200 dark:border-white/10">
               <Image
                 src="/images/sat-alfa.jpg"
                 alt="SAT ALFA Logo"
                 fill
                 className="object-contain p-0.5"
-                sizes="32px"
+                sizes="28px"
               />
             </div>
-            <h1 className="heading-5 text-slate-900 dark:text-white group-hover:text-[#EBFF00] transition-colors">
+            <h1 className="text-sm font-bold text-slate-900 dark:text-white group-hover:text-[#EBFF00] transition-colors">
               SAT-ALFA
             </h1>
           </Link>
 
-          <div className="flex items-center gap-3 px-3 py-3 rounded-lg bg-slate-50 dark:bg-slate-900/30 border border-slate-200 dark:border-slate-800">
-            <div className="w-10 h-10 rounded-full border-2 border-slate-300 dark:border-slate-600 bg-slate-100 dark:bg-slate-800 flex items-center justify-center overflow-hidden shrink-0">
-              <span className="text-sm font-bold text-slate-700 dark:text-slate-200">
+          <div className="flex items-center gap-2 px-2.5 py-2 rounded-lg bg-slate-50 dark:bg-slate-900/30 border border-slate-200 dark:border-slate-800">
+            <div className="w-8 h-8 rounded-full border-2 border-slate-300 dark:border-slate-600 bg-slate-100 dark:bg-slate-800 flex items-center justify-center overflow-hidden shrink-0">
+              <span className="text-xs font-bold text-slate-700 dark:text-slate-200">
                 {username.charAt(0).toUpperCase()}
               </span>
             </div>
             <div className="flex-1 min-w-0">
-              <p className="font-semibold text-sm text-slate-900 dark:text-white truncate">
+              <p className="font-semibold text-xs text-slate-900 dark:text-white truncate">
                 {username}
               </p>
-              <p className="text-xs text-slate-500 dark:text-slate-400 font-medium">
-                {role === "ADMIN" ? "Administrator" : "Student"}
+              <p className="text-[10px] text-slate-500 dark:text-slate-400 font-medium">
+                {role === "ADMIN" ? "Admin" : "Student"}
               </p>
             </div>
           </div>
 
           {role === "STUDENT" && (
-            <button className="w-full bg-[#EBFF00] text-slate-950 font-bold py-2.5 px-4 rounded-lg hover:bg-[#d4e600] active:bg-[#b8cc00] transition-all flex items-center justify-center gap-2 shadow-sm">
-              <Zap className="w-4 h-4" /> Upgrade
+            <button className="w-full bg-[#EBFF00] text-slate-950 font-bold py-1.5 px-3 rounded-lg hover:bg-[#d4e600] active:bg-[#b8cc00] transition-all flex items-center justify-center gap-1.5 shadow-sm text-xs">
+              <Zap className="w-3.5 h-3.5" /> Upgrade
             </button>
           )}
         </div>
