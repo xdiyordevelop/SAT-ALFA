@@ -113,13 +113,13 @@ export function Sidebar({ username, role }: SidebarProps) {
         {/* Top Header & Profile Area */}
         <div className="px-4 py-3 border-b border-slate-200 dark:border-white/5 flex flex-col gap-3">
           <Link href={role === "ADMIN" ? "/admin/dashboard" : "/student/dashboard"} className="flex items-center gap-2 group">
-             <div className="w-7 h-7 rounded-lg overflow-hidden bg-white dark:bg-slate-900 shadow-sm flex items-center justify-center shrink-0 border border-slate-200 dark:border-white/10">
+             <div className="w-7 h-7 rounded-lg overflow-hidden bg-white dark:bg-slate-900 shadow-sm flex items-center justify-center shrink-0 border border-slate-200 dark:border-white/10 relative">
               <Image
                 src="/images/sat-alfa.jpg"
                 alt="SAT ALFA Logo"
-                fill
-                className="object-contain p-0.5"
-                sizes="28px"
+                width={28}
+                height={28}
+                className="object-contain"
               />
             </div>
             <h1 className="text-sm font-bold text-slate-900 dark:text-white group-hover:text-[#EBFF00] transition-colors">
