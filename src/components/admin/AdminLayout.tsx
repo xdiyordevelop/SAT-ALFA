@@ -22,13 +22,13 @@ export function AdminLayout({
   userRole = "ADMIN",
 }: AdminLayoutProps) {
   return (
-    <div className="flex min-h-screen bg-slate-50 dark:bg-[#0a0a0a] transition-colors duration-300">
-      {/* Fixed Sidebar - flex-shrink-0 ensures it never shrinks */}
+    <div className="min-h-screen bg-slate-50 dark:bg-[#0a0a0a] transition-colors duration-300">
+      {/* Fixed Sidebar */}
       <Sidebar username={userName || "Admin"} role={userRole} />
 
-      {/* Main Content Area - flex-1 grows to fill available space */}
-      <div className="flex flex-col flex-1 min-w-0">
-        {/* Top Header - positioned relative to main area, not viewport */}
+      {/* Main Content Area with proper sidebar offset */}
+      <div className="lg:ml-72 transition-all duration-300 flex flex-col min-h-screen">
+        {/* Top Header - fixed, offset from sidebar */}
         <Topbar
           title={title}
           breadcrumbs={breadcrumbs}
@@ -37,8 +37,8 @@ export function AdminLayout({
           userRole={userRole}
         />
 
-        {/* Page Content - scrollable area offset from fixed header */}
-        <main className="flex-1 p-4 sm:p-6 lg:p-8 w-full overflow-x-hidden">
+        {/* Page Content - offset from fixed navbar */}
+        <main className="flex-1 p-4 sm:p-6 lg:p-8 w-full overflow-x-hidden mt-16">
           <div className="max-w-6xl mx-auto w-full">
             {children}
           </div>
