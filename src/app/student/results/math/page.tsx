@@ -1,8 +1,7 @@
 import { prisma } from "@/lib/db/prisma";
 import { getSession } from "@/lib/auth/session";
 import { redirect } from "next/navigation";
-import { Sidebar } from "@/components/layout/Sidebar";
-import { Topbar } from "@/components/layout/Topbar";
+import { StudentLayout } from "@/components/student/StudentLayout";
 import { TrendingUp, TrendingDown, BarChart3, Calendar } from "lucide-react";
 import Link from "next/link";
 
@@ -57,32 +56,26 @@ export default async function MathResultsPage() {
   const isTrendingUp = trendPercentage > 0;
 
   return (
-    <div className="min-h-screen bg-slate-50 dark:bg-[#0a0a0a] ">
-      <Sidebar username={session.username} role={session.role} />
+    <StudentLayout
+      title="Math Results"
+      breadcrumbs={[
+        { label: "Student" },
+        { label: "Results" },
+        { label: "Math" },
+      ]}
+    >
+      {/* Header */}
+      <div className="mb-8 animate-fade-in">
+        <h1 className="text-3xl font-bold text-slate-900 dark:text-white mb-2">
+          Math Test Results
+        </h1>
+        <p className="text-slate-600 dark:text-slate-400 ">
+          Track your SAT Math section performance
+        </p>
+      </div>
 
-      <div className="lg:ml-64">
-        <Topbar
-          title="Math Results"
-          breadcrumbs={[
-            { label: "Student" },
-            { label: "Results" },
-            { label: "Math" },
-          ]}
-        />
-
-        <main className="pt-24 px-6 pb-12">
-          {/* Header */}
-          <div className="mb-8 animate-fade-in">
-            <h1 className="text-3xl font-bold text-slate-900 dark:text-white mb-2">
-              Math Test Results
-            </h1>
-            <p className="text-slate-600 dark:text-slate-400 ">
-              Track your SAT Math section performance
-            </p>
-          </div>
-
-          {/* Stats Cards */}
-          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 mb-8">
+      {/* Stats Cards */}
+      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 mb-8">
             <div className="bg-white dark:bg-[#131313] rounded-2xl border border-slate-200 dark:border-white/10 p-6 animate-slide-up">
               <p className="text-sm font-medium text-slate-600 dark:text-slate-400 mb-2">
                 Average Score
@@ -247,8 +240,6 @@ export default async function MathResultsPage() {
               View English Results
             </Link>
           </div>
-        </main>
-      </div>
-    </div>
-  );
-}
+        </StudentLayout>
+      );
+    }

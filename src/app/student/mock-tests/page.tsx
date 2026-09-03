@@ -1,8 +1,7 @@
 import { getSession } from "@/lib/auth/session";
 import { redirect } from "next/navigation";
 import { prisma } from "@/lib/db/prisma";
-import { Sidebar } from "@/components/layout/Sidebar";
-import { Topbar } from "@/components/layout/Topbar";
+import { StudentLayout } from "@/components/student/StudentLayout";
 import { StudentMockTestsHub } from "./StudentMockTestsHub";
 
 export default async function StudentMockTestsPage() {
@@ -62,26 +61,17 @@ export default async function StudentMockTestsPage() {
       : null;
 
   return (
-    <div className="min-h-screen bg-slate-50 dark:bg-[#0a0a0a] text-slate-900 dark:text-white transition-colors duration-300">
-      <Sidebar username={session.username} role={session.role} />
-
-      <div className="lg:ml-72 flex flex-col min-h-screen">
-        <Topbar
-          title="Mock Tests"
-          breadcrumbs={[{ label: "Talaba" }, { label: "Mock Imtihonlar" }]}
-          userName={`${student.firstName} ${student.lastName}`}
-          userEmail={session.username || ""}
-          userRole={session.role}
-        />
-
-        <main className="flex-1 p-4 sm:p-6 lg:p-8 max-w-7xl mx-auto w-full">
-          <StudentMockTestsHub
-            availableTests={availableTests}
-            completedAttempts={completedAttempts}
-            highestScore={highestScore}
-          />
-        </main>
-      </div>
-    </div>
+    <StudentLayout
+      title="Mock Tests"
+      breadcrumbs={[{ label: "Talaba" }, { label: "Mock Imtihonlar" }]}
+      userName={`${student.firstName} ${student.lastName}`}
+      userEmail={session.username || ""}
+    >
+      <StudentMockTestsHub
+        availableTests={availableTests}
+        completedAttempts={completedAttempts}
+        highestScore={highestScore}
+      />
+    </StudentLayout>
   );
 }

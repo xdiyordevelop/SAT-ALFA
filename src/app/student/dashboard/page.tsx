@@ -1,8 +1,7 @@
 import { redirect } from "next/navigation";
 import { getSession } from "@/lib/auth/session";
 import { prisma } from "@/lib/db/prisma";
-import { Sidebar } from "@/components/layout/Sidebar";
-import { Topbar } from "@/components/layout/Topbar";
+import { StudentLayout } from "@/components/student/StudentLayout";
 import {
   StudentDashboardView,
   PublishedTestItem,
@@ -119,37 +118,25 @@ export default async function StudentDashboardPage() {
       : 0;
 
   return (
-    <div className="min-h-screen bg-slate-50 dark:bg-[#0a0a0a] text-slate-900 dark:text-white">
-      <Sidebar
-        username={session.username || "Student"}
-        role={session.role || "STUDENT"}
+    <StudentLayout
+      title="Student Dashboard"
+      breadcrumbs={[{ label: "Student" }, { label: "Dashboard" }]}
+      userName={studentName}
+      userEmail={studentEmail}
+    >
+      <StudentDashboardView
+        studentName={studentName}
+        studentEmail={studentEmail}
+        publishedTests={publishedTests}
+        attempts={attempts}
+        metrics={{
+          testsTaken: attempts.length,
+          highestScore,
+          averageScore,
+          mathAvg,
+          rwAvg,
+        }}
       />
-
-      <div className="lg:ml-64 flex-1 min-w-0 w-full lg:w-[calc(100%-16rem)]">
-        <Topbar
-          title="Student Dashboard"
-          breadcrumbs={[{ label: "Student" }, { label: "Dashboard" }]}
-          userName={studentName}
-          userEmail={studentEmail}
-          userRole={session.role}
-        />
-
-        <main className="pt-24 px-4 sm:px-6 lg:px-8 pb-12 max-w-7xl mx-auto">
-          <StudentDashboardView
-            studentName={studentName}
-            studentEmail={studentEmail}
-            publishedTests={publishedTests}
-            attempts={attempts}
-            metrics={{
-              testsTaken: attempts.length,
-              highestScore,
-              averageScore,
-              mathAvg,
-              rwAvg,
-            }}
-          />
-        </main>
-      </div>
-    </div>
+    </StudentLayout>
   );
 }

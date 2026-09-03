@@ -1,8 +1,7 @@
 import { redirect } from "next/navigation";
 import { getSession } from "@/lib/auth/session";
 import { prisma } from "@/lib/db/prisma";
-import { Sidebar } from "@/components/layout/Sidebar";
-import { Topbar } from "@/components/layout/Topbar";
+import { StudentLayout } from "@/components/student/StudentLayout";
 import { StudentPaymentsContent } from "@/components/student/StudentPaymentsContent";
 
 export default async function StudentPaymentsPage() {
@@ -39,25 +38,13 @@ export default async function StudentPaymentsPage() {
   });
 
   return (
-    <div className="min-h-screen bg-slate-50 dark:bg-[#0a0a0a] ">
-      <Sidebar
-        username={session.username || "Student"}
-        role={session.role || "STUDENT"}
-      />
-
-      <div className="lg:ml-64">
-        <Topbar
-          title="My Payments"
-          breadcrumbs={[{ label: "Student" }, { label: "Payments" }]}
-          userName={`${student.firstName} ${student.lastName}`}
-          userEmail={user?.username}
-          userRole={session.role}
-        />
-
-        <main className="pt-24 px-6 pb-12">
-          <StudentPaymentsContent student={student} payments={payments} />
-        </main>
-      </div>
-    </div>
+    <StudentLayout
+      title="My Payments"
+      breadcrumbs={[{ label: "Student" }, { label: "Payments" }]}
+      userName={`${student.firstName} ${student.lastName}`}
+      userEmail={user?.username}
+    >
+      <StudentPaymentsContent student={student} payments={payments} />
+    </StudentLayout>
   );
 }
