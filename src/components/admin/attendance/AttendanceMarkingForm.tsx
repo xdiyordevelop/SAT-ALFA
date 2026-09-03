@@ -397,7 +397,7 @@ export function AttendanceMarkingForm() {
 
       {/* Action Buttons */}
       {filteredStudents.length > 0 && (
-        <div className="mt-8 flex gap-4 justify-end animate-slide-up">
+        <div className="mt-8 flex gap-4 justify-center animate-slide-up">
           <button
             onClick={handleReset}
             className="px-6 py-3 border border-slate-200 dark:border-slate-700 rounded-lg font-medium text-slate-700 dark:text-slate-300 hover:bg-slate-50 dark:hover:bg-slate-800 transition-colors flex items-center gap-2"
