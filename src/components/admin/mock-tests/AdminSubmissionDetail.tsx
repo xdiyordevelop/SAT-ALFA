@@ -546,7 +546,7 @@ export function AdminSubmissionDetail({
           <h4 className="font-semibold text-yellow-900 text-sm mb-1">
             Performance Overview
           </h4>
-          <p className="text-sm text-indigo-950 leading-relaxed">
+          <p className="text-sm text-slate-800 dark:text-slate-200 leading-relaxed">
             {overallInsight}
           </p>
         </div>
