@@ -3,12 +3,12 @@ import { cva, type VariantProps } from "class-variance-authority";
 import { cn } from "@/lib/utils";
 
 const buttonVariants = cva(
-  "inline-flex items-center justify-center gap-2 font-semibold rounded-lg transition-all duration-200 disabled:opacity-60 disabled:cursor-not-allowed focus:outline-none focus:ring-2 focus:ring-offset-2 dark:focus:ring-offset-slate-900",
+  "inline-flex items-center justify-center gap-2 font-semibold rounded-lg transition-all duration-200 disabled:opacity-60 disabled:cursor-not-allowed focus:outline-none focus:ring-2 focus:ring-offset-2 dark:focus:ring-offset-[#0a0a0a]",
   {
     variants: {
       variant: {
         primary:
-          "bg-amber-500 hover:bg-amber-600 active:bg-amber-700 text-slate-950 border border-amber-500 shadow-sm focus:ring-amber-500/50",
+          "bg-[#EBFF00] hover:bg-[#d4e600] active:bg-[#b8cc00] text-slate-950 border border-[#EBFF00] shadow-sm hover:shadow-md focus:ring-[#EBFF00]/50 font-bold",
         secondary:
           "bg-slate-100 dark:bg-[#1c1b1b] text-slate-900 dark:text-slate-100 border border-slate-200 dark:border-white/5 hover:bg-slate-200 dark:hover:bg-[#333333] focus:ring-slate-400/50",
         danger:
@@ -16,7 +16,7 @@ const buttonVariants = cva(
         ghost:
           "bg-transparent text-slate-700 dark:text-slate-200 hover:bg-slate-100 dark:hover:bg-[#2a2a2a] focus:ring-slate-400/50",
         outline:
-          "bg-transparent text-amber-600 dark:text-amber-400 border-2 border-amber-500 hover:bg-amber-500/10 focus:ring-amber-500/50",
+          "bg-transparent text-[#EBFF00] dark:text-[#EBFF00] border-2 border-[#EBFF00] hover:bg-[#EBFF00]/10 focus:ring-[#EBFF00]/50",
       },
       size: {
         sm: "px-3 py-1.5 text-sm",
