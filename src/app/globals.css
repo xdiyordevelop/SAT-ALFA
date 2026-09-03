@@ -261,15 +261,16 @@ body {
          border border-slate-200 dark:border-white/10
          rounded-lg text-sm
          text-slate-900 dark:text-white
-         placeholder-slate-400
+         placeholder-slate-400 dark:placeholder-slate-500
          focus:outline-none focus:border-[#EBFF00]
          focus:ring-2 focus:ring-[#EBFF00] focus:ring-offset-2
          dark:focus:ring-offset-[#0a0a0a]
-         transition-all duration-200;
+         transition-all duration-200
+         disabled:opacity-50 disabled:cursor-not-allowed;
 }
 
 .input-primary::placeholder {
-  @apply text-slate-500;
+  @apply text-slate-500 dark:text-slate-500;
 }
 
 /* Badge Styles */
