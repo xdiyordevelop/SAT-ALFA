@@ -75,14 +75,14 @@ export function Topbar({
   };
 
   return (
-    <div className="sticky top-0 z-[40] w-full bg-white/80 dark:bg-[#0a0a0a]/80 backdrop-blur-lg border-b border-slate-200 dark:border-white/10 shadow-sm">
-      <div className="flex h-16 items-center justify-between px-4 sm:px-6 lg:px-8 w-full">
-        
+    <div className="sticky top-0 z-[40] w-full bg-white dark:bg-[#0a0a0a] border-b border-slate-200 dark:border-white/5 shadow-sm">
+      <div className="flex h-16 items-center justify-between px-4 sm:px-6 lg:px-8 w-full gap-6">
+
         {/* Left: Breadcrumbs (Hidden on very small screens) */}
-        <div className="hidden sm:flex items-center gap-2 text-sm">
+        <div className="hidden sm:flex items-center gap-2 text-sm min-w-0">
           {breadcrumbs.map((crumb, index) => (
             <div key={index} className="flex items-center gap-2">
-              {index > 0 && <span className="text-slate-300 dark:text-slate-600">/</span>}
+              {index > 0 && <span className="text-slate-300 dark:text-slate-700 flex-shrink-0">/</span>}
               {crumb.href ? (
                 <Link
                   href={crumb.href}
@@ -91,7 +91,7 @@ export function Topbar({
                   {crumb.label}
                 </Link>
               ) : (
-                <span className="font-bold text-slate-900 dark:text-[#EBFF00]">
+                <span className="font-semibold text-slate-900 dark:text-white">
                   {crumb.label}
                 </span>
               )}
@@ -100,40 +100,40 @@ export function Topbar({
         </div>
 
         {/* Mobile Title */}
-        <div className="sm:hidden font-bold text-slate-900 dark:text-[#EBFF00]">
+        <div className="sm:hidden font-semibold text-slate-900 dark:text-white text-sm">
           {title}
         </div>
 
         {/* Right: Actions */}
-        <div className="flex items-center gap-2 sm:gap-4">
-          
+        <div className="flex items-center gap-3 ml-auto">
+
           <ThemeToggle />
 
           {/* Notifications */}
           <div className="relative" ref={(el) => { if (el) dropdownRefs.current["notifications"] = el; }}>
             <button
               onClick={() => toggleDropdown("notifications")}
-              className="p-2 rounded-lg text-slate-500 hover:text-slate-900 hover:bg-slate-100 dark:text-slate-400 dark:hover:text-[#EBFF00] dark:hover:bg-[#1c1b1b] transition-all relative"
+              className="p-2 rounded-lg text-slate-500 hover:text-slate-900 hover:bg-slate-100 dark:text-slate-400 dark:hover:text-white dark:hover:bg-slate-900/50 transition-all relative flex-shrink-0"
             >
               <Bell className="w-5 h-5" />
               <span className="absolute top-1.5 right-1.5 w-2 h-2 rounded-full bg-rose-500"></span>
             </button>
 
             {openDropdown === "notifications" && (
-              <div className="absolute right-0 mt-2 w-80 bg-white dark:bg-[#131313] rounded-xl shadow-2xl border border-slate-200 dark:border-white/10 z-50 overflow-hidden transform origin-top-right transition-all">
-                <div className="p-4 border-b border-slate-200 dark:border-white/10 bg-slate-50 dark:bg-[#1c1b1b]">
-                  <h3 className="font-bold text-slate-900 dark:text-white">Notifications</h3>
+              <div className="absolute right-0 mt-2 w-80 bg-white dark:bg-slate-900 rounded-xl shadow-lg border border-slate-200 dark:border-slate-800 z-50 overflow-hidden">
+                <div className="p-4 border-b border-slate-200 dark:border-slate-800 bg-slate-50 dark:bg-slate-800/50">
+                  <h3 className="font-semibold text-slate-900 dark:text-white">Notifications</h3>
                 </div>
                 <div className="max-h-[28rem] overflow-y-auto custom-scrollbar">
                   {isLoadingNotifs ? (
-                    <div className="p-6 text-center text-slate-500">Loading...</div>
+                    <div className="p-6 text-center text-slate-500 text-sm">Loading...</div>
                   ) : (
                     <div className="p-8 flex flex-col items-center justify-center text-slate-500 dark:text-slate-400">
                       <div className="w-12 h-12 rounded-full bg-emerald-100 dark:bg-emerald-900/30 flex items-center justify-center mb-3">
                         <CheckCircle className="w-6 h-6 text-emerald-600 dark:text-emerald-400" />
                       </div>
-                      <p className="font-bold text-slate-900 dark:text-white">No new notifications</p>
-                      <p className="text-xs mt-1">All caught up</p>
+                      <p className="font-semibold text-slate-900 dark:text-white text-sm">No new notifications</p>
+                      <p className="text-xs text-slate-500 dark:text-slate-400 mt-1">All caught up</p>
                     </div>
                   )}
                 </div>
@@ -142,35 +142,38 @@ export function Topbar({
           </div>
 
           {/* Profile Dropdown */}
-          <div className="relative ml-2" ref={(el) => { if (el) dropdownRefs.current["profile"] = el; }}>
+          <div className="relative" ref={(el) => { if (el) dropdownRefs.current["profile"] = el; }}>
             <button
               onClick={() => toggleDropdown("profile")}
-              className="flex items-center gap-2 pl-2 pr-1 py-1 rounded-full border border-slate-200 dark:border-white/10 hover:bg-slate-50 dark:hover:bg-[#1c1b1b] transition-colors"
+              className="flex items-center gap-2 px-2 py-1.5 rounded-lg border border-slate-200 dark:border-slate-800 hover:bg-slate-50 dark:hover:bg-slate-800/50 transition-colors flex-shrink-0"
             >
-              <div className="w-7 h-7 rounded-full bg-slate-900 dark:bg-[#EBFF00] flex items-center justify-center">
-                <span className="text-xs font-bold text-white dark:text-black">
+              <div className="w-7 h-7 rounded-full bg-slate-200 dark:bg-slate-700 flex items-center justify-center flex-shrink-0">
+                <span className="text-xs font-bold text-slate-900 dark:text-white">
                   {userName.charAt(0).toUpperCase()}
                 </span>
               </div>
+              <span className="text-sm font-medium text-slate-600 dark:text-slate-300 hidden sm:inline">
+                {userName}
+              </span>
             </button>
 
             {openDropdown === "profile" && (
-               <div className="absolute right-0 mt-2 w-56 bg-white dark:bg-[#131313] rounded-xl shadow-2xl border border-slate-200 dark:border-white/10 z-50 overflow-hidden">
-                <div className="p-4 border-b border-slate-200 dark:border-white/10">
-                  <p className="font-bold text-sm text-slate-900 dark:text-white truncate">{userName}</p>
+              <div className="absolute right-0 mt-2 w-56 bg-white dark:bg-slate-900 rounded-xl shadow-lg border border-slate-200 dark:border-slate-800 z-50 overflow-hidden">
+                <div className="p-4 border-b border-slate-200 dark:border-slate-800">
+                  <p className="font-semibold text-sm text-slate-900 dark:text-white truncate">{userName}</p>
                   <p className="text-xs text-slate-500 dark:text-slate-400 truncate">{userEmail}</p>
                 </div>
                 <div className="p-2 flex flex-col gap-1">
                   <Link
                     href={userRole === "ADMIN" ? "/admin/settings/profile" : "/student/profile"}
                     onClick={() => setOpenDropdown(null)}
-                    className="flex items-center gap-3 px-3 py-2 rounded-md text-sm font-semibold text-slate-700 dark:text-slate-300 hover:bg-slate-100 dark:hover:bg-[#1c1b1b] hover:text-slate-900 dark:hover:text-[#EBFF00] transition-colors"
+                    className="flex items-center gap-3 px-3 py-2 rounded-lg text-sm font-medium text-slate-700 dark:text-slate-300 hover:bg-slate-100 dark:hover:bg-slate-800/50 hover:text-slate-900 dark:hover:text-white transition-colors"
                   >
                     <User className="w-4 h-4" /> Profile
                   </Link>
                   <button
                     onClick={() => { setOpenDropdown(null); handleLogout(); }}
-                    className="flex items-center gap-3 px-3 py-2 rounded-md text-sm font-semibold text-rose-600 dark:text-rose-400 hover:bg-rose-50 dark:hover:bg-rose-950/30 transition-colors w-full text-left"
+                    className="flex items-center gap-3 px-3 py-2 rounded-lg text-sm font-medium text-rose-600 dark:text-rose-400 hover:bg-rose-50 dark:hover:bg-rose-950/30 transition-colors w-full text-left"
                   >
                     <LogOut className="w-4 h-4" /> Sign Out
                   </button>
