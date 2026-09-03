@@ -171,25 +171,8 @@ export function NeonLoginForm() {
         </button>
       </form>
 
-      {/* Footer Link */}
-      {role === "STUDENT" && (
-        <div className="mt-8 text-center pt-6 border-t border-white/5">
-          <p className="text-sm text-slate-400">
-            Don't have an account?{" "}
-            <a
-              href="#"
-              className="text-[#EBFF00] font-bold hover:text-[#d4e600] transition-colors"
-              onClick={(e) => e.preventDefault()}
-              title="Coming soon"
-            >
-              Sign up
-            </a>
-          </p>
-        </div>
-      )}
-
       {/* Footer Text */}
-      <p className="text-[11px] text-slate-600 text-center mt-6 font-medium">
+      <p className="text-[11px] text-slate-600 text-center mt-8 font-medium">
         🔒 Secure connection • Unauthorized access prohibited
       </p>
     </div>
