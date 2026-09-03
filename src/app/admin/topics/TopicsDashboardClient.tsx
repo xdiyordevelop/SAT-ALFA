@@ -199,8 +199,8 @@ export default function TopicsDashboardClient({ topics, groups }: Props) {
                   <span
                     className={`text-xs font-bold px-2.5 py-1 rounded-full flex-shrink-0 ${
                       topic.subject === "MATH"
-                        ? "bg-emerald-100 dark:bg-emerald-900/30 text-emerald-700 dark:text-emerald-400"
-                        : "bg-yellow-100 dark:bg-yellow-900/30 text-yellow-700 dark:text-yellow-400"
+                        ? "bg-blue-100 dark:bg-blue-900/30 text-blue-700 dark:text-blue-400"
+                        : "bg-[#EBFF00]/20 text-[#EBFF00] dark:text-[#EBFF00]"
                     }`}
                   >
                     {topic.subject === "MATH" ? "Math" : "Reading & Writing"}
@@ -310,12 +310,12 @@ export default function TopicsDashboardClient({ topics, groups }: Props) {
                       <div key={progress.id} className="relative pl-8">
                         {/* Timeline Dot */}
                         <div
-                          className={`absolute -left-[11px] top-5 w-5 h-5 rounded-full border-2 bg-white dark:bg-[#131313] ] flex items-center justify-center {
- isApproved ? 'border-emerald-500' : isCurrent ? 'border-yellow-500' : 'border-neutral-300 '
+                          className={`absolute -left-[11px] top-5 w-5 h-5 rounded-full border-2 bg-white dark:bg-[#131313] ] flex items-center justify-center ${
+ isApproved ? 'border-green-500' : isCurrent ? 'border-[#EBFF00]' : 'border-neutral-300 '
  }`}
                         >
                           {isApproved && (
-                            <CheckCircle2 className="w-3 h-3 text-emerald-500" />
+                            <CheckCircle2 className="w-3 h-3 text-green-500" />
                           )}
                           {isCurrent && (
                             <div className="w-2 h-2 rounded-full bg-[#EBFF00]" />
@@ -330,9 +330,9 @@ export default function TopicsDashboardClient({ topics, groups }: Props) {
                                 Step {index + 1}
                               </span>
                               <span
-                                className={`text-xs font-bold {
- isApproved ? 'text-emerald-600 ' :
- isCurrent ? 'text-slate-900 dark:text-yellow-500 ' :
+                                className={`text-xs font-bold ${
+ isApproved ? 'text-green-600 ' :
+ isCurrent ? 'text-slate-900 dark:text-[#EBFF00] ' :
  'text-slate-500 dark:text-slate-400'
  }`}
                               >
@@ -353,7 +353,7 @@ export default function TopicsDashboardClient({ topics, groups }: Props) {
                                   : "Reading & Writing"}
                               </span>
                               {isApproved && progress.approvedAt && (
-                                <span className="text-emerald-600">
+                                <span className="text-green-600">
                                   Unlocked on:{" "}
                                   {new Date(
                                     progress.approvedAt,
@@ -392,9 +392,9 @@ export default function TopicsDashboardClient({ topics, groups }: Props) {
                                   progress.isApproved,
                                 )
                               }
-                              className={`flex items-center gap-2 px-4 py-2 rounded-lg font-medium text-sm transition-colors border {
- progress.isApproved 
- ? 'bg-emerald-50 text-emerald-700 border-emerald-200 hover:bg-emerald-100 '
+                              className={`flex items-center gap-2 px-4 py-2 rounded-lg font-medium text-sm transition-colors border ${
+ progress.isApproved
+ ? 'bg-green-50 text-green-700 border-green-200 hover:bg-green-100 '
  : 'bg-white dark:bg-[#131313] text-slate-700 dark:text-slate-300 border-slate-200 dark:border-white/10 hover:bg-slate-50 dark:bg-[#0a0a0a] '
  }`}
                             >
