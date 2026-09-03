@@ -59,7 +59,7 @@ export default async function StudentDashboardPage() {
     };
   });
 
-  // 3. Fetch student's previous test attempts (both SAT testing system & legacy)
+  // 3. Fetch student's previous test attempts with reviewIndex for analytics
   const studentId = student?.id || session.userId;
   const attemptsData = await prisma.studentTestAttempt.findMany({
     where: { studentId: studentId },
@@ -84,6 +84,7 @@ export default async function StudentDashboardPage() {
     totalScore: a.totalScore,
     rwScore: a.rwScore,
     mathScore: a.mathScore,
+    reviewIndex: a.reviewIndex as any, // Pass real reviewIndex data
   }));
 
   // Calculate metrics

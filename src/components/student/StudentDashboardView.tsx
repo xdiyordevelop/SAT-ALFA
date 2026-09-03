@@ -24,18 +24,7 @@ export interface PublishedTestItem {
   };
 }
 
-export interface AttemptHistoryItem {
-  id: string;
-  testId: string;
-  testName: string;
-  startedAt: string;
-  completedAt: string | null;
-  totalScore: number | null;
-  rwScore: number | null;
-  mathScore: number | null;
-}
-
-interface ReviewQuestion {
+export interface ReviewQuestion {
   questionId: string;
   module: number;
   questionNumber: number;
@@ -46,43 +35,50 @@ interface ReviewQuestion {
   skill?: string;
 }
 
-// Generate mock review data for UI - can be replaced with real API data later
-function generateMockReviewIndex(attempts: AttemptHistoryItem[]): ReviewQuestion[] {
-  const domains = [
-    "Heart of Algebra",
-    "Advanced Math",
-    "Problem Solving",
-    "Data Analysis",
-    "Geometry",
-    "Trigonometry",
-    "Standard English",
-    "Grammar",
-    "Vocabulary",
-  ];
+export interface AttemptHistoryItem {
+  id: string;
+  testId: string;
+  testName: string;
+  startedAt: string;
+  completedAt: string | null;
+  totalScore: number | null;
+  rwScore: number | null;
+  mathScore: number | null;
+  reviewIndex?: any[] | null;
+}
 
-  const mockQuestions: ReviewQuestion[] = [];
+function normalizeReviewQuestion(q: any): ReviewQuestion {
+  // Normalize module from "MODULE_1" to 1, "MODULE_2" to 2, etc.
+  let moduleNum = q.module;
+  if (typeof q.module === 'string') {
+    const match = q.module.match(/MODULE_(\d)/);
+    moduleNum = match ? parseInt(match[1]) : 1;
+  }
 
-  // Create ~50 mock questions spread across domains and modules
-  attempts.forEach((attempt, attemptIdx) => {
-    for (let i = 0; i < 50; i++) {
-      const domain = domains[i % domains.length];
-      const module = (i % 4) + 1;
-      const isCorrect = Math.random() > 0.3; // 70% correct rate
+  return {
+    questionId: q.questionId,
+    module: moduleNum,
+    questionNumber: q.questionNumber,
+    userAnswer: q.userAnswer,
+    correctAnswer: q.correctAnswer,
+    isCorrect: q.isCorrect,
+    domain: q.domain,
+    skill: q.skill,
+  };
+}
 
-      mockQuestions.push({
-        questionId: `${attempt.id}-q${i}`,
-        module,
-        questionNumber: (i % 27) + 1,
-        userAnswer: isCorrect ? "A" : "B",
-        correctAnswer: "A",
-        isCorrect,
-        domain,
-        skill: domain.toLowerCase(),
-      });
+function aggregateReviewIndex(attempts: AttemptHistoryItem[]): ReviewQuestion[] {
+  // Aggregate all reviewIndex data from completed attempts
+  const allQuestions: ReviewQuestion[] = [];
+
+  attempts.forEach((attempt) => {
+    if (attempt.completedAt && attempt.reviewIndex && Array.isArray(attempt.reviewIndex)) {
+      const normalized = attempt.reviewIndex.map(normalizeReviewQuestion);
+      allQuestions.push(...normalized);
     }
   });
 
-  return mockQuestions;
+  return allQuestions;
 }
 
 interface StudentDashboardViewProps {
@@ -245,9 +241,9 @@ export function StudentDashboardView({
             <h3 className="text-xl font-bold text-slate-900 dark:text-white">Topic Performance</h3>
           </div>
 
-          {attempts.length > 0 ? (
+          {attempts.length > 0 && attempts.some(a => a.completedAt && a.reviewIndex) ? (
             <PerformanceBreakdown
-              reviewIndex={generateMockReviewIndex(attempts)}
+              reviewIndex={aggregateReviewIndex(attempts)}
             />
           ) : (
             <div className="text-center py-12 text-slate-500 dark:text-slate-400">
