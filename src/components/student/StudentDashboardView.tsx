@@ -11,6 +11,7 @@ import {
   YAxis,
   CartesianGrid
 } from "recharts";
+import { PerformanceBreakdown } from "@/app/student/results/[id]/components/PerformanceBreakdown";
 
 export interface PublishedTestItem {
   id: string;
@@ -32,6 +33,56 @@ export interface AttemptHistoryItem {
   totalScore: number | null;
   rwScore: number | null;
   mathScore: number | null;
+}
+
+interface ReviewQuestion {
+  questionId: string;
+  module: number;
+  questionNumber: number;
+  userAnswer: string;
+  correctAnswer: string;
+  isCorrect: boolean;
+  domain?: string;
+  skill?: string;
+}
+
+// Generate mock review data for UI - can be replaced with real API data later
+function generateMockReviewIndex(attempts: AttemptHistoryItem[]): ReviewQuestion[] {
+  const domains = [
+    "Heart of Algebra",
+    "Advanced Math",
+    "Problem Solving",
+    "Data Analysis",
+    "Geometry",
+    "Trigonometry",
+    "Standard English",
+    "Grammar",
+    "Vocabulary",
+  ];
+
+  const mockQuestions: ReviewQuestion[] = [];
+
+  // Create ~50 mock questions spread across domains and modules
+  attempts.forEach((attempt, attemptIdx) => {
+    for (let i = 0; i < 50; i++) {
+      const domain = domains[i % domains.length];
+      const module = (i % 4) + 1;
+      const isCorrect = Math.random() > 0.3; // 70% correct rate
+
+      mockQuestions.push({
+        questionId: `${attempt.id}-q${i}`,
+        module,
+        questionNumber: (i % 27) + 1,
+        userAnswer: isCorrect ? "A" : "B",
+        correctAnswer: "A",
+        isCorrect,
+        domain,
+        skill: domain.toLowerCase(),
+      });
+    }
+  });
+
+  return mockQuestions;
 }
 
 interface StudentDashboardViewProps {
@@ -191,49 +242,18 @@ export function StudentDashboardView({
         <div className="col-span-1 md:col-span-3 bg-white dark:bg-[#131313] border border-slate-200 dark:border-white/10 rounded-2xl p-6 lg:p-8 shadow-sm">
           <div className="flex items-center gap-3 mb-6">
             <BrainCircuit className="w-6 h-6 text-slate-900 dark:text-[#EBFF00]" />
-            <h3 className="text-xl font-bold text-slate-900 dark:text-white">Performance Analysis</h3>
+            <h3 className="text-xl font-bold text-slate-900 dark:text-white">Topic Performance</h3>
           </div>
 
-          <div className="grid grid-cols-1 md:grid-cols-3 gap-6 mb-8">
-            <div className="bg-slate-50 dark:bg-[#1c1b1b] border border-slate-200 dark:border-white/10 rounded-xl p-5 text-center">
-              <p className="text-xs font-bold text-slate-500 dark:text-slate-400 uppercase tracking-wider mb-2">Tests Completed</p>
-              <p className="text-3xl font-black text-slate-900 dark:text-[#EBFF00]">{metrics.testsTaken}</p>
+          {attempts.length > 0 ? (
+            <PerformanceBreakdown
+              reviewIndex={generateMockReviewIndex(attempts)}
+            />
+          ) : (
+            <div className="text-center py-12 text-slate-500 dark:text-slate-400">
+              <p className="text-sm">Complete a test to see your topic performance breakdown.</p>
             </div>
-
-            <div className="bg-slate-50 dark:bg-[#1c1b1b] border border-slate-200 dark:border-white/10 rounded-xl p-5 text-center">
-              <p className="text-xs font-bold text-slate-500 dark:text-slate-400 uppercase tracking-wider mb-2">Highest Score</p>
-              <p className="text-3xl font-black text-slate-900 dark:text-[#EBFF00]">{metrics.highestScore || '---'}</p>
-            </div>
-
-            <div className="bg-slate-50 dark:bg-[#1c1b1b] border border-slate-200 dark:border-white/10 rounded-xl p-5 text-center">
-              <p className="text-xs font-bold text-slate-500 dark:text-slate-400 uppercase tracking-wider mb-2">Average Score</p>
-              <p className="text-3xl font-black text-slate-900 dark:text-[#EBFF00]">{metrics.averageScore > 0 ? Math.round(metrics.averageScore) : '---'}</p>
-            </div>
-          </div>
-
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-            <div className="border border-slate-200 dark:border-white/10 rounded-xl p-5 bg-slate-50 dark:bg-[#1c1b1b]">
-              <div className="flex justify-between items-start mb-4">
-                <h4 className="font-bold text-slate-900 dark:text-white">Reading & Writing</h4>
-                <span className="text-sm font-bold text-slate-900 dark:text-[#EBFF00]">{metrics.rwAvg}/800</span>
-              </div>
-              <div className="w-full bg-slate-200 dark:bg-[#2a2a2a] h-3 rounded-full overflow-hidden">
-                <div className="bg-blue-500 h-full rounded-full shadow-[0_0_10px_rgba(59,130,246,0.5)]" style={{ width: `${Math.min((metrics.rwAvg / 800) * 100, 100)}%` }}></div>
-              </div>
-              <p className="text-xs text-slate-600 dark:text-slate-400 mt-3">Your performance in reading comprehension and writing skills.</p>
-            </div>
-
-            <div className="border border-slate-200 dark:border-white/10 rounded-xl p-5 bg-slate-50 dark:bg-[#1c1b1b]">
-              <div className="flex justify-between items-start mb-4">
-                <h4 className="font-bold text-slate-900 dark:text-white">Math</h4>
-                <span className="text-sm font-bold text-slate-900 dark:text-[#EBFF00]">{metrics.mathAvg}/800</span>
-              </div>
-              <div className="w-full bg-slate-200 dark:bg-[#2a2a2a] h-3 rounded-full overflow-hidden">
-                <div className="bg-green-500 h-full rounded-full shadow-[0_0_10px_rgba(34,197,94,0.5)]" style={{ width: `${Math.min((metrics.mathAvg / 800) * 100, 100)}%` }}></div>
-              </div>
-              <p className="text-xs text-slate-600 dark:text-slate-400 mt-3">Your mathematical problem-solving and algebra skills.</p>
-            </div>
-          </div>
+          )}
         </div>
 
         {/* Recent Results History */}
