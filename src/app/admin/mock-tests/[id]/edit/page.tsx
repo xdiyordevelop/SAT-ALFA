@@ -313,7 +313,7 @@ function QuestionCard({
             </div>
             {/* AI Image Import */}
             <div>
-              <label className="flex items-center gap-2 cursor-pointer bg-yellow-500 hover:bg-yellow-600 dark:bg-yellow-600 dark:hover:bg-yellow-700 text-slate-900 dark:text-white text-slate-900 dark:text-white px-3 py-2 rounded text-sm w-max transition-colors">
+              <label className="flex items-center gap-2 cursor-pointer bg-[#EBFF00] hover:bg-[#EBFF00] dark:bg-[#EBFF00] dark:hover:bg-[#d9ff00] text-slate-900 dark:text-white text-slate-900 dark:text-white px-3 py-2 rounded text-sm w-max transition-colors">
                 {aiParseLoading ? "Parsing image..." : "Import from Screenshot"}
                 <input
                   type="file"
@@ -339,7 +339,7 @@ function QuestionCard({
               <Button
                 onClick={handleAiFix}
                 disabled={aiFixLoading || !aiFixInstruction}
-                className="bg-yellow-500 hover:bg-yellow-600 dark:bg-yellow-600 dark:hover:bg-yellow-700 text-slate-900 dark:text-white"
+                className="bg-[#EBFF00] hover:bg-[#EBFF00] dark:bg-[#EBFF00] dark:hover:bg-[#d9ff00] text-slate-900 dark:text-white"
               >
                 {aiFixLoading ? "Fixing..." : "AI Fix"}
               </Button>
@@ -577,7 +577,7 @@ function QuestionCard({
           <div className="flex gap-2 pt-4">
             <Button
               onClick={() => onSave(editData)}
-              className="bg-yellow-600 hover:bg-yellow-700 text-slate-900 font-bold flex items-center gap-2 flex-1"
+              className="bg-[#EBFF00] hover:bg-[#d9ff00] text-slate-900 font-bold flex items-center gap-2 flex-1"
             >
               <Save className="w-4 h-4" /> Save Question
             </Button>
@@ -618,7 +618,7 @@ function QuestionCard({
           </Button>
           <Button
             onClick={onEdit}
-            className="bg-yellow-600 hover:bg-yellow-700 text-slate-900 px-3 py-1"
+            className="bg-[#EBFF00] hover:bg-[#d9ff00] text-slate-900 px-3 py-1"
           >
             Edit
           </Button>

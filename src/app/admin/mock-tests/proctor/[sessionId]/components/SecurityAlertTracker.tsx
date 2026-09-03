@@ -118,8 +118,8 @@ export function SecurityAlertTracker({
                             ? severity === "high"
                               ? "bg-red-500"
                               : severity === "medium"
-                                ? "bg-yellow-500"
-                                : "bg-yellow-500"
+                                ? "bg-[#EBFF00]"
+                                : "bg-[#EBFF00]"
                             : "bg-slate-100 dark:bg-[#1c1b1b]"
                         }`}
                       />
@@ -139,13 +139,13 @@ export function SecurityAlertTracker({
         </p>
         <div className="grid grid-cols-3 gap-3">
           <div className="flex items-center gap-2">
-            <div className="w-3 h-3 bg-yellow-500 rounded-full" />
+            <div className="w-3 h-3 bg-[#EBFF00] rounded-full" />
             <span className="text-xs text-slate-500 dark:text-slate-400">
               1-2 exits
             </span>
           </div>
           <div className="flex items-center gap-2">
-            <div className="w-3 h-3 bg-yellow-500 rounded-full" />
+            <div className="w-3 h-3 bg-[#EBFF00] rounded-full" />
             <span className="text-xs text-slate-500 dark:text-slate-400">
               3-4 exits
             </span>

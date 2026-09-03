@@ -367,7 +367,7 @@ export function AdminSubmissionDetail({
           </div>
           <div className="w-full bg-slate-100 dark:bg-[#1c1b1b] rounded-full h-2 overflow-hidden">
             <div
-              className="bg-yellow-500 h-2 rounded-full transition-all duration-500"
+              className="bg-[#EBFF00] h-2 rounded-full transition-all duration-500"
               style={{
                 width: `${mathScore ? Math.min(100, ((mathScore - 200) / 600) * 100) : 0}%`,
               }}
@@ -395,7 +395,7 @@ export function AdminSubmissionDetail({
           </div>
           <div className="w-full bg-slate-100 dark:bg-[#1c1b1b] rounded-full h-2 overflow-hidden">
             <div
-              className="bg-yellow-600 h-2 rounded-full transition-all duration-500"
+              className="bg-[#EBFF00] h-2 rounded-full transition-all duration-500"
               style={{
                 width: `${englishScore ? Math.min(100, ((englishScore - 200) / 600) * 100) : 0}%`,
               }}
@@ -447,7 +447,7 @@ export function AdminSubmissionDetail({
                   <div className="w-full bg-neutral-200 rounded-full h-2 overflow-hidden">
                     <div
                       className={`h-2 rounded-full transition-all duration-500 ${
-                        isHigh ? "bg-emerald-500" : isMedium ? "bg-yellow-500" : "bg-red-500"
+                        isHigh ? "bg-emerald-500" : isMedium ? "bg-[#EBFF00]" : "bg-red-500"
                       }`}
                       style={{
                         width: `${Math.min(100, Math.max(0, topic.percentage))}%`,
@@ -585,7 +585,7 @@ export function AdminSubmissionDetail({
                   key={i}
                   className="flex items-center gap-2 text-sm text-slate-700 dark:text-slate-300 "
                 >
-                  <span className="w-1.5 h-1.5 rounded-full bg-yellow-600 " />
+                  <span className="w-1.5 h-1.5 rounded-full bg-[#EBFF00] " />
                   {item}
                 </li>
               ))}

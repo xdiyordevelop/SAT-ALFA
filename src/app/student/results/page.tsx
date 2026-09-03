@@ -59,7 +59,7 @@ function scoreBg(score: number, max: number): string {
     return "bg-emerald-500/15 border-emerald-500/30 text-emerald-500";
   if (pct >= 0.65) return "bg-blue-500/15 border-blue-500/30 text-blue-300";
   if (pct >= 0.45)
-    return "bg-yellow-500/15 border-yellow-500/30 text-yellow-500";
+    return "bg-[#EBFF00]/15 border-yellow-500/30 text-yellow-500";
   return "bg-red-500/15 border-red-500/30 text-red-300";
 }
 

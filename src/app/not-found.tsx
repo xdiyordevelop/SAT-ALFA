@@ -23,7 +23,7 @@ export default function NotFound() {
         <div className="flex flex-col sm:flex-row gap-4 justify-center">
           <Link
             href="/"
-            className="px-6 py-3 bg-yellow-600 hover:bg-yellow-700 text-slate-900 rounded-lg font-medium transition-colors inline-flex items-center justify-center gap-2"
+            className="px-6 py-3 bg-[#EBFF00] hover:bg-[#d9ff00] text-slate-900 rounded-lg font-medium transition-colors inline-flex items-center justify-center gap-2"
           >
             <ArrowLeft className="w-4 h-4" />
             Go Home

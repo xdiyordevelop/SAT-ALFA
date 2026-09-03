@@ -116,7 +116,7 @@ export function GroupDetailContent({
       {/* A. Group Header & Settings Bar */}
       <div className="bg-white dark:bg-[#131313] border border-slate-200 dark:border-white/10 rounded-2xl p-6 md:p-8 flex flex-col md:flex-row md:items-center justify-between gap-6 relative overflow-hidden">
         {/* Decorative background element */}
-        <div className="absolute top-0 right-0 w-64 h-64 bg-yellow-500/5 rounded-full blur-3xl -translate-y-1/2 translate-x-1/3 pointer-events-none" />
+        <div className="absolute top-0 right-0 w-64 h-64 bg-[#EBFF00]/5 rounded-full blur-3xl -translate-y-1/2 translate-x-1/3 pointer-events-none" />
 
         <div>
           <div className="flex items-center gap-3 mb-2">
@@ -132,7 +132,7 @@ export function GroupDetailContent({
           </p>
           <div className="flex items-center gap-6 mt-4">
             <div className="flex items-center gap-2">
-              <div className="w-8 h-8 rounded-lg bg-yellow-500/10 flex items-center justify-center text-yellow-500">
+              <div className="w-8 h-8 rounded-lg bg-[#EBFF00]/10 flex items-center justify-center text-yellow-500">
                 <Users className="w-4 h-4" />
               </div>
               <span className="text-sm font-medium text-slate-700 dark:text-slate-300">
@@ -140,7 +140,7 @@ export function GroupDetailContent({
               </span>
             </div>
             <div className="flex items-center gap-2">
-              <div className="w-8 h-8 rounded-lg bg-yellow-500/10 flex items-center justify-center text-yellow-500 font-bold">
+              <div className="w-8 h-8 rounded-lg bg-[#EBFF00]/10 flex items-center justify-center text-yellow-500 font-bold">
                 $
               </div>
               <span className="text-sm font-medium text-slate-700 dark:text-slate-300">
@@ -160,7 +160,7 @@ export function GroupDetailContent({
           </Link>
           <button
             onClick={() => setShowEditModal(true)}
-            className="flex items-center gap-2 px-4 py-2 bg-yellow-500 hover:bg-yellow-400 text-slate-950 rounded-lg font-bold transition-colors"
+            className="flex items-center gap-2 px-4 py-2 bg-[#EBFF00] hover:bg-[#d9ff00] text-slate-950 rounded-lg font-bold transition-colors"
           >
             <Edit2 className="w-4 h-4" />
             Edit Group
@@ -188,7 +188,7 @@ export function GroupDetailContent({
           </div>
           <button
             onClick={() => setShowAddStudentModal(true)}
-            className="flex items-center gap-2 px-4 py-2 bg-yellow-500 hover:bg-yellow-400 text-slate-950 rounded-lg font-bold transition-colors whitespace-nowrap"
+            className="flex items-center gap-2 px-4 py-2 bg-[#EBFF00] hover:bg-[#d9ff00] text-slate-950 rounded-lg font-bold transition-colors whitespace-nowrap"
           >
             <UserPlus className="w-4 h-4" />
             Add Student
@@ -257,7 +257,7 @@ export function GroupDetailContent({
                           </span>
                         )}
                         {status === "PARTIAL" && (
-                          <span className="inline-block px-2.5 py-1 bg-yellow-500/10 text-slate-900 dark:text-yellow-500 border border-yellow-500/20 rounded-md text-[11px] font-bold tracking-wider">
+                          <span className="inline-block px-2.5 py-1 bg-[#EBFF00]/10 text-slate-900 dark:text-yellow-500 border border-yellow-500/20 rounded-md text-[11px] font-bold tracking-wider">
                             PARTIAL (-{formatUZS(debt)})
                           </span>
                         )}
@@ -340,7 +340,7 @@ export function GroupDetailContent({
               <button
                 onClick={handleSaveEdit}
                 disabled={isPending}
-                className="flex-1 px-4 py-2.5 rounded-xl bg-yellow-500 hover:bg-yellow-400 text-slate-950 transition-colors font-bold disabled:opacity-50 flex items-center justify-center"
+                className="flex-1 px-4 py-2.5 rounded-xl bg-[#EBFF00] hover:bg-[#d9ff00] text-slate-950 transition-colors font-bold disabled:opacity-50 flex items-center justify-center"
               >
                 {isPending ? "Saving..." : "Save Changes"}
               </button>
@@ -443,7 +443,7 @@ export function GroupDetailContent({
                       <button
                         onClick={() => handleAddStudent(student.id)}
                         disabled={isPending}
-                        className="px-4 py-2 text-sm bg-yellow-500/10 hover:bg-yellow-500/20 text-slate-900 dark:text-yellow-500 border border-yellow-500/20 rounded-lg font-medium transition-colors disabled:opacity-50"
+                        className="px-4 py-2 text-sm bg-[#EBFF00]/10 hover:bg-[#EBFF00]/20 text-slate-900 dark:text-yellow-500 border border-yellow-500/20 rounded-lg font-medium transition-colors disabled:opacity-50"
                       >
                         Add to Group
                       </button>

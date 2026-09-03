@@ -533,7 +533,7 @@ export function StudentDetailContent({
             </p>
             <button
               onClick={() => setShowEditModal(false)}
-              className="w-full px-4 py-2 bg-yellow-600 hover:bg-yellow-700 text-slate-900 rounded-lg font-medium"
+              className="w-full px-4 py-2 bg-[#EBFF00] hover:bg-[#d9ff00] text-slate-900 rounded-lg font-medium"
             >
               Close
             </button>

@@ -129,7 +129,7 @@ export default function PaymentsPage() {
                     {formatUZS(data?.totalExpected || 0)}
                   </h3>
                 </div>
-                <div className="p-3 bg-yellow-500/10 rounded-xl text-yellow-600">
+                <div className="p-3 bg-[#EBFF00]/10 rounded-xl text-yellow-600">
                   <DollarSign className="w-6 h-6" />
                 </div>
               </div>
@@ -167,7 +167,7 @@ export default function PaymentsPage() {
                     {formatUZS(data?.totalDebt || 0)}
                   </h3>
                 </div>
-                <div className="p-3 bg-yellow-500/10 rounded-xl text-yellow-600">
+                <div className="p-3 bg-[#EBFF00]/10 rounded-xl text-yellow-600">
                   <AlertCircle className="w-6 h-6" />
                 </div>
               </div>

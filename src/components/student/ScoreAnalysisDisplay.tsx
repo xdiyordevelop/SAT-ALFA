@@ -177,7 +177,7 @@ export function ScoreAnalysisDisplay({
         {" "}
         <h2 className="text-2xl font-bold text-slate-900 dark:text-white flex items-center gap-2">
           {" "}
-          <span className="w-1 h-8 bg-yellow-500 rounded-full" /> English
+          <span className="w-1 h-8 bg-[#EBFF00] rounded-full" /> English
           Analysis{" "}
         </h2>{" "}
         <div className="grid grid-cols-1 md:grid-cols-2 gap-6">

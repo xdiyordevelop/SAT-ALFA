@@ -135,7 +135,7 @@ export function LoginForm() {
         <button
           type="submit"
           disabled={loading || !username || !password}
-          className="w-full h-11 mt-6 bg-yellow-500 hover:bg-yellow-600 text-slate-900 font-bold rounded-lg shadow-sm transition-all duration-200 flex items-center justify-center disabled:opacity-70 disabled:cursor-not-allowed"
+          className="w-full h-11 mt-6 bg-[#EBFF00] hover:bg-[#EBFF00] text-slate-900 font-bold rounded-lg shadow-sm transition-all duration-200 flex items-center justify-center disabled:opacity-70 disabled:cursor-not-allowed"
         >
           {loading ? (
             <Loader2 className="w-5 h-5 animate-spin" />

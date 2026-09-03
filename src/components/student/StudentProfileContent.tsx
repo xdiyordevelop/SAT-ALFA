@@ -356,7 +356,7 @@ export function StudentProfileContent({
                     <button
                       onClick={handleUpdatePhone}
                       disabled={loading}
-                      className="flex-1 px-4 py-2 bg-yellow-600 hover:bg-yellow-700 disabled:bg-neutral-400 text-slate-900 rounded-lg font-medium transition-colors flex items-center justify-center gap-2"
+                      className="flex-1 px-4 py-2 bg-[#EBFF00] hover:bg-[#d9ff00] disabled:bg-neutral-400 text-slate-900 rounded-lg font-medium transition-colors flex items-center justify-center gap-2"
                     >
                       <Save className="w-4 h-4" />
                       Save
@@ -453,7 +453,7 @@ export function StudentProfileContent({
                     <button
                       onClick={handleChangePassword}
                       disabled={loading}
-                      className="flex-1 px-4 py-2 bg-yellow-600 hover:bg-yellow-700 disabled:bg-neutral-400 text-slate-900 rounded-lg font-medium transition-colors flex items-center justify-center gap-2"
+                      className="flex-1 px-4 py-2 bg-[#EBFF00] hover:bg-[#d9ff00] disabled:bg-neutral-400 text-slate-900 rounded-lg font-medium transition-colors flex items-center justify-center gap-2"
                     >
                       <Save className="w-4 h-4" />
                       Update Password

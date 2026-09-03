@@ -293,7 +293,7 @@ export function AdminMockTestsRoom({
           </p>
           <Link
             href="/admin/mock-tests/import"
-            className="inline-flex items-center gap-2 bg-yellow-400 hover:bg-yellow-300 text-slate-950 font-bold px-6 py-2.5 rounded-xl text-sm transition-colors"
+            className="inline-flex items-center gap-2 bg-yellow-400 hover:bg-[#d9ff00] text-slate-950 font-bold px-6 py-2.5 rounded-xl text-sm transition-colors"
           >
             <Sparkles className="w-4 h-4" />
             Import New Test Now
@@ -335,7 +335,7 @@ export function AdminMockTestsRoom({
                       ) : (
                         <span
                           className={`w-2 h-2 rounded-full {
- isPublished ? 'bg-emerald-400 shadow-[0_0_8px_#34d399]' : 'bg-yellow-500'
+ isPublished ? 'bg-emerald-400 shadow-[0_0_8px_#34d399]' : 'bg-[#EBFF00]'
  }`}
                         />
                       )}

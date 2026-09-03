@@ -393,7 +393,7 @@ export default function ProctorDashboardClient() {
       {confirmModal.isOpen && (
         <div className="fixed inset-0 z-50 flex items-center justify-center bg-white/50 dark:bg-[#0a0a0a]/80 backdrop-blur-sm p-4">
           <div className="bg-white dark:bg-[#131313] border border-slate-200 dark:border-white/10 rounded-2xl p-6 md:p-8 w-full max-w-sm shadow-2xl relative overflow-hidden">
-             <div className={`absolute top-0 left-0 w-full h-1 ${confirmModal.action === "DISQUALIFY" ? "bg-yellow-500" : "bg-yellow-500 dark:bg-[#EBFF00]"}`}></div>
+             <div className={`absolute top-0 left-0 w-full h-1 ${confirmModal.action === "DISQUALIFY" ? "bg-[#EBFF00]" : "bg-[#EBFF00] dark:bg-[#EBFF00]"}`}></div>
             <h3 className="text-xl font-black text-slate-900 dark:text-white mb-2">
               {confirmModal.title}
             </h3>
@@ -411,8 +411,8 @@ export default function ProctorDashboardClient() {
               <Button
                 className={
                   confirmModal.action === "DISQUALIFY"
-                    ? "bg-yellow-600 hover:bg-yellow-700 text-white border-transparent"
-                    : "bg-yellow-500 dark:bg-[#EBFF00] hover:bg-yellow-400 dark:hover:bg-white text-slate-950 border-transparent font-bold"
+                    ? "bg-[#EBFF00] hover:bg-[#d9ff00] text-white border-transparent"
+                    : "bg-[#EBFF00] dark:bg-[#EBFF00] hover:bg-[#d9ff00] dark:hover:bg-white text-slate-950 border-transparent font-bold"
                 }
                 onClick={() =>
                   handleAction(

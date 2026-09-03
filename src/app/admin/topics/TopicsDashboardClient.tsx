@@ -243,7 +243,7 @@ export default function TopicsDashboardClient({ topics, groups }: Props) {
 
                 <button
                   onClick={() => setAssignModalOpen(topic.id)}
-                  className="w-full py-2 bg-yellow-500 hover:bg-yellow-600 dark:bg-yellow-600 dark:hover:bg-yellow-700 text-slate-900 dark:text-white rounded font-medium text-xs transition-colors mt-auto"
+                  className="w-full py-2 bg-[#EBFF00] hover:bg-[#EBFF00] dark:bg-[#EBFF00] dark:hover:bg-[#d9ff00] text-slate-900 dark:text-white rounded font-medium text-xs transition-colors mt-auto"
                 >
                   + Assign to Group
                 </button>
@@ -288,7 +288,7 @@ export default function TopicsDashboardClient({ topics, groups }: Props) {
             {activeGroup && (
               <button
                 onClick={() => setRoadmapAssignModal(true)}
-                className="px-5 py-2.5 bg-yellow-600 hover:bg-yellow-700 text-slate-900 rounded-lg font-medium transition-colors flex items-center justify-center gap-2 sm:mt-6"
+                className="px-5 py-2.5 bg-[#EBFF00] hover:bg-[#d9ff00] text-slate-900 rounded-lg font-medium transition-colors flex items-center justify-center gap-2 sm:mt-6"
               >
                 <Plus className="w-4 h-4" /> Add Lesson to Group
               </button>
@@ -318,7 +318,7 @@ export default function TopicsDashboardClient({ topics, groups }: Props) {
                             <CheckCircle2 className="w-3 h-3 text-emerald-500" />
                           )}
                           {isCurrent && (
-                            <div className="w-2 h-2 rounded-full bg-yellow-500" />
+                            <div className="w-2 h-2 rounded-full bg-[#EBFF00]" />
                           )}
                         </div>
 

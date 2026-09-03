@@ -48,7 +48,7 @@ export function StudentMockTestsHub({
         <div className="flex gap-3">
           <Link
             href="/student/mock-tests/proctor/join"
-            className="px-5 py-2.5 bg-yellow-500/10 hover:bg-yellow-500/20 border border-yellow-500/20 text-slate-900 dark:text-yellow-500 rounded-xl font-bold transition-all flex items-center justify-center gap-2 whitespace-nowrap shadow-[0_0_15px_rgba(245,158,11,0.1)] hover:shadow-[0_0_20px_rgba(245,158,11,0.2)]"
+            className="px-5 py-2.5 bg-[#EBFF00]/10 hover:bg-[#EBFF00]/20 border border-yellow-500/20 text-slate-900 dark:text-yellow-500 rounded-xl font-bold transition-all flex items-center justify-center gap-2 whitespace-nowrap shadow-[0_0_15px_rgba(245,158,11,0.1)] hover:shadow-[0_0_20px_rgba(245,158,11,0.2)]"
           >
             <Video className="w-5 h-5" />
             Join Live Session with PIN
@@ -93,9 +93,9 @@ export function StudentMockTestsHub({
         </div>
 
         <div className="bg-white dark:bg-[#131313] border border-slate-200 dark:border-white/10 rounded-2xl p-6 relative overflow-hidden group hover:border-yellow-500/30 transition-colors">
-          <div className="absolute top-0 right-0 w-32 h-32 bg-yellow-500/5 rounded-full blur-2xl -translate-y-1/2 translate-x-1/3 pointer-events-none group-hover:bg-yellow-500/10 transition-colors" />
+          <div className="absolute top-0 right-0 w-32 h-32 bg-[#EBFF00]/5 rounded-full blur-2xl -translate-y-1/2 translate-x-1/3 pointer-events-none group-hover:bg-[#EBFF00]/10 transition-colors" />
           <div className="flex items-center gap-4 relative z-10">
-            <div className="w-12 h-12 rounded-xl bg-yellow-500/10 flex items-center justify-center shrink-0">
+            <div className="w-12 h-12 rounded-xl bg-[#EBFF00]/10 flex items-center justify-center shrink-0">
               <Trophy className="w-6 h-6 text-slate-900 dark:text-yellow-500" />
             </div>
             <div>
@@ -167,10 +167,10 @@ export function StudentMockTestsHub({
                         key={test.id}
                         className="bg-white dark:bg-[#131313] border border-slate-200 dark:border-white/10 rounded-2xl p-6 flex flex-col h-full hover:border-yellow-500/50 transition-all duration-300 relative overflow-hidden group shadow-lg shadow-black/20"
                       >
-                        <div className="absolute top-0 right-0 w-32 h-32 bg-yellow-500/5 rounded-full blur-2xl -translate-y-1/2 translate-x-1/3 pointer-events-none" />
+                        <div className="absolute top-0 right-0 w-32 h-32 bg-[#EBFF00]/5 rounded-full blur-2xl -translate-y-1/2 translate-x-1/3 pointer-events-none" />
 
                         <div className="mb-4 relative z-10">
-                          <span className="inline-flex px-2 py-1 bg-yellow-500/10 text-slate-900 dark:text-yellow-500 border border-yellow-500/20 rounded-md text-[10px] font-bold tracking-wider uppercase mb-3">
+                          <span className="inline-flex px-2 py-1 bg-[#EBFF00]/10 text-slate-900 dark:text-yellow-500 border border-yellow-500/20 rounded-md text-[10px] font-bold tracking-wider uppercase mb-3">
                             Digital SAT Full Test
                           </span>
                           <h3 className="text-lg font-bold text-slate-900 dark:text-white line-clamp-2 leading-tight">
@@ -209,7 +209,7 @@ export function StudentMockTestsHub({
                         <div className="relative z-10 pt-4 border-t border-slate-200 dark:border-white/10">
                           <Link
                             href={`/student/mock-tests/${test.id}/take`}
-                            className="w-full py-3 px-4 bg-yellow-500 hover:bg-yellow-400 text-slate-950 rounded-xl font-bold flex items-center justify-center gap-2 transition-colors group-hover:shadow-[0_0_20px_rgba(245,158,11,0.2)]"
+                            className="w-full py-3 px-4 bg-[#EBFF00] hover:bg-[#d9ff00] text-slate-950 rounded-xl font-bold flex items-center justify-center gap-2 transition-colors group-hover:shadow-[0_0_20px_rgba(245,158,11,0.2)]"
                           >
                             <PlayCircle className="w-5 h-5" />
                             Start Test
@@ -273,7 +273,7 @@ export function StudentMockTestsHub({
                               {attempt.rwScore || 0}
                             </td>
                             <td className="py-4 px-6">
-                              <span className="inline-flex px-3 py-1 bg-yellow-500/10 text-slate-900 dark:text-yellow-500 font-bold rounded-lg border border-yellow-500/20">
+                              <span className="inline-flex px-3 py-1 bg-[#EBFF00]/10 text-slate-900 dark:text-yellow-500 font-bold rounded-lg border border-yellow-500/20">
                                 {attempt.totalScore || 0}
                               </span>
                             </td>

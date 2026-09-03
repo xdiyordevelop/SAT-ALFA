@@ -115,10 +115,10 @@ export function StudentMockTestsHub({
             // In Progress Card
              return (
               <div key={test.id} className="bg-white dark:bg-[#131313] border border-yellow-500 dark:border-[#EBFF00] rounded-xl p-6 flex flex-col relative overflow-hidden shadow-[0_0_15px_rgba(235,255,0,0.1)]">
-                <div className="absolute top-0 right-0 w-32 h-32 bg-yellow-500 dark:bg-[#EBFF00] opacity-10 blur-[40px]"></div>
+                <div className="absolute top-0 right-0 w-32 h-32 bg-[#EBFF00] dark:bg-[#EBFF00] opacity-10 blur-[40px]"></div>
                 <div className="flex justify-between items-start mb-6 z-10">
                   <span className="bg-yellow-50 dark:bg-[#EBFF00]/10 border border-yellow-200 dark:border-[#EBFF00]/20 text-yellow-700 dark:text-[#EBFF00] font-bold uppercase tracking-wider px-3 py-1 rounded text-[10px] flex items-center gap-1.5">
-                    <span className="w-1.5 h-1.5 rounded-full bg-yellow-500 dark:bg-[#EBFF00] animate-pulse"></span> Davom etmoqda
+                    <span className="w-1.5 h-1.5 rounded-full bg-[#EBFF00] dark:bg-[#EBFF00] animate-pulse"></span> Davom etmoqda
                   </span>
                   <Timer className="w-5 h-5 text-yellow-600 dark:text-[#EBFF00]" />
                 </div>
@@ -139,7 +139,7 @@ export function StudentMockTestsHub({
             // Not Started Card
             return (
               <div key={test.id} className="bg-white dark:bg-[#131313] border border-slate-200 dark:border-white/10 rounded-xl p-6 flex flex-col hover:border-slate-300 dark:hover:border-[#EBFF00] transition-colors group relative overflow-hidden shadow-sm">
-                <div className="absolute top-0 right-0 w-32 h-32 bg-yellow-500 dark:bg-[#EBFF00] opacity-5 blur-[40px] group-hover:opacity-10 transition-opacity"></div>
+                <div className="absolute top-0 right-0 w-32 h-32 bg-[#EBFF00] dark:bg-[#EBFF00] opacity-5 blur-[40px] group-hover:opacity-10 transition-opacity"></div>
                 <div className="flex justify-between items-start mb-6 z-10">
                   <span className="bg-slate-100 dark:bg-[#1c1b1b] border border-slate-200 dark:border-white/5 text-slate-600 dark:text-slate-300 font-bold uppercase tracking-wider px-3 py-1 rounded text-[10px]">Boshlanmagan</span>
                   <Clock className="w-5 h-5 text-slate-400" />
@@ -151,7 +151,7 @@ export function StudentMockTestsHub({
                   <span>{test.questions.length} Savol</span>
                 </div>
                 <div className="mt-auto z-10">
-                   <Link href={`/student/mock-tests/${test.id}/take`} className="w-full bg-yellow-500 dark:bg-[#EBFF00] text-slate-950 font-bold py-3 px-4 rounded-lg hover:bg-yellow-400 dark:hover:bg-white active:scale-[0.98] transition-all flex items-center justify-center gap-2 shadow-[0_0_10px_rgba(235,255,0,0.1)]">
+                   <Link href={`/student/mock-tests/${test.id}/take`} className="w-full bg-[#EBFF00] dark:bg-[#EBFF00] text-slate-950 font-bold py-3 px-4 rounded-lg hover:bg-[#d9ff00] dark:hover:bg-white active:scale-[0.98] transition-all flex items-center justify-center gap-2 shadow-[0_0_10px_rgba(235,255,0,0.1)]">
                     <Play className="w-4 h-4" /> Boshlash
                   </Link>
                 </div>

@@ -408,7 +408,7 @@ export function AttendanceMarkingForm() {
           <button
             onClick={handleSave}
             disabled={saving || !selectedGroup}
-            className="px-6 py-3 bg-yellow-600 hover:bg-yellow-700 disabled:opacity-50 text-slate-900 rounded-lg font-medium transition-colors flex items-center gap-2"
+            className="px-6 py-3 bg-[#EBFF00] hover:bg-[#d9ff00] disabled:opacity-50 text-slate-900 rounded-lg font-medium transition-colors flex items-center gap-2"
           >
             <Save className="w-5 h-5" />
             {saving ? "Saving..." : "Save Attendance"}

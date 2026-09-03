@@ -74,7 +74,7 @@ export default function RoadmapClient({
         {" "}
         <button
           onClick={() => setShowAddModal(true)}
-          className="flex items-center gap-2 bg-yellow-600 hover:bg-yellow-700 text-slate-900 px-4 py-2 rounded-lg font-medium transition-colors"
+          className="flex items-center gap-2 bg-[#EBFF00] hover:bg-[#d9ff00] text-slate-900 px-4 py-2 rounded-lg font-medium transition-colors"
         >
           {" "}
           <Plus className="w-4 h-4" /> Add Topic to Roadmap{" "}
@@ -97,7 +97,7 @@ export default function RoadmapClient({
                   <Check className="w-3 h-3 text-green-500" />
                 )}{" "}
                 {isCurrent && (
-                  <div className="w-2 h-2 rounded-full bg-yellow-500" />
+                  <div className="w-2 h-2 rounded-full bg-[#EBFF00]" />
                 )}{" "}
               </div>{" "}
               <div
@@ -143,7 +143,7 @@ export default function RoadmapClient({
                     <button
                       onClick={() => toggleApproval(item.id, false)}
                       disabled={loading}
-                      className={`flex items-center gap-2 text-sm font-medium px-4 py-2 rounded-lg transition-colors { isCurrent ?'bg-yellow-600 hover:bg-yellow-700 text-slate-900' :'bg-slate-100 dark:bg-[#1c1b1b] text-slate-600 dark:text-slate-400 hover:bg-neutral-200' }`}
+                      className={`flex items-center gap-2 text-sm font-medium px-4 py-2 rounded-lg transition-colors { isCurrent ?'bg-[#EBFF00] hover:bg-[#d9ff00] text-slate-900' :'bg-slate-100 dark:bg-[#1c1b1b] text-slate-600 dark:text-slate-400 hover:bg-neutral-200' }`}
                     >
                       {" "}
                       {isCurrent ? (

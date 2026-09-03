@@ -68,9 +68,9 @@ export function CreateGroupForm() {
   if (success) {
     return (
       <div className="max-w-2xl animate-slide-up">
-        <div className="bg-yellow-500/10 border-2 border-yellow-500/20 rounded-2xl p-8 text-center">
+        <div className="bg-[#EBFF00]/10 border-2 border-yellow-500/20 rounded-2xl p-8 text-center">
           <div className="flex items-center justify-center mb-4">
-            <div className="w-12 h-12 rounded-full bg-yellow-500/20 flex items-center justify-center">
+            <div className="w-12 h-12 rounded-full bg-[#EBFF00]/20 flex items-center justify-center">
               <Check className="w-6 h-6 text-yellow-600 dark:text-yellow-400" />
             </div>
           </div>
@@ -154,7 +154,7 @@ export function CreateGroupForm() {
           <button
             type="submit"
             disabled={loading}
-            className="flex-1 px-6 py-3 bg-yellow-500 hover:bg-yellow-400 disabled:opacity-50 text-slate-950 rounded-xl font-bold transition-colors flex items-center justify-center gap-2"
+            className="flex-1 px-6 py-3 bg-[#EBFF00] hover:bg-[#d9ff00] disabled:opacity-50 text-slate-950 rounded-xl font-bold transition-colors flex items-center justify-center gap-2"
           >
             {loading && <Loader className="w-5 h-5 animate-spin" />}
             {loading ? "Creating..." : "Create Group"}

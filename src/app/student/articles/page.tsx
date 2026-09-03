@@ -78,7 +78,7 @@ export default async function StudentArticlesPage({
                 <Link
                   key={cat}
                   href={`/student/articles?category=${cat}${q ? `&q=${q}` : ""}`}
-                  className={`whitespace-nowrap px-4 py-3 rounded-xl text-sm font-bold transition-colors ${category === cat || (!category && cat === "ALL") ? "bg-yellow-500 text-slate-950" : "bg-white dark:bg-[#131313] text-slate-500 dark:text-slate-400 hover:text-slate-900 dark:text-white border border-slate-200 dark:border-white/10"}`}
+                  className={`whitespace-nowrap px-4 py-3 rounded-xl text-sm font-bold transition-colors ${category === cat || (!category && cat === "ALL") ? "bg-[#EBFF00] text-slate-950" : "bg-white dark:bg-[#131313] text-slate-500 dark:text-slate-400 hover:text-slate-900 dark:text-white border border-slate-200 dark:border-white/10"}`}
                 >
                   {cat}
                 </Link>
@@ -99,7 +99,7 @@ export default async function StudentArticlesPage({
                   className="block group bg-white dark:bg-[#131313] border border-slate-200 dark:border-white/10 rounded-2xl p-6 hover:border-yellow-500/50 transition-all hover:-translate-y-1"
                 >
                   <div className="flex items-center justify-between mb-4">
-                    <span className="text-xs font-bold uppercase tracking-wider text-yellow-500 bg-yellow-500/10 px-2.5 py-1 rounded-md">
+                    <span className="text-xs font-bold uppercase tracking-wider text-yellow-500 bg-[#EBFF00]/10 px-2.5 py-1 rounded-md">
                       {article.category}
                     </span>
                     <div className="flex items-center gap-1.5 text-xs text-slate-500 dark:text-slate-400 font-medium">

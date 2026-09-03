@@ -224,7 +224,7 @@ export default async function MathResultsPage() {
                 </p>
                 <Link
                   href="/student/mock-tests"
-                  className="inline-block mt-4 px-6 py-2 bg-yellow-600 hover:bg-yellow-700 text-slate-900 rounded-lg font-medium transition-colors"
+                  className="inline-block mt-4 px-6 py-2 bg-[#EBFF00] hover:bg-[#d9ff00] text-slate-900 rounded-lg font-medium transition-colors"
                 >
                   Take a Test
                 </Link>

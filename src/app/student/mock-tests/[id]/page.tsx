@@ -240,7 +240,7 @@ export default function TakeMockTestPage() {
                 <div className="flex flex-col sm:flex-row gap-3">
                   <Link
                     href="/student/mock-tests"
-                    className="flex-1 px-6 py-3 rounded-xl bg-yellow-600 hover:bg-yellow-700 text-slate-900 font-semibold text-sm transition-colors text-center shadow-sm"
+                    className="flex-1 px-6 py-3 rounded-xl bg-[#EBFF00] hover:bg-[#d9ff00] text-slate-900 font-semibold text-sm transition-colors text-center shadow-sm"
                   >
                     View My Mock Tests
                   </Link>
@@ -331,7 +331,7 @@ export default function TakeMockTestPage() {
                 <div className="flex gap-4 pt-2">
                   <button
                     onClick={() => setTestStarted(true)}
-                    className="flex-1 py-3.5 px-6 rounded-xl bg-yellow-600 hover:bg-yellow-700 text-slate-900 font-bold text-sm transition-all shadow-md hover:shadow-lg"
+                    className="flex-1 py-3.5 px-6 rounded-xl bg-[#EBFF00] hover:bg-[#d9ff00] text-slate-900 font-bold text-sm transition-all shadow-md hover:shadow-lg"
                   >
                     Start Test Now
                   </button>
@@ -384,7 +384,7 @@ export default function TakeMockTestPage() {
             {/* Progress bar */}
             <div className="w-full bg-neutral-200 rounded-full h-2 overflow-hidden">
               <div
-                className="bg-yellow-600 h-2 rounded-full transition-all duration-300"
+                className="bg-[#EBFF00] h-2 rounded-full transition-all duration-300"
                 style={{ width: `${progress}%` }}
               />
             </div>
@@ -463,7 +463,7 @@ export default function TakeMockTestPage() {
                   <button
                     type="button"
                     onClick={() => setCurrentQuestion(currentQuestion + 1)}
-                    className="px-6 py-2.5 rounded-xl bg-yellow-600 hover:bg-yellow-700 text-slate-900 font-semibold text-sm transition-colors shadow-sm"
+                    className="px-6 py-2.5 rounded-xl bg-[#EBFF00] hover:bg-[#d9ff00] text-slate-900 font-semibold text-sm transition-colors shadow-sm"
                   >
                     Next Question
                   </button>

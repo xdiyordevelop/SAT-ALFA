@@ -16,7 +16,7 @@ export function ArticleReader({ article }: { article: any }) {
       <article className="flex-1 bg-white dark:bg-[#131313] border border-slate-200 dark:border-white/10 rounded-2xl p-8 md:p-12 w-full min-w-0">
         <header className="mb-10 pb-10 border-b border-slate-200 dark:border-white/10">
           <div className="flex flex-wrap items-center gap-4 mb-4">
-            <span className="text-xs font-bold text-yellow-500 bg-yellow-500/10 px-3 py-1.5 rounded-lg uppercase tracking-wider">
+            <span className="text-xs font-bold text-yellow-500 bg-[#EBFF00]/10 px-3 py-1.5 rounded-lg uppercase tracking-wider">
               {article.category}
             </span>
             <span className="flex items-center gap-1.5 text-sm text-slate-500 dark:text-slate-400 font-medium">

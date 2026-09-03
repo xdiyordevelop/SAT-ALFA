@@ -97,7 +97,7 @@ export default async function StudentTopicsRoadmapPage() {
                       <CheckCircle2 className="w-3 h-3 text-green-500" />
                     )}
                     {isCurrent && (
-                      <div className="w-2 h-2 rounded-full bg-yellow-500" />
+                      <div className="w-2 h-2 rounded-full bg-[#EBFF00]" />
                     )}
                   </div>
 

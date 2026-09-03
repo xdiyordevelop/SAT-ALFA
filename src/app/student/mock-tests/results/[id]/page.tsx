@@ -55,7 +55,7 @@ export default async function StudentResultPage({
               </p>
               <Link
                 href="/student/mock-tests"
-                className="px-5 py-2.5 bg-yellow-600 hover:bg-yellow-700 text-slate-900 rounded-xl font-medium text-sm transition-colors"
+                className="px-5 py-2.5 bg-[#EBFF00] hover:bg-[#d9ff00] text-slate-900 rounded-xl font-medium text-sm transition-colors"
               >
                 Back to My Mock Tests
               </Link>
@@ -167,7 +167,7 @@ export default async function StudentResultPage({
                 </div>
                 <Link
                   href="/student/mock-tests"
-                  className="px-5 py-2.5 bg-yellow-600 hover:bg-yellow-700 text-slate-900 rounded-xl font-medium text-sm transition-colors"
+                  className="px-5 py-2.5 bg-[#EBFF00] hover:bg-[#d9ff00] text-slate-900 rounded-xl font-medium text-sm transition-colors"
                 >
                   Return to Mock Tests to Resubmit
                 </Link>

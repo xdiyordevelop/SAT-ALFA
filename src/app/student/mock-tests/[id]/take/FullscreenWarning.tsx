@@ -62,7 +62,7 @@ export function FullscreenWarning(): React.ReactElement {
         {/* Resume Button */}
         <button
           onClick={handleResumeFullscreen}
-          className="w-full py-3 rounded-lg font-bold flex items-center justify-center gap-2 transition-all duration-200 bg-yellow-400 text-slate-950 hover:bg-yellow-500 active:scale-95"
+          className="w-full py-3 rounded-lg font-bold flex items-center justify-center gap-2 transition-all duration-200 bg-yellow-400 text-slate-950 hover:bg-[#EBFF00] active:scale-95"
         >
           <Maximize2 className="w-5 h-5" /> Return to Fullscreen & Resume
         </button>

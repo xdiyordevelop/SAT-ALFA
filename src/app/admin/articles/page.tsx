@@ -49,7 +49,7 @@ export default async function AdminArticlesPage({
               </Link>
               <Link
                 href="/admin/articles/import"
-                className="flex items-center gap-2 bg-yellow-500 hover:bg-yellow-400 text-slate-950 px-4 py-2 rounded-xl font-bold transition-colors"
+                className="flex items-center gap-2 bg-[#EBFF00] hover:bg-[#d9ff00] text-slate-950 px-4 py-2 rounded-xl font-bold transition-colors"
               >
                 <FileUp className="w-4 h-4" />
                 Import from PDF
@@ -66,7 +66,7 @@ export default async function AdminArticlesPage({
             </Link>
             <Link
               href="/admin/articles?filter=published"
-              className={`px-4 py-1.5 rounded-lg text-sm font-medium transition-colors ${statusFilter === "published" ? "bg-yellow-500/20 text-yellow-500" : "text-slate-500 dark:text-slate-400 hover:bg-slate-50 dark:bg-[#0a0a0a]"}`}
+              className={`px-4 py-1.5 rounded-lg text-sm font-medium transition-colors ${statusFilter === "published" ? "bg-[#EBFF00]/20 text-yellow-500" : "text-slate-500 dark:text-slate-400 hover:bg-slate-50 dark:bg-[#0a0a0a]"}`}
             >
               Published
             </Link>

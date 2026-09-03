@@ -109,7 +109,7 @@ export function ProfileSettings() {
         <button
           type="submit"
           disabled={loading}
-          className="px-6 py-3 bg-yellow-600 hover:bg-yellow-700 disabled:opacity-50 text-slate-900 rounded-lg font-medium transition-colors flex items-center justify-center gap-2 ml-auto"
+          className="px-6 py-3 bg-[#EBFF00] hover:bg-[#d9ff00] disabled:opacity-50 text-slate-900 rounded-lg font-medium transition-colors flex items-center justify-center gap-2 ml-auto"
         >
           {loading && <Loader className="w-5 h-5 animate-spin" />}
           {loading ? "Saving..." : "Save Changes"}

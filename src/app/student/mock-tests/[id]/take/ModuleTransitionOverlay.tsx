@@ -107,7 +107,7 @@ export function ModuleTransitionOverlay(): React.ReactElement {
           <Button
             variant="primary"
             onClick={handleContinue}
-            className="flex-1 bg-yellow-400 text-slate-950 hover:bg-yellow-500"
+            className="flex-1 bg-yellow-400 text-slate-950 hover:bg-[#EBFF00]"
           >
             Continue {currentModule === 2 ? "to Break" : "to Next Module"}
           </Button>

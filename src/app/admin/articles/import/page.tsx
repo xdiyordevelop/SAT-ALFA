@@ -141,7 +141,7 @@ export default function ImportArticlePage() {
             onSubmit={handleUpload}
             className="bg-white dark:bg-[#131313] border border-slate-200 dark:border-white/10 p-8 rounded-2xl text-center"
           >
-            <div className="w-16 h-16 bg-yellow-500/10 text-yellow-500 rounded-2xl flex items-center justify-center mx-auto mb-6">
+            <div className="w-16 h-16 bg-[#EBFF00]/10 text-yellow-500 rounded-2xl flex items-center justify-center mx-auto mb-6">
               <FileUp className="w-8 h-8" />
             </div>
             <h2 className="text-2xl font-bold text-slate-900 dark:text-white mb-2">
@@ -154,7 +154,7 @@ export default function ImportArticlePage() {
             </p>
 
             {error && (
-              <div className="bg-yellow-500/10 border border-yellow-500/20 rounded-xl p-4 mb-6 flex items-start justify-between text-left">
+              <div className="bg-[#EBFF00]/10 border border-yellow-500/20 rounded-xl p-4 mb-6 flex items-start justify-between text-left">
                 <div className="text-yellow-600 text-sm">{error}</div>
                 <button
                   type="button"
@@ -183,7 +183,7 @@ export default function ImportArticlePage() {
             <button
               type="submit"
               disabled={loading}
-              className="w-full bg-yellow-500 hover:bg-yellow-400 text-slate-950 font-bold py-3.5 rounded-xl transition-colors disabled:opacity-50 flex items-center justify-center gap-2"
+              className="w-full bg-[#EBFF00] hover:bg-[#d9ff00] text-slate-950 font-bold py-3.5 rounded-xl transition-colors disabled:opacity-50 flex items-center justify-center gap-2"
             >
               {loading && <Loader2 className="w-5 h-5 animate-spin" />}
               {loading

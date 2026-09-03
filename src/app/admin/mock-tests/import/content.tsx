@@ -543,7 +543,7 @@ export function TestImporterContent() {
               </div>
               <div className="h-2 w-full bg-slate-200 dark:bg-slate-700 rounded-full overflow-hidden">
                 <div
-                  className="h-full bg-yellow-500 transition-all duration-300"
+                  className="h-full bg-[#EBFF00] transition-all duration-300"
                   style={{
                     width: `${progress.total > 0 ? (progress.current / progress.total) * 100 : 0}%`,
                   }}
@@ -570,7 +570,7 @@ export function TestImporterContent() {
                     onClick={() =>
                       router.push(`/admin/mock-tests/${successData.testId}`)
                     }
-                    className="bg-yellow-500 hover:bg-yellow-600 dark:bg-yellow-600 dark:hover:bg-yellow-700 text-slate-900 dark:text-white"
+                    className="bg-[#EBFF00] hover:bg-[#EBFF00] dark:bg-[#EBFF00] dark:hover:bg-[#d9ff00] text-slate-900 dark:text-white"
                   >
                     View Test
                   </Button>
@@ -593,7 +593,7 @@ export function TestImporterContent() {
           <Button
             onClick={handleStartUpload}
             disabled={isProcessing}
-            className="bg-yellow-600 hover:bg-yellow-700 text-slate-900 min-w-[140px]"
+            className="bg-[#EBFF00] hover:bg-[#d9ff00] text-slate-900 min-w-[140px]"
           >
             {isProcessing ? (
               <Loader2 className="w-4 h-4 animate-spin mx-auto" />

@@ -159,7 +159,7 @@ export function StudentDashboardView({
 
         {/* Quick Start / Next Mock */}
         <div className="col-span-1 bg-slate-900 dark:bg-[#1c1b1b] border border-slate-800 dark:border-white/10 rounded-2xl p-6 lg:p-8 flex flex-col justify-between relative overflow-hidden shadow-lg">
-          <div className="absolute top-0 right-0 w-32 h-32 bg-yellow-500 dark:bg-[#EBFF00] opacity-10 blur-[40px] rounded-full pointer-events-none"></div>
+          <div className="absolute top-0 right-0 w-32 h-32 bg-[#EBFF00] dark:bg-[#EBFF00] opacity-10 blur-[40px] rounded-full pointer-events-none"></div>
           
           <div>
             <div className="flex justify-between items-center mb-4">
@@ -188,7 +188,7 @@ export function StudentDashboardView({
           {nextTest ? (
              <Link
               href={`/student/mock-tests/${nextTest.id}/take`}
-              className="w-full bg-yellow-500 dark:bg-[#EBFF00] text-slate-950 font-bold py-3.5 px-4 rounded-xl flex items-center justify-center gap-2 hover:bg-yellow-400 dark:hover:bg-white active:scale-[0.98] transition-all shadow-[0_0_15px_rgba(235,255,0,0.15)]"
+              className="w-full bg-[#EBFF00] dark:bg-[#EBFF00] text-slate-950 font-bold py-3.5 px-4 rounded-xl flex items-center justify-center gap-2 hover:bg-[#d9ff00] dark:hover:bg-white active:scale-[0.98] transition-all shadow-[0_0_15px_rgba(235,255,0,0.15)]"
             >
               Testni boshlash
               <ArrowRight className="w-5 h-5" />

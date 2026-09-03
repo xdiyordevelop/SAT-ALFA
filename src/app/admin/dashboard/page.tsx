@@ -161,7 +161,7 @@ export default async function AdminDashboard() {
               <Target className="w-5 h-5 text-slate-600 dark:text-slate-400" />
             </div>
             <span className="bg-yellow-100 dark:bg-yellow-900/30 text-yellow-700 dark:text-yellow-300 px-2 py-1 rounded text-[10px] font-semibold flex items-center gap-1">
-              <span className="w-1.5 h-1.5 rounded-full bg-yellow-500 animate-pulse"></span> Active
+              <span className="w-1.5 h-1.5 rounded-full bg-[#EBFF00] animate-pulse"></span> Active
             </span>
           </div>
           <div>

@@ -107,7 +107,7 @@ export function FileUpload({ mockTestId, onUploadSuccess }: FileUploadProps) {
         />
         <label
           htmlFor={`file-upload-${mockTestId}`}
-          className="inline-block px-4 py-2 bg-yellow- text-slate-900 dark:text-white rounded-lg text-sm font-medium cursor-pointer hover:bg-yellow-700 disabled:opacity-50"
+          className="inline-block px-4 py-2 bg-yellow- text-slate-900 dark:text-white rounded-lg text-sm font-medium cursor-pointer hover:bg-[#d9ff00] disabled:opacity-50"
         >
           {isUploading ? "Uploading..." : "Select Files"}
         </label>

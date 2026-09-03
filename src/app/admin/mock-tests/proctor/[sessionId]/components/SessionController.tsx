@@ -95,7 +95,7 @@ export function SessionController({
             <Button
               onClick={() => handleStatusChange("COMPLETED")}
               disabled={isUpdating || session.status === "COMPLETED"}
-              className="flex-1 bg-yellow-500 hover:bg-yellow-600 dark:bg-yellow-600 dark:hover:bg-yellow-700 disabled:opacity-50 text-slate-900 dark:text-white"
+              className="flex-1 bg-[#EBFF00] hover:bg-[#EBFF00] dark:bg-[#EBFF00] dark:hover:bg-[#d9ff00] disabled:opacity-50 text-slate-900 dark:text-white"
             >
               <CheckCircle className="w-4 h-4 mr-2" /> Complete
             </Button>

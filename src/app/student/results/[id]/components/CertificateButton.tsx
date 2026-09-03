@@ -199,7 +199,7 @@ export function CertificateButton({
     <Button
       onClick={generatePDF}
       disabled={isGenerating}
-      className="flex items-center gap-2 px-6 py-3 bg-yellow-400 text-slate-950 hover:bg-yellow-500 disabled:opacity-50"
+      className="flex items-center gap-2 px-6 py-3 bg-yellow-400 text-slate-950 hover:bg-[#EBFF00] disabled:opacity-50"
     >
       <Download className="w-5 h-5" />
       {isGenerating ? "Generating..." : "Download Certificate"}

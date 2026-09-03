@@ -166,7 +166,7 @@ export default function CreateMockTestClient() {
             onClick={() => setMode("manual")}
             className="flex flex-col p-8 bg-white dark:bg-[#131313]/70 border border-slate-200 dark:border-white/10 rounded-2xl hover:border-yellow-500/80 transition-all cursor-pointer group text-left shadow-lg"
           >
-            <div className="w-16 h-16 bg-yellow-500/10 rounded-xl border border-yellow-500/20 flex items-center justify-center mb-6 group-hover:scale-105 transition-transform">
+            <div className="w-16 h-16 bg-[#EBFF00]/10 rounded-xl border border-yellow-500/20 flex items-center justify-center mb-6 group-hover:scale-105 transition-transform">
               <PenTool className="w-8 h-8 text-slate-900 dark:text-yellow-500" />
             </div>
             <h3 className="text-xl font-bold text-slate-900 dark:text-white mb-3 group-hover:text-slate-900 dark:text-yellow-500 transition-colors">
@@ -184,14 +184,14 @@ export default function CreateMockTestClient() {
             href="/admin/mock-tests/import"
             className="flex flex-col p-8 bg-white dark:bg-[#131313]/70 border border-slate-200 dark:border-white/10 rounded-2xl hover:border-yellow-500/80 transition-all cursor-pointer group relative text-left shadow-lg block"
           >
-            <div className="absolute top-6 right-6 flex items-center gap-1.5 px-3 py-1.5 bg-yellow-500/10 border border-yellow-500/20 rounded-lg">
+            <div className="absolute top-6 right-6 flex items-center gap-1.5 px-3 py-1.5 bg-[#EBFF00]/10 border border-yellow-500/20 rounded-lg">
               <Sparkles className="w-3.5 h-3.5 text-slate-900 dark:text-yellow-500" />
               <span className="text-[11px] font-bold text-slate-900 dark:text-yellow-500 uppercase tracking-wider">
                 AI Powered
               </span>
             </div>
 
-            <div className="w-16 h-16 bg-yellow-500/10 rounded-xl border border-yellow-500/20 flex items-center justify-center mb-6 group-hover:scale-105 transition-transform">
+            <div className="w-16 h-16 bg-[#EBFF00]/10 rounded-xl border border-yellow-500/20 flex items-center justify-center mb-6 group-hover:scale-105 transition-transform">
               <UploadCloud className="w-8 h-8 text-slate-900 dark:text-yellow-500" />
             </div>
             <h3 className="text-xl font-bold text-slate-900 dark:text-white mb-3 group-hover:text-slate-900 dark:text-yellow-500 transition-colors">
@@ -314,7 +314,7 @@ export default function CreateMockTestClient() {
                 <button
                   type="button"
                   onClick={addQuestion}
-                  className="flex items-center gap-2 px-4 py-2 bg-yellow-500 hover:bg-yellow-600 text-slate-900 rounded-lg text-sm font-medium transition-colors shadow-sm"
+                  className="flex items-center gap-2 px-4 py-2 bg-[#EBFF00] hover:bg-[#EBFF00] text-slate-900 rounded-lg text-sm font-medium transition-colors shadow-sm"
                 >
                   <Plus className="w-4 h-4" />
                   Add Question
@@ -334,7 +334,7 @@ export default function CreateMockTestClient() {
                       <button
                         type="button"
                         onClick={() => removeQuestion(question.id)}
-                        className="p-2 hover:bg-yellow-500/10 text-yellow-600 dark:text-yellow-400 rounded-lg transition-colors"
+                        className="p-2 hover:bg-[#EBFF00]/10 text-yellow-600 dark:text-yellow-400 rounded-lg transition-colors"
                       >
                         <Trash2 className="w-4 h-4" />
                       </button>
@@ -426,7 +426,7 @@ export default function CreateMockTestClient() {
               <button
                 type="submit"
                 disabled={loading}
-                className="px-8 py-3 bg-yellow-600 hover:bg-yellow-500 disabled:opacity-50 text-slate-900 rounded-xl font-medium transition-colors text-sm shadow-md"
+                className="px-8 py-3 bg-[#EBFF00] hover:bg-[#EBFF00] disabled:opacity-50 text-slate-900 rounded-xl font-medium transition-colors text-sm shadow-md"
               >
                 {loading ? "Creating..." : "Create Mock Test"}
               </button>

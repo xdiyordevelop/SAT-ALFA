@@ -55,7 +55,7 @@ export default async function TopicsPage() {
             </div>
             <Link
               href="/admin/topics/create"
-              className="px-6 py-3 bg-yellow-600 hover:bg-yellow-700 text-slate-900 rounded-lg font-medium transition-colors w-full md:w-auto flex items-center justify-center gap-2 shadow-sm"
+              className="px-6 py-3 bg-[#EBFF00] hover:bg-[#d9ff00] text-slate-900 rounded-lg font-medium transition-colors w-full md:w-auto flex items-center justify-center gap-2 shadow-sm"
             >
               <Plus className="w-5 h-5" />
               Create Topic

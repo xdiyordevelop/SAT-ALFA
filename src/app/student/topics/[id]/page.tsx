@@ -39,7 +39,7 @@ export default async function StudentTopicViewPage({
         </p>
         <Link
           href="/student/topics"
-          className="bg-yellow-600 px-4 py-2 rounded"
+          className="bg-[#EBFF00] px-4 py-2 rounded"
         >
           Return to Roadmap
         </Link>

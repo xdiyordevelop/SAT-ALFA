@@ -249,7 +249,7 @@ export default function EditTopicClient({
                   document.getElementById("submit-btn")?.click();
                 }}
                 disabled={loading}
-                className="px-6 py-3 bg-yellow-600 hover:bg-yellow-700 text-slate-900 rounded-xl font-medium transition-all shadow-lg shadow-yellow-500/20 disabled:opacity-50 disabled:cursor-not-allowed flex items-center justify-center min-w-[150px]"
+                className="px-6 py-3 bg-[#EBFF00] hover:bg-[#d9ff00] text-slate-900 rounded-xl font-medium transition-all shadow-lg shadow-yellow-500/20 disabled:opacity-50 disabled:cursor-not-allowed flex items-center justify-center min-w-[150px]"
               >
                 {loading ? "Saving..." : "Save Changes"}
               </button>
@@ -516,7 +516,7 @@ export default function EditTopicClient({
                           <div className="w-full max-w-[200px] flex flex-col items-center">
                             <div className="w-full h-2 bg-slate-200 dark:bg-slate-700 rounded-full overflow-hidden mb-3">
                               <div
-                                className="h-full bg-yellow-600 transition-all duration-300 ease-out"
+                                className="h-full bg-[#EBFF00] transition-all duration-300 ease-out"
                                 style={{ width: `${videoProgress}%` }}
                               ></div>
                             </div>

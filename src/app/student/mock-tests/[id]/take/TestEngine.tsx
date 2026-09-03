@@ -113,7 +113,7 @@ export function TestEngine({
     return (
       <div className="min-h-screen bg-slate-50 dark:bg-[#0a0a0a] flex items-center justify-center p-4">
         <div className="max-w-md w-full bg-white dark:bg-[#131313] border border-slate-200 dark:border-white/10 rounded-xl p-8 shadow-2xl relative overflow-hidden text-center">
-          <div className="absolute top-0 right-0 w-32 h-32 bg-yellow-500 dark:bg-[#EBFF00] opacity-10 blur-[40px]"></div>
+          <div className="absolute top-0 right-0 w-32 h-32 bg-[#EBFF00] dark:bg-[#EBFF00] opacity-10 blur-[40px]"></div>
           <div className="flex justify-center mb-6 relative z-10">
             <div className="w-16 h-16 bg-slate-100 dark:bg-[#1c1b1b] rounded-full flex items-center justify-center border border-slate-200 dark:border-white/5 shadow-sm">
               <ShieldAlert className="w-8 h-8 text-slate-900 dark:text-[#EBFF00]" />
@@ -127,7 +127,7 @@ export function TestEngine({
           </p>
           <button
             onClick={startExam}
-            className="w-full py-4 rounded-xl font-bold flex items-center justify-center gap-2 transition-all duration-200 bg-yellow-500 dark:bg-[#EBFF00] text-slate-950 hover:bg-yellow-400 dark:hover:bg-white shadow-[0_0_15px_rgba(235,255,0,0.15)] relative z-10"
+            className="w-full py-4 rounded-xl font-bold flex items-center justify-center gap-2 transition-all duration-200 bg-[#EBFF00] dark:bg-[#EBFF00] text-slate-950 hover:bg-[#d9ff00] dark:hover:bg-white shadow-[0_0_15px_rgba(235,255,0,0.15)] relative z-10"
           >
             <Maximize2 className="w-5 h-5" /> To'liq ekranga o'tish va Boshlash
           </button>
@@ -154,7 +154,7 @@ export function TestEngine({
   const hasStimulus = !!currentQuestion.passage || !!currentQuestion.imageUrl;
 
   return (
-    <div className="h-screen bg-white dark:bg-[#0a0a0a] flex flex-col overflow-hidden font-sans text-slate-900 dark:text-white selection:bg-yellow-500 dark:selection:bg-[#EBFF00] selection:text-slate-950">
+    <div className="h-screen bg-white dark:bg-[#0a0a0a] flex flex-col overflow-hidden font-sans text-slate-900 dark:text-white selection:bg-[#EBFF00] dark:selection:bg-[#EBFF00] selection:text-slate-950">
       <TestHeader
         moduleNumber={currentModule}
         proctorCode={proctorCode}

@@ -141,7 +141,7 @@ export function ParticipantMatrix({
                       <Button
                         onClick={() => handlePause(participant.id)}
                         disabled={actioningParticipantId === participant.id}
-                        className="text-xs px-2 py-1 bg-yellow-600 hover:bg-yellow-700"
+                        className="text-xs px-2 py-1 bg-[#EBFF00] hover:bg-[#d9ff00]"
                       >
                         Pause
                       </Button>

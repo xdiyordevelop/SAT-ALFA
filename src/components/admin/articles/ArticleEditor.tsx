@@ -93,7 +93,7 @@ export function ArticleEditor({ initialData }: { initialData: any }) {
           <button
             disabled={loading}
             onClick={() => handleSave(true)}
-            className="flex items-center gap-2 px-4 py-2 bg-yellow-500 hover:bg-yellow-400 text-slate-950 rounded-xl transition-colors text-sm font-bold"
+            className="flex items-center gap-2 px-4 py-2 bg-[#EBFF00] hover:bg-[#d9ff00] text-slate-950 rounded-xl transition-colors text-sm font-bold"
           >
             <Save className="w-4 h-4" /> Publish
           </button>

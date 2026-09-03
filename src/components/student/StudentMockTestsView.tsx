@@ -160,7 +160,7 @@ export function StudentMockTestsView({
 
                       <Link
                         href={`/student/mock-tests/${test.id}`}
-                        className="w-full inline-flex items-center justify-center gap-2 px-4 py-2.5 bg-yellow-600 hover:bg-yellow-700 text-slate-900 rounded-xl font-medium text-sm transition-colors shadow-sm"
+                        className="w-full inline-flex items-center justify-center gap-2 px-4 py-2.5 bg-[#EBFF00] hover:bg-[#d9ff00] text-slate-900 rounded-xl font-medium text-sm transition-colors shadow-sm"
                       >
                         <Play className="w-4 h-4 fill-white" />
                         Start Test
@@ -241,7 +241,7 @@ export function StudentMockTestsView({
 
                     <Link
                       href={`/student/mock-tests/results/${test.id}`}
-                      className="w-full inline-flex items-center justify-center gap-2 px-4 py-2.5 bg-yellow-600 hover:bg-yellow-700 text-slate-900 rounded-xl font-medium text-sm transition-colors shadow-sm"
+                      className="w-full inline-flex items-center justify-center gap-2 px-4 py-2.5 bg-[#EBFF00] hover:bg-[#d9ff00] text-slate-900 rounded-xl font-medium text-sm transition-colors shadow-sm"
                     >
                       <Sparkles className="w-4 h-4" />
                       View Full AI Analysis

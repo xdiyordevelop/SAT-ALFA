@@ -97,7 +97,7 @@ export function AdminMockTestsView({
         </div>
         <Link
           href="/admin/mock-tests/create"
-          className="inline-flex items-center justify-center gap-2 px-5 py-3 bg-yellow-600 hover:bg-yellow-700 text-slate-900 rounded-xl font-medium text-sm transition-all shadow-sm hover:shadow"
+          className="inline-flex items-center justify-center gap-2 px-5 py-3 bg-[#EBFF00] hover:bg-[#d9ff00] text-slate-900 rounded-xl font-medium text-sm transition-all shadow-sm hover:shadow"
         >
           <Plus className="w-4 h-4" />
           Create Practice Test
@@ -397,7 +397,7 @@ export function AdminMockTestsView({
               </p>
               <Link
                 href="/admin/mock-tests/create"
-                className="inline-flex items-center gap-2 px-4 py-2.5 bg-yellow-600 hover:bg-yellow-700 text-slate-900 rounded-xl text-sm font-medium"
+                className="inline-flex items-center gap-2 px-4 py-2.5 bg-[#EBFF00] hover:bg-[#d9ff00] text-slate-900 rounded-xl text-sm font-medium"
               >
                 <Plus className="w-4 h-4" />
                 Create Practice Test
