@@ -132,7 +132,7 @@ export function ArticleEditor({ initialData }: { initialData: any }) {
                 />
               </div>
             ) : (
-              <div className="prose prose-invert prose-amber max-w-none">
+              <div className="prose prose-invert prose-yellow max-w-none">
                 <h1>{formData.title}</h1>
                 <p className="lead">{formData.summary}</p>
                 <MathRenderer text={formData.content} />

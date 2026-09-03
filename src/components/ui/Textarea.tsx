@@ -28,7 +28,7 @@ export function Textarea({
         className={`w-full px-4 py-2.5 rounded-lg border-2 transition-all duration-200 text-slate-900 dark:text-white bg-white dark:bg-[#131313] placeholder-neutral-400 resize-vertical ${
           error
             ? "border-red-500 focus:ring-2 focus:ring-red-200"
-            : "border-slate-200 dark:border-white/10 focus:border-amber-500 focus:ring-2 focus:ring-amber-500/20"
+            : "border-slate-200 dark:border-white/10 focus:border-yellow-500 focus:ring-2 focus:ring-yellow-500/20"
         } ${className}`}
         {...props}
       />

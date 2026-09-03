@@ -33,7 +33,7 @@ export function ArticleReader({ article }: { article: any }) {
             {article.summary}
           </p>
         </header>
-        <div className="prose prose-slate prose-amber max-w-none prose-lg prose-img:rounded-xl prose-img:border prose-img:border-slate-200 dark:border-white/10 prose-headings:text-slate-900 dark:text-white prose-a:text-yellow-500">
+        <div className="prose prose-slate prose-yellow max-w-none prose-lg prose-img:rounded-xl prose-img:border prose-img:border-slate-200 dark:border-white/10 prose-headings:text-slate-900 dark:text-white prose-a:text-yellow-500">
           <MathRenderer text={article.content} />
         </div>
       </article>

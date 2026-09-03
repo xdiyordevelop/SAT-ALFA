@@ -15,11 +15,11 @@ interface StatCardProps {
 
 const colorClasses = {
   primary:
-    "bg-amber-100 dark:bg-amber-950/40 text-amber-600 dark:text-amber-400",
+    "bg-yellow-100 dark:bg-yellow-950/40 text-yellow-600 dark:text-yellow-400",
   success:
     "bg-emerald-100 dark:bg-emerald-950/40 text-emerald-600 dark:text-emerald-400",
   warning:
-    "bg-amber-100 dark:bg-amber-950/40 text-amber-600 dark:text-amber-400",
+    "bg-yellow-100 dark:bg-yellow-950/40 text-yellow-600 dark:text-yellow-400",
   danger: "bg-rose-100 dark:bg-rose-950/40 text-rose-600 dark:text-rose-400",
 };
 
@@ -32,7 +32,7 @@ export function StatCard({
 }: StatCardProps) {
   return (
     <div className="group">
-      <div className="bg-white dark:bg-[#131313] rounded-xl border border-slate-200 dark:border-white/10 p-6 shadow-sm hover:border-amber-400/50 transition-all cursor-pointer">
+      <div className="bg-white dark:bg-[#131313] rounded-xl border border-slate-200 dark:border-white/10 p-6 shadow-sm hover:border-yellow-400/50 transition-all cursor-pointer">
         <div className="flex items-start justify-between mb-4">
           <div className={`p-3 rounded-lg ${colorClasses[color]}`}>
             <Icon className="w-6 h-6" />
