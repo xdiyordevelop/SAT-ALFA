@@ -53,7 +53,7 @@ export function AttemptHistoryTable({ attempts }: AttemptHistoryTableProps) {
     <ArrowUpDown
       className={`w-4 h-4 ml-1 inline ${
         sortField === field
-          ? "text-amber-500"
+          ? "text-yellow-500 dark:text-yellow-400"
           : "text-slate-500 dark:text-slate-400"
       }`}
     />
@@ -169,7 +169,7 @@ export function AttemptHistoryTable({ attempts }: AttemptHistoryTableProps) {
                             ? attempt.rwScore >= 600
                               ? "text-emerald-600"
                               : attempt.rwScore >= 500
-                                ? "text-amber-500"
+                                ? "text-yellow-500 dark:text-yellow-400"
                                 : "text-red-600"
                             : "text-slate-500 dark:text-slate-400"
                         }`}
@@ -184,7 +184,7 @@ export function AttemptHistoryTable({ attempts }: AttemptHistoryTableProps) {
                             ? attempt.mathScore >= 600
                               ? "text-emerald-600"
                               : attempt.mathScore >= 500
-                                ? "text-amber-500"
+                                ? "text-yellow-500 dark:text-yellow-400"
                                 : "text-red-600"
                             : "text-slate-500 dark:text-slate-400"
                         }`}
@@ -199,7 +199,7 @@ export function AttemptHistoryTable({ attempts }: AttemptHistoryTableProps) {
                             ? attempt.totalScore >= 1200
                               ? "text-emerald-600"
                               : attempt.totalScore >= 1000
-                                ? "text-amber-500"
+                                ? "text-yellow-500 dark:text-yellow-400"
                                 : "text-red-600"
                             : "text-slate-500 dark:text-slate-400"
                         }`}

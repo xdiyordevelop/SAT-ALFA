@@ -124,14 +124,14 @@ export default function SmsNotificationsPage() {
       </div>
 
       {error && (
-        <div className="mb-6 p-4 rounded-lg bg-red-100 border border-red-300 text-red-700 flex items-start gap-3">
+        <div className="mb-6 p-4 rounded-lg bg-red-100 dark:bg-red-900/20 border border-red-200 dark:border-red-900/50 text-red-700 dark:text-red-300 flex items-start gap-3">
           <AlertCircle className="w-5 h-5 flex-shrink-0 mt-0.5" />
           <span>{error}</span>
         </div>
       )}
 
       {success && (
-        <div className="mb-6 p-4 rounded-lg bg-green-100 border border-green-300 text-green-700 flex items-start gap-3">
+        <div className="mb-6 p-4 rounded-lg bg-emerald-100 dark:bg-emerald-900/20 border border-emerald-200 dark:border-emerald-900/50 text-emerald-700 dark:text-emerald-300 flex items-start gap-3">
           <CheckCircle className="w-5 h-5 flex-shrink-0 mt-0.5" />
           <span>{success}</span>
         </div>
@@ -139,45 +139,45 @@ export default function SmsNotificationsPage() {
 
       {/* Stats */}
       <div className="grid grid-cols-1 md:grid-cols-3 gap-6 mb-8">
-            <div className="bg-white dark:bg-[#131313] rounded-2xl border border-slate-200 dark:border-white/10 p-6">
+            <div className="bg-white dark:bg-slate-900 rounded-lg border border-slate-200 dark:border-slate-800 p-6">
               <div className="flex items-center justify-between">
                 <div>
-                  <p className="text-sm text-slate-600 dark:text-slate-400 ">
+                  <p className="text-sm text-slate-600 dark:text-slate-400">
                     Sent
                   </p>
-                  <p className="text-3xl font-bold text-green-600 ">
+                  <p className="text-3xl font-bold text-emerald-600 dark:text-emerald-400">
                     {sentCount}
                   </p>
                 </div>
-                <CheckCircle className="w-10 h-10 text-green-600 " />
+                <CheckCircle className="w-10 h-10 text-emerald-600 dark:text-emerald-400" />
               </div>
             </div>
 
-            <div className="bg-white dark:bg-[#131313] rounded-2xl border border-slate-200 dark:border-white/10 p-6">
+            <div className="bg-white dark:bg-slate-900 rounded-lg border border-slate-200 dark:border-slate-800 p-6">
               <div className="flex items-center justify-between">
                 <div>
-                  <p className="text-sm text-slate-600 dark:text-slate-400 ">
+                  <p className="text-sm text-slate-600 dark:text-slate-400">
                     Pending
                   </p>
-                  <p className="text-3xl font-bold text-slate-900 dark:text-yellow-500 ">
+                  <p className="text-3xl font-bold text-yellow-500 dark:text-yellow-400">
                     {pendingCount}
                   </p>
                 </div>
-                <MessageSquare className="w-10 h-10 text-slate-900 dark:text-yellow-500 " />
+                <MessageSquare className="w-10 h-10 text-yellow-500 dark:text-yellow-400" />
               </div>
             </div>
 
-            <div className="bg-white dark:bg-[#131313] rounded-2xl border border-slate-200 dark:border-white/10 p-6">
+            <div className="bg-white dark:bg-slate-900 rounded-lg border border-slate-200 dark:border-slate-800 p-6">
               <div className="flex items-center justify-between">
                 <div>
-                  <p className="text-sm text-slate-600 dark:text-slate-400 ">
+                  <p className="text-sm text-slate-600 dark:text-slate-400">
                     Failed
                   </p>
-                  <p className="text-3xl font-bold text-red-600 ">
+                  <p className="text-3xl font-bold text-red-600 dark:text-red-400">
                     {failedCount}
                   </p>
                 </div>
-                <AlertCircle className="w-10 h-10 text-red-600 " />
+                <AlertCircle className="w-10 h-10 text-red-600 dark:text-red-400" />
               </div>
             </div>
           </div>

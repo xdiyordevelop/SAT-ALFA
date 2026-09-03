@@ -528,7 +528,7 @@ export function TestImporterContent() {
                 onClick={() => {
                   stopRequested.current = true;
                 }}
-                className="px-3 py-1.5 text-xs font-semibold rounded-lg bg-red-100 text-red-700 hover:bg-red-200 transition-colors"
+                className="px-3 py-1.5 text-xs font-semibold rounded-lg bg-red-100 dark:bg-red-900/30 text-red-700 dark:text-red-300 hover:bg-red-200 dark:hover:bg-red-900/50 transition-colors"
               >
                 Stop
               </button>
@@ -554,14 +554,14 @@ export function TestImporterContent() {
         )}
 
         {successData && (
-          <div className="mt-6 p-6 rounded-xl bg-emerald-50 dark:bg-emerald-900/20 border border-emerald-200 dark:border-emerald-900/50">
+          <div className="mt-6 p-6 rounded-xl bg-yellow-50 dark:bg-yellow-900/20 border border-yellow-200 dark:border-yellow-900/50">
             <div className="flex items-start gap-3">
-              <CheckCircle className="w-6 h-6 text-emerald-600 dark:text-emerald-400 shrink-0 mt-0.5" />
+              <CheckCircle className="w-6 h-6 text-yellow-600 dark:text-yellow-400 shrink-0 mt-0.5" />
               <div>
-                <h3 className="font-bold text-emerald-800 dark:text-emerald-300 mb-1">
+                <h3 className="font-bold text-yellow-800 dark:text-yellow-300 mb-1">
                   Import Complete!
                 </h3>
-                <p className="text-sm text-emerald-700 dark:text-emerald-400 mb-4">
+                <p className="text-sm text-yellow-700 dark:text-yellow-400 mb-4">
                   Successfully extracted and saved {successData.count} questions
                   to "{successData.name}".
                 </p>
@@ -570,7 +570,7 @@ export function TestImporterContent() {
                     onClick={() =>
                       router.push(`/admin/mock-tests/${successData.testId}`)
                     }
-                    className="bg-emerald-600 hover:bg-emerald-700 text-white"
+                    className="bg-yellow-500 hover:bg-yellow-600 dark:bg-yellow-600 dark:hover:bg-yellow-700 text-slate-900 dark:text-white"
                   >
                     View Test
                   </Button>
