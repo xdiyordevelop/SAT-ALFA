@@ -103,8 +103,7 @@ export function NeonLoginForm() {
           <label htmlFor="username" className="text-sm font-semibold text-slate-700 dark:text-slate-300">
             Email or Username
           </label>
-          <div className="relative">
-            <UserIcon className="absolute left-4 top-1/2 -translate-y-1/2 w-5 h-5 text-slate-400 dark:text-slate-600 pointer-events-none z-10" />
+          <div className="relative w-full">
             <input
               id="username"
               type="text"
@@ -113,9 +112,10 @@ export function NeonLoginForm() {
               onChange={(e) => setUsername(e.target.value)}
               disabled={loading}
               placeholder={role === "STUDENT" ? "Enter your phone or ID" : "Enter admin username"}
-              className="input-primary pl-12"
+              className="input-primary pl-11 pr-4"
               aria-label="Username"
             />
+            <UserIcon className="absolute left-3.5 top-1/2 -translate-y-1/2 w-5 h-5 text-slate-400 dark:text-slate-600 pointer-events-none" />
           </div>
         </div>
 
@@ -134,8 +134,7 @@ export function NeonLoginForm() {
               Forgot password?
             </a>
           </div>
-          <div className="relative">
-            <Lock className="absolute left-4 top-1/2 -translate-y-1/2 w-5 h-5 text-slate-400 dark:text-slate-600 pointer-events-none z-10" />
+          <div className="relative w-full">
             <input
               id="password"
               type="password"
@@ -144,9 +143,10 @@ export function NeonLoginForm() {
               onChange={(e) => setPassword(e.target.value)}
               disabled={loading}
               placeholder="Enter your password"
-              className="input-primary pl-12"
+              className="input-primary pl-11 pr-4"
               aria-label="Password"
             />
+            <Lock className="absolute left-3.5 top-1/2 -translate-y-1/2 w-5 h-5 text-slate-400 dark:text-slate-600 pointer-events-none" />
           </div>
         </div>
 
