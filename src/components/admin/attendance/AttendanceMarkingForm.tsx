@@ -181,18 +181,18 @@ export function AttendanceMarkingForm() {
     { color: string; icon: React.ReactNode; label: string }
   > = {
     PRESENT: {
-      color: "bg-green-100 text-green-700 border-green-300 ",
+      color: "bg-green-100 dark:bg-green-950/30 text-green-700 dark:text-green-300 border-green-300 dark:border-green-900/50",
       icon: <Check className="w-4 h-4" />,
       label: "Present",
     },
     ABSENT: {
-      color: "bg-red-100 text-red-700 border-red-300 ",
+      color: "bg-red-100 dark:bg-red-950/30 text-red-700 dark:text-red-300 border-red-300 dark:border-red-900/50",
       icon: <X className="w-4 h-4" />,
       label: "Absent",
     },
     LATE: {
       color:
-        "bg-yellow-100 dark:bg-yellow-900/30 text-yellow-700 border-yellow-300 ",
+        "bg-yellow-100 dark:bg-yellow-900/30 text-yellow-700 dark:text-yellow-300 border-yellow-300 dark:border-yellow-900/50",
       icon: <Clock className="w-4 h-4" />,
       label: "Late",
     },
@@ -230,7 +230,7 @@ export function AttendanceMarkingForm() {
             <select
               value={selectedGroup}
               onChange={(e) => setSelectedGroup(e.target.value)}
-              className="w-full px-4 py-3 rounded-lg border border-slate-200 dark:border-white/10 bg-slate-50 dark:bg-[#0a0a0a] text-slate-900 dark:text-white focus:border-yellow-500 focus:ring-2 focus:ring-yellow-200 outline-none transition-all"
+              className="w-full px-4 py-3 rounded-lg border border-slate-200 dark:border-white/10 bg-slate-50 dark:bg-[#0a0a0a] text-slate-900 dark:text-white focus:border-yellow-500 dark:focus:border-yellow-600 focus:ring-2 focus:ring-yellow-200 dark:focus:ring-yellow-600/30 outline-none transition-all"
             >
               <option value="">Select a group...</option>
               {groups.map((group) => (
@@ -249,7 +249,7 @@ export function AttendanceMarkingForm() {
               type="date"
               value={selectedDate}
               onChange={(e) => setSelectedDate(e.target.value)}
-              className="w-full px-4 py-3 rounded-lg border border-slate-200 dark:border-white/10 bg-slate-50 dark:bg-[#0a0a0a] text-slate-900 dark:text-white focus:border-yellow-500 focus:ring-2 focus:ring-yellow-200 outline-none transition-all"
+              className="w-full px-4 py-3 rounded-lg border border-slate-200 dark:border-white/10 bg-slate-50 dark:bg-[#0a0a0a] text-slate-900 dark:text-white focus:border-yellow-500 dark:focus:border-yellow-600 focus:ring-2 focus:ring-yellow-200 dark:focus:ring-yellow-600/30 outline-none transition-all"
             />
           </div>
 
@@ -264,7 +264,7 @@ export function AttendanceMarkingForm() {
                 placeholder="Name or phone..."
                 value={searchTerm}
                 onChange={(e) => setSearchTerm(e.target.value)}
-                className="w-full pl-10 pr-4 py-3 rounded-lg border border-slate-200 dark:border-white/10 bg-slate-50 dark:bg-[#0a0a0a] text-slate-900 dark:text-white placeholder-neutral-400 focus:border-yellow-500 focus:ring-2 focus:ring-yellow-200 outline-none transition-all"
+                className="w-full pl-10 pr-4 py-3 rounded-lg border border-slate-200 dark:border-white/10 bg-slate-50 dark:bg-[#0a0a0a] text-slate-900 dark:text-white placeholder-neutral-400 focus:border-yellow-500 dark:focus:border-yellow-600 focus:ring-2 focus:ring-yellow-200 dark:focus:ring-yellow-600/30 outline-none transition-all"
               />
             </div>
           </div>
@@ -357,7 +357,7 @@ export function AttendanceMarkingForm() {
                               className={`px-3 py-2 rounded-lg text-xs font-medium border transition-all ${
                                 isActive
                                   ? config.color
-                                  : "bg-slate-100 dark:bg-slate-800 text-slate-600 dark:text-slate-300 border-slate-200 dark:border-slate-700 hover:border-slate-300 dark:hover:border-slate-600 "
+                                  : "bg-slate-100 dark:bg-[#0a0a0a] text-slate-600 dark:text-slate-400 border-slate-200 dark:border-slate-700 hover:border-slate-300 dark:hover:border-slate-600 "
                               }`}
                               title={config.label}
                             >
@@ -375,7 +375,7 @@ export function AttendanceMarkingForm() {
                         onChange={(e) =>
                           handleNoteChange(student.id, e.target.value)
                         }
-                        className="w-full px-3 py-2 rounded-lg border border-slate-200 dark:border-white/10 bg-slate-50 dark:bg-[#0a0a0a] text-slate-900 dark:text-white placeholder-neutral-400 text-sm focus:border-yellow-500 focus:ring-1 focus:ring-yellow-200 outline-none transition-all"
+                        className="w-full px-3 py-2 rounded-lg border border-slate-200 dark:border-white/10 bg-slate-50 dark:bg-[#0a0a0a] text-slate-900 dark:text-white placeholder-neutral-400 text-sm focus:border-yellow-500 dark:focus:border-yellow-600 focus:ring-1 focus:ring-yellow-200 dark:focus:ring-yellow-600/30 outline-none transition-all"
                       />
                     </td>
                   </tr>
