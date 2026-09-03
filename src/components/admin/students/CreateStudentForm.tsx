@@ -4,6 +4,7 @@ import { useState, useEffect } from "react";
 import { useRouter } from "next/navigation";
 import { createStudent } from "@/server/actions/student.actions";
 import { AlertCircle, Check, Eye, EyeOff, Loader, Copy } from "lucide-react";
+import { Button } from "@/components/ui/Button";
 
 interface Group {
   id: string;
@@ -127,68 +128,67 @@ export function CreateStudentForm() {
   if (success && createdStudent) {
     return (
       <div className="max-w-2xl animate-slide-up">
-        <div className="bg-green-50 border-2 border-green-200 rounded-2xl p-8">
+        <div className="bg-emerald-50 dark:bg-emerald-950/30 border-2 border-emerald-200 dark:border-emerald-900/50 rounded-lg p-8">
           <div className="flex items-center gap-4 mb-6">
-            <div className="w-12 h-12 rounded-full bg-green-100 flex items-center justify-center">
-              <Check className="w-6 h-6 text-green-600 " />
+            <div className="w-12 h-12 rounded-full bg-emerald-100 dark:bg-emerald-900/50 flex items-center justify-center">
+              <Check className="w-6 h-6 text-emerald-600 dark:text-emerald-400" />
             </div>
             <div>
-              <h2 className="text-2xl font-bold text-green-900 ">
+              <h2 className="heading-3 text-emerald-900 dark:text-emerald-100">
                 Student Created Successfully
               </h2>
-              <p className="text-green-700 ">
-                {createdStudent.firstName} {createdStudent.lastName} has been
-                added to the system
+              <p className="text-emerald-700 dark:text-emerald-300 text-sm">
+                {createdStudent.firstName} {createdStudent.lastName} has been added to the system
               </p>
             </div>
           </div>
 
-          <div className="space-y-4 mb-8 p-6 bg-white dark:bg-[#131313] rounded-xl">
-            <div className="flex items-center justify-between p-4 bg-slate-50 dark:bg-[#0a0a0a] rounded-lg">
+          <div className="space-y-4 mb-8 p-6 bg-white dark:bg-slate-900 rounded-lg border border-emerald-200 dark:border-emerald-900/50">
+            <div className="flex items-center justify-between p-4 bg-slate-50 dark:bg-slate-800 rounded-lg">
               <div>
                 <p className="text-xs font-medium text-slate-600 dark:text-slate-400 uppercase tracking-wide">
                   Username
                 </p>
-                <p className="text-lg font-mono font-bold text-slate-900 dark:text-white ">
+                <p className="text-lg font-mono font-bold text-slate-900 dark:text-white">
                   {createdStudent.username}
                 </p>
               </div>
               <button
                 onClick={() => copyToClipboard(createdStudent.username)}
-                className="p-2 hover:bg-neutral-200 rounded-lg transition-colors"
+                className="p-2 hover:bg-slate-200 dark:hover:bg-slate-700 rounded-lg transition-colors"
                 title="Copy username"
               >
-                <Copy className="w-5 h-5 text-slate-600 dark:text-slate-400 " />
+                <Copy className="w-5 h-5 text-slate-600 dark:text-slate-400" />
               </button>
             </div>
 
-            <div className="flex items-center justify-between p-4 bg-slate-50 dark:bg-[#0a0a0a] rounded-lg">
+            <div className="flex items-center justify-between p-4 bg-slate-50 dark:bg-slate-800 rounded-lg">
               <div>
                 <p className="text-xs font-medium text-slate-600 dark:text-slate-400 uppercase tracking-wide">
                   Temporary Password
                 </p>
-                <p className="text-lg font-mono font-bold text-slate-900 dark:text-white ">
+                <p className="text-lg font-mono font-bold text-slate-900 dark:text-white">
                   {showPassword ? createdStudent.password : "••••••"}
                 </p>
               </div>
               <div className="flex gap-2">
                 <button
                   onClick={() => setShowPassword(!showPassword)}
-                  className="p-2 hover:bg-neutral-200 rounded-lg transition-colors"
+                  className="p-2 hover:bg-slate-200 dark:hover:bg-slate-700 rounded-lg transition-colors"
                   title={showPassword ? "Hide password" : "Show password"}
                 >
                   {showPassword ? (
-                    <EyeOff className="w-5 h-5 text-slate-600 dark:text-slate-400 " />
+                    <EyeOff className="w-5 h-5 text-slate-600 dark:text-slate-400" />
                   ) : (
-                    <Eye className="w-5 h-5 text-slate-600 dark:text-slate-400 " />
+                    <Eye className="w-5 h-5 text-slate-600 dark:text-slate-400" />
                   )}
                 </button>
                 <button
                   onClick={() => copyToClipboard(createdStudent.password)}
-                  className="p-2 hover:bg-neutral-200 rounded-lg transition-colors"
+                  className="p-2 hover:bg-slate-200 dark:hover:bg-slate-700 rounded-lg transition-colors"
                   title="Copy password"
                 >
-                  <Copy className="w-5 h-5 text-slate-600 dark:text-slate-400 " />
+                  <Copy className="w-5 h-5 text-slate-600 dark:text-slate-400" />
                 </button>
               </div>
             </div>
@@ -196,25 +196,28 @@ export function CreateStudentForm() {
 
           <div className="space-y-3">
             <p className="text-sm text-slate-700 dark:text-slate-300 font-medium">
-              ⚠️ Share these credentials with the student securely. The password
-              cannot be recovered.
+              ⚠️ Share these credentials with the student securely. The password cannot be recovered.
             </p>
             <div className="flex gap-4">
-              <button
+              <Button
                 onClick={() => router.push("/admin/students")}
-                className="flex-1 px-6 py-3 bg-green-600 hover:bg-green-700 text-slate-900 dark:text-white rounded-lg font-medium transition-colors"
+                variant="primary"
+                size="md"
+                className="flex-1"
               >
                 View All Students
-              </button>
-              <button
+              </Button>
+              <Button
                 onClick={() => {
                   setSuccess(false);
                   setCreatedStudent(null);
                 }}
-                className="flex-1 px-6 py-3 border border-green-300 text-green-700 rounded-lg font-medium hover:bg-green-50 transition-colors"
+                variant="secondary"
+                size="md"
+                className="flex-1"
               >
                 Create Another
-              </button>
+              </Button>
             </div>
           </div>
         </div>
@@ -224,9 +227,9 @@ export function CreateStudentForm() {
 
   return (
     <form onSubmit={handleSubmit} className="max-w-2xl animate-slide-up">
-      <div className="bg-white dark:bg-[#131313] rounded-2xl border border-slate-200 dark:border-white/10 p-8">
+      <div className="bg-white dark:bg-slate-900 rounded-lg border border-slate-200 dark:border-slate-800 p-8">
         {error && (
-          <div className="mb-6 p-4 bg-red-100 border border-red-300 rounded-lg text-red-700 flex items-center gap-3">
+          <div className="mb-6 p-4 bg-red-50 dark:bg-red-950/30 border border-red-200 dark:border-red-900/50 rounded-lg text-red-700 dark:text-red-400 flex items-center gap-3">
             <AlertCircle className="w-5 h-5 flex-shrink-0" />
             {error}
           </div>
@@ -234,13 +237,13 @@ export function CreateStudentForm() {
 
         {/* Personal Information */}
         <div className="mb-8">
-          <h3 className="text-lg font-bold text-slate-900 dark:text-white mb-6">
+          <h3 className="heading-4 text-slate-900 dark:text-white mb-6">
             Personal Information
           </h3>
 
           <div>
             <div>
-              <label className="block text-sm font-medium text-slate-900 dark:text-white mb-2">
+              <label className="block text-sm font-semibold text-slate-900 dark:text-white mb-2">
                 First Name *
               </label>
               <input
@@ -249,11 +252,11 @@ export function CreateStudentForm() {
                 value={formData.firstName}
                 onChange={handleChange}
                 placeholder="Ali"
-                className="w-full px-4 py-3 rounded-lg border border-slate-200 dark:border-white/10 bg-slate-50 dark:bg-[#0a0a0a] text-slate-900 dark:text-white placeholder-neutral-400 focus:border-yellow-500 focus:ring-2 focus:ring-yellow-200 outline-none transition-all"
+                className="w-full px-4 py-2.5 rounded-lg border border-slate-200 dark:border-slate-800 bg-white dark:bg-slate-800 text-slate-900 dark:text-white placeholder-slate-500 dark:placeholder-slate-400 focus:border-[#EBFF00] focus:ring-2 focus:ring-[#EBFF00]/20 outline-none transition-all"
               />
             </div>
             <div>
-              <label className="block text-sm font-medium text-slate-900 dark:text-white mb-2">
+              <label className="block text-sm font-semibold text-slate-900 dark:text-white mb-2">
                 Last Name *
               </label>
               <input
@@ -262,13 +265,13 @@ export function CreateStudentForm() {
                 value={formData.lastName}
                 onChange={handleChange}
                 placeholder="Valiyev"
-                className="w-full px-4 py-3 rounded-lg border border-slate-200 dark:border-white/10 bg-slate-50 dark:bg-[#0a0a0a] text-slate-900 dark:text-white placeholder-neutral-400 focus:border-yellow-500 focus:ring-2 focus:ring-yellow-200 outline-none transition-all"
+                className="w-full px-4 py-2.5 rounded-lg border border-slate-200 dark:border-slate-800 bg-white dark:bg-slate-800 text-slate-900 dark:text-white placeholder-slate-500 dark:placeholder-slate-400 focus:border-[#EBFF00] focus:ring-2 focus:ring-[#EBFF00]/20 outline-none transition-all"
               />
             </div>
           </div>
 
           <div>
-            <label className="block text-sm font-medium text-slate-900 dark:text-white mb-2">
+            <label className="block text-sm font-semibold text-slate-900 dark:text-white mb-2">
               Phone *
             </label>
             <input
@@ -277,19 +280,19 @@ export function CreateStudentForm() {
               value={formData.phone}
               onChange={handleChange}
               placeholder="+998 99 123 45 67"
-              className="w-full px-4 py-3 rounded-lg border border-slate-200 dark:border-white/10 bg-slate-50 dark:bg-[#0a0a0a] text-slate-900 dark:text-white placeholder-neutral-400 focus:border-yellow-500 focus:ring-2 focus:ring-yellow-200 outline-none transition-all"
+              className="w-full px-4 py-2.5 rounded-lg border border-slate-200 dark:border-slate-800 bg-white dark:bg-slate-800 text-slate-900 dark:text-white placeholder-slate-500 dark:placeholder-slate-400 focus:border-[#EBFF00] focus:ring-2 focus:ring-[#EBFF00]/20 outline-none transition-all"
             />
           </div>
         </div>
 
         {/* Account Information */}
         <div className="mb-8">
-          <h3 className="text-lg font-bold text-slate-900 dark:text-white mb-6">
+          <h3 className="heading-4 text-slate-900 dark:text-white mb-6">
             Account Information
           </h3>
 
           <div>
-            <label className="block text-sm font-medium text-slate-900 dark:text-white mb-2">
+            <label className="block text-sm font-semibold text-slate-900 dark:text-white mb-2">
               Username *
             </label>
             <input
@@ -298,12 +301,12 @@ export function CreateStudentForm() {
               value={formData.username}
               onChange={handleChange}
               placeholder="e.g. john_doe"
-              className="w-full px-4 py-3 rounded-lg border border-slate-200 dark:border-white/10 bg-slate-50 dark:bg-[#0a0a0a] text-slate-900 dark:text-white placeholder-neutral-400 focus:border-yellow-500 focus:ring-2 focus:ring-yellow-200 outline-none transition-all mb-4"
+              className="w-full px-4 py-2.5 rounded-lg border border-slate-200 dark:border-slate-800 bg-white dark:bg-slate-800 text-slate-900 dark:text-white placeholder-slate-500 dark:placeholder-slate-400 focus:border-[#EBFF00] focus:ring-2 focus:ring-[#EBFF00]/20 outline-none transition-all mb-4"
             />
           </div>
 
           <div>
-            <label className="block text-sm font-medium text-slate-900 dark:text-white mb-2">
+            <label className="block text-sm font-semibold text-slate-900 dark:text-white mb-2">
               Password *
             </label>
             <div className="relative">
@@ -313,12 +316,12 @@ export function CreateStudentForm() {
                 value={formData.password}
                 onChange={handleChange}
                 placeholder="Minimum 6 characters"
-                className="w-full px-4 py-3 rounded-lg border border-slate-200 dark:border-white/10 bg-slate-50 dark:bg-[#0a0a0a] text-slate-900 dark:text-white placeholder-neutral-400 focus:border-yellow-500 focus:ring-2 focus:ring-yellow-200 outline-none transition-all"
+                className="w-full px-4 py-2.5 rounded-lg border border-slate-200 dark:border-slate-800 bg-white dark:bg-slate-800 text-slate-900 dark:text-white placeholder-slate-500 dark:placeholder-slate-400 focus:border-[#EBFF00] focus:ring-2 focus:ring-[#EBFF00]/20 outline-none transition-all"
               />
               <button
                 type="button"
                 onClick={() => setShowPassword(!showPassword)}
-                className="absolute right-4 top-1/2 -translate-y-1/2 text-slate-500 dark:text-slate-400 hover:text-slate-600 dark:text-slate-400 "
+                className="absolute right-4 top-1/2 -translate-y-1/2 text-slate-500 dark:text-slate-400 hover:text-slate-600 dark:hover:text-slate-300"
               >
                 {showPassword ? (
                   <EyeOff className="w-5 h-5" />
@@ -332,19 +335,19 @@ export function CreateStudentForm() {
 
         {/* Academic Information */}
         <div className="mb-8">
-          <h3 className="text-lg font-bold text-slate-900 dark:text-white mb-6">
+          <h3 className="heading-4 text-slate-900 dark:text-white mb-6">
             Academic Information
           </h3>
 
           <div className="mb-4">
-            <label className="block text-sm font-medium text-slate-900 dark:text-white mb-2">
+            <label className="block text-sm font-semibold text-slate-900 dark:text-white mb-2">
               Status
             </label>
             <select
               name="status"
               value={formData.status}
               onChange={handleChange}
-              className="w-full px-4 py-3 rounded-lg border border-slate-200 dark:border-white/10 bg-slate-50 dark:bg-[#0a0a0a] text-slate-900 dark:text-white focus:border-yellow-500 focus:ring-2 focus:ring-yellow-200 outline-none transition-all"
+              className="w-full px-4 py-2.5 rounded-lg border border-slate-200 dark:border-slate-800 bg-white dark:bg-slate-800 text-slate-900 dark:text-white focus:border-[#EBFF00] focus:ring-2 focus:ring-[#EBFF00]/20 outline-none transition-all"
             >
               <option value="ACTIVE">Active</option>
               <option value="INACTIVE">Inactive</option>
@@ -353,11 +356,11 @@ export function CreateStudentForm() {
           </div>
 
           <div>
-            <label className="block text-sm font-medium text-slate-900 dark:text-white mb-2">
+            <label className="block text-sm font-semibold text-slate-900 dark:text-white mb-2">
               Group (Optional)
             </label>
             {groupsLoading ? (
-              <div className="px-4 py-3 rounded-lg border border-slate-200 dark:border-white/10 bg-slate-50 dark:bg-[#0a0a0a] text-slate-600 dark:text-slate-400 ">
+              <div className="px-4 py-2.5 rounded-lg border border-slate-200 dark:border-slate-800 bg-white dark:bg-slate-800 text-slate-600 dark:text-slate-400">
                 Loading groups...
               </div>
             ) : (
@@ -365,7 +368,7 @@ export function CreateStudentForm() {
                 name="groupId"
                 value={formData.groupId}
                 onChange={handleChange}
-                className="w-full px-4 py-3 rounded-lg border border-slate-200 dark:border-white/10 bg-slate-50 dark:bg-[#0a0a0a] text-slate-900 dark:text-white focus:border-yellow-500 focus:ring-2 focus:ring-yellow-200 outline-none transition-all"
+                className="w-full px-4 py-2.5 rounded-lg border border-slate-200 dark:border-slate-800 bg-white dark:bg-slate-800 text-slate-900 dark:text-white focus:border-[#EBFF00] focus:ring-2 focus:ring-[#EBFF00]/20 outline-none transition-all"
               >
                 <option value="">Select a group...</option>
                 {groups.map((group) => (
@@ -385,13 +388,13 @@ export function CreateStudentForm() {
 
         {/* Parent/Guardian Information */}
         <div className="mb-8">
-          <h3 className="text-lg font-bold text-slate-900 dark:text-white mb-6">
+          <h3 className="heading-4 text-slate-900 dark:text-white mb-6">
             Parent/Guardian Information (Optional)
           </h3>
 
           <div className="grid grid-cols-2 gap-4 mb-4">
             <div>
-              <label className="block text-sm font-medium text-slate-900 dark:text-white mb-2">
+              <label className="block text-sm font-semibold text-slate-900 dark:text-white mb-2">
                 Parent Name
               </label>
               <input
@@ -400,11 +403,11 @@ export function CreateStudentForm() {
                 value={formData.parentName}
                 onChange={handleChange}
                 placeholder="Parent full name"
-                className="w-full px-4 py-3 rounded-lg border border-slate-200 dark:border-white/10 bg-slate-50 dark:bg-[#0a0a0a] text-slate-900 dark:text-white placeholder-neutral-400 focus:border-yellow-500 focus:ring-2 focus:ring-yellow-200 outline-none transition-all"
+                className="w-full px-4 py-2.5 rounded-lg border border-slate-200 dark:border-slate-800 bg-white dark:bg-slate-800 text-slate-900 dark:text-white placeholder-slate-500 dark:placeholder-slate-400 focus:border-[#EBFF00] focus:ring-2 focus:ring-[#EBFF00]/20 outline-none transition-all"
               />
             </div>
             <div>
-              <label className="block text-sm font-medium text-slate-900 dark:text-white mb-2">
+              <label className="block text-sm font-semibold text-slate-900 dark:text-white mb-2">
                 Parent Phone
               </label>
               <input
@@ -413,13 +416,13 @@ export function CreateStudentForm() {
                 value={formData.parentPhone}
                 onChange={handleChange}
                 placeholder="+998 99 123 45 67"
-                className="w-full px-4 py-3 rounded-lg border border-slate-200 dark:border-white/10 bg-slate-50 dark:bg-[#0a0a0a] text-slate-900 dark:text-white placeholder-neutral-400 focus:border-yellow-500 focus:ring-2 focus:ring-yellow-200 outline-none transition-all"
+                className="w-full px-4 py-2.5 rounded-lg border border-slate-200 dark:border-slate-800 bg-white dark:bg-slate-800 text-slate-900 dark:text-white placeholder-slate-500 dark:placeholder-slate-400 focus:border-[#EBFF00] focus:ring-2 focus:ring-[#EBFF00]/20 outline-none transition-all"
               />
             </div>
           </div>
 
           <div>
-            <label className="block text-sm font-medium text-slate-900 dark:text-white mb-2">
+            <label className="block text-sm font-semibold text-slate-900 dark:text-white mb-2">
               Relationship
             </label>
             <input
@@ -428,28 +431,30 @@ export function CreateStudentForm() {
               value={formData.parentRelationship}
               onChange={handleChange}
               placeholder="Father, Mother, Guardian, etc."
-              className="w-full px-4 py-3 rounded-lg border border-slate-200 dark:border-white/10 bg-slate-50 dark:bg-[#0a0a0a] text-slate-900 dark:text-white placeholder-neutral-400 focus:border-yellow-500 focus:ring-2 focus:ring-yellow-200 outline-none transition-all"
+              className="w-full px-4 py-2.5 rounded-lg border border-slate-200 dark:border-slate-800 bg-white dark:bg-slate-800 text-slate-900 dark:text-white placeholder-slate-500 dark:placeholder-slate-400 focus:border-[#EBFF00] focus:ring-2 focus:ring-[#EBFF00]/20 outline-none transition-all"
             />
           </div>
         </div>
 
         {/* Form Actions */}
-        <div className="flex gap-4 pt-8 border-t border-slate-200 dark:border-white/10 ">
+        <div className="flex gap-4 pt-8 border-t border-slate-200 dark:border-slate-800">
           <button
             type="button"
             onClick={() => window.history.back()}
-            className="flex-1 px-6 py-3 border border-slate-200 dark:border-white/10 rounded-lg font-medium text-slate-700 dark:text-slate-300 hover:bg-slate-50 dark:bg-[#0a0a0a] transition-colors"
+            className="flex-1 px-6 py-2.5 border border-slate-200 dark:border-slate-800 rounded-lg font-medium text-slate-700 dark:text-slate-300 hover:bg-slate-50 dark:hover:bg-slate-800 transition-colors"
           >
             Cancel
           </button>
-          <button
+          <Button
             type="submit"
+            variant="primary"
+            size="md"
             disabled={loading}
-            className="flex-1 px-6 py-3 bg-yellow-600 hover:bg-yellow-700 disabled:opacity-50 text-slate-900 rounded-lg font-medium transition-colors flex items-center justify-center gap-2"
+            className="flex-1"
           >
             {loading && <Loader className="w-5 h-5 animate-spin" />}
             {loading ? "Creating..." : "Create Student"}
-          </button>
+          </Button>
         </div>
       </div>
     </form>
