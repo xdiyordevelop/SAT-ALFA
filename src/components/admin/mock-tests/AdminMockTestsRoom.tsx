@@ -408,7 +408,7 @@ export function AdminMockTestsRoom({
                     onClick={() => setDeleteConfirmId(test.id)}
                     disabled={isActionBusy}
                     title="Delete Test"
-                    className="p-2.5 rounded-xl text-slate-500 dark:text-slate-400 hover:text-rose-600 hover:bg-rose-950/30 border border-transparent hover:border-rose-900/50 transition-all"
+                    className="p-2.5 rounded-xl text-slate-500 dark:text-slate-400 hover:text-red-600 hover:bg-red-950/30 border border-transparent hover:border-red-900/50 transition-all"
                   >
                     <Trash2 className="w-4 h-4" />
                   </button>
@@ -423,7 +423,7 @@ export function AdminMockTestsRoom({
       {deleteConfirmId && (
         <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-slate-50 dark:bg-[#0a0a0a] backdrop-blur-sm animate-fade-in">
           <div className="bg-white dark:bg-[#131313] border border-slate-200 dark:border-white/10 rounded-2xl p-6 max-w-md w-full shadow-2xl space-y-4">
-            <div className="w-12 h-12 rounded-2xl bg-rose-950/50 border border-rose-800/40 text-rose-600 flex items-center justify-center mx-auto">
+            <div className="w-12 h-12 rounded-2xl bg-red-950/50 border border-red-800/40 text-red-600 flex items-center justify-center mx-auto">
               <AlertTriangle className="w-6 h-6" />
             </div>
             <div className="text-center">
@@ -444,7 +444,7 @@ export function AdminMockTestsRoom({
               </Button>
               <Button
                 onClick={() => handleDeleteTest(deleteConfirmId)}
-                className="bg-rose-600 hover:bg-rose-500 text-slate-900 dark:text-white font-bold flex-1 rounded-xl"
+                className="bg-red-600 hover:bg-red-500 text-slate-900 dark:text-white font-bold flex-1 rounded-xl"
               >
                 Delete Test
               </Button>

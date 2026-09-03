@@ -162,7 +162,7 @@ export function AdminMockTestsView({
             <span className="text-sm font-medium text-slate-600 dark:text-slate-400 ">
               Test Templates
             </span>
-            <div className="p-2 rounded-xl bg-purple-100 text-slate-900 dark:text-yellow-500 ">
+            <div className="p-2 rounded-xl bg-yellow-100 dark:bg-yellow-900/30 text-slate-900 dark:text-yellow-500 ">
               <Brain className="w-5 h-5" />
             </div>
           </div>

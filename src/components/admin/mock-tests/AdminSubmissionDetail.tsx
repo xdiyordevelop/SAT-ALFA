@@ -353,7 +353,7 @@ export function AdminSubmissionDetail({
             <span className="text-sm font-semibold text-slate-600 dark:text-slate-400 ">
               Math Section
             </span>
-            <span className="text-xs font-bold px-2 py-0.5 rounded bg-blue-100 text-blue-700 ">
+            <span className="text-xs font-bold px-2 py-0.5 rounded bg-yellow-100 dark:bg-yellow-900/30 text-yellow-700 dark:text-yellow-300 ">
               200–800
             </span>
           </div>
@@ -367,7 +367,7 @@ export function AdminSubmissionDetail({
           </div>
           <div className="w-full bg-slate-100 dark:bg-[#1c1b1b] rounded-full h-2 overflow-hidden">
             <div
-              className="bg-blue-600 h-2 rounded-full transition-all duration-500"
+              className="bg-yellow-500 h-2 rounded-full transition-all duration-500"
               style={{
                 width: `${mathScore ? Math.min(100, ((mathScore - 200) / 600) * 100) : 0}%`,
               }}
@@ -381,7 +381,7 @@ export function AdminSubmissionDetail({
             <span className="text-sm font-semibold text-slate-600 dark:text-slate-400 ">
               Reading & Writing Section
             </span>
-            <span className="text-xs font-bold px-2 py-0.5 rounded bg-purple-100 text-purple-700 ">
+            <span className="text-xs font-bold px-2 py-0.5 rounded bg-yellow-100 dark:bg-yellow-900/30 text-yellow-700 dark:text-yellow-300 ">
               200–800
             </span>
           </div>
@@ -447,7 +447,7 @@ export function AdminSubmissionDetail({
                   <div className="w-full bg-neutral-200 rounded-full h-2 overflow-hidden">
                     <div
                       className={`h-2 rounded-full transition-all duration-500 ${
-                        isHigh ? "bg-green-500" : isMedium ? "bg-yellow-500" : "bg-red-500"
+                        isHigh ? "bg-emerald-500" : isMedium ? "bg-yellow-500" : "bg-red-500"
                       }`}
                       style={{
                         width: `${Math.min(100, Math.max(0, topic.percentage))}%`,

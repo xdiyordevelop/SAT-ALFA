@@ -68,7 +68,7 @@ export function AttemptHistoryTable({ attempts }: AttemptHistoryTableProps) {
               <th className="px-6 py-4 text-left text-slate-500 dark:text-slate-400 font-bold uppercase tracking-wide">
                 <button
                   onClick={() => handleSort("studentName")}
-                  className="flex items-center hover:text-amber-500 transition-colors"
+                  className="flex items-center hover:text-yellow-500 transition-colors"
                 >
                   Student
                   <SortIcon field="studentName" />
@@ -80,7 +80,7 @@ export function AttemptHistoryTable({ attempts }: AttemptHistoryTableProps) {
               <th className="px-6 py-4 text-left text-slate-500 dark:text-slate-400 font-bold uppercase tracking-wide">
                 <button
                   onClick={() => handleSort("completedAt")}
-                  className="flex items-center hover:text-amber-500 transition-colors"
+                  className="flex items-center hover:text-yellow-500 transition-colors"
                 >
                   Completed
                   <SortIcon field="completedAt" />

@@ -167,7 +167,7 @@ export function GroupDetailContent({
           </button>
           <button
             onClick={() => setShowDeleteModal(true)}
-            className="flex items-center gap-2 px-4 py-2 bg-rose-500/10 hover:bg-rose-500/20 text-rose-600 border border-rose-500/20 rounded-lg font-medium transition-colors"
+            className="flex items-center gap-2 px-4 py-2 bg-red-500/10 hover:bg-red-500/20 text-red-600 border border-red-500/20 rounded-lg font-medium transition-colors"
           >
             <Trash2 className="w-4 h-4" />
             Delete
@@ -262,7 +262,7 @@ export function GroupDetailContent({
                           </span>
                         )}
                         {status === "UNPAID" && (
-                          <span className="inline-block px-2.5 py-1 bg-rose-500/10 text-rose-600 border border-rose-500/20 rounded-md text-[11px] font-bold tracking-wider">
+                          <span className="inline-block px-2.5 py-1 bg-red-500/10 text-red-600 border border-red-500/20 rounded-md text-[11px] font-bold tracking-wider">
                             UNPAID
                           </span>
                         )}
@@ -271,7 +271,7 @@ export function GroupDetailContent({
                         <button
                           onClick={() => handleRemoveStudent(student.id)}
                           disabled={isPending}
-                          className="px-3 py-1.5 text-xs font-medium text-rose-600 hover:text-rose-300 bg-rose-500/10 hover:bg-rose-500/20 border border-rose-500/20 rounded-lg transition-colors disabled:opacity-50"
+                          className="px-3 py-1.5 text-xs font-medium text-red-600 hover:text-red-300 bg-red-500/10 hover:bg-red-500/20 border border-red-500/20 rounded-lg transition-colors disabled:opacity-50"
                         >
                           Remove
                         </button>
@@ -353,7 +353,7 @@ export function GroupDetailContent({
       {showDeleteModal && (
         <div className="fixed inset-0 bg-slate-50 dark:bg-[#0a0a0a]/60 backdrop-blur-sm flex items-center justify-center z-50 p-4">
           <div className="bg-white dark:bg-[#131313] border border-slate-200 dark:border-white/10 rounded-2xl p-6 md:p-8 max-w-md w-full shadow-2xl animate-slide-up text-center">
-            <div className="w-16 h-16 rounded-full bg-rose-500/10 text-rose-500 flex items-center justify-center mx-auto mb-4">
+            <div className="w-16 h-16 rounded-full bg-red-500/10 text-red-500 flex items-center justify-center mx-auto mb-4">
               <Trash2 className="w-8 h-8" />
             </div>
             <h2 className="text-2xl font-bold text-slate-900 dark:text-white mb-3">
@@ -377,7 +377,7 @@ export function GroupDetailContent({
               <button
                 onClick={handleDelete}
                 disabled={isPending}
-                className="flex-1 px-4 py-2.5 rounded-xl bg-rose-600 hover:bg-rose-500 text-slate-900 dark:text-white transition-colors font-bold disabled:opacity-50"
+                className="flex-1 px-4 py-2.5 rounded-xl bg-red-600 hover:bg-red-500 text-slate-900 dark:text-white transition-colors font-bold disabled:opacity-50"
               >
                 {isPending ? "Deleting..." : "Yes, Delete"}
               </button>

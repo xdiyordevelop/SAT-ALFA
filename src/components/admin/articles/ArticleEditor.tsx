@@ -217,7 +217,7 @@ export function ArticleEditor({ initialData }: { initialData: any }) {
                 >
                   <button
                     onClick={() => removeVocab(i)}
-                    className="absolute top-2 right-2 text-slate-500 dark:text-slate-400 hover:text-rose-500"
+                    className="absolute top-2 right-2 text-slate-500 dark:text-slate-400 hover:text-red-500"
                   >
                     <Trash2 className="w-4 h-4" />
                   </button>
