@@ -204,7 +204,7 @@ export function AttendanceMarkingForm() {
   };
 
   return (
-    <div className="space-y-6">
+    <div className="space-y-4">
       {/* Alerts */}
       {error && (
         <div className="mb-6 p-4 bg-red-50 dark:bg-red-950/30 border border-red-200 dark:border-red-900/50 rounded-lg text-red-700 dark:text-red-300 flex items-center gap-3">
@@ -221,8 +221,8 @@ export function AttendanceMarkingForm() {
       )}
 
       {/* Controls */}
-      <div className="bg-white dark:bg-[#131313] rounded-2xl border border-slate-200 dark:border-white/10 p-6 mb-6 animate-slide-up">
-        <div className="grid grid-cols-1 md:grid-cols-3 gap-4 mb-4">
+      <div className="bg-white dark:bg-[#131313] rounded-2xl border border-slate-200 dark:border-white/10 p-5 mb-4 animate-slide-up">
+        <div className="grid grid-cols-1 md:grid-cols-3 gap-3 mb-3">
           <div>
             <label className="block text-sm font-medium text-slate-900 dark:text-white mb-2">
               Group
@@ -230,7 +230,7 @@ export function AttendanceMarkingForm() {
             <select
               value={selectedGroup}
               onChange={(e) => setSelectedGroup(e.target.value)}
-              className="w-full px-4 py-3 rounded-lg border border-slate-200 dark:border-white/10 bg-slate-50 dark:bg-[#0a0a0a] text-slate-900 dark:text-white focus:border-yellow-500 dark:focus:border-yellow-600 focus:ring-2 focus:ring-yellow-200 dark:focus:ring-yellow-600/30 outline-none transition-all"
+              className="w-full px-4 py-2 rounded-lg border border-slate-200 dark:border-white/10 bg-slate-50 dark:bg-[#0a0a0a] text-slate-900 dark:text-white focus:border-yellow-500 dark:focus:border-yellow-600 focus:ring-2 focus:ring-yellow-200 dark:focus:ring-yellow-600/30 outline-none transition-all"
             >
               <option value="">Select a group...</option>
               {groups.map((group) => (
@@ -249,7 +249,7 @@ export function AttendanceMarkingForm() {
               type="date"
               value={selectedDate}
               onChange={(e) => setSelectedDate(e.target.value)}
-              className="w-full px-4 py-3 rounded-lg border border-slate-200 dark:border-white/10 bg-slate-50 dark:bg-[#0a0a0a] text-slate-900 dark:text-white focus:border-yellow-500 dark:focus:border-yellow-600 focus:ring-2 focus:ring-yellow-200 dark:focus:ring-yellow-600/30 outline-none transition-all"
+              className="w-full px-4 py-2 rounded-lg border border-slate-200 dark:border-white/10 bg-slate-50 dark:bg-[#0a0a0a] text-slate-900 dark:text-white focus:border-yellow-500 dark:focus:border-yellow-600 focus:ring-2 focus:ring-yellow-200 dark:focus:ring-yellow-600/30 outline-none transition-all"
             />
           </div>
 
@@ -264,7 +264,7 @@ export function AttendanceMarkingForm() {
                 placeholder="Name or phone..."
                 value={searchTerm}
                 onChange={(e) => setSearchTerm(e.target.value)}
-                className="w-full pl-10 pr-4 py-3 rounded-lg border border-slate-200 dark:border-white/10 bg-slate-50 dark:bg-[#0a0a0a] text-slate-900 dark:text-white placeholder-neutral-400 focus:border-yellow-500 dark:focus:border-yellow-600 focus:ring-2 focus:ring-yellow-200 dark:focus:ring-yellow-600/30 outline-none transition-all"
+                className="w-full pl-10 pr-4 py-2 rounded-lg border border-slate-200 dark:border-white/10 bg-slate-50 dark:bg-[#0a0a0a] text-slate-900 dark:text-white placeholder-neutral-400 focus:border-yellow-500 dark:focus:border-yellow-600 focus:ring-2 focus:ring-yellow-200 dark:focus:ring-yellow-600/30 outline-none transition-all"
               />
             </div>
           </div>
@@ -385,12 +385,15 @@ export function AttendanceMarkingForm() {
           </div>
         </div>
       ) : (
-        <div className="text-center py-16">
-          <Calendar className="w-16 h-16 text-slate-500 dark:text-slate-400 mx-auto mb-4" />
+        <div className="text-center py-12">
+          <Calendar className="w-12 h-12 text-slate-400 dark:text-slate-500 mx-auto mb-3" />
           <p className="text-slate-600 dark:text-slate-400 font-medium">
             {selectedGroup
               ? "No students in this group"
               : "Select a group to get started"}
+          </p>
+          <p className="text-sm text-slate-500 dark:text-slate-500 mt-1">
+            {!selectedGroup && "Choose a group above to view and mark student attendance"}
           </p>
         </div>
       )}

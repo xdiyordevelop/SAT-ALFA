@@ -22,11 +22,11 @@ export default async function MarkAttendancePage() {
       userEmail={session.username || "admin@satalfa.uz"}
       userRole={session.role}
     >
-      <div className="mb-8 animate-fade-in">
-        <h1 className="text-3xl font-bold text-slate-900 dark:text-white mb-2">
+      <div className="mb-6 animate-fade-in">
+        <h1 className="text-3xl font-bold text-slate-900 dark:text-white mb-1">
           Mark Student Attendance
         </h1>
-        <p className="text-slate-600 dark:text-slate-400 ">
+        <p className="text-slate-600 dark:text-slate-400 text-sm">
           Record attendance for your selected group
         </p>
       </div>

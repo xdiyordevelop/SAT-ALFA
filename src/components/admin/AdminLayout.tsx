@@ -39,7 +39,7 @@ export function AdminLayout({
 
         {/* Page Content - offset from fixed navbar */}
         <main className="flex-1 p-4 sm:p-6 lg:p-8 w-full overflow-x-hidden mt-16">
-          <div className="max-w-7xl mx-auto w-full">
+          <div className="max-w-6xl mx-auto w-full">
             {children}
           </div>
         </main>
