@@ -209,7 +209,7 @@ export function StudentDashboardView({
 
         {/* Recent Results History */}
         {attempts.length > 0 && (
-          <div className="col-span-1 md:col-span-3 mt-4">
+          <div className="col-span-1">
              <div className="flex items-center gap-3 mb-6">
               <History className="w-6 h-6 text-slate-900 dark:text-[#EBFF00]" />
               <h3 className="text-xl font-bold text-slate-900 dark:text-white">Recent Results</h3>
