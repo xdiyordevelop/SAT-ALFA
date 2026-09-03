@@ -1,8 +1,7 @@
 "use client";
 import { useState } from "react";
 import { useRouter } from "next/navigation";
-import { Sidebar } from "@/components/layout/Sidebar";
-import { Topbar } from "@/components/layout/Topbar";
+import { AdminLayout } from "@/components/admin/AdminLayout";
 import { FileUp, Loader2, XCircle } from "lucide-react";
 import { saveParsedArticle } from "@/server/actions/article.actions";
 import { renderPdfToCanvases, cropAndUploadCanvas } from "./pdf-helper";
@@ -125,18 +124,17 @@ export default function ImportArticlePage() {
   }
 
   return (
-    <div className="min-h-screen bg-white dark:bg-[#131313] text-slate-800 dark:text-slate-200">
-      <Sidebar username="Admin" role="ADMIN" />
-      <div className="lg:ml-64 flex-1 min-w-0 w-full lg:w-[calc(100%-16rem)]">
-        <Topbar
-          title="Import PDF Article"
-          breadcrumbs={[
-            { label: "Admin" },
-            { label: "Articles" },
-            { label: "Import" },
-          ]}
-        />
-        <main className="pt-24 px-6 pb-12 max-w-2xl mx-auto">
+    <AdminLayout
+      title="Import PDF Article"
+      breadcrumbs={[
+        { label: "Admin" },
+        { label: "Articles" },
+        { label: "Import" },
+      ]}
+      userName="Admin"
+      userEmail="admin@satalfa.uz"
+      userRole="ADMIN"
+    >
           <form
             onSubmit={handleUpload}
             className="bg-white dark:bg-[#131313] border border-slate-200 dark:border-white/10 p-8 rounded-2xl text-center"
@@ -191,8 +189,6 @@ export default function ImportArticlePage() {
                 : "Extract Article"}
             </button>
           </form>
-        </main>
-      </div>
-    </div>
+    </AdminLayout>
   );
 }

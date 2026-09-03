@@ -2,8 +2,7 @@ import React from "react";
 import { getSession } from "@/lib/auth";
 import { redirect } from "next/navigation";
 import { prisma } from "@/lib/prisma";
-import { Sidebar } from "@/components/layout/Sidebar";
-import { Topbar } from "@/components/layout/Topbar";
+import { AdminLayout } from "@/components/admin/AdminLayout";
 import { SessionController } from "./components/SessionController";
 import { ParticipantMatrix } from "./components/ParticipantMatrix";
 import { SecurityAlertTracker } from "./components/SecurityAlertTracker";
@@ -36,65 +35,53 @@ export default async function ProctoredControlPage({
 
   if (!proctoredSession) {
     return (
-      <div className="min-h-screen bg-slate-50 dark:bg-[#0a0a0a]">
-        <Sidebar username={session.username} role={session.role} />
-        <div className="lg:ml-64">
-          <Topbar
-            title="Proctor Control"
-            breadcrumbs={[{ label: "Admin" }, { label: "Proctor Control" }]}
-            userName={session.username}
-            userRole={session.role}
-          />
-          <main className="pt-24 px-6 pb-12">
-            <div className="max-w-7xl mx-auto text-center py-12">
-              <p className="text-red-600 text-lg font-bold">
-                Session not found
-              </p>
-              <p className="text-slate-500 dark:text-slate-400 mt-2">
-                The proctored session could not be found.
-              </p>
-            </div>
-          </main>
+      <AdminLayout
+        title="Proctor Control"
+        breadcrumbs={[{ label: "Admin" }, { label: "Proctor Control" }]}
+        userName={session.username || "Admin"}
+        userEmail={session.username || "admin@satalfa.uz"}
+        userRole={session.role}
+      >
+        <div className="text-center py-12">
+          <p className="text-red-600 text-lg font-bold">
+            Session not found
+          </p>
+          <p className="text-slate-500 dark:text-slate-400 mt-2">
+            The proctored session could not be found.
+          </p>
         </div>
-      </div>
+      </AdminLayout>
     );
   }
 
   return (
-    <div className="min-h-screen bg-slate-50 dark:bg-[#0a0a0a]">
-      <Sidebar username={session.username} role={session.role} />
-      <div className="lg:ml-64">
-        <Topbar
-          title="Proctor Control Room"
-          breadcrumbs={[
-            { label: "Admin" },
-            { label: "Mock Tests" },
-            { label: "Proctor Control" },
-          ]}
-          userName={session.username}
-          userRole={session.role}
-        />
-        <main className="pt-24 px-6 pb-12">
-          <div className="max-w-7xl mx-auto">
-            {/* Test Title */}
-            <div className="mb-6">
-              <h1 className="text-3xl font-bold text-slate-900 dark:text-yellow-500 mb-2">
-                {proctoredSession.satTest.name}
-              </h1>
-              <p className="text-slate-500 dark:text-slate-400">
-                Session created{" "}
-                {new Date(proctoredSession.createdAt).toLocaleString()}
-              </p>
-            </div>
-            {/* Real-time Control Room */}
-            <ProctoredControlRoom
-              sessionId={sessionId}
-              initialSession={proctoredSession as any}
-              adminUsername={session.username}
-            />
-          </div>
-        </main>
+    <AdminLayout
+      title="Proctor Control Room"
+      breadcrumbs={[
+        { label: "Admin" },
+        { label: "Mock Tests" },
+        { label: "Proctor Control" },
+      ]}
+      userName={session.username || "Admin"}
+      userEmail={session.username || "admin@satalfa.uz"}
+      userRole={session.role}
+    >
+      {/* Test Title */}
+      <div className="mb-6">
+        <h1 className="text-3xl font-bold text-slate-900 dark:text-yellow-500 mb-2">
+          {proctoredSession.satTest.name}
+        </h1>
+        <p className="text-slate-500 dark:text-slate-400">
+          Session created{" "}
+          {new Date(proctoredSession.createdAt).toLocaleString()}
+        </p>
       </div>
-    </div>
+      {/* Real-time Control Room */}
+      <ProctoredControlRoom
+        sessionId={sessionId}
+        initialSession={proctoredSession as any}
+        adminUsername={session.username}
+      />
+    </AdminLayout>
   );
 }
