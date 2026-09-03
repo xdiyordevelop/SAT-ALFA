@@ -106,7 +106,7 @@ export function Sidebar({ username, role }: SidebarProps) {
 
       {/* Sidebar Container */}
       <nav
-        className={`fixed left-0 top-0 h-screen w-72 bg-white dark:bg-[#0a0a0a] border-r border-slate-200 dark:border-white/5 flex flex-col z-[55] transition-transform duration-300 ease-in-out lg:translate-x-0 ${
+        className={`fixed lg:static left-0 top-0 h-screen w-72 bg-white dark:bg-[#0a0a0a] border-r border-slate-200 dark:border-white/5 flex flex-col z-[55] transition-transform duration-300 ease-in-out lg:z-auto lg:translate-x-0 lg:flex-shrink-0 ${
           isOpen ? "translate-x-0" : "-translate-x-full"
         }`}
       >
