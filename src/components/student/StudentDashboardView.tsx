@@ -151,7 +151,7 @@ export function StudentDashboardView({
               </ResponsiveContainer>
             ) : (
               <div className="w-full h-full flex items-center justify-center text-slate-500 dark:text-slate-400 text-sm font-medium">
-                Ma'lumotlar yetarli emas. Kamida bitta test yakunlang.
+                Not enough data. Complete at least one test.
               </div>
             )}
           </div>
@@ -163,71 +163,70 @@ export function StudentDashboardView({
           
           <div>
             <div className="flex justify-between items-center mb-4">
-              <h3 className="text-xl font-bold text-white">Keyingi Maqsad</h3>
+              <h3 className="text-xl font-bold text-white">Next Target</h3>
               <Target className="w-6 h-6 text-yellow-500 dark:text-[#EBFF00]" />
             </div>
-            
+
             <p className="text-slate-400 dark:text-slate-400 mb-6 text-sm font-medium">
-              {nextTest ? nextTest.description || "To'liq formatdagi SAT Mock Test. Tayyorgarligingizni tekshiring." : "Hozircha yangi testlar yo'q. Qayta takrorlang."}
+              {nextTest ? nextTest.description || "Full-length SAT Mock Test. Check your readiness." : "No new tests available. Check back later."}
             </p>
-            
+
             {nextTest && (
               <div className="bg-slate-800 dark:bg-[#2a2a2a]/50 rounded-lg p-4 border border-slate-700 dark:border-white/5 mb-8">
                 <div className="flex justify-between text-sm mb-3">
-                  <span className="text-slate-300 font-medium">Taxminiy vaqt</span>
-                  <span className="text-yellow-500 dark:text-[#EBFF00] font-bold font-mono">134 daq</span>
+                  <span className="text-slate-300 font-medium">Estimated Time</span>
+                  <span className="text-yellow-500 dark:text-[#EBFF00] font-bold font-mono">134 min</span>
                 </div>
                 <div className="flex justify-between text-sm">
                   <span className="text-slate-300 font-medium">Format</span>
-                  <span className="text-slate-400 font-medium">Raqamli Adaptiv</span>
+                  <span className="text-slate-400 font-medium">Digital Adaptive</span>
                 </div>
               </div>
             )}
           </div>
-          
+
           {nextTest ? (
              <Link
               href={`/student/mock-tests/${nextTest.id}/take`}
               className="w-full bg-[#EBFF00] dark:bg-[#EBFF00] text-slate-950 font-bold py-3.5 px-4 rounded-xl flex items-center justify-center gap-2 hover:bg-[#d9ff00] dark:hover:bg-white active:scale-[0.98] transition-all shadow-[0_0_15px_rgba(235,255,0,0.15)]"
             >
-              Testni boshlash
+              Start Test
               <ArrowRight className="w-5 h-5" />
             </Link>
           ) : (
              <button disabled className="w-full bg-slate-800 text-slate-500 font-bold py-3.5 px-4 rounded-xl flex items-center justify-center gap-2 cursor-not-allowed">
-              Test mavjud emas
+              No Test Available
             </button>
           )}
         </div>
 
-        {/* AI Insights / Weaknesses */}
         <div className="col-span-1 md:col-span-3 bg-white dark:bg-[#131313] border border-slate-200 dark:border-white/10 rounded-2xl p-6 lg:p-8 shadow-sm">
           <div className="flex items-center gap-3 mb-6">
             <BrainCircuit className="w-6 h-6 text-slate-900 dark:text-[#EBFF00]" />
-            <h3 className="text-xl font-bold text-slate-900 dark:text-white">ALFA Tutor Tahlillari</h3>
+            <h3 className="text-xl font-bold text-slate-900 dark:text-white">AI Tutor Insights</h3>
           </div>
-          
+
           <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
             <div className="border border-slate-200 dark:border-white/10 rounded-xl p-5 bg-slate-50 dark:bg-[#1c1b1b]">
               <div className="flex justify-between items-start mb-3">
                 <h4 className="font-bold text-slate-900 dark:text-white">Heart of Algebra</h4>
-                <span className="text-rose-600 dark:text-rose-400 text-xs font-bold uppercase tracking-wider bg-rose-100 dark:bg-rose-950/50 px-2 py-1 rounded border border-rose-200 dark:border-rose-900/50">Kritik</span>
+                <span className="text-rose-600 dark:text-rose-400 text-xs font-bold uppercase tracking-wider bg-rose-100 dark:bg-rose-950/50 px-2 py-1 rounded border border-rose-200 dark:border-rose-900/50">Critical</span>
               </div>
               <p className="text-sm text-slate-600 dark:text-slate-400 mb-5 font-medium leading-relaxed">
-                Siz chiziqli tengsizliklar tizimlarini yechishda o'rtacha vaqtdan 2.5 marta ko'p vaqt sarflayapsiz.
+                You're spending 2.5x longer than average solving systems of linear inequalities.
               </p>
               <button className="text-slate-900 dark:text-[#EBFF00] text-sm font-bold flex items-center gap-1 hover:underline transition-all">
-                Maxsus mashqni boshlash <ChevronRight className="w-4 h-4" />
+                Start Focused Practice <ChevronRight className="w-4 h-4" />
               </button>
             </div>
-            
+
             <div className="border border-slate-200 dark:border-white/10 rounded-xl p-5 bg-slate-50 dark:bg-[#1c1b1b]">
               <div className="flex justify-between items-start mb-3">
                 <h4 className="font-bold text-slate-900 dark:text-white">Standard English Conventions</h4>
-                <span className="text-emerald-700 dark:text-[#EBFF00] text-xs font-bold uppercase tracking-wider bg-emerald-100 dark:bg-[#EBFF00]/10 px-2 py-1 rounded border border-emerald-200 dark:border-[#EBFF00]/20">O'smoqda</span>
+                <span className="text-emerald-700 dark:text-[#EBFF00] text-xs font-bold uppercase tracking-wider bg-emerald-100 dark:bg-[#EBFF00]/10 px-2 py-1 rounded border border-emerald-200 dark:border-[#EBFF00]/20">Improving</span>
               </div>
               <p className="text-sm text-slate-600 dark:text-slate-400 mb-5 font-medium leading-relaxed">
-                Tinish belgilari bo'yicha aniqlik oxirgi testda 15% ga oshdi. Nuqtali vergullarni farqlashga e'tiborni saqlang.
+                Your punctuation accuracy improved by 15% on the last test. Keep focusing on distinguishing commas and semicolons.
               </p>
               <div className="w-full bg-slate-200 dark:bg-[#1c1b1b] h-2 rounded-full overflow-hidden">
                 <div className="bg-slate-900 dark:bg-[#EBFF00] h-full w-[85%] rounded-r-full shadow-[0_0_10px_rgba(235,255,0,0.5)]"></div>
@@ -241,7 +240,7 @@ export function StudentDashboardView({
           <div className="col-span-1 md:col-span-3 mt-4">
              <div className="flex items-center gap-3 mb-6">
               <History className="w-6 h-6 text-slate-900 dark:text-[#EBFF00]" />
-              <h3 className="text-xl font-bold text-slate-900 dark:text-white">Oxirgi Natijalar</h3>
+              <h3 className="text-xl font-bold text-slate-900 dark:text-white">Recent Results</h3>
             </div>
             <div className="space-y-3">
               {attempts.slice(0, 5).map((attempt) => (
