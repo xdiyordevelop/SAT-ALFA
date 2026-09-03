@@ -102,18 +102,6 @@ export function StudentDashboardView({
   attempts,
   metrics,
 }: StudentDashboardViewProps) {
-  
-  // Format data for the chart (Performance Trajectory)
-  const chartData = [...attempts]
-    .reverse()
-    .filter((a) => a.totalScore !== null)
-    .map((attempt, idx) => ({
-      name: `Mock ${idx + 1}`,
-      Total: attempt.totalScore || 0,
-      ReadingWriting: attempt.rwScore || 0,
-      Math: attempt.mathScore || 0,
-      date: new Date(attempt.startedAt).toLocaleDateString(),
-    }));
 
   return (
     <div className="flex flex-col gap-6 lg:gap-8 w-full">
@@ -132,65 +120,7 @@ export function StudentDashboardView({
       {/* Bento Grid Layout */}
       <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
 
-        {/* Performance Overview (Chart) */}
-        <div className="col-span-1 md:col-span-2 bg-white dark:bg-[#131313] border border-slate-200 dark:border-white/10 rounded-2xl p-6 lg:p-8 flex flex-col relative overflow-hidden shadow-sm">
-          <div className="absolute inset-0 bg-gradient-to-br from-[#EBFF00]/5 dark:from-[#EBFF00]/[0.02] to-transparent pointer-events-none"></div>
-
-          <div className="flex justify-between items-center mb-8 z-10">
-            <h3 className="text-xl font-bold text-slate-900 dark:text-white">Performance Trajectory</h3>
-            <span className="flex items-center gap-1.5 text-sm font-semibold text-slate-900 dark:text-[#EBFF00]">
-              <span className="w-2.5 h-2.5 rounded-full bg-slate-900 dark:bg-[#EBFF00]"></span> Total Score
-            </span>
-          </div>
-
-          <div className="flex-1 w-full h-[350px] z-10">
-            {chartData.length > 0 ? (
-              <ResponsiveContainer width="100%" height="100%">
-                <AreaChart data={chartData} margin={{ top: 10, right: 0, left: -20, bottom: 0 }}>
-                  <defs>
-                    <linearGradient id="mathGrad" x1="0" y1="0" x2="0" y2="1">
-                      <stop offset="5%" stopColor="#EBFF00" stopOpacity={0.3} />
-                      <stop offset="95%" stopColor="#EBFF00" stopOpacity={0} />
-                    </linearGradient>
-                    <linearGradient id="mathGradLight" x1="0" y1="0" x2="0" y2="1">
-                      <stop offset="5%" stopColor="#0f172a" stopOpacity={0.1} />
-                      <stop offset="95%" stopColor="#0f172a" stopOpacity={0} />
-                    </linearGradient>
-                  </defs>
-                  <CartesianGrid strokeDasharray="3 3" vertical={false} stroke="#334155" strokeOpacity={0.2} />
-                  <XAxis dataKey="name" stroke="#64748b" fontSize={12} tickLine={false} axisLine={false} dy={10} />
-                  <YAxis domain={[400, 1600]} stroke="#64748b" fontSize={12} tickLine={false} axisLine={false} />
-                  <Tooltip
-                    contentStyle={{
-                      backgroundColor: "var(--tw-colors-slate-900)",
-                      borderColor: "var(--tw-colors-slate-800)",
-                      borderRadius: "0.5rem",
-                      color: "#fff",
-                      border: "1px solid rgba(255,255,255,0.1)",
-                    }}
-                    itemStyle={{ color: "#EBFF00", fontWeight: "bold" }}
-                  />
-                  <Area
-                    type="monotone"
-                    dataKey="Total"
-                    stroke="currentColor"
-                    className="text-slate-900 dark:text-[#EBFF00]"
-                    strokeWidth={3}
-                    fillOpacity={1}
-                    fill="url(#mathGradLight)"
-                    activeDot={{ r: 6, fill: "#EBFF00", stroke: "#131313", strokeWidth: 2 }}
-                  />
-                </AreaChart>
-              </ResponsiveContainer>
-            ) : (
-              <div className="w-full h-full flex items-center justify-center text-slate-500 dark:text-slate-400 text-sm font-medium">
-                Not enough data. Complete at least one test.
-              </div>
-            )}
-          </div>
-        </div>
-
-        <div className="col-span-1 bg-white dark:bg-[#131313] border border-slate-200 dark:border-white/10 rounded-2xl p-6 lg:p-8 shadow-sm">
+        <div className="col-span-1 md:col-span-2 bg-white dark:bg-[#131313] border border-slate-200 dark:border-white/10 rounded-2xl p-6 lg:p-8 shadow-sm">
           <div className="flex items-center gap-3 mb-6">
             <BrainCircuit className="w-6 h-6 text-slate-900 dark:text-[#EBFF00]" />
             <h3 className="text-xl font-bold text-slate-900 dark:text-white">Topic Performance</h3>
