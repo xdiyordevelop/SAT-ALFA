@@ -1,7 +1,7 @@
 "use client";
 
 import Link from "next/link";
-import { ArrowRight, BookOpen, Clock, History, Target, Layers, Zap, BrainCircuit, ChevronRight } from "lucide-react";
+import { BookOpen, Clock, History, Layers, BrainCircuit } from "lucide-react";
 import {
   Area,
   AreaChart,
@@ -115,8 +115,6 @@ export function StudentDashboardView({
       date: new Date(attempt.startedAt).toLocaleDateString(),
     }));
 
-  const nextTest = publishedTests.length > 0 ? publishedTests[0] : null;
-
   return (
     <div className="flex flex-col gap-6 lg:gap-8 w-full">
       {/* Dashboard Header */}
@@ -132,20 +130,20 @@ export function StudentDashboardView({
       </div>
 
       {/* Bento Grid Layout */}
-      <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
-        
-        {/* Performance Overview (Chart) */}
-        <div className="col-span-1 md:col-span-2 bg-white dark:bg-[#131313] border border-slate-200 dark:border-white/10 rounded-2xl p-6 lg:p-8 flex flex-col relative overflow-hidden shadow-sm">
+      <div className="grid grid-cols-1 gap-6">
+
+        {/* Performance Overview (Chart) - Full Width */}
+        <div className="bg-white dark:bg-[#131313] border border-slate-200 dark:border-white/10 rounded-2xl p-6 lg:p-8 flex flex-col relative overflow-hidden shadow-sm">
           <div className="absolute inset-0 bg-gradient-to-br from-[#EBFF00]/5 dark:from-[#EBFF00]/[0.02] to-transparent pointer-events-none"></div>
-          
+
           <div className="flex justify-between items-center mb-8 z-10">
             <h3 className="text-xl font-bold text-slate-900 dark:text-white">Performance Trajectory</h3>
             <span className="flex items-center gap-1.5 text-sm font-semibold text-slate-900 dark:text-[#EBFF00]">
               <span className="w-2.5 h-2.5 rounded-full bg-slate-900 dark:bg-[#EBFF00]"></span> Total Score
             </span>
           </div>
-          
-          <div className="flex-1 w-full h-[300px] z-10">
+
+          <div className="flex-1 w-full h-[450px] z-10">
             {chartData.length > 0 ? (
               <ResponsiveContainer width="100%" height="100%">
                 <AreaChart data={chartData} margin={{ top: 10, right: 0, left: -20, bottom: 0 }}>
@@ -192,50 +190,7 @@ export function StudentDashboardView({
           </div>
         </div>
 
-        {/* Quick Start / Next Mock */}
-        <div className="col-span-1 bg-slate-900 dark:bg-[#1c1b1b] border border-slate-800 dark:border-white/10 rounded-2xl p-6 lg:p-8 flex flex-col justify-between relative overflow-hidden shadow-lg">
-          <div className="absolute top-0 right-0 w-32 h-32 bg-[#EBFF00] dark:bg-[#EBFF00] opacity-10 blur-[40px] rounded-full pointer-events-none"></div>
-          
-          <div>
-            <div className="flex justify-between items-center mb-4">
-              <h3 className="text-xl font-bold text-white">Next Target</h3>
-              <Target className="w-6 h-6 text-yellow-500 dark:text-[#EBFF00]" />
-            </div>
-
-            <p className="text-slate-400 dark:text-slate-400 mb-6 text-sm font-medium">
-              {nextTest ? nextTest.description || "Full-length SAT Mock Test. Check your readiness." : "No new tests available. Check back later."}
-            </p>
-
-            {nextTest && (
-              <div className="bg-slate-800 dark:bg-[#2a2a2a]/50 rounded-lg p-4 border border-slate-700 dark:border-white/5 mb-8">
-                <div className="flex justify-between text-sm mb-3">
-                  <span className="text-slate-300 font-medium">Estimated Time</span>
-                  <span className="text-yellow-500 dark:text-[#EBFF00] font-bold font-mono">134 min</span>
-                </div>
-                <div className="flex justify-between text-sm">
-                  <span className="text-slate-300 font-medium">Format</span>
-                  <span className="text-slate-400 font-medium">Digital Adaptive</span>
-                </div>
-              </div>
-            )}
-          </div>
-
-          {nextTest ? (
-             <Link
-              href={`/student/mock-tests/${nextTest.id}/take`}
-              className="w-full bg-[#EBFF00] dark:bg-[#EBFF00] text-slate-950 font-bold py-3.5 px-4 rounded-xl flex items-center justify-center gap-2 hover:bg-[#d9ff00] dark:hover:bg-white active:scale-[0.98] transition-all shadow-[0_0_15px_rgba(235,255,0,0.15)]"
-            >
-              Start Test
-              <ArrowRight className="w-5 h-5" />
-            </Link>
-          ) : (
-             <button disabled className="w-full bg-slate-800 text-slate-500 font-bold py-3.5 px-4 rounded-xl flex items-center justify-center gap-2 cursor-not-allowed">
-              No Test Available
-            </button>
-          )}
-        </div>
-
-        <div className="col-span-1 md:col-span-3 bg-white dark:bg-[#131313] border border-slate-200 dark:border-white/10 rounded-2xl p-6 lg:p-8 shadow-sm">
+        <div className="bg-white dark:bg-[#131313] border border-slate-200 dark:border-white/10 rounded-2xl p-6 lg:p-8 shadow-sm">
           <div className="flex items-center gap-3 mb-6">
             <BrainCircuit className="w-6 h-6 text-slate-900 dark:text-[#EBFF00]" />
             <h3 className="text-xl font-bold text-slate-900 dark:text-white">Topic Performance</h3>
