@@ -19,7 +19,7 @@ export function AdminTopNav({ userName, userEmail, pageTitle }: { userName?: str
   };
 
   return (
-    <header className="fixed top-0 right-0 left-0 lg:left-72 bg-white dark:bg-[#0a0a0a] border-b border-slate-200 dark:border-white/5 z-40 transition-all duration-300">
+    <header className="sticky top-0 bg-white dark:bg-[#0a0a0a] border-b border-slate-200 dark:border-white/5 z-40 transition-all duration-300">
       <div className="flex justify-between items-center w-full px-4 sm:px-6 lg:px-8 h-16">
 
         {/* Left: Mobile Menu Button */}
