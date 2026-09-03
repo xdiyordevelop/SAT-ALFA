@@ -143,7 +143,7 @@ export function StudentDashboardView({
             </span>
           </div>
 
-          <div className="flex-1 w-full h-[450px] z-10">
+          <div className="flex-1 w-full h-[350px] z-10">
             {chartData.length > 0 ? (
               <ResponsiveContainer width="100%" height="100%">
                 <AreaChart data={chartData} margin={{ top: 10, right: 0, left: -20, bottom: 0 }}>
