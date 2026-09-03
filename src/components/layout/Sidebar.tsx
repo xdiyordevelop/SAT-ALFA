@@ -21,7 +21,6 @@ import {
   Settings,
   FileText,
   HelpCircle,
-  Zap
 } from "lucide-react";
 import { logoutAction } from "@/server/actions/auth.actions";
 
@@ -143,11 +142,6 @@ export function Sidebar({ username, role }: SidebarProps) {
             </div>
           </div>
 
-          {role === "STUDENT" && (
-            <button className="w-full bg-[#EBFF00] text-slate-950 font-bold py-1.5 px-3 rounded-lg hover:bg-[#d4e600] active:bg-[#b8cc00] transition-all flex items-center justify-center gap-1.5 shadow-sm text-xs">
-              <Zap className="w-3.5 h-3.5" /> Upgrade
-            </button>
-          )}
         </div>
 
         {/* Navigation Links */}
