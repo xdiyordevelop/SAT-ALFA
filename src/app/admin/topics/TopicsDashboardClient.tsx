@@ -138,25 +138,25 @@ export default function TopicsDashboardClient({ topics, groups }: Props) {
   return (
     <div className="space-y-8 animate-fade-in">
       {/* Mode Selector (Tabs) */}
-      <div className="flex bg-neutral-200/50 p-1 rounded-xl w-fit">
+      <div className="flex gap-2 border-b border-slate-200 dark:border-slate-800 w-fit">
         <button
           onClick={() => setActiveMode("bank")}
-          className={`flex items-center gap-2 px-6 py-2.5 rounded-lg font-medium text-sm transition-all {
- activeMode === "bank"
- ? "bg-white dark:bg-[#131313] text-slate-900 dark:text-yellow-500 shadow-sm"
- : "text-slate-600 dark:text-slate-400 hover:text-slate-900 dark:text-white "
- }`}
+          className={`flex items-center gap-2 px-4 py-3 font-medium text-sm transition-all border-b-2 ${
+            activeMode === "bank"
+              ? "border-yellow-500 text-slate-900 dark:text-yellow-400"
+              : "border-transparent text-slate-600 dark:text-slate-400 hover:text-slate-900 dark:hover:text-slate-300"
+          }`}
         >
           <BookOpen className="w-4 h-4" />
           Topic Repository
         </button>
         <button
           onClick={() => setActiveMode("roadmap")}
-          className={`flex items-center gap-2 px-6 py-2.5 rounded-lg font-medium text-sm transition-all {
- activeMode === "roadmap"
- ? "bg-white dark:bg-[#131313] text-slate-900 dark:text-yellow-500 shadow-sm"
- : "text-slate-600 dark:text-slate-400 hover:text-slate-900 dark:text-white "
- }`}
+          className={`flex items-center gap-2 px-4 py-3 font-medium text-sm transition-all border-b-2 ${
+            activeMode === "roadmap"
+              ? "border-yellow-500 text-slate-900 dark:text-yellow-400"
+              : "border-transparent text-slate-600 dark:text-slate-400 hover:text-slate-900 dark:hover:text-slate-300"
+          }`}
         >
           <Map className="w-4 h-4" />
           Group Roadmap
@@ -189,63 +189,63 @@ export default function TopicsDashboardClient({ topics, groups }: Props) {
           </div>
 
           {/* Grid */}
-          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
             {filteredTopics.map((topic) => (
               <div
                 key={topic.id}
-                className="bg-white dark:bg-[#131313] border border-slate-200 dark:border-white/10 rounded-2xl p-5 hover:shadow-lg transition-all flex flex-col"
+                className="bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 rounded-lg p-4 hover:border-slate-300 dark:hover:border-slate-700 transition-all flex flex-col"
               >
-                <div className="flex justify-between items-start mb-3">
+                <div className="flex justify-between items-start gap-2 mb-3">
                   <span
-                    className={`text-xs font-bold px-3 py-1 rounded-full {
- topic.subject === "MATH" 
- ? "bg-emerald-100 text-emerald-700 "
- : "bg-yellow-100 dark:bg-yellow-900/30 text-yellow-700 "
- }`}
+                    className={`text-xs font-bold px-2.5 py-1 rounded-full flex-shrink-0 ${
+                      topic.subject === "MATH"
+                        ? "bg-emerald-100 dark:bg-emerald-900/30 text-emerald-700 dark:text-emerald-400"
+                        : "bg-yellow-100 dark:bg-yellow-900/30 text-yellow-700 dark:text-yellow-400"
+                    }`}
                   >
                     {topic.subject === "MATH" ? "Math" : "Reading & Writing"}
                   </span>
-                  <div className="flex gap-2">
+                  <div className="flex gap-1">
                     <Link
                       href={`/admin/topics/${topic.id}/edit`}
-                      className="p-1.5 text-slate-500 dark:text-slate-400 hover:text-yellow-500 transition-colors"
+                      className="p-1 text-slate-500 dark:text-slate-400 hover:text-yellow-600 dark:hover:text-yellow-400 hover:bg-slate-100 dark:hover:bg-slate-800 rounded transition-colors"
                     >
                       <Edit className="w-4 h-4" />
                     </Link>
                     <button
                       onClick={() => handleDeleteTopic(topic.id)}
-                      className="p-1.5 text-slate-500 dark:text-slate-400 hover:text-red-500 transition-colors"
+                      className="p-1 text-slate-500 dark:text-slate-400 hover:text-red-600 dark:hover:text-red-400 hover:bg-slate-100 dark:hover:bg-slate-800 rounded transition-colors"
                     >
                       <Trash2 className="w-4 h-4" />
                     </button>
                   </div>
                 </div>
 
-                <h3 className="text-lg font-bold text-slate-900 dark:text-white mb-2 line-clamp-2">
+                <h3 className="text-base font-semibold text-slate-900 dark:text-white mb-1 line-clamp-2">
                   {topic.title}
                 </h3>
-                <p className="text-sm text-slate-500 dark:text-slate-400 line-clamp-2 flex-1 mb-4">
-                  {topic.description || "No description provided."}
+                <p className="text-xs text-slate-500 dark:text-slate-400 line-clamp-1 mb-2">
+                  {topic.description || "No description"}
                 </p>
 
-                <div className="flex flex-wrap gap-2 mb-6">
+                <div className="flex flex-wrap gap-1.5 mb-3 text-[11px]">
                   {topic.videoPath && (
-                    <span className="flex items-center gap-1 text-xs font-medium bg-slate-100 dark:bg-[#1c1b1b] text-slate-600 dark:text-slate-400 px-2.5 py-1 rounded-md">
-                      <MonitorPlay className="w-3.5 h-3.5" /> Video
+                    <span className="flex items-center gap-0.5 bg-slate-100 dark:bg-slate-800 text-slate-600 dark:text-slate-400 px-2 py-0.5 rounded">
+                      <MonitorPlay className="w-3 h-3" /> Video
                     </span>
                   )}
                   {topic.bookPdfPath && (
-                    <span className="flex items-center gap-1 text-xs font-medium bg-slate-100 dark:bg-[#1c1b1b] text-slate-600 dark:text-slate-400 px-2.5 py-1 rounded-md">
-                      <Layers className="w-3.5 h-3.5" /> PDF Material
+                    <span className="flex items-center gap-0.5 bg-slate-100 dark:bg-slate-800 text-slate-600 dark:text-slate-400 px-2 py-0.5 rounded">
+                      <Layers className="w-3 h-3" /> PDF
                     </span>
                   )}
                 </div>
 
                 <button
                   onClick={() => setAssignModalOpen(topic.id)}
-                  className="w-full py-2.5 border border-yellow-200 bg-slate-50 dark:bg-[#0a0a0a] hover:bg-yellow-100 dark:bg-yellow-900/30 text-slate-900 dark:text-yellow-500 rounded-lg font-medium text-sm transition-colors flex items-center justify-center gap-2"
+                  className="w-full py-2 bg-yellow-500 hover:bg-yellow-600 dark:bg-yellow-600 dark:hover:bg-yellow-700 text-slate-900 dark:text-white rounded font-medium text-xs transition-colors mt-auto"
                 >
-                  <Plus className="w-4 h-4" /> Assign to Group
+                  + Assign to Group
                 </button>
               </div>
             ))}

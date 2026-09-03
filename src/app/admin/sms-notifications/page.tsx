@@ -228,7 +228,7 @@ export default function SmsNotificationsPage() {
                     notifications.map((notification) => (
                       <tr
                         key={notification.id}
-                        className="hover:bg-slate-50 dark:bg-[#0a0a0a] transition-colors"
+                        className="hover:bg-slate-50 dark:hover:bg-slate-800/50 transition-colors"
                       >
                         <td className="px-6 py-4">
                           <div>

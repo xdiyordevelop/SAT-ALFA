@@ -137,7 +137,7 @@ export function AttemptHistoryTable({ attempts }: AttemptHistoryTableProps) {
                 .map((attempt, index) => (
                   <tr
                     key={attempt.id}
-                    className={`border-b border-slate-200 dark:border-white/10 transition-colors hover:bg-slate-50 dark:bg-[#0a0a0a] ${
+                    className={`border-b border-slate-200 dark:border-white/10 transition-colors hover:bg-slate-50 dark:hover:bg-slate-800/50 ${
                       index % 2 === 0 ? "bg-white dark:bg-[#131313]/30" : ""
                     }`}
                   >

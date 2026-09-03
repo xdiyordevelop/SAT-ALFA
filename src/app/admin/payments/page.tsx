@@ -190,7 +190,7 @@ export default function PaymentsPage() {
                       expandedGroup === group.id ? null : group.id,
                     )
                   }
-                  className="w-full flex items-center justify-between p-6 hover:bg-slate-50 dark:bg-[#0a0a0a] transition-colors"
+                  className="w-full flex items-center justify-between p-6 hover:bg-slate-50 dark:hover:bg-slate-800/50 transition-colors"
                 >
                   <div className="flex items-center gap-4">
                     <div className="w-10 h-10 rounded-xl bg-[#EBFF00]/10 flex items-center justify-center text-[#EBFF00] border border-[#EBFF00]/20">
@@ -241,7 +241,7 @@ export default function PaymentsPage() {
                             {group.students.map((student: any) => (
                               <tr
                                 key={student.id}
-                                className="border-b border-slate-200 dark:border-white/10 hover:bg-slate-50 dark:bg-[#0a0a0a] transition-colors"
+                                className="border-b border-slate-200 dark:border-white/10 hover:bg-slate-50 dark:hover:bg-slate-800/50 transition-colors"
                               >
                                 <td className="py-4 px-4">
                                   <p className="font-medium text-slate-900 dark:text-white">

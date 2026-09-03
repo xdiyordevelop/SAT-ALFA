@@ -202,7 +202,7 @@ export default async function AttendancePage() {
                   return (
                     <tr
                       key={record.id}
-                      className="border-b border-slate-200 dark:border-white/10 hover:bg-slate-50 dark:bg-[#0a0a0a] transition-colors"
+                      className="border-b border-slate-200 dark:border-white/10 hover:bg-slate-50 dark:hover:bg-slate-800/50 transition-colors"
                       style={{
                         animation: `slideUp 0.3s ease-out ${100 + index * 30}ms backwards`,
                       }}

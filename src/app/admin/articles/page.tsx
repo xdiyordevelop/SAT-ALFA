@@ -103,7 +103,7 @@ export default async function AdminArticlesPage({
                   articles.map((article) => (
                     <tr
                       key={article.id}
-                      className="hover:bg-slate-100 dark:bg-[#1c1b1b]/20 transition-colors"
+                      className="hover:bg-slate-100 dark:hover:bg-slate-800/50 transition-colors"
                     >
                       <td className="px-6 py-4">
                         <p className="font-bold text-slate-900 dark:text-white mb-1">

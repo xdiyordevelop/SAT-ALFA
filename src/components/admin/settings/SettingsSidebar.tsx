@@ -61,17 +61,17 @@ export function SettingsSidebar() {
   ];
 
   return (
-    <div className="bg-white dark:bg-[#131313] rounded-2xl border border-slate-200 dark:border-white/10 p-6 h-fit sticky top-24">
-      <nav className="space-y-2">
+    <div className="bg-transparent h-fit sticky top-24">
+      <nav className="space-y-1">
         {menuItems.map((item) => (
           <Link
             key={item.href}
             href={item.href}
-            className={`flex items-center gap-3 px-4 py-3 rounded-lg transition-all {
- item.active
- ? "bg-yellow-100 dark:bg-yellow-900/30 text-yellow-700 font-medium"
- : "text-slate-700 dark:text-slate-300 hover:bg-slate-50 dark:bg-[#0a0a0a] "
- }`}
+            className={`flex items-center gap-3 px-4 py-2.5 rounded-lg transition-all ${
+              item.active
+                ? "bg-slate-100 dark:bg-slate-800/80 text-slate-900 dark:text-white font-medium border-l-2 border-yellow-500"
+                : "text-slate-700 dark:text-slate-300 hover:bg-slate-50 dark:hover:bg-slate-800/40 border-l-2 border-transparent"
+            }`}
           >
             {item.icon}
             <span>{item.label}</span>
