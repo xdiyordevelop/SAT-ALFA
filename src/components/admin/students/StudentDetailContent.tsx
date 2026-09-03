@@ -200,7 +200,7 @@ export function StudentDetailContent({
             <p className="text-sm font-medium text-slate-600 dark:text-slate-400 ">
               Total Tests
             </p>
-            <TrendingUp className="w-5 h-5 text-blue-600 " />
+            <TrendingUp className="w-5 h-5 text-yellow-600 " />
           </div>
           <p className="text-3xl font-bold text-slate-900 dark:text-white ">
             {metrics.totalTests}

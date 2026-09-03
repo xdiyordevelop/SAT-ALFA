@@ -89,7 +89,7 @@ export function AttemptHistoryTable({ attempts }: AttemptHistoryTableProps) {
               <th className="px-6 py-4 text-center text-slate-500 dark:text-slate-400 font-bold uppercase tracking-wide">
                 <button
                   onClick={() => handleSort("rwScore")}
-                  className="flex items-center justify-center hover:text-amber-500 transition-colors w-full"
+                  className="flex items-center justify-center hover:text-yellow-500 transition-colors w-full"
                 >
                   R&W
                   <SortIcon field="rwScore" />
@@ -98,7 +98,7 @@ export function AttemptHistoryTable({ attempts }: AttemptHistoryTableProps) {
               <th className="px-6 py-4 text-center text-slate-500 dark:text-slate-400 font-bold uppercase tracking-wide">
                 <button
                   onClick={() => handleSort("mathScore")}
-                  className="flex items-center justify-center hover:text-amber-500 transition-colors w-full"
+                  className="flex items-center justify-center hover:text-yellow-500 transition-colors w-full"
                 >
                   Math
                   <SortIcon field="mathScore" />
@@ -107,7 +107,7 @@ export function AttemptHistoryTable({ attempts }: AttemptHistoryTableProps) {
               <th className="px-6 py-4 text-center text-slate-500 dark:text-slate-400 font-bold uppercase tracking-wide">
                 <button
                   onClick={() => handleSort("totalScore")}
-                  className="flex items-center justify-center hover:text-amber-500 transition-colors w-full"
+                  className="flex items-center justify-center hover:text-yellow-500 transition-colors w-full"
                 >
                   Total
                   <SortIcon field="totalScore" />

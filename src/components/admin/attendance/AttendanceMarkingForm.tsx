@@ -197,7 +197,7 @@ export function AttendanceMarkingForm() {
       label: "Late",
     },
     EXCUSED: {
-      color: "bg-blue-100 text-blue-700 border-blue-300 ",
+      color: "bg-slate-100 dark:bg-slate-800 text-slate-700 dark:text-slate-300 border-slate-300 dark:border-slate-700 ",
       icon: <AlertCircle className="w-4 h-4" />,
       label: "Excused",
     },
