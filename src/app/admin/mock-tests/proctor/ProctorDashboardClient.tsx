@@ -265,7 +265,7 @@ export default function ProctorDashboardClient() {
                           </span>
                         )}
                         {p.status === "COMPLETED" && (
-                           <span className="inline-flex items-center gap-1.5 px-2.5 py-1 rounded bg-yellow-50 dark:bg-yellow-900/30 border border-blue-200 dark:border-blue-700/50 text-yellow-700 dark:text-[#EBFF00] text-[10px] font-black uppercase tracking-wider">
+                           <span className="inline-flex items-center gap-1.5 px-2.5 py-1 rounded bg-yellow-50 dark:bg-yellow-900/30 border border-yellow-200 dark:border-yellow-700/50 text-yellow-700 dark:text-[#EBFF00] text-[10px] font-black uppercase tracking-wider">
                             Completed
                           </span>
                         )}
@@ -275,7 +275,7 @@ export default function ProctorDashboardClient() {
                           </span>
                         )}
                         {p.status === "DISQUALIFIED" && (
-                           <span className="inline-flex items-center gap-1.5 px-2.5 py-1 rounded bg-yellow-50 dark:bg-yellow-900/30 border border-yellow-200 dark:border-yellow-700/50 text-rose-700 dark:text-yellow-500 text-[10px] font-black uppercase tracking-wider">
+                           <span className="inline-flex items-center gap-1.5 px-2.5 py-1 rounded bg-yellow-50 dark:bg-yellow-900/30 border border-yellow-200 dark:border-yellow-700/50 text-yellow-700 dark:text-yellow-500 text-[10px] font-black uppercase tracking-wider">
                             Disqualified
                           </span>
                         )}
@@ -297,7 +297,7 @@ export default function ProctorDashboardClient() {
                       </td>
                       <td className="p-4 text-center">
                         {p.fullscreenExitCount > 0 ? (
-                          <span className="inline-flex items-center justify-center min-w-[24px] h-6 px-1.5 rounded-md bg-yellow-100 dark:bg-yellow-950/50 text-rose-700 dark:text-yellow-400 border border-yellow-200 dark:border-yellow-900/50 font-black text-xs shadow-sm">
+                          <span className="inline-flex items-center justify-center min-w-[24px] h-6 px-1.5 rounded-md bg-yellow-100 dark:bg-yellow-950/50 text-yellow-700 dark:text-yellow-400 border border-yellow-200 dark:border-yellow-900/50 font-black text-xs shadow-sm">
                             {p.fullscreenExitCount}
                           </span>
                         ) : (
@@ -356,7 +356,7 @@ export default function ProctorDashboardClient() {
                                 })
                               }
                               disabled={actionLoading === p.id}
-                              className="p-1.5 text-orange-600 dark:text-orange-400 bg-orange-50 dark:bg-orange-900/20 hover:bg-orange-100 dark:hover:bg-orange-900/40 rounded border border-orange-200 dark:border-orange-700/30 transition-colors"
+                              className="p-1.5 text-yellow-600 dark:text-yellow-400 bg-yellow-50 dark:bg-yellow-900/20 hover:bg-yellow-100 dark:hover:bg-yellow-900/40 rounded border border-yellow-200 dark:border-yellow-700/30 transition-colors"
                               title="Force Submit"
                             >
                               <CheckCircle className="w-4 h-4" />

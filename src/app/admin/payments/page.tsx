@@ -129,7 +129,7 @@ export default function PaymentsPage() {
                     {formatUZS(data?.totalExpected || 0)}
                   </h3>
                 </div>
-                <div className="p-3 bg-blue-500/10 rounded-xl text-blue-600">
+                <div className="p-3 bg-yellow-500/10 rounded-xl text-yellow-600">
                   <DollarSign className="w-6 h-6" />
                 </div>
               </div>
@@ -163,11 +163,11 @@ export default function PaymentsPage() {
                   <p className="text-slate-500 dark:text-slate-400 text-sm font-medium mb-1">
                     Total Debt
                   </p>
-                  <h3 className="text-2xl font-bold text-rose-600">
+                  <h3 className="text-2xl font-bold text-yellow-600">
                     {formatUZS(data?.totalDebt || 0)}
                   </h3>
                 </div>
-                <div className="p-3 bg-rose-500/10 rounded-xl text-rose-600">
+                <div className="p-3 bg-yellow-500/10 rounded-xl text-yellow-600">
                   <AlertCircle className="w-6 h-6" />
                 </div>
               </div>
@@ -261,7 +261,7 @@ export default function PaymentsPage() {
                                     {formatUZS(student.amountPaid)}
                                   </span>
                                 </td>
-                                <td className="py-4 px-4 font-medium text-rose-600">
+                                <td className="py-4 px-4 font-medium text-yellow-600">
                                   {student.debt > 0
                                     ? formatUZS(student.debt)
                                     : "-"}
@@ -278,7 +278,7 @@ export default function PaymentsPage() {
                                     </span>
                                   )}
                                   {student.status === "UNPAID" && (
-                                    <span className="inline-block px-2.5 py-1 bg-rose-500/10 text-rose-600 border border-rose-500/20 rounded-md text-[11px] font-bold tracking-wider">
+                                    <span className="inline-block px-2.5 py-1 bg-yellow-500/10 text-yellow-600 border border-rose-500/20 rounded-md text-[11px] font-bold tracking-wider">
                                       UNPAID
                                     </span>
                                   )}

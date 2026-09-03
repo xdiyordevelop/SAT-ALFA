@@ -155,7 +155,7 @@ export default async function AttendancePage() {
             <p className="text-sm font-medium text-slate-600 dark:text-slate-400">
               Excused
             </p>
-            <Users className="w-5 h-5 text-blue-600" />
+            <Users className="w-5 h-5 text-yellow-600 dark:text-yellow-400" />
           </div>
           <p className="text-3xl font-bold text-slate-900 dark:text-white">
             {stats.excused}
@@ -196,7 +196,7 @@ export default async function AttendancePage() {
                     PRESENT: "bg-green-100 text-green-700",
                     ABSENT: "bg-red-100 text-red-700",
                     LATE: "bg-[#EBFF00]/20 dark:bg-[#EBFF00]/10 text-yellow-700 dark:text-[#EBFF00]",
-                    EXCUSED: "bg-blue-100 text-blue-700",
+                    EXCUSED: "bg-yellow-100 dark:bg-yellow-900/30 text-yellow-700 dark:text-yellow-300",
                   };
 
                   return (

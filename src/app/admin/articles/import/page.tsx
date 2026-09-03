@@ -159,7 +159,7 @@ export default function ImportArticlePage() {
                 <button
                   type="button"
                   onClick={() => setError("")}
-                  className="text-yellow-600 hover:text-rose-300 transition-colors ml-4 shrink-0"
+                  className="text-yellow-600 dark:text-yellow-400 hover:text-yellow-500 dark:hover:text-yellow-300 transition-colors ml-4 shrink-0"
                 >
                   <XCircle className="w-5 h-5" />
                 </button>
