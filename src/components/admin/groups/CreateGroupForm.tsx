@@ -68,19 +68,19 @@ export function CreateGroupForm() {
   if (success) {
     return (
       <div className="max-w-2xl animate-slide-up">
-        <div className="bg-emerald-500/10 border-2 border-emerald-500/20 rounded-2xl p-8 text-center">
+        <div className="bg-yellow-500/10 border-2 border-yellow-500/20 rounded-2xl p-8 text-center">
           <div className="flex items-center justify-center mb-4">
-            <div className="w-12 h-12 rounded-full bg-emerald-500/20 flex items-center justify-center">
-              <Check className="w-6 h-6 text-emerald-600" />
+            <div className="w-12 h-12 rounded-full bg-yellow-500/20 flex items-center justify-center">
+              <Check className="w-6 h-6 text-yellow-600 dark:text-yellow-400" />
             </div>
           </div>
           <h2 className="text-2xl font-bold text-slate-900 dark:text-white mb-2">
             Group Created Successfully
           </h2>
-          <p className="text-emerald-600 mb-6">
+          <p className="text-yellow-600 dark:text-yellow-400 mb-6">
             {formData.name} has been added to the system
           </p>
-          <p className="text-sm text-emerald-500">
+          <p className="text-sm text-yellow-500 dark:text-yellow-400">
             Redirecting to groups list...
           </p>
         </div>
@@ -90,9 +90,9 @@ export function CreateGroupForm() {
 
   return (
     <form onSubmit={handleSubmit} className="max-w-3xl animate-slide-up">
-      <div className="bg-white dark:bg-[#131313] rounded-2xl border border-slate-200 dark:border-white/10 p-8">
+      <div className="bg-white dark:bg-slate-900 rounded-lg border border-slate-200 dark:border-slate-800 p-6">
         {error && (
-          <div className="mb-6 p-4 bg-rose-500/10 border border-rose-500/20 rounded-lg text-rose-600 flex items-center gap-3">
+          <div className="mb-6 p-4 bg-red-500/10 dark:bg-red-900/20 border border-red-500/20 dark:border-red-900/50 rounded-lg text-red-600 dark:text-red-400 flex items-center gap-3">
             <AlertCircle className="w-5 h-5 flex-shrink-0" />
             {error}
           </div>

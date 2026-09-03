@@ -278,7 +278,7 @@ export default function PaymentsPage() {
                                     </span>
                                   )}
                                   {student.status === "UNPAID" && (
-                                    <span className="inline-block px-2.5 py-1 bg-yellow-500/10 text-yellow-600 border border-yellow-500/20 rounded-md text-[11px] font-bold tracking-wider">
+                                    <span className="inline-block px-2.5 py-1 bg-red-500/10 text-red-600 border border-red-500/20 rounded-md text-[11px] font-bold tracking-wider">
                                       UNPAID
                                     </span>
                                   )}
