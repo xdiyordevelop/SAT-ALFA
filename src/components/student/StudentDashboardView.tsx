@@ -130,10 +130,10 @@ export function StudentDashboardView({
       </div>
 
       {/* Bento Grid Layout */}
-      <div className="grid grid-cols-1 gap-6">
+      <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
 
-        {/* Performance Overview (Chart) - Full Width */}
-        <div className="bg-white dark:bg-[#131313] border border-slate-200 dark:border-white/10 rounded-2xl p-6 lg:p-8 flex flex-col relative overflow-hidden shadow-sm">
+        {/* Performance Overview (Chart) */}
+        <div className="col-span-1 md:col-span-2 bg-white dark:bg-[#131313] border border-slate-200 dark:border-white/10 rounded-2xl p-6 lg:p-8 flex flex-col relative overflow-hidden shadow-sm">
           <div className="absolute inset-0 bg-gradient-to-br from-[#EBFF00]/5 dark:from-[#EBFF00]/[0.02] to-transparent pointer-events-none"></div>
 
           <div className="flex justify-between items-center mb-8 z-10">
@@ -190,7 +190,7 @@ export function StudentDashboardView({
           </div>
         </div>
 
-        <div className="bg-white dark:bg-[#131313] border border-slate-200 dark:border-white/10 rounded-2xl p-6 lg:p-8 shadow-sm">
+        <div className="col-span-1 bg-white dark:bg-[#131313] border border-slate-200 dark:border-white/10 rounded-2xl p-6 lg:p-8 shadow-sm">
           <div className="flex items-center gap-3 mb-6">
             <BrainCircuit className="w-6 h-6 text-slate-900 dark:text-[#EBFF00]" />
             <h3 className="text-xl font-bold text-slate-900 dark:text-white">Topic Performance</h3>
