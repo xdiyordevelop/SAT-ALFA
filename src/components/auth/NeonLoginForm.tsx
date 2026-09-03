@@ -104,7 +104,7 @@ export function NeonLoginForm() {
             Email or Username
           </label>
           <div className="relative">
-            <UserIcon className="absolute left-4 top-1/2 -translate-y-1/2 w-5 h-5 text-slate-500 dark:text-slate-500 pointer-events-none z-10" />
+            <UserIcon className="absolute left-4 top-1/2 -translate-y-1/2 w-5 h-5 text-slate-400 dark:text-slate-600 pointer-events-none z-10" />
             <input
               id="username"
               type="text"
@@ -135,7 +135,7 @@ export function NeonLoginForm() {
             </a>
           </div>
           <div className="relative">
-            <Lock className="absolute left-4 top-1/2 -translate-y-1/2 w-5 h-5 text-slate-500 dark:text-slate-500 pointer-events-none z-10" />
+            <Lock className="absolute left-4 top-1/2 -translate-y-1/2 w-5 h-5 text-slate-400 dark:text-slate-600 pointer-events-none z-10" />
             <input
               id="password"
               type="password"
