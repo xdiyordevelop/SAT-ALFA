@@ -203,34 +203,47 @@ export function StudentDashboardView({
         <div className="col-span-1 md:col-span-3 bg-white dark:bg-[#131313] border border-slate-200 dark:border-white/10 rounded-2xl p-6 lg:p-8 shadow-sm">
           <div className="flex items-center gap-3 mb-6">
             <BrainCircuit className="w-6 h-6 text-slate-900 dark:text-[#EBFF00]" />
-            <h3 className="text-xl font-bold text-slate-900 dark:text-white">AI Tutor Insights</h3>
+            <h3 className="text-xl font-bold text-slate-900 dark:text-white">Performance Analysis</h3>
+          </div>
+
+          <div className="grid grid-cols-1 md:grid-cols-3 gap-6 mb-8">
+            <div className="bg-slate-50 dark:bg-[#1c1b1b] border border-slate-200 dark:border-white/10 rounded-xl p-5 text-center">
+              <p className="text-xs font-bold text-slate-500 dark:text-slate-400 uppercase tracking-wider mb-2">Tests Completed</p>
+              <p className="text-3xl font-black text-slate-900 dark:text-[#EBFF00]">{metrics.testsTaken}</p>
+            </div>
+
+            <div className="bg-slate-50 dark:bg-[#1c1b1b] border border-slate-200 dark:border-white/10 rounded-xl p-5 text-center">
+              <p className="text-xs font-bold text-slate-500 dark:text-slate-400 uppercase tracking-wider mb-2">Highest Score</p>
+              <p className="text-3xl font-black text-slate-900 dark:text-[#EBFF00]">{metrics.highestScore || '---'}</p>
+            </div>
+
+            <div className="bg-slate-50 dark:bg-[#1c1b1b] border border-slate-200 dark:border-white/10 rounded-xl p-5 text-center">
+              <p className="text-xs font-bold text-slate-500 dark:text-slate-400 uppercase tracking-wider mb-2">Average Score</p>
+              <p className="text-3xl font-black text-slate-900 dark:text-[#EBFF00]">{metrics.averageScore > 0 ? Math.round(metrics.averageScore) : '---'}</p>
+            </div>
           </div>
 
           <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
             <div className="border border-slate-200 dark:border-white/10 rounded-xl p-5 bg-slate-50 dark:bg-[#1c1b1b]">
-              <div className="flex justify-between items-start mb-3">
-                <h4 className="font-bold text-slate-900 dark:text-white">Heart of Algebra</h4>
-                <span className="text-rose-600 dark:text-rose-400 text-xs font-bold uppercase tracking-wider bg-rose-100 dark:bg-rose-950/50 px-2 py-1 rounded border border-rose-200 dark:border-rose-900/50">Critical</span>
+              <div className="flex justify-between items-start mb-4">
+                <h4 className="font-bold text-slate-900 dark:text-white">Reading & Writing</h4>
+                <span className="text-sm font-bold text-slate-900 dark:text-[#EBFF00]">{metrics.rwAvg}/200</span>
               </div>
-              <p className="text-sm text-slate-600 dark:text-slate-400 mb-5 font-medium leading-relaxed">
-                You're spending 2.5x longer than average solving systems of linear inequalities.
-              </p>
-              <button className="text-slate-900 dark:text-[#EBFF00] text-sm font-bold flex items-center gap-1 hover:underline transition-all">
-                Start Focused Practice <ChevronRight className="w-4 h-4" />
-              </button>
+              <div className="w-full bg-slate-200 dark:bg-[#2a2a2a] h-3 rounded-full overflow-hidden">
+                <div className="bg-blue-500 h-full rounded-full shadow-[0_0_10px_rgba(59,130,246,0.5)]" style={{ width: `${Math.min((metrics.rwAvg / 200) * 100, 100)}%` }}></div>
+              </div>
+              <p className="text-xs text-slate-600 dark:text-slate-400 mt-3">Your performance in reading comprehension and writing skills.</p>
             </div>
 
             <div className="border border-slate-200 dark:border-white/10 rounded-xl p-5 bg-slate-50 dark:bg-[#1c1b1b]">
-              <div className="flex justify-between items-start mb-3">
-                <h4 className="font-bold text-slate-900 dark:text-white">Standard English Conventions</h4>
-                <span className="text-emerald-700 dark:text-[#EBFF00] text-xs font-bold uppercase tracking-wider bg-emerald-100 dark:bg-[#EBFF00]/10 px-2 py-1 rounded border border-emerald-200 dark:border-[#EBFF00]/20">Improving</span>
+              <div className="flex justify-between items-start mb-4">
+                <h4 className="font-bold text-slate-900 dark:text-white">Math</h4>
+                <span className="text-sm font-bold text-slate-900 dark:text-[#EBFF00]">{metrics.mathAvg}/200</span>
               </div>
-              <p className="text-sm text-slate-600 dark:text-slate-400 mb-5 font-medium leading-relaxed">
-                Your punctuation accuracy improved by 15% on the last test. Keep focusing on distinguishing commas and semicolons.
-              </p>
-              <div className="w-full bg-slate-200 dark:bg-[#1c1b1b] h-2 rounded-full overflow-hidden">
-                <div className="bg-slate-900 dark:bg-[#EBFF00] h-full w-[85%] rounded-r-full shadow-[0_0_10px_rgba(235,255,0,0.5)]"></div>
+              <div className="w-full bg-slate-200 dark:bg-[#2a2a2a] h-3 rounded-full overflow-hidden">
+                <div className="bg-green-500 h-full rounded-full shadow-[0_0_10px_rgba(34,197,94,0.5)]" style={{ width: `${Math.min((metrics.mathAvg / 200) * 100, 100)}%` }}></div>
               </div>
+              <p className="text-xs text-slate-600 dark:text-slate-400 mt-3">Your mathematical problem-solving and algebra skills.</p>
             </div>
           </div>
         </div>
@@ -269,7 +282,7 @@ export function StudentDashboardView({
                       </div>
                     ) : (
                       <span className="text-xs font-bold uppercase tracking-wider text-slate-900 dark:text-[#EBFF00] bg-slate-100 dark:bg-[#EBFF00]/10 px-3 py-1.5 rounded-md border border-slate-200 dark:border-[#EBFF00]/20">
-                        Jarayonda
+                        In Progress
                       </span>
                     )}
 
@@ -277,7 +290,7 @@ export function StudentDashboardView({
                       href={`/student/results/${attempt.id}`}
                       className="text-xs font-bold uppercase tracking-wider text-slate-600 dark:text-slate-300 hover:text-slate-900 dark:hover:text-black bg-slate-100 dark:bg-[#2a2a2a] hover:bg-slate-200 dark:hover:bg-white px-4 py-2 rounded-lg transition-all"
                     >
-                      Batafsil
+                      View Details
                     </Link>
                   </div>
                 </div>
