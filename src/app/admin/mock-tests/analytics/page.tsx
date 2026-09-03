@@ -4,8 +4,7 @@ import React from "react";
 import { getSession } from "@/lib/auth/session";
 import { redirect } from "next/navigation";
 import { prisma } from "@/lib/db/prisma";
-import { Sidebar } from "@/components/layout/Sidebar";
-import { Topbar } from "@/components/layout/Topbar";
+import { AdminLayout } from "@/components/admin/AdminLayout";
 import { Users, Target, BookOpen, Calculator, BarChart2 } from "lucide-react";
 import { PerformanceBenchmarks } from "./components/PerformanceBenchmarks";
 import { AttemptHistoryTable } from "./components/AttemptHistoryTable";
@@ -186,109 +185,118 @@ export default async function AdminAnalyticsPage({
   } as any;
 
   return (
-    <div className="min-h-screen bg-white dark:bg-[#131313]">
-      <Sidebar username={session.username} role={session.role} />
+    <AdminLayout
+      title="Analytics Dashboard"
+      breadcrumbs={[
+        { label: "Admin" },
+        { label: "Mock Tests" },
+        { label: "Analytics" },
+      ]}
+      userName={session.username}
+      userEmail={session.username || ""}
+      userRole={session.role}
+    >
+      {/* Filters */}
+      <div className="mb-6 animate-fade-in">
+        <React.Suspense
+          fallback={
+            <div className="h-20 bg-slate-100 dark:bg-slate-800 animate-pulse rounded-lg"></div>
+          }
+        >
+          <AnalyticsFilters
+            tests={tests}
+            groups={groups}
+            currentTest={testId}
+            currentGroup={groupId}
+            currentTime={timeRange}
+          />
+        </React.Suspense>
+      </div>
 
-      <div className="lg:ml-64">
-        <Topbar
-          title="Analytics Dashboard"
-          breadcrumbs={[
-            { label: "Admin" },
-            { label: "Mock Tests" },
-            { label: "Analytics" },
-          ]}
-          userName={session.username}
-          userRole={session.role}
-        />
-
-        <main className="pt-24 px-6 pb-12">
-          <div className="max-w-7xl mx-auto">
-            {/* Filters */}
-            <div className="mb-6">
-              <React.Suspense
-                fallback={
-                  <div className="h-20 bg-slate-100 dark:bg-[#1c1b1b] animate-pulse rounded-lg"></div>
-                }
-              >
-                <AnalyticsFilters
-                  tests={tests}
-                  groups={groups}
-                  currentTest={testId}
-                  currentGroup={groupId}
-                  currentTime={timeRange}
-                />
-              </React.Suspense>
+      {/* Summary Cards */}
+      <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4 mb-8 animate-fade-in">
+        <div className="bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 rounded-lg p-6 shadow-sm hover:border-slate-300 dark:hover:border-slate-700 transition-colors group">
+          <div className="flex items-start justify-between mb-4">
+            <div className="w-10 h-10 rounded-lg bg-slate-100 dark:bg-slate-800 flex items-center justify-center group-hover:bg-slate-200 dark:group-hover:bg-slate-700 transition-colors">
+              <Users className="w-5 h-5 text-slate-600 dark:text-slate-400" />
             </div>
+            <span className="bg-blue-100 dark:bg-blue-900/30 text-blue-700 dark:text-blue-300 px-2 py-1 rounded text-[10px] font-semibold">
+              Tests
+            </span>
+          </div>
+          <div>
+            <span className="text-2xl font-bold text-slate-900 dark:text-white block">
+              {totalAttempts}
+            </span>
+            <span className="text-xs text-slate-500 dark:text-slate-400 font-medium">Total Attempts</span>
+          </div>
+        </div>
 
-            {/* Summary Cards */}
-            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 mb-8">
-              <div className="bg-white dark:bg-[#131313] border border-slate-200 dark:border-white/10 rounded-2xl shadow-sm p-6 flex items-center gap-4 transition-transform hover:-translate-y-1 duration-300">
-                <div className="w-12 h-12 rounded-full bg-blue-100 dark:bg-blue-900/30 flex items-center justify-center text-blue-600 dark:text-[#EBFF00]">
-                  <Users className="w-6 h-6" />
-                </div>
-                <div>
-                  <p className="text-xs text-slate-500 dark:text-slate-400 font-medium mb-1">
-                    Total Attempts
-                  </p>
-                  <p className="text-2xl font-bold text-slate-900 dark:text-white">
-                    {totalAttempts}
-                  </p>
-                </div>
-              </div>
-              <div className="bg-white dark:bg-[#131313] border border-slate-200 dark:border-white/10 rounded-2xl shadow-sm p-6 flex items-center gap-4 transition-transform hover:-translate-y-1 duration-300">
-                <div className="w-12 h-12 rounded-full bg-yellow-100 dark:bg-yellow-900/30 flex items-center justify-center text-yellow-600 dark:text-yellow-400">
-                  <Target className="w-6 h-6" />
-                </div>
-                <div>
-                  <p className="text-xs text-slate-500 dark:text-slate-400 font-medium mb-1">
-                    Avg Total Score
-                  </p>
-                  <p className="text-2xl font-bold text-slate-900 dark:text-white">
-                    {avgTotalScore}
-                  </p>
-                </div>
-              </div>
-              <div className="bg-white dark:bg-[#131313] border border-slate-200 dark:border-white/10 rounded-2xl shadow-sm p-6 flex items-center gap-4 transition-transform hover:-translate-y-1 duration-300">
-                <div className="w-12 h-12 rounded-full bg-emerald-100 dark:bg-emerald-900/30 flex items-center justify-center text-emerald-600 dark:text-emerald-400">
-                  <BookOpen className="w-6 h-6" />
-                </div>
-                <div>
-                  <p className="text-xs text-slate-500 dark:text-slate-400 font-medium mb-1">
-                    Avg R&W
-                  </p>
-                  <p className="text-2xl font-bold text-slate-900 dark:text-white">
-                    {avgRWScore}
-                  </p>
-                </div>
-              </div>
-              <div className="bg-white dark:bg-[#131313] border border-slate-200 dark:border-white/10 rounded-2xl shadow-sm p-6 flex items-center gap-4 transition-transform hover:-translate-y-1 duration-300">
-                <div className="w-12 h-12 rounded-full bg-purple-100 dark:bg-purple-900/30 flex items-center justify-center text-purple-600 dark:text-purple-400">
-                  <Calculator className="w-6 h-6" />
-                </div>
-                <div>
-                  <p className="text-xs text-slate-500 dark:text-slate-400 font-medium mb-1">
-                    Avg Math
-                  </p>
-                  <p className="text-2xl font-bold text-slate-900 dark:text-white">
-                    {avgMathScore}
-                  </p>
-                </div>
-              </div>
-            </div>
-
-            {/* Performance Benchmarks */}
-            <PerformanceBenchmarks analytics={analytics} />
-
-            {/* Attempt History Table */}
-            <div className="mb-8">
-              <h2 className="text-2xl font-bold text-yellow-400 mb-4">
-                Attempt History
-              </h2>
-              <AttemptHistoryTable attempts={attemptRecords} />
+        <div className="bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 rounded-lg p-6 shadow-sm hover:border-slate-300 dark:hover:border-slate-700 transition-colors group">
+          <div className="flex items-start justify-between mb-4">
+            <div className="w-10 h-10 rounded-lg bg-slate-100 dark:bg-slate-800 flex items-center justify-center group-hover:bg-slate-200 dark:group-hover:bg-slate-700 transition-colors">
+              <Target className="w-5 h-5 text-slate-600 dark:text-slate-400" />
             </div>
           </div>
-        </main>
+          <div>
+            <span className="text-2xl font-bold text-slate-900 dark:text-white block">
+              {avgTotalScore}
+            </span>
+            <span className="text-xs text-slate-500 dark:text-slate-400 font-medium">Avg Total Score</span>
+          </div>
+        </div>
+
+        <div className="bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 rounded-lg p-6 shadow-sm hover:border-slate-300 dark:hover:border-slate-700 transition-colors group">
+          <div className="flex items-start justify-between mb-4">
+            <div className="w-10 h-10 rounded-lg bg-slate-100 dark:bg-slate-800 flex items-center justify-center group-hover:bg-slate-200 dark:group-hover:bg-slate-700 transition-colors">
+              <BookOpen className="w-5 h-5 text-slate-600 dark:text-slate-400" />
+            </div>
+          </div>
+          <div>
+            <span className="text-2xl font-bold text-slate-900 dark:text-white block">
+              {avgRWScore}
+            </span>
+            <span className="text-xs text-slate-500 dark:text-slate-400 font-medium">Avg Reading & Writing</span>
+          </div>
+        </div>
+
+        <div className="bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 rounded-lg p-6 shadow-sm hover:border-slate-300 dark:hover:border-slate-700 transition-colors group">
+          <div className="flex items-start justify-between mb-4">
+            <div className="w-10 h-10 rounded-lg bg-slate-100 dark:bg-slate-800 flex items-center justify-center group-hover:bg-slate-200 dark:group-hover:bg-slate-700 transition-colors">
+              <Calculator className="w-5 h-5 text-slate-600 dark:text-slate-400" />
+            </div>
+          </div>
+          <div>
+            <span className="text-2xl font-bold text-slate-900 dark:text-white block">
+              {avgMathScore}
+            </span>
+            <span className="text-xs text-slate-500 dark:text-slate-400 font-medium">Avg Math</span>
+          </div>
+        </div>
       </div>
-    </div>
+
+      {/* Performance Benchmarks */}
+      {attempts.length > 0 ? (
+        <PerformanceBenchmarks analytics={analytics} />
+      ) : (
+        <div className="bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 rounded-lg p-12 mb-8 text-center">
+          <BarChart2 className="w-12 h-12 text-slate-400 dark:text-slate-500 mx-auto mb-3" />
+          <p className="font-semibold text-slate-900 dark:text-white mb-1">No data available</p>
+          <p className="text-sm text-slate-600 dark:text-slate-400">
+            Try adjusting your filters or wait for test attempts to be completed.
+          </p>
+        </div>
+      )}
+
+      {/* Attempt History Table */}
+      {attempts.length > 0 && (
+        <div className="animate-fade-in">
+          <h2 className="text-lg font-semibold text-slate-900 dark:text-white mb-4">
+            Attempt History
+          </h2>
+          <AttemptHistoryTable attempts={attemptRecords} />
+        </div>
+      )}
+    </AdminLayout>
   );
 }
