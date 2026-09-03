@@ -227,10 +227,10 @@ export function StudentDashboardView({
             <div className="border border-slate-200 dark:border-white/10 rounded-xl p-5 bg-slate-50 dark:bg-[#1c1b1b]">
               <div className="flex justify-between items-start mb-4">
                 <h4 className="font-bold text-slate-900 dark:text-white">Reading & Writing</h4>
-                <span className="text-sm font-bold text-slate-900 dark:text-[#EBFF00]">{metrics.rwAvg}/400</span>
+                <span className="text-sm font-bold text-slate-900 dark:text-[#EBFF00]">{metrics.rwAvg}/800</span>
               </div>
               <div className="w-full bg-slate-200 dark:bg-[#2a2a2a] h-3 rounded-full overflow-hidden">
-                <div className="bg-blue-500 h-full rounded-full shadow-[0_0_10px_rgba(59,130,246,0.5)]" style={{ width: `${Math.min((metrics.rwAvg / 400) * 100, 100)}%` }}></div>
+                <div className="bg-blue-500 h-full rounded-full shadow-[0_0_10px_rgba(59,130,246,0.5)]" style={{ width: `${Math.min((metrics.rwAvg / 800) * 100, 100)}%` }}></div>
               </div>
               <p className="text-xs text-slate-600 dark:text-slate-400 mt-3">Your performance in reading comprehension and writing skills.</p>
             </div>
@@ -238,10 +238,10 @@ export function StudentDashboardView({
             <div className="border border-slate-200 dark:border-white/10 rounded-xl p-5 bg-slate-50 dark:bg-[#1c1b1b]">
               <div className="flex justify-between items-start mb-4">
                 <h4 className="font-bold text-slate-900 dark:text-white">Math</h4>
-                <span className="text-sm font-bold text-slate-900 dark:text-[#EBFF00]">{metrics.mathAvg}/400</span>
+                <span className="text-sm font-bold text-slate-900 dark:text-[#EBFF00]">{metrics.mathAvg}/800</span>
               </div>
               <div className="w-full bg-slate-200 dark:bg-[#2a2a2a] h-3 rounded-full overflow-hidden">
-                <div className="bg-green-500 h-full rounded-full shadow-[0_0_10px_rgba(34,197,94,0.5)]" style={{ width: `${Math.min((metrics.mathAvg / 400) * 100, 100)}%` }}></div>
+                <div className="bg-green-500 h-full rounded-full shadow-[0_0_10px_rgba(34,197,94,0.5)]" style={{ width: `${Math.min((metrics.mathAvg / 800) * 100, 100)}%` }}></div>
               </div>
               <p className="text-xs text-slate-600 dark:text-slate-400 mt-3">Your mathematical problem-solving and algebra skills.</p>
             </div>
