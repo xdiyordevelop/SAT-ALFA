@@ -48,17 +48,17 @@ export function NeonLoginForm() {
   }
 
   return (
-    <div className="w-full max-w-sm glass-dark p-6 sm:p-8 rounded-2xl backdrop-blur-xl bg-[#131313]/90 border border-white/10 relative z-10 transition-all duration-300">
+    <div className="w-full max-w-sm glass-dark dark:glass-dark p-6 sm:p-8 rounded-2xl backdrop-blur-xl bg-white dark:bg-[#131313]/90 border border-slate-200 dark:border-white/10 relative z-10 transition-all duration-300">
 
       {/* Role Selector */}
-      <div className="flex gap-1 bg-[#1c1b1b] p-1 rounded-lg mb-8 border border-white/5">
+      <div className="flex gap-1 bg-slate-100 dark:bg-[#1c1b1b] p-1 rounded-lg mb-8 border border-slate-200 dark:border-white/5">
         <button
           type="button"
           onClick={() => handleRoleChange("STUDENT")}
           className={`flex-1 py-2.5 px-3 text-sm font-semibold rounded-md transition-all duration-300 ${
             role === "STUDENT"
               ? "bg-[#EBFF00] text-black shadow-lg shadow-[#EBFF00]/20"
-              : "text-slate-400 hover:text-white hover:bg-[#2a2a2a]"
+              : "text-slate-600 dark:text-slate-400 hover:text-slate-900 dark:hover:text-white hover:bg-slate-200 dark:hover:bg-[#2a2a2a]"
           }`}
         >
           Student
@@ -69,7 +69,7 @@ export function NeonLoginForm() {
           className={`flex-1 py-2.5 px-3 text-sm font-semibold rounded-md transition-all duration-300 ${
             role === "ADMIN"
               ? "bg-[#EBFF00] text-black shadow-lg shadow-[#EBFF00]/20"
-              : "text-slate-400 hover:text-white hover:bg-[#2a2a2a]"
+              : "text-slate-600 dark:text-slate-400 hover:text-slate-900 dark:hover:text-white hover:bg-slate-200 dark:hover:bg-[#2a2a2a]"
           }`}
         >
           Admin
@@ -78,10 +78,10 @@ export function NeonLoginForm() {
 
       {/* Header */}
       <div className="text-center mb-8">
-        <h2 className="text-2xl font-black text-white mb-2 tracking-tight">
+        <h2 className="text-2xl font-black text-slate-900 dark:text-white mb-2 tracking-tight">
           Sign In
         </h2>
-        <p className="text-sm text-slate-400">
+        <p className="text-sm text-slate-600 dark:text-slate-400">
           {role === "STUDENT"
             ? "Access your learning portal"
             : "Admin control panel"}
@@ -92,15 +92,15 @@ export function NeonLoginForm() {
 
         {/* Error Message */}
         {error && (
-          <div className="p-4 bg-rose-950/40 border-l-4 border-rose-500 rounded-lg flex items-start gap-3 animate-slide-up">
-            <AlertCircle className="w-5 h-5 text-rose-400 flex-shrink-0 mt-0.5" />
-            <p className="text-sm font-medium text-rose-300">{error}</p>
+          <div className="p-4 bg-rose-50 dark:bg-rose-950/40 border-l-4 border-rose-400 dark:border-rose-500 rounded-lg flex items-start gap-3 animate-slide-up">
+            <AlertCircle className="w-5 h-5 text-rose-600 dark:text-rose-400 flex-shrink-0 mt-0.5" />
+            <p className="text-sm font-medium text-rose-700 dark:text-rose-300">{error}</p>
           </div>
         )}
 
         {/* Username Field */}
         <div className="flex flex-col gap-2">
-          <label htmlFor="username" className="text-sm font-semibold text-slate-300">
+          <label htmlFor="username" className="text-sm font-semibold text-slate-700 dark:text-slate-300">
             Email or Username
           </label>
           <div className="relative">
@@ -122,7 +122,7 @@ export function NeonLoginForm() {
         {/* Password Field */}
         <div className="flex flex-col gap-2">
           <div className="flex justify-between items-center">
-            <label htmlFor="password" className="text-sm font-semibold text-slate-300">
+            <label htmlFor="password" className="text-sm font-semibold text-slate-700 dark:text-slate-300">
               Password
             </label>
             <a

@@ -65,7 +65,7 @@ export default function LoginPage() {
       </div>
 
       {/* Right Side - Form Area (Mobile: 100%, Desktop: 50%) */}
-      <div className="w-full lg:w-1/2 flex flex-col justify-center items-center p-6 sm:p-12 relative bg-slate-50 dark:bg-[#0a0a0a] transition-colors duration-500">
+      <div className="w-full lg:w-1/2 flex flex-col justify-center items-center p-6 sm:p-12 relative bg-white dark:bg-[#0a0a0a] transition-colors duration-500">
 
         {/* Mobile Header */}
         <div className="lg:hidden flex flex-col items-center gap-4 mb-10 z-10">
