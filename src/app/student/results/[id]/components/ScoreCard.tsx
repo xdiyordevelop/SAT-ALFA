@@ -24,14 +24,14 @@ export function ScoreCard({
   const percentage = (score / maxScore) * 100;
   const bgClass =
     variant === "primary"
-      ? "bg-gradient-to-br from-yellow-900/40 to-yellow-950/40 border-yellow-600/50"
+      ? "bg-gradient-to-br from-[#EBFF00]/50/40 to-[#000000]/40 border-yellow-600/50"
       : "bg-gradient-to-br from-blue-900/40 to-blue-950/40 border-blue-600/50";
   const textClass =
     variant === "primary"
-      ? "text-slate-900 dark:text-yellow-500"
+      ? "text-slate-900 dark:text-[#EBFF00]"
       : "text-blue-600";
   const labelClass =
-    variant === "primary" ? "text-yellow-700" : "text-blue-700";
+    variant === "primary" ? "text-[#d9ff00]" : "text-blue-700";
 
   return (
     <Card
@@ -63,7 +63,7 @@ export function ScoreCard({
           <div
             className={`h-full rounded-full transition-all duration-500 ${
               variant === "primary"
-                ? "bg-gradient-to-r from-yellow-400 to-yellow-300"
+                ? "bg-gradient-to-r from-[#EBFF00] to-yellow-300"
                 : "bg-gradient-to-r from-blue-400 to-blue-300"
             }`}
             style={{ width: `${percentage}%` }}

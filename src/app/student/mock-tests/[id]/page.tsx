@@ -138,7 +138,7 @@ export default function TakeMockTestPage() {
       >
         <div className="flex justify-center items-center min-h-[60vh]">
           <div className="text-center">
-            <Loader2 className="w-10 h-10 text-slate-900 dark:text-yellow-500 animate-spin mx-auto mb-4" />
+            <Loader2 className="w-10 h-10 text-slate-900 dark:text-[#EBFF00] animate-spin mx-auto mb-4" />
             <p className="text-slate-600 dark:text-slate-400 font-medium">
               Loading test...
             </p>
@@ -156,7 +156,7 @@ export default function TakeMockTestPage() {
       >
         <Link
           href="/student/mock-tests"
-          className="inline-flex items-center gap-2 text-slate-900 dark:text-yellow-500 hover:text-yellow-700 font-medium mb-6"
+          className="inline-flex items-center gap-2 text-slate-900 dark:text-[#EBFF00] hover:text-[#d9ff00] font-medium mb-6"
         >
           <ArrowLeft className="w-4 h-4" /> Back to Mock Tests
         </Link>
@@ -184,7 +184,7 @@ export default function TakeMockTestPage() {
             <div className="w-20 h-20 rounded-3xl bg-green-100 flex items-center justify-center text-green-600 mx-auto mb-6 shadow-md">
               <CheckCircle2 className="w-10 h-10" />
             </div>
-            <span className="text-xs font-bold px-3 py-1 rounded-full bg-yellow-100 dark:bg-yellow-900/30 text-yellow-700 uppercase tracking-wider">
+            <span className="text-xs font-bold px-3 py-1 rounded-full bg-[#EBFF00]/10 dark:bg-[#EBFF00]/50/30 text-[#d9ff00] uppercase tracking-wider">
               Status: Pending Review
             </span>
             <h1 className="text-3xl font-extrabold text-slate-900 dark:text-white mt-4 mb-2">
@@ -208,12 +208,12 @@ export default function TakeMockTestPage() {
                 <span className="text-xs text-slate-500 dark:text-slate-400 block mb-1">
                   Time Spent
                 </span>
-                <span className="text-2xl font-bold text-slate-900 dark:text-yellow-500">
+                <span className="text-2xl font-bold text-slate-900 dark:text-[#EBFF00]">
                   {formatTime((test?.duration || 0) * 60 - timeLeft)}
                 </span>
               </div>
             </div>
-            <div className="p-4 rounded-xl bg-slate-50 dark:bg-[#0a0a0a] border border-yellow-200 text-xs text-yellow-900 mb-8 text-left">
+            <div className="p-4 rounded-xl bg-slate-50 dark:bg-[#0a0a0a] border border-yellow-200 text-xs text-[#EBFF00]/50 mb-8 text-left">
               <p className="font-semibold mb-1">ℹ️ What happens next?</p>
               <p>
                 Your instructor will review your performance and approve
@@ -256,13 +256,13 @@ export default function TakeMockTestPage() {
         <div className="max-w-2xl mx-auto">
           <Link
             href="/student/mock-tests"
-            className="inline-flex items-center gap-2 text-slate-900 dark:text-yellow-500 hover:text-yellow-700 font-medium text-sm mb-6 transition-colors"
+            className="inline-flex items-center gap-2 text-slate-900 dark:text-[#EBFF00] hover:text-[#d9ff00] font-medium text-sm mb-6 transition-colors"
           >
             <ArrowLeft className="w-4 h-4" /> Back to Mock Tests
           </Link>
           <div className="bg-white dark:bg-[#131313] rounded-3xl border border-slate-200 dark:border-white/10 p-8 sm:p-10 shadow-lg space-y-6">
             <div>
-              <span className="text-xs font-bold px-3 py-1 rounded-full bg-yellow-100 dark:bg-yellow-900/30 text-yellow-700 uppercase tracking-wider">
+              <span className="text-xs font-bold px-3 py-1 rounded-full bg-[#EBFF00]/10 dark:bg-[#EBFF00]/50/30 text-[#d9ff00] uppercase tracking-wider">
                 {test?.subject} Section
               </span>
               <h1 className="text-3xl font-extrabold text-slate-900 dark:text-white mt-3">
@@ -286,12 +286,12 @@ export default function TakeMockTestPage() {
                 <span className="text-xs text-slate-500 dark:text-slate-400 block mb-1">
                   Time Allowed
                 </span>
-                <span className="text-2xl font-bold text-slate-900 dark:text-yellow-500">
+                <span className="text-2xl font-bold text-slate-900 dark:text-[#EBFF00]">
                   {test?.duration} Minutes
                 </span>
               </div>
             </div>
-            <div className="p-4 rounded-xl bg-slate-50 dark:bg-[#0a0a0a] border border-yellow-200 text-xs text-yellow-900 leading-relaxed space-y-1">
+            <div className="p-4 rounded-xl bg-slate-50 dark:bg-[#0a0a0a] border border-yellow-200 text-xs text-[#EBFF00]/50 leading-relaxed space-y-1">
               <p className="font-bold">Exam Guidelines:</p>
               <ul className="list-disc list-inside space-y-1">
                 <li>
@@ -335,7 +335,7 @@ export default function TakeMockTestPage() {
         {/* Top Bar: Timer & Progress */}
         <div className="bg-white dark:bg-[#131313] rounded-2xl border border-slate-200 dark:border-white/10 p-5 flex items-center justify-between shadow-sm">
           <div className="flex items-center gap-3">
-            <span className="text-xs font-bold px-2.5 py-1 rounded-full bg-yellow-100 dark:bg-yellow-900/30 text-yellow-700">
+            <span className="text-xs font-bold px-2.5 py-1 rounded-full bg-[#EBFF00]/10 dark:bg-[#EBFF00]/50/30 text-[#d9ff00]">
               Question {currentQuestion + 1} of {questions.length}
             </span>
             <span className="text-xs text-slate-500 dark:text-slate-400 hidden sm:inline">

@@ -77,7 +77,7 @@ export function StudentPaymentsContent({
             <p className="text-sm font-medium text-slate-600 dark:text-slate-400 ">
               Monthly Fee
             </p>
-            <DollarSign className="w-4 h-4 text-slate-900 dark:text-yellow-500 " />
+            <DollarSign className="w-4 h-4 text-slate-900 dark:text-[#EBFF00] " />
           </div>
           <p className="text-3xl font-bold text-slate-900 dark:text-white ">
             {monthlyFee?.toLocaleString() || 0} so'm

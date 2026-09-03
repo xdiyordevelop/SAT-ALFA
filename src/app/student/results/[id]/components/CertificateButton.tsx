@@ -46,7 +46,7 @@ export function CertificateButton({
       doc.setFillColor(15, 23, 42); // slate-950
       doc.rect(0, 0, pageWidth, pageHeight, "F"); // Yellow accent border
 
-      doc.setDrawColor(251, 191, 36); // yellow-400
+      doc.setDrawColor(251, 191, 36); // [#EBFF00]
       doc.setLineWidth(3);
       doc.rect(margin / 2, margin / 2, pageWidth - margin, pageHeight - margin); // Inner accent lines
 
@@ -54,7 +54,7 @@ export function CertificateButton({
       doc.setDrawColor(251, 191, 36);
       doc.rect(margin, margin, pageWidth - 2 * margin, pageHeight - 2 * margin); // Header:"CERTIFICATE OF COMPLETION"
 
-      doc.setTextColor(251, 191, 36); // yellow-400
+      doc.setTextColor(251, 191, 36); // [#EBFF00]
       doc.setFontSize(24);
       doc.setFont("Helvetica", "bold");
       doc.text("CERTIFICATE OF COMPLETION", pageWidth / 2, margin + 25, {
@@ -199,7 +199,7 @@ export function CertificateButton({
     <Button
       onClick={generatePDF}
       disabled={isGenerating}
-      className="flex items-center gap-2 px-6 py-3 bg-yellow-400 text-slate-950 hover:bg-[#EBFF00] disabled:opacity-50"
+      className="flex items-center gap-2 px-6 py-3 bg-[#EBFF00] text-slate-950 hover:bg-[#EBFF00] disabled:opacity-50"
     >
       <Download className="w-5 h-5" />
       {isGenerating ? "Generating..." : "Download Certificate"}
@@ -220,7 +220,7 @@ function drawScoreBox(
   doc.setFillColor(30, 41, 59); // slate-900
   doc.rect(x, y, width, height, "F"); // Box border
 
-  doc.setDrawColor(251, 191, 36); // yellow-400
+  doc.setDrawColor(251, 191, 36); // [#EBFF00]
   doc.setLineWidth(1);
   doc.rect(x, y, width, height); // Label
 

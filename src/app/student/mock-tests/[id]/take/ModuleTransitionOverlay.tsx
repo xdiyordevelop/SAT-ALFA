@@ -42,7 +42,7 @@ export function ModuleTransitionOverlay(): React.ReactElement {
     <div className="fixed inset-0 z-50 bg-slate-50 dark:bg-[#0a0a0a] flex flex-col items-center justify-center p-4 backdrop-blur-sm">
       <div className="max-w-md w-full bg-white dark:bg-[#131313] border border-slate-200 dark:border-white/10 rounded-xl p-8 shadow-2xl relative overflow-hidden">
         {/* Top accent bar */}
-        <div className="absolute top-0 left-0 right-0 h-1 bg-yellow-400" />
+        <div className="absolute top-0 left-0 right-0 h-1 bg-[#EBFF00]" />
 
         <h2 className="text-2xl font-bold text-slate-900 dark:text-white mb-2">
           End of {moduleName}
@@ -65,7 +65,7 @@ export function ModuleTransitionOverlay(): React.ReactElement {
 
           <div className="flex justify-between items-center">
             <div className="flex items-center gap-2 text-slate-600 dark:text-slate-400">
-              <AlertCircle className="w-5 h-5 text-slate-900 dark:text-yellow-500" />
+              <AlertCircle className="w-5 h-5 text-slate-900 dark:text-[#EBFF00]" />
               <span>Flagged for Review</span>
             </div>
             <span className="font-bold text-slate-900 dark:text-white">
@@ -86,9 +86,9 @@ export function ModuleTransitionOverlay(): React.ReactElement {
           </div>
         </div>
 
-        <div className="bg-yellow-950/20 border border-yellow-700/50 rounded-lg p-4 mb-8">
+        <div className="bg-[#000000]/20 border border-[#d9ff00]/50 rounded-lg p-4 mb-8">
           <div className="flex items-start gap-3">
-            <AlertCircle className="w-5 h-5 text-yellow-500 flex-shrink-0 mt-0.5" />
+            <AlertCircle className="w-5 h-5 text-[#EBFF00] flex-shrink-0 mt-0.5" />
             <p className="text-sm text-yellow-200">
               Once you leave this module, you <strong>cannot return</strong> to
               these questions. Please ensure you are ready to move on.
@@ -107,7 +107,7 @@ export function ModuleTransitionOverlay(): React.ReactElement {
           <Button
             variant="primary"
             onClick={handleContinue}
-            className="flex-1 bg-yellow-400 text-slate-950 hover:bg-[#EBFF00]"
+            className="flex-1 bg-[#EBFF00] text-slate-950 hover:bg-[#EBFF00]"
           >
             Continue {currentModule === 2 ? "to Break" : "to Next Module"}
           </Button>

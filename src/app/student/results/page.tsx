@@ -48,7 +48,7 @@ function scoreColor(score: number, max: number): string {
   const pct = score / max;
   if (pct >= 0.85) return "text-emerald-600";
   if (pct >= 0.65) return "text-blue-600";
-  if (pct >= 0.45) return "text-slate-900 dark:text-yellow-500";
+  if (pct >= 0.45) return "text-slate-900 dark:text-[#EBFF00]";
   return "text-red-600";
 }
 
@@ -58,7 +58,7 @@ function scoreBg(score: number, max: number): string {
     return "bg-emerald-500/15 border-emerald-500/30 text-emerald-500";
   if (pct >= 0.65) return "bg-blue-500/15 border-blue-500/30 text-blue-300";
   if (pct >= 0.45)
-    return "bg-[#EBFF00]/15 border-yellow-500/30 text-yellow-500";
+    return "bg-[#EBFF00]/15 border-[#EBFF00]/30 text-[#EBFF00]";
   return "bg-red-500/15 border-red-500/30 text-red-300";
 }
 
@@ -135,7 +135,7 @@ export default async function StudentResultsHubPage() {
             <div className="grid grid-cols-2 lg:grid-cols-4 gap-4 overflow-x-auto pb-2">
               <div className="col-span-2 lg:col-span-1 bg-white dark:bg-[#131313] border border-slate-200 dark:border-white/10 rounded-2xl p-5 flex flex-col gap-2 min-w-[200px]">
                 <div className="flex items-center gap-2 text-slate-500 dark:text-slate-400 text-xs font-semibold uppercase tracking-widest">
-                  <Trophy className="w-3.5 h-3.5 text-slate-900 dark:text-yellow-500" />
+                  <Trophy className="w-3.5 h-3.5 text-slate-900 dark:text-[#EBFF00]" />
                   SAT Average
                 </div>
                 {count > 0 ? (
@@ -158,12 +158,12 @@ export default async function StudentResultsHubPage() {
 
               <div className="col-span-2 lg:col-span-1 bg-white dark:bg-[#131313] border border-slate-200 dark:border-white/10 rounded-2xl p-5 flex flex-col gap-2 min-w-[200px]">
                 <div className="flex items-center gap-2 text-slate-500 dark:text-slate-400 text-xs font-semibold uppercase tracking-widest">
-                  <Star className="w-3.5 h-3.5 text-yellow-400" />
+                  <Star className="w-3.5 h-3.5 text-[#EBFF00]" />
                   Best Score
                 </div>
                 {highestScore ? (
                   <>
-                    <p className="text-4xl font-bold text-yellow-400">
+                    <p className="text-4xl font-bold text-[#EBFF00]">
                       {highestScore}
                     </p>
                     <p className="text-slate-500 dark:text-slate-400 text-xs">

@@ -87,7 +87,7 @@ export function PerformanceBreakdown({
     <div className="space-y-8 mb-8">
       {/* Topic Performance Chart */}
       <Card className="bg-white dark:bg-[#131313] border-slate-200 dark:border-white/10 p-6">
-        <h3 className="text-lg font-bold text-slate-900 dark:text-yellow-500 mb-6">
+        <h3 className="text-lg font-bold text-slate-900 dark:text-[#EBFF00] mb-6">
           Performance by Topic
         </h3>
         <ResponsiveContainer width="100%" height={300}>
@@ -117,7 +117,7 @@ export function PerformanceBreakdown({
 
       {/* Module Performance */}
       <Card className="bg-white dark:bg-[#131313] border-slate-200 dark:border-white/10 p-6">
-        <h3 className="text-lg font-bold text-slate-900 dark:text-yellow-500 mb-6">
+        <h3 className="text-lg font-bold text-slate-900 dark:text-[#EBFF00] mb-6">
           Module Performance
         </h3>
         <ResponsiveContainer width="100%" height={250}>
@@ -217,12 +217,12 @@ export function PerformanceBreakdown({
 
       {/* Insights */}
       <Card className="bg-slate-50 dark:bg-[#0a0a0a] border-yellow-600/30 p-6">
-        <h4 className="text-lg font-bold text-slate-900 dark:text-yellow-500 mb-4">
+        <h4 className="text-lg font-bold text-slate-900 dark:text-[#EBFF00] mb-4">
           📊 Key Insights
         </h4>
         <ul className="space-y-2 text-slate-600 dark:text-slate-400 text-sm">
           <li className="flex gap-2">
-            <span className="text-slate-900 dark:text-yellow-500">•</span>
+            <span className="text-slate-900 dark:text-[#EBFF00]">•</span>
             <span>
               {" "}
               Overall accuracy:{" "}

@@ -96,7 +96,7 @@ export function TestHeader({
             onClick={() => setAnnotateActive(!isAnnotateActive)}
             className={`flex items-center gap-2 px-3 py-2 rounded-md transition-all text-sm font-bold ${
               isAnnotateActive
-                ? "bg-yellow-100 dark:bg-[#EBFF00]/10 text-yellow-800 dark:text-[#EBFF00] border border-yellow-300 dark:border-[#EBFF00]/30 shadow-[0_0_10px_rgba(235,255,0,0.1)]"
+                ? "bg-[#EBFF00]/10 dark:bg-[#EBFF00]/10 text-yellow-800 dark:text-[#EBFF00] border border-yellow-300 dark:border-[#EBFF00]/30 shadow-[0_0_10px_rgba(235,255,0,0.1)]"
                 : "text-slate-500 dark:text-slate-400 hover:bg-slate-100 dark:hover:bg-[#1c1b1b] hover:text-slate-900 dark:hover:text-white"
             }`}
             title={isAnnotateActive ? "Belgilash rejimi faol" : "Belgilash"}

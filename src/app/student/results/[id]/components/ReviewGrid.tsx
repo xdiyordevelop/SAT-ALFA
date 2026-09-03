@@ -76,7 +76,7 @@ export function ReviewGrid({
         .sort(([a], [b]) => parseInt(a) - parseInt(b))
         .map(([moduleNum, questions]) => (
           <div key={moduleNum}>
-            <h3 className="text-lg font-bold text-slate-900 dark:text-yellow-500 mb-4">
+            <h3 className="text-lg font-bold text-slate-900 dark:text-[#EBFF00] mb-4">
               {getModuleLabel(parseInt(moduleNum))}
             </h3>
             {/* 8-column grid */}

@@ -48,7 +48,7 @@ export function StudentMockTestsHub({
         <div className="flex gap-3">
           <Link
             href="/student/mock-tests/proctor/join"
-            className="px-5 py-2.5 bg-[#EBFF00]/10 hover:bg-[#EBFF00]/20 border border-yellow-500/20 text-slate-900 dark:text-yellow-500 rounded-xl font-bold transition-all flex items-center justify-center gap-2 whitespace-nowrap shadow-[0_0_15px_rgba(245,158,11,0.1)] hover:shadow-[0_0_20px_rgba(245,158,11,0.2)]"
+            className="px-5 py-2.5 bg-[#EBFF00]/10 hover:bg-[#EBFF00]/20 border border-[#EBFF00]/20 text-slate-900 dark:text-[#EBFF00] rounded-xl font-bold transition-all flex items-center justify-center gap-2 whitespace-nowrap shadow-[0_0_15px_rgba(245,158,11,0.1)] hover:shadow-[0_0_20px_rgba(245,158,11,0.2)]"
           >
             <Video className="w-5 h-5" />
             Join Live Session with PIN
@@ -58,7 +58,7 @@ export function StudentMockTestsHub({
 
       {/* 2. Top Metric Cards (3 Cards) */}
       <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
-        <div className="bg-white dark:bg-[#131313] border border-slate-200 dark:border-white/10 rounded-2xl p-6 relative overflow-hidden group hover:border-yellow-500/30 transition-colors">
+        <div className="bg-white dark:bg-[#131313] border border-slate-200 dark:border-white/10 rounded-2xl p-6 relative overflow-hidden group hover:border-[#EBFF00]/30 transition-colors">
           <div className="absolute top-0 right-0 w-32 h-32 bg-emerald-500/5 rounded-full blur-2xl -translate-y-1/2 translate-x-1/3 pointer-events-none group-hover:bg-emerald-500/10 transition-colors" />
           <div className="flex items-center gap-4 relative z-10">
             <div className="w-12 h-12 rounded-xl bg-emerald-500/10 flex items-center justify-center shrink-0">
@@ -75,7 +75,7 @@ export function StudentMockTestsHub({
           </div>
         </div>
 
-        <div className="bg-white dark:bg-[#131313] border border-slate-200 dark:border-white/10 rounded-2xl p-6 relative overflow-hidden group hover:border-yellow-500/30 transition-colors">
+        <div className="bg-white dark:bg-[#131313] border border-slate-200 dark:border-white/10 rounded-2xl p-6 relative overflow-hidden group hover:border-[#EBFF00]/30 transition-colors">
           <div className="absolute top-0 right-0 w-32 h-32 bg-blue-500/5 rounded-full blur-2xl -translate-y-1/2 translate-x-1/3 pointer-events-none group-hover:bg-blue-500/10 transition-colors" />
           <div className="flex items-center gap-4 relative z-10">
             <div className="w-12 h-12 rounded-xl bg-blue-500/10 flex items-center justify-center shrink-0">
@@ -92,11 +92,11 @@ export function StudentMockTestsHub({
           </div>
         </div>
 
-        <div className="bg-white dark:bg-[#131313] border border-slate-200 dark:border-white/10 rounded-2xl p-6 relative overflow-hidden group hover:border-yellow-500/30 transition-colors">
+        <div className="bg-white dark:bg-[#131313] border border-slate-200 dark:border-white/10 rounded-2xl p-6 relative overflow-hidden group hover:border-[#EBFF00]/30 transition-colors">
           <div className="absolute top-0 right-0 w-32 h-32 bg-[#EBFF00]/5 rounded-full blur-2xl -translate-y-1/2 translate-x-1/3 pointer-events-none group-hover:bg-[#EBFF00]/10 transition-colors" />
           <div className="flex items-center gap-4 relative z-10">
             <div className="w-12 h-12 rounded-xl bg-[#EBFF00]/10 flex items-center justify-center shrink-0">
-              <Trophy className="w-6 h-6 text-slate-900 dark:text-yellow-500" />
+              <Trophy className="w-6 h-6 text-slate-900 dark:text-[#EBFF00]" />
             </div>
             <div>
               <p className="text-sm font-medium text-slate-500 dark:text-slate-400 mb-1">
@@ -116,7 +116,7 @@ export function StudentMockTestsHub({
           onClick={() => setActiveTab("available")}
           className={`flex items-center gap-2 px-6 py-4 font-bold text-sm transition-colors border-b-2 ${
             activeTab === "available"
-              ? "border-yellow-500 text-slate-900 dark:text-yellow-500"
+              ? "border-[#EBFF00] text-slate-900 dark:text-[#EBFF00]"
               : "border-transparent text-slate-500 dark:text-slate-400 hover:text-slate-800 dark:text-slate-200"
           }`}
         >
@@ -127,7 +127,7 @@ export function StudentMockTestsHub({
           onClick={() => setActiveTab("history")}
           className={`flex items-center gap-2 px-6 py-4 font-bold text-sm transition-colors border-b-2 ${
             activeTab === "history"
-              ? "border-yellow-500 text-slate-900 dark:text-yellow-500"
+              ? "border-[#EBFF00] text-slate-900 dark:text-[#EBFF00]"
               : "border-transparent text-slate-500 dark:text-slate-400 hover:text-slate-800 dark:text-slate-200"
           }`}
         >
@@ -165,12 +165,12 @@ export function StudentMockTestsHub({
                     return (
                       <div
                         key={test.id}
-                        className="bg-white dark:bg-[#131313] border border-slate-200 dark:border-white/10 rounded-2xl p-6 flex flex-col h-full hover:border-yellow-500/50 transition-all duration-300 relative overflow-hidden group shadow-lg shadow-black/20"
+                        className="bg-white dark:bg-[#131313] border border-slate-200 dark:border-white/10 rounded-2xl p-6 flex flex-col h-full hover:border-[#EBFF00]/50 transition-all duration-300 relative overflow-hidden group shadow-lg shadow-black/20"
                       >
                         <div className="absolute top-0 right-0 w-32 h-32 bg-[#EBFF00]/5 rounded-full blur-2xl -translate-y-1/2 translate-x-1/3 pointer-events-none" />
 
                         <div className="mb-4 relative z-10">
-                          <span className="inline-flex px-2 py-1 bg-[#EBFF00]/10 text-slate-900 dark:text-yellow-500 border border-yellow-500/20 rounded-md text-[10px] font-bold tracking-wider uppercase mb-3">
+                          <span className="inline-flex px-2 py-1 bg-[#EBFF00]/10 text-slate-900 dark:text-[#EBFF00] border border-[#EBFF00]/20 rounded-md text-[10px] font-bold tracking-wider uppercase mb-3">
                             Digital SAT Full Test
                           </span>
                           <h3 className="text-lg font-bold text-slate-900 dark:text-white line-clamp-2 leading-tight">
@@ -273,7 +273,7 @@ export function StudentMockTestsHub({
                               {attempt.rwScore || 0}
                             </td>
                             <td className="py-4 px-6">
-                              <span className="inline-flex px-3 py-1 bg-[#EBFF00]/10 text-slate-900 dark:text-yellow-500 font-bold rounded-lg border border-yellow-500/20">
+                              <span className="inline-flex px-3 py-1 bg-[#EBFF00]/10 text-slate-900 dark:text-[#EBFF00] font-bold rounded-lg border border-[#EBFF00]/20">
                                 {attempt.totalScore || 0}
                               </span>
                             </td>
@@ -282,7 +282,7 @@ export function StudentMockTestsHub({
                                 href={`/student/mock-tests/results/${attempt.id}`}
                                 className="inline-flex items-center gap-2 px-4 py-2 bg-slate-100 dark:bg-[#1c1b1b] hover:bg-slate-700 text-slate-900 dark:text-white rounded-lg font-medium transition-colors border border-slate-200 dark:border-white/10 hover:border-slate-400"
                               >
-                                <BarChart3 className="w-4 h-4 text-slate-900 dark:text-yellow-500" />
+                                <BarChart3 className="w-4 h-4 text-slate-900 dark:text-[#EBFF00]" />
                                 View Full Analysis
                               </Link>
                             </td>

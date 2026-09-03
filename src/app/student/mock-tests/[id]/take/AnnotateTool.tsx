@@ -6,7 +6,7 @@ import { useTestContext } from "../context/TestContext";
 type HighlightColor = "yellow" | "blue";
 
 const COLOR_MAP: Record<HighlightColor, string> = {
-  yellow: "bg-yellow-400/60 text-slate-900 dark:text-white",
+  yellow: "bg-[#EBFF00]/60 text-slate-900 dark:text-white",
   blue: "bg-blue-400/50 text-slate-900 dark:text-white",
 };
 
@@ -121,7 +121,7 @@ export function AnnotateColorPicker() {
       </span>
       <button
         onClick={() => pick("yellow")}
-        className={`w-5 h-5 rounded-full bg-yellow-400 border-2 transition-transform ${selected === "yellow" ? "border-white scale-110" : "border-transparent"}`}
+        className={`w-5 h-5 rounded-full bg-[#EBFF00] border-2 transition-transform ${selected === "yellow" ? "border-white scale-110" : "border-transparent"}`}
         title="Yellow highlight"
       />
       <button

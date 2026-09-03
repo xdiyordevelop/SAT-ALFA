@@ -98,7 +98,7 @@ export function SelectionToolbar(): React.ReactElement {
     const range = selection.getRangeAt(0);
     const span = document.createElement("span");
     span.className =
-      "underline decoration-yellow-400 decoration-2 underline-offset-2 cursor-pointer hover:decoration-yellow-500 transition-colors";
+      "underline decoration-[#EBFF00] decoration-2 underline-offset-2 cursor-pointer hover:decoration-[#EBFF00] transition-colors";
     span.textContent = selectedText;
     span.title = "Click to remove underline";
     range.deleteContents();
@@ -150,7 +150,7 @@ export function SelectionToolbar(): React.ReactElement {
             className="p-2 hover:bg-slate-100 dark:bg-[#1c1b1b] rounded transition-colors"
             title="Highlight yellow"
           >
-            <Highlighter className="w-4 h-4 text-slate-900 dark:text-yellow-500" />
+            <Highlighter className="w-4 h-4 text-slate-900 dark:text-[#EBFF00]" />
           </button>
 
           {/* Blue Highlight */}
@@ -177,7 +177,7 @@ export function SelectionToolbar(): React.ReactElement {
             className="p-2 hover:bg-slate-100 dark:bg-[#1c1b1b] rounded transition-colors border-l border-slate-200 dark:border-white/10"
             title="Underline"
           >
-            <Underline className="w-4 h-4 text-slate-900 dark:text-yellow-500" />
+            <Underline className="w-4 h-4 text-slate-900 dark:text-[#EBFF00]" />
           </button>
 
           {/* Clear */}

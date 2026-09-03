@@ -48,7 +48,7 @@ export function StudentAttendanceContent({
       case "ABSENT":
         return "bg-red-100 text-red-700 ";
       case "LATE":
-        return "bg-yellow-100 dark:bg-yellow-900/30 text-yellow-700 ";
+        return "bg-[#EBFF00]/10 dark:bg-[#EBFF00]/50/30 text-[#d9ff00] ";
       case "EXCUSED":
         return "bg-blue-100 text-blue-700 ";
       default:
@@ -117,9 +117,9 @@ export function StudentAttendanceContent({
             <p className="text-sm font-medium text-slate-600 dark:text-slate-400 ">
               Late
             </p>
-            <Clock className="w-4 h-4 text-slate-900 dark:text-yellow-500 " />
+            <Clock className="w-4 h-4 text-slate-900 dark:text-[#EBFF00] " />
           </div>
-          <p className="text-3xl font-bold text-slate-900 dark:text-yellow-500 ">
+          <p className="text-3xl font-bold text-slate-900 dark:text-[#EBFF00] ">
             {late}
           </p>
           <p className="text-xs text-slate-500 dark:text-slate-400 mt-1">

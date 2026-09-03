@@ -48,12 +48,12 @@ export function TimerDisplay({
     if (isWarning1min) {
       return isFlashing
         ? "text-red-500 animate-pulse"
-        : "text-slate-900 dark:text-yellow-500 animate-pulse";
+        : "text-slate-900 dark:text-[#EBFF00] animate-pulse";
     }
     if (isWarning5min) {
-      return "text-slate-900 dark:text-yellow-500";
+      return "text-slate-900 dark:text-[#EBFF00]";
     }
-    return "text-slate-900 dark:text-yellow-500";
+    return "text-slate-900 dark:text-[#EBFF00]";
   };
 
   const getContainerClasses = () => {
@@ -64,7 +64,7 @@ export function TimerDisplay({
       return `border-red-500 bg-red-950/20 ${isFlashing ? "shadow-lg shadow-red-500/50" : ""}`;
     }
     if (isWarning5min) {
-      return "border-yellow-500 bg-yellow-950/20 shadow-md shadow-yellow-500/30";
+      return "border-[#EBFF00] bg-[#000000]/20 shadow-md shadow-[#EBFF00]/30";
     }
     return "border-slate-200 dark:border-white/10 bg-slate-50 dark:bg-[#0a0a0a]";
   };
@@ -97,7 +97,7 @@ export function TimerDisplay({
         <span className="text-xs font-bold text-red-600 ml-1">URGENT</span>
       )}
       {isWarning5min && !isWarning1min && (
-        <span className="text-xs font-bold text-slate-900 dark:text-yellow-500 ml-1">
+        <span className="text-xs font-bold text-slate-900 dark:text-[#EBFF00] ml-1">
           5 MIN
         </span>
       )}

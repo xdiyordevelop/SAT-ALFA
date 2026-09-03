@@ -165,7 +165,7 @@ export default async function MathResultsPage() {
                   const getScoreColor = (pct: number) => {
                     if (pct >= 80) return "bg-green-100 text-green-700 ";
                     if (pct >= 60)
-                      return "bg-yellow-100 dark:bg-yellow-900/30 text-yellow-700 ";
+                      return "bg-[#EBFF00]/10 dark:bg-[#EBFF00]/50/30 text-[#d9ff00] ";
                     return "bg-red-100 text-red-700 ";
                   };
 
@@ -191,7 +191,7 @@ export default async function MathResultsPage() {
                         </div>
                       </div>
                       <div className="text-right">
-                        <p className="text-2xl font-bold text-slate-900 dark:text-yellow-500 ">
+                        <p className="text-2xl font-bold text-slate-900 dark:text-[#EBFF00] ">
                           {test.score || 0}/{test.maxScore}
                         </p>
                         <span

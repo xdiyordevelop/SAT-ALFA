@@ -42,7 +42,7 @@ export function StudentMockTestsView({
           onClick={() => setActiveTab("available")}
           className={`p-6 rounded-2xl border transition-all cursor-pointer ${
             activeTab === "available"
-              ? "border-yellow-500 bg-white dark:bg-[#131313] shadow-md ring-2 ring-yellow-500/20"
+              ? "border-[#EBFF00] bg-white dark:bg-[#131313] shadow-md ring-2 ring-[#EBFF00]/20"
               : "border-slate-200 dark:border-white/10 bg-white dark:bg-[#131313] hover:border-neutral-300"
           }`}
         >
@@ -92,7 +92,7 @@ export function StudentMockTestsView({
           onClick={() => setActiveTab("available")}
           className={`px-4 py-2.5 rounded-xl font-semibold text-sm transition-all flex items-center gap-2 ${
             activeTab === "available"
-              ? "bg-yellow-100 text-slate-900 dark:text-yellow-700 shadow-sm"
+              ? "bg-[#EBFF00]/10 text-slate-900 dark:text-[#d9ff00] shadow-sm"
               : "text-slate-600 dark:text-slate-400 hover:bg-slate-100 dark:bg-[#1c1b1b]"
           }`}
         >
@@ -132,7 +132,7 @@ export function StudentMockTestsView({
                   >
                     <div>
                       <div className="flex items-start justify-between mb-2">
-                        <span className="text-xs font-bold px-2.5 py-1 rounded-full bg-yellow-100 dark:bg-yellow-900/30 text-yellow-700 uppercase tracking-wider">
+                        <span className="text-xs font-bold px-2.5 py-1 rounded-full bg-[#EBFF00]/10 dark:bg-[#EBFF00]/50/30 text-[#d9ff00] uppercase tracking-wider">
                           {test.subject}
                         </span>
                       </div>
@@ -216,7 +216,7 @@ export function StudentMockTestsView({
                           <span className="text-[11px] text-slate-500 dark:text-slate-400 uppercase block">
                             Total
                           </span>
-                          <span className="font-extrabold text-slate-900 dark:text-yellow-500 text-lg">
+                          <span className="font-extrabold text-slate-900 dark:text-[#EBFF00] text-lg">
                             {score}
                           </span>
                         </div>

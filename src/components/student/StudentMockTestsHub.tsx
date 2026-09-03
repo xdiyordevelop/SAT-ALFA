@@ -114,10 +114,10 @@ export function StudentMockTestsHub({
           } else if (isInProgress) {
             // In Progress Card
              return (
-              <div key={test.id} className="bg-white dark:bg-[#131313] border border-yellow-500 dark:border-[#EBFF00] rounded-xl p-6 flex flex-col relative overflow-hidden shadow-[0_0_15px_rgba(235,255,0,0.1)]">
+              <div key={test.id} className="bg-white dark:bg-[#131313] border border-[#EBFF00] dark:border-[#EBFF00] rounded-xl p-6 flex flex-col relative overflow-hidden shadow-[0_0_15px_rgba(235,255,0,0.1)]">
                 <div className="absolute top-0 right-0 w-32 h-32 bg-[#EBFF00] dark:bg-[#EBFF00] opacity-10 blur-[40px]"></div>
                 <div className="flex justify-between items-start mb-6 z-10">
-                  <span className="bg-yellow-50 dark:bg-[#EBFF00]/10 border border-yellow-200 dark:border-[#EBFF00]/20 text-yellow-700 dark:text-[#EBFF00] font-bold uppercase tracking-wider px-3 py-1 rounded text-[10px] flex items-center gap-1.5">
+                  <span className="bg-yellow-50 dark:bg-[#EBFF00]/10 border border-yellow-200 dark:border-[#EBFF00]/20 text-[#d9ff00] dark:text-[#EBFF00] font-bold uppercase tracking-wider px-3 py-1 rounded text-[10px] flex items-center gap-1.5">
                     <span className="w-1.5 h-1.5 rounded-full bg-[#EBFF00] dark:bg-[#EBFF00] animate-pulse"></span> Davom etmoqda
                   </span>
                   <Timer className="w-5 h-5 text-yellow-600 dark:text-[#EBFF00]" />
@@ -129,7 +129,7 @@ export function StudentMockTestsHub({
                   <span>{test.questions.length} Savol</span>
                 </div>
                 <div className="mt-auto z-10">
-                   <Link href={`/student/mock-tests/${test.id}/take`} className="w-full bg-transparent border-2 border-yellow-500 dark:border-[#EBFF00] text-yellow-700 dark:text-[#EBFF00] font-bold py-3 px-4 rounded-lg hover:bg-yellow-50 dark:hover:bg-[#EBFF00] dark:hover:text-black transition-all flex items-center justify-center gap-2">
+                   <Link href={`/student/mock-tests/${test.id}/take`} className="w-full bg-transparent border-2 border-[#EBFF00] dark:border-[#EBFF00] text-[#d9ff00] dark:text-[#EBFF00] font-bold py-3 px-4 rounded-lg hover:bg-yellow-50 dark:hover:bg-[#EBFF00] dark:hover:text-black transition-all flex items-center justify-center gap-2">
                     <Play className="w-4 h-4" /> Davom ettirish
                   </Link>
                 </div>

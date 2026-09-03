@@ -72,14 +72,14 @@ export default async function StudentTopicViewPage({
     >
       <Link
         href="/student/topics"
-        className="inline-flex items-center gap-2 text-slate-900 dark:text-yellow-500 hover:text-yellow-700 font-medium mb-6"
+        className="inline-flex items-center gap-2 text-slate-900 dark:text-[#EBFF00] hover:text-[#d9ff00] font-medium mb-6"
       >
         <ArrowLeft className="w-4 h-4" /> Back to Roadmap
       </Link>
 
       <div className="mb-8">
         <div className="flex items-center gap-3 mb-2">
-          <span className="text-xs font-semibold px-2 py-0.5 rounded text-slate-900 dark:text-yellow-500 bg-slate-50 dark:bg-[#0a0a0a]">
+          <span className="text-xs font-semibold px-2 py-0.5 rounded text-slate-900 dark:text-[#EBFF00] bg-slate-50 dark:bg-[#0a0a0a]">
             {topic.subject}
           </span>
         </div>
@@ -98,7 +98,7 @@ export default async function StudentTopicViewPage({
           {/* Video Player Section */}
           <div className="bg-white dark:bg-[#131313] rounded-2xl border border-slate-200 dark:border-white/10 p-6 shadow-sm">
             <h2 className="text-xl font-bold text-slate-900 dark:text-white mb-4 flex items-center gap-2">
-              <PlayCircle className="w-5 h-5 text-yellow-500" /> Video
+              <PlayCircle className="w-5 h-5 text-[#EBFF00]" /> Video
               Lesson
             </h2>
             {topic.videoPath ? (
@@ -134,7 +134,7 @@ export default async function StudentTopicViewPage({
           {/* Materials Section */}
           <div className="bg-white dark:bg-[#131313] rounded-2xl border border-slate-200 dark:border-white/10 p-6 shadow-sm sticky top-28">
             <h2 className="text-xl font-bold text-slate-900 dark:text-white mb-4 flex items-center gap-2">
-              <BookOpen className="w-5 h-5 text-yellow-500" /> Learning
+              <BookOpen className="w-5 h-5 text-[#EBFF00]" /> Learning
               Materials
             </h2>
             {topic.bookTitle || topic.bookPdfPath ? (
@@ -154,7 +154,7 @@ export default async function StudentTopicViewPage({
                     href={topic.bookPdfPath}
                     target="_blank"
                     rel="noopener noreferrer"
-                    className="flex items-center justify-center gap-2 w-full px-4 py-3 bg-slate-50 dark:bg-[#0a0a0a] hover:bg-yellow-100 dark:bg-yellow-900/30 text-yellow-700 rounded-xl font-medium transition-colors border border-yellow-200"
+                    className="flex items-center justify-center gap-2 w-full px-4 py-3 bg-slate-50 dark:bg-[#0a0a0a] hover:bg-[#EBFF00]/10 dark:bg-[#EBFF00]/50/30 text-[#d9ff00] rounded-xl font-medium transition-colors border border-yellow-200"
                   >
                     <Download className="w-4 h-4" /> Download PDF / Open
                     Book

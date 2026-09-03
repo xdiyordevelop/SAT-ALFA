@@ -169,7 +169,7 @@ export default async function EnglishResultsPage() {
                   const getScoreColor = (pct: number) => {
                     if (pct >= 80) return "bg-green-100 text-green-700 ";
                     if (pct >= 60)
-                      return "bg-yellow-100 dark:bg-yellow-900/30 text-yellow-700 ";
+                      return "bg-[#EBFF00]/10 dark:bg-[#EBFF00]/50/30 text-[#d9ff00] ";
                     return "bg-red-100 text-red-700 ";
                   };
 

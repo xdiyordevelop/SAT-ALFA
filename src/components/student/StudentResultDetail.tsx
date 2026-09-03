@@ -71,7 +71,7 @@ export function StudentResultDetail({
       <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4">
         <Link
           href="/student/mock-tests"
-          className="inline-flex items-center gap-2 text-slate-900 dark:text-yellow-500 hover:text-yellow-700 font-medium text-sm transition-colors"
+          className="inline-flex items-center gap-2 text-slate-900 dark:text-[#EBFF00] hover:text-[#d9ff00] font-medium text-sm transition-colors"
         >
           <ArrowLeft className="w-4 h-4" />
           Back to My Mock Tests
@@ -87,7 +87,7 @@ export function StudentResultDetail({
       <div className="bg-white dark:bg-[#131313] rounded-2xl border border-slate-200 dark:border-white/10 p-6 md:p-8 shadow-sm">
         <div className="flex flex-col md:flex-row md:items-center md:justify-between gap-6">
           <div>
-            <span className="text-xs font-bold px-2.5 py-1 rounded-full bg-yellow-100 dark:bg-yellow-900/30 text-yellow-700 uppercase tracking-wider">
+            <span className="text-xs font-bold px-2.5 py-1 rounded-full bg-[#EBFF00]/10 dark:bg-[#EBFF00]/50/30 text-[#d9ff00] uppercase tracking-wider">
               {test.subject || "SAT Mock Test"}
             </span>
             <h1 className="text-2xl md:text-3xl font-extrabold text-slate-900 dark:text-white mt-2">
@@ -109,7 +109,7 @@ export function StudentResultDetail({
             <span className="text-xs font-semibold text-slate-500 dark:text-slate-400 uppercase tracking-wider block mb-1">
               SAT Scaled Score
             </span>
-            <span className="text-3xl font-extrabold text-slate-900 dark:text-yellow-500 ">
+            <span className="text-3xl font-extrabold text-slate-900 dark:text-[#EBFF00] ">
               {totalScore}
             </span>
             <span className="text-xs text-slate-500 dark:text-slate-400 block mt-0.5">
@@ -136,7 +136,7 @@ export function StudentResultDetail({
               </span>
               <span className="text-yellow-200 text-lg">/ 1600</span>
             </div>
-            <div className="w-full bg-yellow-900/50 rounded-full h-2.5 overflow-hidden">
+            <div className="w-full bg-[#EBFF00]/50/50 rounded-full h-2.5 overflow-hidden">
               <div
                 className="bg-white dark:bg-[#131313] h-2.5 rounded-full transition-all duration-500"
                 style={{
@@ -208,7 +208,7 @@ export function StudentResultDetail({
       {topicList.length > 0 && (
         <div className="bg-white dark:bg-[#131313] rounded-2xl border border-slate-200 dark:border-white/10 p-6 md:p-8 shadow-sm">
           <h2 className="text-xl font-bold text-slate-900 dark:text-white mb-6 flex items-center gap-2">
-            <Target className="w-5 h-5 text-slate-900 dark:text-yellow-500 " />
+            <Target className="w-5 h-5 text-slate-900 dark:text-[#EBFF00] " />
             SAT Topic Performance Breakdown
           </h2>
 
@@ -236,7 +236,7 @@ export function StudentResultDetail({
                         isHigh
                           ? "text-green-600 "
                           : isMedium
-                          ? "text-slate-900 dark:text-yellow-500 "
+                          ? "text-slate-900 dark:text-[#EBFF00] "
                           : "text-red-600 "
                       }`}
                     >
@@ -327,7 +327,7 @@ export function StudentResultDetail({
       {/* AI Recommendations */}
       <div className="bg-white dark:bg-[#131313] rounded-2xl border border-slate-200 dark:border-white/10 p-6 md:p-8 shadow-sm space-y-6">
         <div className="flex items-center gap-3">
-          <div className="w-10 h-10 rounded-xl bg-gradient-to-r from-yellow-500 to-violet-600 flex items-center justify-center text-slate-900 dark:text-white shadow-md">
+          <div className="w-10 h-10 rounded-xl bg-gradient-to-r from-[#EBFF00] to-violet-600 flex items-center justify-center text-slate-900 dark:text-white shadow-md">
             <Sparkles className="w-5 h-5" />
           </div>
           <div>
@@ -341,7 +341,7 @@ export function StudentResultDetail({
         </div>
 
         {/* Insight Overview */}
-        <div className="p-5 rounded-xl bg-slate-50 dark:bg-[#0a0a0a] border border-yellow-100 ">
+        <div className="p-5 rounded-xl bg-slate-50 dark:bg-[#0a0a0a] border border-[#EBFF00]/10 ">
           <p className="text-sm text-indigo-950 leading-relaxed font-medium">
             {overallInsight}
           </p>
@@ -355,7 +355,7 @@ export function StudentResultDetail({
                 key={i}
                 className="flex items-start gap-3 p-3.5 rounded-xl bg-slate-50 dark:bg-[#0a0a0a] border border-slate-200 dark:border-white/10 text-sm text-slate-800 dark:text-slate-200 "
               >
-                <div className="w-6 h-6 rounded-full bg-yellow-100 dark:bg-yellow-900/30 text-yellow-700 flex items-center justify-center text-xs font-bold flex-shrink-0 mt-0.5">
+                <div className="w-6 h-6 rounded-full bg-[#EBFF00]/10 dark:bg-[#EBFF00]/50/30 text-[#d9ff00] flex items-center justify-center text-xs font-bold flex-shrink-0 mt-0.5">
                   {i + 1}
                 </div>
                 <span>{rec}</span>

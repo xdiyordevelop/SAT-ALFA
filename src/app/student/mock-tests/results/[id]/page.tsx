@@ -73,12 +73,12 @@ export default async function StudentResultPage({
         <div className="max-w-xl mx-auto">
           <Link
             href="/student/mock-tests"
-            className="inline-flex items-center gap-2 text-slate-900 dark:text-yellow-500 hover:text-yellow-700 font-medium text-sm mb-6 transition-colors"
+            className="inline-flex items-center gap-2 text-slate-900 dark:text-[#EBFF00] hover:text-[#d9ff00] font-medium text-sm mb-6 transition-colors"
           >
             <ArrowLeft className="w-4 h-4" /> Back to Mock Tests
           </Link>
           <div className="bg-white dark:bg-[#131313] rounded-2xl border border-yellow-200 p-8 text-center shadow-sm">
-            <div className="w-16 h-16 rounded-full bg-yellow-100 dark:bg-yellow-900/30 flex items-center justify-center text-slate-900 dark:text-yellow-500 mx-auto mb-4">
+            <div className="w-16 h-16 rounded-full bg-[#EBFF00]/10 dark:bg-[#EBFF00]/50/30 flex items-center justify-center text-slate-900 dark:text-[#EBFF00] mx-auto mb-4">
               <Clock className="w-8 h-8" />
             </div>
             <h1 className="text-2xl font-bold text-slate-900 dark:text-white mb-2">
@@ -90,7 +90,7 @@ export default async function StudentResultPage({
               review and approve your submission before official scores and
               AI diagnostics are unlocked in your dashboard.
             </p>
-            <div className="p-4 rounded-xl bg-slate-50 dark:bg-[#0a0a0a] border border-yellow-200 text-xs text-yellow-900 font-medium">
+            <div className="p-4 rounded-xl bg-slate-50 dark:bg-[#0a0a0a] border border-yellow-200 text-xs text-[#EBFF00]/50 font-medium">
               Submitted on{" "}
               {new Date(
                 test.uploadedAt || test.createdAt,
@@ -127,7 +127,7 @@ export default async function StudentResultPage({
         <div className="max-w-xl mx-auto">
           <Link
             href="/student/mock-tests"
-            className="inline-flex items-center gap-2 text-slate-900 dark:text-yellow-500 hover:text-yellow-700 font-medium text-sm mb-6 transition-colors"
+            className="inline-flex items-center gap-2 text-slate-900 dark:text-[#EBFF00] hover:text-[#d9ff00] font-medium text-sm mb-6 transition-colors"
           >
             <ArrowLeft className="w-4 h-4" /> Back to Mock Tests
           </Link>

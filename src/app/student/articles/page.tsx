@@ -61,7 +61,7 @@ export default async function StudentArticlesPage({
               name="q"
               defaultValue={q || ""}
               placeholder="Search articles..."
-              className="w-full pl-12 pr-4 py-3 bg-white dark:bg-[#131313] border border-slate-200 dark:border-white/10 rounded-xl text-slate-900 dark:text-white placeholder-slate-500 focus:outline-none focus:border-yellow-500"
+              className="w-full pl-12 pr-4 py-3 bg-white dark:bg-[#131313] border border-slate-200 dark:border-white/10 rounded-xl text-slate-900 dark:text-white placeholder-slate-500 focus:outline-none focus:border-[#EBFF00]"
             />
             {category && (
               <input type="hidden" name="category" value={category} />
@@ -91,17 +91,17 @@ export default async function StudentArticlesPage({
             <Link
               href={`/student/articles/${article.slug}`}
               key={article.id}
-              className="block group bg-white dark:bg-[#131313] border border-slate-200 dark:border-white/10 rounded-2xl p-6 hover:border-yellow-500/50 transition-all hover:-translate-y-1"
+              className="block group bg-white dark:bg-[#131313] border border-slate-200 dark:border-white/10 rounded-2xl p-6 hover:border-[#EBFF00]/50 transition-all hover:-translate-y-1"
             >
               <div className="flex items-center justify-between mb-4">
-                <span className="text-xs font-bold uppercase tracking-wider text-yellow-500 bg-[#EBFF00]/10 px-2.5 py-1 rounded-md">
+                <span className="text-xs font-bold uppercase tracking-wider text-[#EBFF00] bg-[#EBFF00]/10 px-2.5 py-1 rounded-md">
                   {article.category}
                 </span>
                 <div className="flex items-center gap-1.5 text-xs text-slate-500 dark:text-slate-400 font-medium">
                   <Clock className="w-3.5 h-3.5" /> {article.readTimeMin}m
                 </div>
               </div>
-              <h3 className="text-xl font-bold text-slate-900 dark:text-white mb-2 group-hover:text-slate-900 dark:text-yellow-500 transition-colors line-clamp-2">
+              <h3 className="text-xl font-bold text-slate-900 dark:text-white mb-2 group-hover:text-slate-900 dark:text-[#EBFF00] transition-colors line-clamp-2">
                 {article.title}
               </h3>
               <p className="text-sm text-slate-500 dark:text-slate-400 line-clamp-3 mb-4">
@@ -109,7 +109,7 @@ export default async function StudentArticlesPage({
               </p>
               <div className="text-xs text-slate-500 dark:text-slate-400 flex items-center justify-between mt-auto pt-4 border-t border-slate-200 dark:border-white/10">
                 <span>{article.viewsCount} views</span>
-                <span className="text-yellow-500 font-medium group-hover:underline">
+                <span className="text-[#EBFF00] font-medium group-hover:underline">
                   Read Article &rarr;
                 </span>
               </div>

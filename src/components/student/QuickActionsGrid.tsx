@@ -35,16 +35,16 @@ export function QuickActionsGrid() {
                 {" "}
                 <div className="flex items-center gap-3">
                   {" "}
-                  <div className="p-2 rounded-lg bg-yellow-100 dark:bg-yellow-900/30 group-hover:bg-yellow-200 transition-colors">
+                  <div className="p-2 rounded-lg bg-[#EBFF00]/10 dark:bg-[#EBFF00]/50/30 group-hover:bg-yellow-200 transition-colors">
                     {" "}
-                    <Icon className="w-5 h-5 text-slate-900 dark:text-yellow-500" />{" "}
+                    <Icon className="w-5 h-5 text-slate-900 dark:text-[#EBFF00]" />{" "}
                   </div>{" "}
-                  <span className="font-medium text-slate-700 dark:text-slate-300 group-hover:text-slate-900 dark:text-yellow-500">
+                  <span className="font-medium text-slate-700 dark:text-slate-300 group-hover:text-slate-900 dark:text-[#EBFF00]">
                     {" "}
                     {action.label}{" "}
                   </span>{" "}
                 </div>{" "}
-                <ArrowRight className="w-5 h-5 text-slate-500 dark:text-slate-400 group-hover:text-slate-900 dark:text-yellow-500 group-hover:translate-x-1 transition-all" />{" "}
+                <ArrowRight className="w-5 h-5 text-slate-500 dark:text-slate-400 group-hover:text-slate-900 dark:text-[#EBFF00] group-hover:translate-x-1 transition-all" />{" "}
               </div>{" "}
             </div>{" "}
           </Link>

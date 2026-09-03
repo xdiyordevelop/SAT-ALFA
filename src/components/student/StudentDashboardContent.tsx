@@ -102,7 +102,7 @@ export function StudentDashboardContent({
             href="/student/mock-tests"
             className="inline-flex items-center gap-2 px-4 py-2.5 rounded-xl border border-slate-200 dark:border-white/10 bg-white dark:bg-[#131313] hover:bg-slate-50 dark:bg-[#0a0a0a] text-slate-800 dark:text-slate-200 font-medium text-sm transition-colors shadow-sm"
           >
-            <Brain className="w-4 h-4 text-slate-900 dark:text-yellow-500" />{" "}
+            <Brain className="w-4 h-4 text-slate-900 dark:text-[#EBFF00]" />{" "}
             Take Mock Test
           </Link>
         </div>

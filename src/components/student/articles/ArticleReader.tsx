@@ -16,7 +16,7 @@ export function ArticleReader({ article }: { article: any }) {
       <article className="flex-1 bg-white dark:bg-[#131313] border border-slate-200 dark:border-white/10 rounded-2xl p-8 md:p-12 w-full min-w-0">
         <header className="mb-10 pb-10 border-b border-slate-200 dark:border-white/10">
           <div className="flex flex-wrap items-center gap-4 mb-4">
-            <span className="text-xs font-bold text-yellow-500 bg-[#EBFF00]/10 px-3 py-1.5 rounded-lg uppercase tracking-wider">
+            <span className="text-xs font-bold text-[#EBFF00] bg-[#EBFF00]/10 px-3 py-1.5 rounded-lg uppercase tracking-wider">
               {article.category}
             </span>
             <span className="flex items-center gap-1.5 text-sm text-slate-500 dark:text-slate-400 font-medium">
@@ -33,7 +33,7 @@ export function ArticleReader({ article }: { article: any }) {
             {article.summary}
           </p>
         </header>
-        <div className="prose prose-slate prose-yellow max-w-none prose-lg prose-img:rounded-xl prose-img:border prose-img:border-slate-200 dark:border-white/10 prose-headings:text-slate-900 dark:text-white prose-a:text-yellow-500">
+        <div className="prose prose-slate prose-yellow max-w-none prose-lg prose-img:rounded-xl prose-img:border prose-img:border-slate-200 dark:border-white/10 prose-headings:text-slate-900 dark:text-white prose-a:text-[#EBFF00]">
           <MathRenderer text={article.content} />
         </div>
       </article>
@@ -43,7 +43,7 @@ export function ArticleReader({ article }: { article: any }) {
         <aside className="w-full xl:w-80 shrink-0 sticky top-24">
           <div className="bg-white dark:bg-[#131313] border border-slate-200 dark:border-white/10 rounded-2xl p-6">
             <div className="flex items-center gap-2 mb-6">
-              <BookOpen className="w-5 h-5 text-yellow-500" />
+              <BookOpen className="w-5 h-5 text-[#EBFF00]" />
               <h3 className="text-lg font-bold text-slate-900 dark:text-white">
                 SAT Vocabulary
               </h3>
@@ -52,13 +52,13 @@ export function ArticleReader({ article }: { article: any }) {
               {vocabList.map((v, i) => (
                 <div
                   key={i}
-                  className={`rounded-xl border transition-all duration-200 overflow-hidden ${activeVocab === i ? "bg-white dark:bg-[#131313] border-yellow-500/50" : "bg-white dark:bg-[#131313] border-slate-200 dark:border-white/10 hover:border-slate-200 dark:border-white/10"}`}
+                  className={`rounded-xl border transition-all duration-200 overflow-hidden ${activeVocab === i ? "bg-white dark:bg-[#131313] border-[#EBFF00]/50" : "bg-white dark:bg-[#131313] border-slate-200 dark:border-white/10 hover:border-slate-200 dark:border-white/10"}`}
                 >
                   <button
                     onClick={() => setActiveVocab(activeVocab === i ? null : i)}
                     className="w-full text-left px-4 py-3 flex items-center justify-between font-bold text-slate-900 dark:text-white"
                   >
-                    <span className="text-slate-900 dark:text-yellow-500">
+                    <span className="text-slate-900 dark:text-[#EBFF00]">
                       {v.word}
                     </span>
                     <span className="text-slate-500 dark:text-slate-400 text-xs">

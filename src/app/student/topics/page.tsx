@@ -78,7 +78,7 @@ export default async function StudentTopicsRoadmapPage() {
             <div key={item.id} className="relative pl-8">
               <div
                 className={`absolute -left-[11px] top-4 w-5 h-5 rounded-full flex items-center justify-center border-2 bg-white dark:bg-[#131313] ${
-                  isApproved ? 'border-green-500' : isCurrent ? 'border-yellow-500' : 'border-neutral-300'
+                  isApproved ? 'border-green-500' : isCurrent ? 'border-[#EBFF00]' : 'border-neutral-300'
                 }`}
               >
                 {isApproved && (
@@ -91,18 +91,18 @@ export default async function StudentTopicsRoadmapPage() {
 
               {canAccess ? (
                 <Link href={`/student/topics/${item.topicId}`}>
-                  <div className="bg-white dark:bg-[#131313] border border-slate-200 dark:border-white/10 rounded-xl p-5 hover:border-yellow-500 hover:shadow-lg transition-all cursor-pointer group">
+                  <div className="bg-white dark:bg-[#131313] border border-slate-200 dark:border-white/10 rounded-xl p-5 hover:border-[#EBFF00] hover:shadow-lg transition-all cursor-pointer group">
                     <div className="flex justify-between items-start">
                       <div>
                         <div className="flex items-center gap-2 mb-2">
                           <span className="text-xs font-semibold px-2 py-0.5 rounded text-slate-600 dark:text-slate-400 bg-slate-100 dark:bg-[#1c1b1b]">
                             Step {index + 1}
                           </span>
-                          <span className="text-xs font-semibold px-2 py-0.5 rounded text-slate-900 dark:text-yellow-500 bg-slate-50 dark:bg-[#0a0a0a]">
+                          <span className="text-xs font-semibold px-2 py-0.5 rounded text-slate-900 dark:text-[#EBFF00] bg-slate-50 dark:bg-[#0a0a0a]">
                             {item.topic.subject}
                           </span>
                         </div>
-                        <h3 className="font-bold text-lg text-slate-900 dark:text-white group-hover:text-yellow-500 transition-colors">
+                        <h3 className="font-bold text-lg text-slate-900 dark:text-white group-hover:text-[#EBFF00] transition-colors">
                           {item.topic.title}
                         </h3>
                         <p className="text-sm text-slate-500 dark:text-slate-400 mt-1 line-clamp-2">
@@ -111,7 +111,7 @@ export default async function StudentTopicsRoadmapPage() {
                         </p>
                       </div>
 
-                      <div className="flex items-center gap-2 text-yellow-500">
+                      <div className="flex items-center gap-2 text-[#EBFF00]">
                         {item.topic.videoPath && (
                           <PlayCircle className="w-5 h-5" />
                         )}
@@ -132,7 +132,7 @@ export default async function StudentTopicsRoadmapPage() {
                           Step {index + 1}
                         </span>
                         {isCurrent && (
-                          <span className="text-xs font-semibold px-2 py-0.5 rounded text-slate-900 dark:text-yellow-500 bg-slate-50 dark:bg-[#0a0a0a]">
+                          <span className="text-xs font-semibold px-2 py-0.5 rounded text-slate-900 dark:text-[#EBFF00] bg-slate-50 dark:bg-[#0a0a0a]">
                             Current
                           </span>
                         )}

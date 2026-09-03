@@ -37,21 +37,21 @@ export function ScoreAnalysisDisplay({
       {/* Summary Cards */}{" "}
       <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
         {" "}
-        <div className="bg-gradient-to-br from-yellow-50 to-yellow-100 rounded-2xl border border-yellow-200 p-6">
+        <div className="bg-gradient-to-br from-yellow-50 to-[#EBFF00]/10 rounded-2xl border border-yellow-200 p-6">
           {" "}
           <div className="flex items-center justify-between mb-4">
             {" "}
-            <p className="text-sm font-medium text-yellow-700">
+            <p className="text-sm font-medium text-[#d9ff00]">
               {" "}
               Total Score{" "}
             </p>{" "}
-            <TrendingUp className="w-5 h-5 text-slate-900 dark:text-yellow-500" />{" "}
+            <TrendingUp className="w-5 h-5 text-slate-900 dark:text-[#EBFF00]" />{" "}
           </div>{" "}
-          <p className="text-3xl font-bold text-yellow-900">
+          <p className="text-3xl font-bold text-[#EBFF00]/50">
             {" "}
             {totalScore}/{maxTotalScore}{" "}
           </p>{" "}
-          <p className="text-sm text-slate-900 dark:text-yellow-500 mt-2">
+          <p className="text-sm text-slate-900 dark:text-[#EBFF00] mt-2">
             {" "}
             {Math.round((totalScore / maxTotalScore) * 100)}% accuracy{" "}
           </p>{" "}
@@ -83,13 +83,13 @@ export function ScoreAnalysisDisplay({
               {" "}
               English Score{" "}
             </p>{" "}
-            <TrendingUp className="w-5 h-5 text-slate-900 dark:text-yellow-500" />{" "}
+            <TrendingUp className="w-5 h-5 text-slate-900 dark:text-[#EBFF00]" />{" "}
           </div>{" "}
           <p className="text-3xl font-bold text-purple-900">
             {" "}
             {englishScore}/{englishMaxScore}{" "}
           </p>{" "}
-          <p className="text-sm text-slate-900 dark:text-yellow-500 mt-2">
+          <p className="text-sm text-slate-900 dark:text-[#EBFF00] mt-2">
             {" "}
             {englishPercentage}% accuracy{" "}
           </p>{" "}
@@ -229,7 +229,7 @@ export function ScoreAnalysisDisplay({
           {" "}
           <h3 className="text-lg font-bold text-purple-900 mb-4 flex items-center gap-2">
             {" "}
-            <Lightbulb className="w-5 h-5 text-slate-900 dark:text-yellow-500" />{" "}
+            <Lightbulb className="w-5 h-5 text-slate-900 dark:text-[#EBFF00]" />{" "}
             Recommendations{" "}
           </h3>{" "}
           <ol className="space-y-2 text-purple-800">

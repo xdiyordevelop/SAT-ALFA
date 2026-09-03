@@ -41,11 +41,11 @@ export function QuestionNavigatorModal(): React.ReactElement {
 
   const getStatusColor = (status: string, isActive: boolean) => {
     if (isActive) {
-      return "border-yellow-400 bg-yellow-400 text-slate-950 shadow-lg shadow-yellow-400/50 ring-2 ring-yellow-400/50";
+      return "border-[#EBFF00] bg-[#EBFF00] text-slate-950 shadow-lg shadow-[#EBFF00]/50 ring-2 ring-[#EBFF00]/50";
     }
     switch (status) {
       case "marked":
-        return "border-yellow-400 bg-yellow-400/20 text-slate-900 dark:text-yellow-500";
+        return "border-[#EBFF00] bg-[#EBFF00]/20 text-slate-900 dark:text-[#EBFF00]";
       case "answered":
         return "border-slate-600 bg-slate-100 dark:bg-[#1c1b1b] text-slate-700 dark:text-slate-300";
       case "unanswered":
@@ -76,15 +76,15 @@ export function QuestionNavigatorModal(): React.ReactElement {
             <span className="text-slate-500 dark:text-slate-400">Answered</span>
           </div>
           <div className="flex items-center gap-2">
-            <div className="w-8 h-8 rounded-lg border-2 border-yellow-400 bg-yellow-400/20 flex items-center justify-center">
-              <Flag className="w-4 h-4 text-slate-900 dark:text-yellow-500" />
+            <div className="w-8 h-8 rounded-lg border-2 border-[#EBFF00] bg-[#EBFF00]/20 flex items-center justify-center">
+              <Flag className="w-4 h-4 text-slate-900 dark:text-[#EBFF00]" />
             </div>
             <span className="text-slate-500 dark:text-slate-400">
               Marked for Review
             </span>
           </div>
           <div className="flex items-center gap-2">
-            <div className="w-8 h-8 rounded-lg border-2 border-yellow-400 bg-yellow-400 text-slate-950 font-bold text-xs" />
+            <div className="w-8 h-8 rounded-lg border-2 border-[#EBFF00] bg-[#EBFF00] text-slate-950 font-bold text-xs" />
             <span className="text-slate-500 dark:text-slate-400">Current</span>
           </div>
         </div>
@@ -108,7 +108,7 @@ export function QuestionNavigatorModal(): React.ReactElement {
                 {question.questionNumber}
                 {/* Marked Flag Icon */}
                 {isMarked && !isActive && (
-                  <Flag className="absolute -top-1 -right-1 w-3 h-3 text-slate-900 dark:text-yellow-500" />
+                  <Flag className="absolute -top-1 -right-1 w-3 h-3 text-slate-900 dark:text-[#EBFF00]" />
                 )}
               </button>
             );
