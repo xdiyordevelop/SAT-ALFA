@@ -305,15 +305,15 @@ function QuestionCard({
       <Card className="bg-slate-50 dark:bg-[#0a0a0a] border-yellow-600/50 p-6">
         <div className="space-y-4">
           {/* AI Tools Section */}
-          <div className="bg-indigo-950/30 border border-indigo-500/30 p-4 rounded-md space-y-3">
+          <div className="bg-yellow-950/30 border border-yellow-500/30 p-4 rounded-md space-y-3">
             <div className="flex items-center gap-2 mb-2">
-              <h3 className="text-indigo-700 font-bold flex items-center gap-2">
+              <h3 className="text-yellow-700 font-bold flex items-center gap-2">
                 <span className="text-xl">✨</span> AI Assistant
               </h3>
             </div>
             {/* AI Image Import */}
             <div>
-              <label className="flex items-center gap-2 cursor-pointer bg-indigo-600 hover:bg-indigo-700 text-slate-900 dark:text-white px-3 py-2 rounded text-sm w-max transition-colors">
+              <label className="flex items-center gap-2 cursor-pointer bg-yellow-500 hover:bg-yellow-600 dark:bg-yellow-600 dark:hover:bg-yellow-700 text-slate-900 dark:text-white text-slate-900 dark:text-white px-3 py-2 rounded text-sm w-max transition-colors">
                 {aiParseLoading ? "Parsing image..." : "Import from Screenshot"}
                 <input
                   type="file"
@@ -331,7 +331,7 @@ function QuestionCard({
                 value={aiFixInstruction}
                 onChange={(e) => setAiFixInstruction(e.target.value)}
                 placeholder="Tell AI to fix something (e.g.,'Fix the math formatting','Extract options')"
-                className="flex-1 px-3 py-2 bg-white dark:bg-[#131313] border border-indigo-500/50 rounded text-slate-900 dark:text-white text-sm"
+                className="flex-1 px-3 py-2 bg-white dark:bg-[#131313] border border-yellow-500/50 rounded text-slate-900 dark:text-white text-sm"
                 onKeyDown={(e) => {
                   if (e.key === "Enter") handleAiFix();
                 }}
@@ -339,7 +339,7 @@ function QuestionCard({
               <Button
                 onClick={handleAiFix}
                 disabled={aiFixLoading || !aiFixInstruction}
-                className="bg-indigo-600 hover:bg-indigo-700"
+                className="bg-yellow-500 hover:bg-yellow-600 dark:bg-yellow-600 dark:hover:bg-yellow-700 text-slate-900 dark:text-white"
               >
                 {aiFixLoading ? "Fixing..." : "AI Fix"}
               </Button>

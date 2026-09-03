@@ -28,7 +28,7 @@ export function SessionController({
       case "ACTIVE":
         return "text-emerald-600 bg-emerald-950/30";
       case "COMPLETED":
-        return "text-blue-600 bg-blue-950/30";
+        return "text-yellow-600 dark:text-yellow-400 bg-yellow-950/30";
       case "REVOKED":
         return "text-red-600 bg-red-950/30";
       default:
@@ -95,7 +95,7 @@ export function SessionController({
             <Button
               onClick={() => handleStatusChange("COMPLETED")}
               disabled={isUpdating || session.status === "COMPLETED"}
-              className="flex-1 bg-blue-600 hover:bg-blue-700 disabled:opacity-50"
+              className="flex-1 bg-yellow-500 hover:bg-yellow-600 dark:bg-yellow-600 dark:hover:bg-yellow-700 disabled:opacity-50 text-slate-900 dark:text-white"
             >
               <CheckCircle className="w-4 h-4 mr-2" /> Complete
             </Button>

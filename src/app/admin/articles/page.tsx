@@ -148,7 +148,7 @@ export default async function AdminArticlesPage({
                           >
                             <button
                               type="submit"
-                              className="p-2 text-slate-500 dark:text-slate-400 hover:text-rose-500 bg-white dark:bg-[#131313] hover:bg-slate-100 dark:bg-[#1c1b1b] rounded-lg transition-colors"
+                              className="p-2 text-slate-500 dark:text-slate-400 hover:text-yellow-600 dark:hover:text-yellow-400 bg-white dark:bg-slate-900 hover:bg-slate-100 dark:hover:bg-slate-800 rounded-lg transition-colors"
                             >
                               <Trash2 className="w-4 h-4" />
                             </button>

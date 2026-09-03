@@ -154,12 +154,12 @@ export default function ImportArticlePage() {
             </p>
 
             {error && (
-              <div className="bg-rose-500/10 border border-rose-500/20 rounded-xl p-4 mb-6 flex items-start justify-between text-left">
-                <div className="text-rose-600 text-sm">{error}</div>
+              <div className="bg-yellow-500/10 border border-yellow-500/20 rounded-xl p-4 mb-6 flex items-start justify-between text-left">
+                <div className="text-yellow-600 text-sm">{error}</div>
                 <button
                   type="button"
                   onClick={() => setError("")}
-                  className="text-rose-600 hover:text-rose-300 transition-colors ml-4 shrink-0"
+                  className="text-yellow-600 hover:text-rose-300 transition-colors ml-4 shrink-0"
                 >
                   <XCircle className="w-5 h-5" />
                 </button>

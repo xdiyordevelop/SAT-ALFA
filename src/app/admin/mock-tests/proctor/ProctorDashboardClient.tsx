@@ -204,7 +204,7 @@ export default function ProctorDashboardClient() {
             </div>
             <div className="bg-white dark:bg-[#131313] border border-slate-200 dark:border-white/10 rounded-xl p-5 flex flex-col gap-2 shadow-sm">
               <span className="font-bold text-[11px] uppercase tracking-wider text-slate-500 dark:text-slate-400">Alerts (Tab Exits)</span>
-              <span className="text-3xl font-black text-rose-600 dark:text-rose-500">{totalExits}</span>
+              <span className="text-3xl font-black text-yellow-600 dark:text-yellow-500">{totalExits}</span>
             </div>
             <div className="bg-white dark:bg-[#131313] border border-slate-200 dark:border-white/10 rounded-xl p-5 flex flex-col gap-2 shadow-sm">
               <span className="font-bold text-[11px] uppercase tracking-wider text-slate-500 dark:text-slate-400">Paused</span>
@@ -265,7 +265,7 @@ export default function ProctorDashboardClient() {
                           </span>
                         )}
                         {p.status === "COMPLETED" && (
-                           <span className="inline-flex items-center gap-1.5 px-2.5 py-1 rounded bg-blue-50 dark:bg-blue-900/30 border border-blue-200 dark:border-blue-700/50 text-blue-700 dark:text-[#EBFF00] text-[10px] font-black uppercase tracking-wider">
+                           <span className="inline-flex items-center gap-1.5 px-2.5 py-1 rounded bg-yellow-50 dark:bg-yellow-900/30 border border-blue-200 dark:border-blue-700/50 text-yellow-700 dark:text-[#EBFF00] text-[10px] font-black uppercase tracking-wider">
                             Completed
                           </span>
                         )}
@@ -275,7 +275,7 @@ export default function ProctorDashboardClient() {
                           </span>
                         )}
                         {p.status === "DISQUALIFIED" && (
-                           <span className="inline-flex items-center gap-1.5 px-2.5 py-1 rounded bg-rose-50 dark:bg-rose-900/30 border border-rose-200 dark:border-rose-700/50 text-rose-700 dark:text-rose-500 text-[10px] font-black uppercase tracking-wider">
+                           <span className="inline-flex items-center gap-1.5 px-2.5 py-1 rounded bg-yellow-50 dark:bg-yellow-900/30 border border-yellow-200 dark:border-yellow-700/50 text-rose-700 dark:text-yellow-500 text-[10px] font-black uppercase tracking-wider">
                             Disqualified
                           </span>
                         )}
@@ -297,7 +297,7 @@ export default function ProctorDashboardClient() {
                       </td>
                       <td className="p-4 text-center">
                         {p.fullscreenExitCount > 0 ? (
-                          <span className="inline-flex items-center justify-center min-w-[24px] h-6 px-1.5 rounded-md bg-rose-100 dark:bg-rose-950/50 text-rose-700 dark:text-rose-400 border border-rose-200 dark:border-rose-900/50 font-black text-xs shadow-sm">
+                          <span className="inline-flex items-center justify-center min-w-[24px] h-6 px-1.5 rounded-md bg-yellow-100 dark:bg-yellow-950/50 text-rose-700 dark:text-yellow-400 border border-yellow-200 dark:border-yellow-900/50 font-black text-xs shadow-sm">
                             {p.fullscreenExitCount}
                           </span>
                         ) : (
@@ -372,7 +372,7 @@ export default function ProctorDashboardClient() {
                                 })
                               }
                               disabled={actionLoading === p.id}
-                              className="p-1.5 text-rose-600 dark:text-rose-400 bg-rose-50 dark:bg-rose-950/30 hover:bg-rose-100 dark:hover:bg-rose-900/50 rounded border border-rose-200 dark:border-rose-900/40 transition-colors"
+                              className="p-1.5 text-yellow-600 dark:text-yellow-400 bg-yellow-50 dark:bg-yellow-950/30 hover:bg-yellow-100 dark:hover:bg-yellow-900/50 rounded border border-yellow-200 dark:border-yellow-900/40 transition-colors"
                               title="Disqualify"
                             >
                               <StopCircle className="w-4 h-4" />
@@ -393,7 +393,7 @@ export default function ProctorDashboardClient() {
       {confirmModal.isOpen && (
         <div className="fixed inset-0 z-50 flex items-center justify-center bg-white/50 dark:bg-[#0a0a0a]/80 backdrop-blur-sm p-4">
           <div className="bg-white dark:bg-[#131313] border border-slate-200 dark:border-white/10 rounded-2xl p-6 md:p-8 w-full max-w-sm shadow-2xl relative overflow-hidden">
-             <div className={`absolute top-0 left-0 w-full h-1 ${confirmModal.action === "DISQUALIFY" ? "bg-rose-500" : "bg-yellow-500 dark:bg-[#EBFF00]"}`}></div>
+             <div className={`absolute top-0 left-0 w-full h-1 ${confirmModal.action === "DISQUALIFY" ? "bg-yellow-500" : "bg-yellow-500 dark:bg-[#EBFF00]"}`}></div>
             <h3 className="text-xl font-black text-slate-900 dark:text-white mb-2">
               {confirmModal.title}
             </h3>
@@ -411,7 +411,7 @@ export default function ProctorDashboardClient() {
               <Button
                 className={
                   confirmModal.action === "DISQUALIFY"
-                    ? "bg-rose-600 hover:bg-rose-700 text-white border-transparent"
+                    ? "bg-yellow-600 hover:bg-yellow-700 text-white border-transparent"
                     : "bg-yellow-500 dark:bg-[#EBFF00] hover:bg-yellow-400 dark:hover:bg-white text-slate-950 border-transparent font-bold"
                 }
                 onClick={() =>

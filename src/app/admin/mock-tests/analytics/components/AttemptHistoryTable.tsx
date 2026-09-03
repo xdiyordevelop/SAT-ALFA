@@ -209,7 +209,7 @@ export function AttemptHistoryTable({ attempts }: AttemptHistoryTableProps) {
                     </td>
                     <td className="px-6 py-4 text-center">
                       <Link href={`/admin/mock-tests/results/${attempt.id}`}>
-                        <Button className="text-xs px-3 py-1 bg-blue-600 hover:bg-blue-700 flex items-center gap-1 mx-auto">
+                        <Button className="text-xs px-3 py-1 bg-yellow-500 hover:bg-yellow-600 dark:bg-yellow-600 dark:hover:bg-yellow-700 text-slate-900 dark:text-white flex items-center gap-1 mx-auto">
                           <Eye className="w-3 h-3" />
                           View
                         </Button>

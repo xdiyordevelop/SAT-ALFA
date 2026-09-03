@@ -334,7 +334,7 @@ export default function CreateMockTestClient() {
                       <button
                         type="button"
                         onClick={() => removeQuestion(question.id)}
-                        className="p-2 hover:bg-rose-500/10 text-rose-600 rounded-lg transition-colors"
+                        className="p-2 hover:bg-yellow-500/10 text-yellow-600 dark:text-yellow-400 rounded-lg transition-colors"
                       >
                         <Trash2 className="w-4 h-4" />
                       </button>
