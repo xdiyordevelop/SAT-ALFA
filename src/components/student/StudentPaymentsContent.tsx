@@ -136,11 +136,25 @@ export function StudentPaymentsContent({
         </div>
 
         <div
-          className={`rounded-xl border p-6 {paymentStatus.color.includes("green") ? "bg-green-50 border-green-200 " : paymentStatus.color.includes("red") ? "bg-red-50 border-red-200 " : "bg-blue-50 border-blue-200 "}`}
+          className={`rounded-xl border p-6 ${
+            paymentStatus.color.includes("green")
+              ? "bg-green-50 dark:bg-green-950/20 border-green-200 dark:border-green-900/30"
+              : paymentStatus.color.includes("red")
+              ? "bg-red-50 dark:bg-red-950/20 border-red-200 dark:border-red-900/30"
+              : "bg-blue-50 dark:bg-blue-950/20 border-blue-200 dark:border-blue-900/30"
+          }`}
         >
-          <p className="text-sm font-medium mb-2">Payment Status</p>
+          <p className="text-sm font-medium mb-2 text-slate-900 dark:text-white">
+            Payment Status
+          </p>
           <p
-            className={`text-3xl font-bold {paymentStatus.color.split(" ")[1]}`}
+            className={`text-3xl font-bold ${
+              paymentStatus.color.includes("green")
+                ? "text-green-700 dark:text-green-400"
+                : paymentStatus.color.includes("red")
+                ? "text-red-700 dark:text-red-400"
+                : "text-blue-700 dark:text-blue-400"
+            }`}
           >
             {paymentStatus.label}
           </p>
@@ -149,13 +163,13 @@ export function StudentPaymentsContent({
 
       {/* Payment Status Banner */}
       {remainingDebt > 0 && (
-        <div className="bg-red-50 border border-red-200 rounded-lg p-4 flex items-start gap-3">
-          <AlertCircle className="w-5 h-5 text-red-600 flex-shrink-0 mt-0.5" />
+        <div className="bg-red-50 dark:bg-red-950/20 border border-red-200 dark:border-red-900/30 rounded-lg p-4 flex items-start gap-3">
+          <AlertCircle className="w-5 h-5 text-red-600 dark:text-red-400 flex-shrink-0 mt-0.5" />
           <div>
-            <p className="font-medium text-red-900 ">
+            <p className="font-medium text-red-900 dark:text-red-200">
               Outstanding Balance: {remainingDebt.toLocaleString()} so'm
             </p>
-            <p className="text-sm text-red-800 mt-1">
+            <p className="text-sm text-red-800 dark:text-red-300 mt-1">
               Please arrange payment at your earliest convenience to keep your
               account in good standing.
             </p>
@@ -164,11 +178,11 @@ export function StudentPaymentsContent({
       )}
 
       {remainingDebt === 0 && (
-        <div className="bg-green-50 border border-green-200 rounded-lg p-4 flex items-start gap-3">
-          <CreditCard className="w-5 h-5 text-green-600 flex-shrink-0 mt-0.5" />
+        <div className="bg-green-50 dark:bg-green-950/20 border border-green-200 dark:border-green-900/30 rounded-lg p-4 flex items-start gap-3">
+          <CreditCard className="w-5 h-5 text-green-600 dark:text-green-400 flex-shrink-0 mt-0.5" />
           <div>
-            <p className="font-medium text-green-900 ">Account Fully Paid</p>
-            <p className="text-sm text-green-800 mt-1">
+            <p className="font-medium text-green-900 dark:text-green-200">Account Fully Paid</p>
+            <p className="text-sm text-green-800 dark:text-green-300 mt-1">
               Your account is in good standing. Thank you for your timely
               payments!
             </p>
@@ -200,11 +214,11 @@ export function StudentPaymentsContent({
                   </th>
                 </tr>
               </thead>
-              <tbody className="divide-y divide-neutral-200 ">
+              <tbody className="divide-y divide-slate-200 dark:divide-white/10">
                 {payments.map((payment) => (
                   <tr
                     key={payment.id}
-                    className="hover:bg-slate-50 dark:bg-[#0a0a0a] transition-colors"
+                    className="hover:bg-slate-50 dark:hover:bg-slate-900/20 transition-colors"
                   >
                     <td className="py-4 px-4">
                       <p className="text-sm font-medium text-slate-900 dark:text-white ">
@@ -253,11 +267,11 @@ export function StudentPaymentsContent({
       </div>
 
       {/* Payment Information Box */}
-      <div className="bg-blue-50 border border-blue-200 rounded-lg p-6">
-        <h4 className="font-semibold text-blue-900 mb-3">
+      <div className="bg-blue-50 dark:bg-blue-950/20 border border-blue-200 dark:border-blue-900/30 rounded-lg p-6">
+        <h4 className="font-semibold text-blue-900 dark:text-blue-200 mb-3">
           Payment Information
         </h4>
-        <ul className="space-y-2 text-sm text-blue-800 ">
+        <ul className="space-y-2 text-sm text-blue-800 dark:text-blue-300">
           <li>• Monthly fee: {monthlyFee?.toLocaleString() || 0} so'm</li>
           <li>• Accepted payment methods: Cash, Credit Card, Bank Transfer</li>
           <li>• Please keep receipts for your records</li>
