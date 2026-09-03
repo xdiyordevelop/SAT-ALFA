@@ -93,14 +93,9 @@ export function StudentDashboardView({
           
           <div className="flex justify-between items-center mb-8 z-10">
             <h3 className="text-xl font-bold text-slate-900 dark:text-white">Performance Trajectory</h3>
-            <div className="flex gap-4">
-              <span className="flex items-center gap-1.5 text-sm font-semibold text-slate-900 dark:text-[#EBFF00]">
-                <span className="w-2.5 h-2.5 rounded-full bg-slate-900 dark:bg-[#EBFF00]"></span> Math
-              </span>
-              <span className="flex items-center gap-1.5 text-sm font-semibold text-slate-500 dark:text-slate-400">
-                <span className="w-2.5 h-2.5 rounded-full bg-slate-500 dark:bg-slate-400"></span> Reading
-              </span>
-            </div>
+            <span className="flex items-center gap-1.5 text-sm font-semibold text-slate-900 dark:text-[#EBFF00]">
+              <span className="w-2.5 h-2.5 rounded-full bg-slate-900 dark:bg-[#EBFF00]"></span> Total Score
+            </span>
           </div>
           
           <div className="flex-1 w-full h-[300px] z-10">
@@ -132,20 +127,13 @@ export function StudentDashboardView({
                   />
                   <Area
                     type="monotone"
-                    dataKey="Math"
+                    dataKey="Total"
                     stroke="currentColor"
                     className="text-slate-900 dark:text-[#EBFF00]"
                     strokeWidth={3}
                     fillOpacity={1}
                     fill="url(#mathGradLight)"
                     activeDot={{ r: 6, fill: "#EBFF00", stroke: "#131313", strokeWidth: 2 }}
-                  />
-                  <Area
-                    type="monotone"
-                    dataKey="ReadingWriting"
-                    stroke="#64748b"
-                    strokeWidth={2}
-                    fillOpacity={0}
                   />
                 </AreaChart>
               </ResponsiveContainer>
