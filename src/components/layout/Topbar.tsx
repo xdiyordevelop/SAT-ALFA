@@ -37,7 +37,7 @@ export function Topbar({
   userAvatar,
   userRole = "STUDENT",
 }: TopbarProps) {
-  if (userRole === "ADMIN") return <AdminTopNav userName={userName} userEmail={userEmail} />;
+  if (userRole === "ADMIN") return <AdminTopNav userName={userName} userEmail={userEmail} pageTitle={title} />;
 
   const [openDropdown, setOpenDropdown] = useState<"notifications" | "profile" | "settings" | null>(null);
   const [notifications, setNotifications] = useState<Notification[]>([]);

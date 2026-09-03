@@ -7,7 +7,7 @@ import { LogOut, Bell, User, Menu } from "lucide-react";
 import { logoutAction } from "@/server/actions/auth.actions";
 import { ThemeToggle } from "@/components/layout/ThemeToggle";
 
-export function AdminTopNav({ userName, userEmail }: { userName?: string; userEmail?: string }) {
+export function AdminTopNav({ userName, userEmail, pageTitle }: { userName?: string; userEmail?: string; pageTitle?: string }) {
   const router = useRouter();
   const [profileOpen, setProfileOpen] = useState(false);
   const [isLoggingOut, setIsLoggingOut] = useState(false);
@@ -27,7 +27,11 @@ export function AdminTopNav({ userName, userEmail }: { userName?: string; userEm
           <button className="lg:hidden p-2 rounded-lg hover:bg-slate-100 dark:hover:bg-slate-900/50 transition-colors flex-shrink-0">
             <Menu className="w-5 h-5 text-slate-600 dark:text-slate-400" />
           </button>
-          <h2 className="text-sm font-semibold text-slate-900 dark:text-white hidden sm:block">Dashboard</h2>
+          {pageTitle && (
+            <h2 className="text-sm font-semibold text-slate-900 dark:text-white hidden sm:block">
+              {pageTitle}
+            </h2>
+          )}
         </div>
 
         {/* Right: Global Controls */}
