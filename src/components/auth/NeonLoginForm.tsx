@@ -48,7 +48,7 @@ export function NeonLoginForm() {
   }
 
   return (
-    <div className="w-full max-w-sm glass-dark dark:glass-dark p-6 sm:p-8 rounded-2xl backdrop-blur-xl bg-white dark:bg-[#131313]/90 border border-slate-200 dark:border-white/10 relative z-10 transition-all duration-300">
+    <div className="w-full max-w-sm p-6 sm:p-8 rounded-2xl backdrop-blur-xl bg-white dark:bg-[#131313] border border-slate-200 dark:border-white/10 relative z-10 transition-all duration-300 shadow-lg">
 
       {/* Role Selector */}
       <div className="flex gap-1 bg-slate-100 dark:bg-[#1c1b1b] p-1 rounded-lg mb-8 border border-slate-200 dark:border-white/5">
