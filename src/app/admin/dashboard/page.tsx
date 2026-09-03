@@ -176,7 +176,7 @@ export default async function AdminDashboard() {
       {/* Bento Grid layout for Analytics & Monitors */}
       <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
         {/* Chart Area */}
-        <div className="lg:col-span-2 bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 rounded-lg p-6 shadow-sm flex flex-col min-h-[400px]">
+        <div className="lg:col-span-2 bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 rounded-lg p-6 shadow-sm flex flex-col">
           <div className="flex items-center gap-3 mb-6">
             <div className="w-8 h-8 rounded-lg bg-blue-100 dark:bg-blue-900/30 flex items-center justify-center">
               <LineChart className="w-5 h-5 text-blue-600 dark:text-blue-400" />
@@ -185,17 +185,23 @@ export default async function AdminDashboard() {
               SAT Score Performance
             </h2>
           </div>
-          <div className="flex-1 bg-slate-50 dark:bg-slate-800/30 border border-slate-200 dark:border-slate-800 rounded-lg flex items-center justify-center relative overflow-hidden p-4">
-            {chartData.length > 0 ? (
-              <div className="w-full h-full min-h-[300px]">
+          {chartData.length > 0 ? (
+            <div className="flex-1 bg-slate-50 dark:bg-slate-800/30 border border-slate-200 dark:border-slate-800 rounded-lg overflow-hidden p-4 min-h-[300px]">
+              <div className="w-full h-full">
                 <ScoreAnalyticsChart data={chartData} />
               </div>
-            ) : (
-              <div className="bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 px-6 py-4 rounded-lg z-10 shadow-sm text-center">
-                <p className="font-medium text-sm text-slate-500 dark:text-slate-400">Analytics data will appear after students complete tests</p>
+            </div>
+          ) : (
+            <div className="flex flex-col items-center justify-center py-12 px-6 text-center">
+              <div className="w-12 h-12 rounded-full bg-slate-100 dark:bg-slate-800 flex items-center justify-center mb-4">
+                <LineChart className="w-6 h-6 text-slate-400 dark:text-slate-500" />
               </div>
-            )}
-          </div>
+              <p className="font-semibold text-slate-900 dark:text-white mb-2">No score data yet</p>
+              <p className="text-sm text-slate-600 dark:text-slate-400 max-w-sm">
+                Students' SAT performance will appear here after they complete tests.
+              </p>
+            </div>
+          )}
         </div>
 
         {/* Right Sidebar - Stats */}
