@@ -111,7 +111,7 @@ export function AdminMockTestsView({
           onClick={() => setActiveTab("results")}
           className={`p-6 rounded-2xl border transition-all cursor-pointer {
  activeTab === "results"
- ? "border-yellow-600 bg-white dark:bg-[#131313] shadow-md ring-2 ring-yellow-500/20"
+ ? "border-[#EBFF00] bg-white dark:bg-[#131313] shadow-md ring-2 ring-[#EBFF00]/20"
  : "border-slate-200 dark:border-white/10 bg-white dark:bg-[#131313] hover:border-neutral-300 "
  }`}
         >
@@ -137,11 +137,11 @@ export function AdminMockTestsView({
             <span className="text-sm font-medium text-slate-600 dark:text-slate-400 ">
               Avg. SAT Score
             </span>
-            <div className="p-2 rounded-xl bg-yellow-100 dark:bg-yellow-900/30 text-slate-900 dark:text-yellow-500 ">
+            <div className="p-2 rounded-xl bg-yellow-100 dark:bg-yellow-900/30 text-slate-900 dark:text-[#EBFF00] ">
               <Award className="w-5 h-5" />
             </div>
           </div>
-          <p className="text-3xl font-bold text-slate-900 dark:text-yellow-500 mb-1">
+          <p className="text-3xl font-bold text-slate-900 dark:text-[#EBFF00] mb-1">
             {averageSatScore || "—"}
           </p>
           <p className="text-xs text-slate-500 dark:text-slate-400 ">
@@ -154,7 +154,7 @@ export function AdminMockTestsView({
           onClick={() => setActiveTab("templates")}
           className={`p-6 rounded-2xl border transition-all cursor-pointer {
  activeTab === "templates"
- ? "border-yellow-600 bg-white dark:bg-[#131313] shadow-md ring-2 ring-yellow-500/20"
+ ? "border-[#EBFF00] bg-white dark:bg-[#131313] shadow-md ring-2 ring-[#EBFF00]/20"
  : "border-slate-200 dark:border-white/10 bg-white dark:bg-[#131313] hover:border-neutral-300 "
  }`}
         >
@@ -162,14 +162,14 @@ export function AdminMockTestsView({
             <span className="text-sm font-medium text-slate-600 dark:text-slate-400 ">
               Test Templates
             </span>
-            <div className="p-2 rounded-xl bg-yellow-100 dark:bg-yellow-900/30 text-slate-900 dark:text-yellow-500 ">
+            <div className="p-2 rounded-xl bg-yellow-100 dark:bg-yellow-900/30 text-slate-900 dark:text-[#EBFF00] ">
               <Brain className="w-5 h-5" />
             </div>
           </div>
           <p className="text-3xl font-bold text-slate-900 dark:text-white mb-1">
             {testTemplates.length}
           </p>
-          <p className="text-xs text-slate-900 dark:text-yellow-500 font-medium">
+          <p className="text-xs text-slate-900 dark:text-[#EBFF00] font-medium">
             Available practice tests
           </p>
         </div>
@@ -203,14 +203,14 @@ export function AdminMockTestsView({
               value={searchQuery}
               onChange={(e) => setSearchQuery(e.target.value)}
               placeholder="Search by student name, username, or test title..."
-              className="w-full pl-11 pr-4 py-2.5 rounded-xl border border-slate-200 dark:border-white/10 bg-white dark:bg-[#131313] text-slate-900 dark:text-white placeholder-neutral-400 text-sm outline-none focus:border-yellow-500 focus:ring-2 focus:ring-yellow-100 transition-all"
+              className="w-full pl-11 pr-4 py-2.5 rounded-xl border border-slate-200 dark:border-white/10 bg-white dark:bg-[#131313] text-slate-900 dark:text-white placeholder-neutral-400 text-sm outline-none focus:border-[#EBFF00] focus:ring-2 focus:ring-yellow-100 transition-all"
             />
           </div>
 
           <select
             value={subjectFilter}
             onChange={(e) => setSubjectFilter(e.target.value)}
-            className="px-4 py-2.5 rounded-xl border border-slate-200 dark:border-white/10 bg-white dark:bg-[#131313] text-slate-900 dark:text-white text-sm outline-none focus:border-yellow-500 focus:ring-2 focus:ring-yellow-100 transition-all"
+            className="px-4 py-2.5 rounded-xl border border-slate-200 dark:border-white/10 bg-white dark:bg-[#131313] text-slate-900 dark:text-white text-sm outline-none focus:border-[#EBFF00] focus:ring-2 focus:ring-yellow-100 transition-all"
           >
             <option value="ALL">All Subjects</option>
             <option value="COMBINED">Combined SAT</option>
@@ -270,7 +270,7 @@ export function AdminMockTestsView({
                           {new Date(test.createdAt).toLocaleDateString()}
                         </td>
                         <td className="px-6 py-4">
-                          <span className="font-extrabold text-slate-900 dark:text-yellow-500 text-base">
+                          <span className="font-extrabold text-slate-900 dark:text-[#EBFF00] text-base">
                             {score}
                           </span>
                           <span className="text-xs text-slate-500 dark:text-slate-400">
@@ -293,7 +293,7 @@ export function AdminMockTestsView({
                         <td className="px-6 py-4 text-right">
                           <Link
                             href={`/admin/mock-tests/results/${test.id}`}
-                            className="inline-flex items-center gap-1.5 px-3.5 py-1.5 rounded-lg bg-slate-50 dark:bg-[#0a0a0a] hover:bg-yellow-100 dark:bg-yellow-900/30 text-slate-900 dark:text-yellow-500 font-medium text-xs transition-colors"
+                            className="inline-flex items-center gap-1.5 px-3.5 py-1.5 rounded-lg bg-slate-50 dark:bg-[#0a0a0a] hover:bg-yellow-100 dark:bg-yellow-900/30 text-slate-900 dark:text-[#EBFF00] font-medium text-xs transition-colors"
                           >
                             <Eye className="w-3.5 h-3.5" />
                             View Result
@@ -343,7 +343,7 @@ export function AdminMockTestsView({
                   >
                     <div className="flex items-start justify-between">
                       <div>
-                        <span className="text-xs font-semibold px-2.5 py-1 rounded-full bg-yellow-100 dark:bg-yellow-900/30 text-yellow-700 uppercase tracking-wider">
+                        <span className="text-xs font-semibold px-2.5 py-1 rounded-full bg-yellow-100 dark:bg-yellow-900/30 text-[#d9ff00] uppercase tracking-wider">
                           {template.subject}
                         </span>
                         <h3 className="font-bold text-lg text-slate-900 dark:text-white mt-2">

@@ -45,7 +45,7 @@ export function AnalyticsFilters({
           <select
             value={currentTest || "all"}
             onChange={(e) => updateFilter("testId", e.target.value)}
-            className="w-full pl-10 pr-3 py-2.5 rounded-xl border border-slate-200 dark:border-white/10 bg-slate-50 dark:bg-[#131313] text-sm outline-none focus:border-yellow-500"
+            className="w-full pl-10 pr-3 py-2.5 rounded-xl border border-slate-200 dark:border-white/10 bg-slate-50 dark:bg-[#131313] text-sm outline-none focus:border-[#EBFF00] focus:ring-2 focus:ring-[#EBFF00]"
           >
             <option value="all">All Tests</option>
             {tests.map((t) => (
@@ -66,7 +66,7 @@ export function AnalyticsFilters({
           <select
             value={currentGroup || "all"}
             onChange={(e) => updateFilter("groupId", e.target.value)}
-            className="w-full pl-10 pr-3 py-2.5 rounded-xl border border-slate-200 dark:border-white/10 bg-slate-50 dark:bg-[#131313] text-sm outline-none focus:border-yellow-500"
+            className="w-full pl-10 pr-3 py-2.5 rounded-xl border border-slate-200 dark:border-white/10 bg-slate-50 dark:bg-[#131313] text-sm outline-none focus:border-[#EBFF00] focus:ring-2 focus:ring-[#EBFF00]"
           >
             <option value="all">All Groups</option>
             {groups.map((g) => (
@@ -87,7 +87,7 @@ export function AnalyticsFilters({
           <select
             value={currentTime || "all"}
             onChange={(e) => updateFilter("timeRange", e.target.value)}
-            className="w-full pl-10 pr-3 py-2.5 rounded-xl border border-slate-200 dark:border-white/10 bg-slate-50 dark:bg-[#131313] text-sm outline-none focus:border-yellow-500"
+            className="w-full pl-10 pr-3 py-2.5 rounded-xl border border-slate-200 dark:border-white/10 bg-slate-50 dark:bg-[#131313] text-sm outline-none focus:border-[#EBFF00] focus:ring-2 focus:ring-[#EBFF00]"
           >
             <option value="all">All Time</option>
             <option value="7">Last 7 Days</option>

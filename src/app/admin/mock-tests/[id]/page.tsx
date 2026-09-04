@@ -99,14 +99,14 @@ export default async function AdminMockTestDetailPage({
       <div className="space-y-8">
         <Link
           href="/admin/mock-tests"
-          className="inline-flex items-center gap-2 text-slate-900 dark:text-yellow-500 hover:text-yellow-700 font-medium text-sm transition-colors"
+          className="inline-flex items-center gap-2 text-slate-900 dark:text-[#EBFF00] hover:text-[#d9ff00] font-medium text-sm transition-colors"
         >
           <ArrowLeft className="w-4 h-4" /> Back to Mock Tests
         </Link>
         <div className="bg-white dark:bg-[#131313] rounded-2xl border border-slate-200 dark:border-white/10 p-8 shadow-sm">
           <div className="flex items-start justify-between mb-4">
             <div>
-              <span className="text-xs font-semibold px-2.5 py-1 rounded-full bg-yellow-100 dark:bg-yellow-900/30 text-yellow-700 uppercase tracking-wider">
+              <span className="text-xs font-semibold px-2.5 py-1 rounded-full bg-yellow-100 dark:bg-yellow-900/30 text-[#d9ff00] uppercase tracking-wider">
                 {test.subject}
               </span>
               <h1 className="text-3xl font-bold text-slate-900 dark:text-white mt-2">
@@ -120,7 +120,7 @@ export default async function AdminMockTestDetailPage({
           </p>
           <div className="grid grid-cols-1 sm:grid-cols-3 gap-4 pt-6 border-t border-slate-100">
             <div className="p-4 rounded-xl bg-slate-50 dark:bg-[#0a0a0a] flex items-center gap-3">
-              <Clock className="w-5 h-5 text-slate-900 dark:text-yellow-500" />
+              <Clock className="w-5 h-5 text-slate-900 dark:text-[#EBFF00]" />
               <div>
                 <span className="text-xs text-slate-500 dark:text-slate-400 block">
                   Duration
@@ -131,7 +131,7 @@ export default async function AdminMockTestDetailPage({
               </div>
             </div>
             <div className="p-4 rounded-xl bg-slate-50 dark:bg-[#0a0a0a] flex items-center gap-3">
-              <HelpCircle className="w-5 h-5 text-slate-900 dark:text-yellow-500" />
+              <HelpCircle className="w-5 h-5 text-slate-900 dark:text-[#EBFF00]" />
               <div>
                 <span className="text-xs text-slate-500 dark:text-slate-400 block">
                   Questions
@@ -142,7 +142,7 @@ export default async function AdminMockTestDetailPage({
               </div>
             </div>
             <div className="p-4 rounded-xl bg-slate-50 dark:bg-[#0a0a0a] flex items-center gap-3">
-              <Award className="w-5 h-5 text-slate-900 dark:text-yellow-500" />
+              <Award className="w-5 h-5 text-slate-900 dark:text-[#EBFF00]" />
               <div>
                 <span className="text-xs text-slate-500 dark:text-slate-400 block">
                   Max Score
@@ -171,7 +171,7 @@ export default async function AdminMockTestDetailPage({
                     <span className="font-bold text-sm text-slate-900 dark:text-white">
                       Question {idx + 1}
                     </span>
-                    <span className="text-xs px-2.5 py-0.5 rounded bg-slate-50 dark:bg-[#0a0a0a] text-yellow-700 font-medium">
+                    <span className="text-xs px-2.5 py-0.5 rounded bg-slate-50 dark:bg-[#0a0a0a] text-[#d9ff00] font-medium">
                       {q.topic || q.section || "Question"}
                     </span>
                   </div>

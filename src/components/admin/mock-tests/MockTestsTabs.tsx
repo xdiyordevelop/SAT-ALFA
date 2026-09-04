@@ -27,7 +27,7 @@ export function MockTestsTabs() {
           <Link
             key={tab.href}
             href={tab.href}
-            className={`flex items-center gap-2 px-4 py-2 rounded-md text-sm font-medium transition-all whitespace-nowrap ${isActive ? "bg-white dark:bg-[#131313] text-slate-900 dark:text-yellow-500 shadow-sm" : "text-slate-600 dark:text-slate-400 hover:text-slate-900 dark:text-white hover:bg-slate-100 dark:bg-[#1c1b1b]/50"}`}
+            className={`flex items-center gap-2 px-4 py-2 rounded-md text-sm font-medium transition-all whitespace-nowrap ${isActive ? "bg-white dark:bg-[#131313] text-slate-900 dark:text-[#EBFF00] shadow-sm" : "text-slate-600 dark:text-slate-400 hover:text-slate-900 dark:text-white hover:bg-slate-100 dark:bg-[#1c1b1b]/50"}`}
           >
             {" "}
             <Icon className="w-4 h-4" /> {tab.label}{" "}

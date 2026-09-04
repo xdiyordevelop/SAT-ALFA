@@ -43,7 +43,7 @@ export function ParticipantMatrix({
         return <Clock className="w-4 h-4 text-slate-500 dark:text-slate-400" />;
       case "TAKING":
         return (
-          <Zap className="w-4 h-4 text-slate-900 dark:text-yellow-500 animate-pulse" />
+          <Zap className="w-4 h-4 text-slate-900 dark:text-[#EBFF00] animate-pulse" />
         );
       case "COMPLETED":
         return <CheckCircle className="w-4 h-4 text-emerald-600" />;
@@ -57,7 +57,7 @@ export function ParticipantMatrix({
       case "WAITING":
         return "bg-slate-100 dark:bg-[#1c1b1b] border-slate-600";
       case "TAKING":
-        return "bg-yellow-950/40 border-yellow-600/50";
+        return "bg-yellow-950/40 border-[#EBFF00]/50";
       case "COMPLETED":
         return "bg-emerald-950/40 border-emerald-600/50";
       default:
@@ -67,7 +67,7 @@ export function ParticipantMatrix({
 
   return (
     <Card className="bg-white dark:bg-[#131313] border-slate-200 dark:border-white/10 p-6">
-      <h2 className="text-xl font-bold text-slate-900 dark:text-yellow-500 mb-4">
+      <h2 className="text-xl font-bold text-slate-900 dark:text-[#EBFF00] mb-4">
         Live Participants ({participants.length})
       </h2>
       {participants.length === 0 ? (
@@ -106,7 +106,7 @@ export function ParticipantMatrix({
                     <p className="text-xs text-slate-500 dark:text-slate-400 uppercase font-bold">
                       Module
                     </p>
-                    <p className="text-lg font-bold text-slate-900 dark:text-yellow-500">
+                    <p className="text-lg font-bold text-slate-900 dark:text-[#EBFF00]">
                       {participant.currentModule || "—"}
                     </p>
                   </div>

@@ -164,12 +164,12 @@ export default function CreateMockTestClient() {
           {/* Option 1: Manual Builder */}
           <div
             onClick={() => setMode("manual")}
-            className="flex flex-col p-8 bg-white dark:bg-[#131313]/70 border border-slate-200 dark:border-white/10 rounded-2xl hover:border-yellow-500/80 transition-all cursor-pointer group text-left shadow-lg"
+            className="flex flex-col p-8 bg-white dark:bg-[#131313]/70 border border-slate-200 dark:border-white/10 rounded-2xl hover:border-[#EBFF00]/80 transition-all cursor-pointer group text-left shadow-lg"
           >
-            <div className="w-16 h-16 bg-[#EBFF00]/10 rounded-xl border border-yellow-500/20 flex items-center justify-center mb-6 group-hover:scale-105 transition-transform">
-              <PenTool className="w-8 h-8 text-slate-900 dark:text-yellow-500" />
+            <div className="w-16 h-16 bg-[#EBFF00]/10 rounded-xl border border-[#EBFF00]/20 flex items-center justify-center mb-6 group-hover:scale-105 transition-transform">
+              <PenTool className="w-8 h-8 text-slate-900 dark:text-[#EBFF00]" />
             </div>
-            <h3 className="text-xl font-bold text-slate-900 dark:text-white mb-3 group-hover:text-slate-900 dark:text-yellow-500 transition-colors">
+            <h3 className="text-xl font-bold text-slate-900 dark:text-white mb-3 group-hover:text-slate-900 dark:text-[#EBFF00] transition-colors">
               Manual Test Builder
             </h3>
             <p className="text-slate-500 dark:text-slate-400 text-sm leading-relaxed">
@@ -182,19 +182,19 @@ export default function CreateMockTestClient() {
           {/* Option 2: AI Import */}
           <Link
             href="/admin/mock-tests/import"
-            className="flex flex-col p-8 bg-white dark:bg-[#131313]/70 border border-slate-200 dark:border-white/10 rounded-2xl hover:border-yellow-500/80 transition-all cursor-pointer group relative text-left shadow-lg block"
+            className="flex flex-col p-8 bg-white dark:bg-[#131313]/70 border border-slate-200 dark:border-white/10 rounded-2xl hover:border-[#EBFF00]/80 transition-all cursor-pointer group relative text-left shadow-lg block"
           >
-            <div className="absolute top-6 right-6 flex items-center gap-1.5 px-3 py-1.5 bg-[#EBFF00]/10 border border-yellow-500/20 rounded-lg">
-              <Sparkles className="w-3.5 h-3.5 text-slate-900 dark:text-yellow-500" />
-              <span className="text-[11px] font-bold text-slate-900 dark:text-yellow-500 uppercase tracking-wider">
+            <div className="absolute top-6 right-6 flex items-center gap-1.5 px-3 py-1.5 bg-[#EBFF00]/10 border border-[#EBFF00]/20 rounded-lg">
+              <Sparkles className="w-3.5 h-3.5 text-slate-900 dark:text-[#EBFF00]" />
+              <span className="text-[11px] font-bold text-slate-900 dark:text-[#EBFF00] uppercase tracking-wider">
                 AI Powered
               </span>
             </div>
 
-            <div className="w-16 h-16 bg-[#EBFF00]/10 rounded-xl border border-yellow-500/20 flex items-center justify-center mb-6 group-hover:scale-105 transition-transform">
-              <UploadCloud className="w-8 h-8 text-slate-900 dark:text-yellow-500" />
+            <div className="w-16 h-16 bg-[#EBFF00]/10 rounded-xl border border-[#EBFF00]/20 flex items-center justify-center mb-6 group-hover:scale-105 transition-transform">
+              <UploadCloud className="w-8 h-8 text-slate-900 dark:text-[#EBFF00]" />
             </div>
-            <h3 className="text-xl font-bold text-slate-900 dark:text-white mb-3 group-hover:text-slate-900 dark:text-yellow-500 transition-colors">
+            <h3 className="text-xl font-bold text-slate-900 dark:text-white mb-3 group-hover:text-slate-900 dark:text-[#EBFF00] transition-colors">
               AI Import & Parser
             </h3>
             <p className="text-slate-500 dark:text-slate-400 text-sm leading-relaxed">
@@ -217,7 +217,7 @@ export default function CreateMockTestClient() {
               href="/admin/mock-tests/import"
               className="flex items-center gap-2 px-4 py-2 text-slate-500 dark:text-slate-400 hover:text-slate-900 dark:text-white rounded-lg text-sm font-medium transition-colors"
             >
-              <Sparkles className="w-4 h-4 text-slate-900 dark:text-yellow-500" />
+              <Sparkles className="w-4 h-4 text-slate-900 dark:text-[#EBFF00]" />
               AI Import
             </Link>
           </div>
@@ -232,7 +232,7 @@ export default function CreateMockTestClient() {
             {/* Test Info Section */}
             <div className="bg-white dark:bg-[#131313] rounded-2xl border border-slate-200 dark:border-white/10 p-8 shadow-sm">
               <h2 className="text-lg font-bold text-slate-900 dark:text-white mb-6 flex items-center gap-2">
-                <FileText className="w-5 h-5 text-slate-900 dark:text-yellow-500" />
+                <FileText className="w-5 h-5 text-slate-900 dark:text-[#EBFF00]" />
                 Test Information
               </h2>
 
@@ -246,7 +246,7 @@ export default function CreateMockTestClient() {
                     value={testName}
                     onChange={(e) => setTestName(e.target.value)}
                     placeholder="e.g., SAT Practice Test 1"
-                    className="w-full px-4 py-3 rounded-xl border border-slate-200 dark:border-white/10 bg-white dark:bg-[#131313] text-slate-900 dark:text-white placeholder-slate-500 focus:border-yellow-500 focus:ring-1 focus:ring-yellow-500 outline-none transition-all text-sm"
+                    className="w-full px-4 py-3 rounded-xl border border-slate-200 dark:border-white/10 bg-white dark:bg-[#131313] text-slate-900 dark:text-white placeholder-slate-500 focus:border-[#EBFF00] focus:ring-1 focus:ring-[#EBFF00] outline-none transition-all text-sm"
                   />
                 </div>
 
@@ -257,7 +257,7 @@ export default function CreateMockTestClient() {
                   <select
                     value={subject}
                     onChange={(e) => setSubject(e.target.value)}
-                    className="w-full px-4 py-3 rounded-xl border border-slate-200 dark:border-white/10 bg-white dark:bg-[#131313] text-slate-900 dark:text-white focus:border-yellow-500 focus:ring-1 focus:ring-yellow-500 outline-none transition-all text-sm"
+                    className="w-full px-4 py-3 rounded-xl border border-slate-200 dark:border-white/10 bg-white dark:bg-[#131313] text-slate-900 dark:text-white focus:border-[#EBFF00] focus:ring-1 focus:ring-[#EBFF00] outline-none transition-all text-sm"
                   >
                     <option>Math</option>
                     <option>English</option>
@@ -273,7 +273,7 @@ export default function CreateMockTestClient() {
                     type="number"
                     value={maxScore}
                     onChange={(e) => setMaxScore(parseInt(e.target.value))}
-                    className="w-full px-4 py-3 rounded-xl border border-slate-200 dark:border-white/10 bg-white dark:bg-[#131313] text-slate-900 dark:text-white focus:border-yellow-500 focus:ring-1 focus:ring-yellow-500 outline-none transition-all text-sm"
+                    className="w-full px-4 py-3 rounded-xl border border-slate-200 dark:border-white/10 bg-white dark:bg-[#131313] text-slate-900 dark:text-white focus:border-[#EBFF00] focus:ring-1 focus:ring-[#EBFF00] outline-none transition-all text-sm"
                   />
                 </div>
 
@@ -285,7 +285,7 @@ export default function CreateMockTestClient() {
                     type="number"
                     value={duration}
                     onChange={(e) => setDuration(parseInt(e.target.value))}
-                    className="w-full px-4 py-3 rounded-xl border border-slate-200 dark:border-white/10 bg-white dark:bg-[#131313] text-slate-900 dark:text-white focus:border-yellow-500 focus:ring-1 focus:ring-yellow-500 outline-none transition-all text-sm"
+                    className="w-full px-4 py-3 rounded-xl border border-slate-200 dark:border-white/10 bg-white dark:bg-[#131313] text-slate-900 dark:text-white focus:border-[#EBFF00] focus:ring-1 focus:ring-[#EBFF00] outline-none transition-all text-sm"
                   />
                 </div>
               </div>
@@ -299,7 +299,7 @@ export default function CreateMockTestClient() {
                   onChange={(e) => setDescription(e.target.value)}
                   placeholder="Optional description about the test"
                   rows={3}
-                  className="w-full px-4 py-3 rounded-xl border border-slate-200 dark:border-white/10 bg-white dark:bg-[#131313] text-slate-900 dark:text-white placeholder-slate-500 focus:border-yellow-500 focus:ring-1 focus:ring-yellow-500 outline-none transition-all resize-none text-sm"
+                  className="w-full px-4 py-3 rounded-xl border border-slate-200 dark:border-white/10 bg-white dark:bg-[#131313] text-slate-900 dark:text-white placeholder-slate-500 focus:border-[#EBFF00] focus:ring-1 focus:ring-[#EBFF00] outline-none transition-all resize-none text-sm"
                 />
               </div>
             </div>
@@ -308,7 +308,7 @@ export default function CreateMockTestClient() {
             <div className="space-y-4">
               <div className="flex items-center justify-between pb-2">
                 <h2 className="text-lg font-bold text-slate-900 dark:text-white flex items-center gap-2">
-                  <PenTool className="w-5 h-5 text-slate-900 dark:text-yellow-500" />
+                  <PenTool className="w-5 h-5 text-slate-900 dark:text-[#EBFF00]" />
                   Questions ({questions.length})
                 </h2>
                 <button
@@ -334,7 +334,7 @@ export default function CreateMockTestClient() {
                       <button
                         type="button"
                         onClick={() => removeQuestion(question.id)}
-                        className="p-2 hover:bg-[#EBFF00]/10 text-yellow-600 dark:text-yellow-400 rounded-lg transition-colors"
+                        className="p-2 hover:bg-[#EBFF00]/10 text-[#EBFF00] dark:text-[#d9ff00] rounded-lg transition-colors"
                       >
                         <Trash2 className="w-4 h-4" />
                       </button>
@@ -354,7 +354,7 @@ export default function CreateMockTestClient() {
                         }
                         placeholder="Enter the question"
                         rows={3}
-                        className="w-full px-4 py-3 rounded-xl border border-slate-200 dark:border-white/10 bg-white dark:bg-[#131313] text-slate-900 dark:text-white placeholder-slate-500 focus:border-yellow-500 focus:ring-1 focus:ring-yellow-500 outline-none transition-all resize-none text-sm"
+                        className="w-full px-4 py-3 rounded-xl border border-slate-200 dark:border-white/10 bg-white dark:bg-[#131313] text-slate-900 dark:text-white placeholder-slate-500 focus:border-[#EBFF00] focus:ring-1 focus:ring-[#EBFF00] outline-none transition-all resize-none text-sm"
                       />
                     </div>
 
@@ -377,7 +377,7 @@ export default function CreateMockTestClient() {
                                   optIndex,
                                 )
                               }
-                              className="w-4 h-4 cursor-pointer accent-yellow-500"
+                              className="w-4 h-4 cursor-pointer accent-[#EBFF00]"
                             />
                             <input
                               type="text"
@@ -390,7 +390,7 @@ export default function CreateMockTestClient() {
                                 )
                               }
                               placeholder={`Option ${optIndex + 1}`}
-                              className="flex-1 px-4 py-2 rounded-xl border border-slate-200 dark:border-white/10 bg-white dark:bg-[#131313] text-slate-900 dark:text-white placeholder-slate-500 focus:border-yellow-500 focus:ring-1 focus:ring-yellow-500 outline-none transition-all text-sm"
+                              className="flex-1 px-4 py-2 rounded-xl border border-slate-200 dark:border-white/10 bg-white dark:bg-[#131313] text-slate-900 dark:text-white placeholder-slate-500 focus:border-[#EBFF00] focus:ring-1 focus:ring-[#EBFF00] outline-none transition-all text-sm"
                             />
                           </div>
                         ))}
@@ -413,7 +413,7 @@ export default function CreateMockTestClient() {
                         }
                         placeholder="Explain the correct answer"
                         rows={2}
-                        className="w-full px-4 py-3 rounded-xl border border-slate-200 dark:border-white/10 bg-white dark:bg-[#131313] text-slate-900 dark:text-white placeholder-slate-500 focus:border-yellow-500 focus:ring-1 focus:ring-yellow-500 outline-none transition-all resize-none text-sm"
+                        className="w-full px-4 py-3 rounded-xl border border-slate-200 dark:border-white/10 bg-white dark:bg-[#131313] text-slate-900 dark:text-white placeholder-slate-500 focus:border-[#EBFF00] focus:ring-1 focus:ring-[#EBFF00] outline-none transition-all resize-none text-sm"
                       />
                     </div>
                   </div>

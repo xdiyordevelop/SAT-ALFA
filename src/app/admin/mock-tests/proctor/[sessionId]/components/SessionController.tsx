@@ -28,7 +28,7 @@ export function SessionController({
       case "ACTIVE":
         return "text-emerald-600 bg-emerald-950/30";
       case "COMPLETED":
-        return "text-yellow-600 dark:text-yellow-400 bg-yellow-950/30";
+        return "text-[#EBFF00] dark:text-[#d9ff00] bg-yellow-950/30";
       case "REVOKED":
         return "text-red-600 bg-red-950/30";
       default:
@@ -40,11 +40,11 @@ export function SessionController({
     <Card className="bg-white dark:bg-[#131313] border-slate-200 dark:border-white/10 p-6 mb-6">
       <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
         {/* Session Code */}
-        <div className="bg-slate-50 dark:bg-[#0a0a0a]/50 border border-yellow-600/30 rounded-lg p-6">
+        <div className="bg-slate-50 dark:bg-[#0a0a0a]/50 border border-[#EBFF00]/30 rounded-lg p-6">
           <p className="text-sm text-slate-500 dark:text-slate-400 uppercase font-bold mb-2">
             Session Code
           </p>
-          <p className="text-5xl font-mono font-bold text-slate-900 dark:text-yellow-500 mb-4 tracking-widest">
+          <p className="text-5xl font-mono font-bold text-slate-900 dark:text-[#EBFF00] mb-4 tracking-widest">
             {session.code}
           </p>
           <p className="text-xs text-slate-500 dark:text-slate-400">
@@ -74,7 +74,7 @@ export function SessionController({
               <p className="text-sm text-slate-500 dark:text-slate-400 uppercase font-bold mb-2">
                 Participants
               </p>
-              <p className="text-3xl font-bold text-slate-900 dark:text-yellow-500">
+              <p className="text-3xl font-bold text-slate-900 dark:text-[#EBFF00]">
                 {session.participants.length}{" "}
                 <span className="text-sm text-slate-500 dark:text-slate-400 ml-2">
                   joined
@@ -116,7 +116,7 @@ export function SessionController({
           <p className="text-xs text-slate-500 dark:text-slate-400 uppercase mb-1">
             Taking Test
           </p>
-          <p className="text-2xl font-bold text-slate-900 dark:text-yellow-500">
+          <p className="text-2xl font-bold text-slate-900 dark:text-[#EBFF00]">
             {
               session.participants.filter((p: any) => p.status === "TAKING")
                 .length

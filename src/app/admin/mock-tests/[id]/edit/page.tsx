@@ -146,7 +146,7 @@ export default function MockTestEditPage() {
       <Card className="bg-white dark:bg-[#131313] border-slate-200 dark:border-white/10 p-6">
         <div className="flex justify-between items-center">
           <div>
-            <h1 className="text-3xl font-bold text-slate-900 dark:text-yellow-500 mb-2">
+            <h1 className="text-3xl font-bold text-slate-900 dark:text-[#EBFF00] mb-2">
               {mockTest.name}
             </h1>
             <p className="text-slate-500 dark:text-slate-400">
@@ -302,12 +302,12 @@ function QuestionCard({
 
   if (isEditing) {
     return (
-      <Card className="bg-slate-50 dark:bg-[#0a0a0a] border-yellow-600/50 p-6">
+      <Card className="bg-slate-50 dark:bg-[#0a0a0a] border-[#EBFF00]/50 p-6">
         <div className="space-y-4">
           {/* AI Tools Section */}
-          <div className="bg-yellow-950/30 border border-yellow-500/30 p-4 rounded-md space-y-3">
+          <div className="bg-yellow-950/30 border border-[#EBFF00]/30 p-4 rounded-md space-y-3">
             <div className="flex items-center gap-2 mb-2">
-              <h3 className="text-yellow-700 font-bold flex items-center gap-2">
+              <h3 className="text-[#d9ff00] font-bold flex items-center gap-2">
                 <span className="text-xl">✨</span> AI Assistant
               </h3>
             </div>
@@ -331,7 +331,7 @@ function QuestionCard({
                 value={aiFixInstruction}
                 onChange={(e) => setAiFixInstruction(e.target.value)}
                 placeholder="Tell AI to fix something (e.g.,'Fix the math formatting','Extract options')"
-                className="flex-1 px-3 py-2 bg-white dark:bg-[#131313] border border-yellow-500/50 rounded text-slate-900 dark:text-white text-sm"
+                className="flex-1 px-3 py-2 bg-white dark:bg-[#131313] border border-[#EBFF00]/50 rounded text-slate-900 dark:text-white text-sm"
                 onKeyDown={(e) => {
                   if (e.key === "Enter") handleAiFix();
                 }}
@@ -348,7 +348,7 @@ function QuestionCard({
 
           {/* Question Number */}
           <div>
-            <label className="block text-slate-900 dark:text-yellow-500 font-bold mb-2">
+            <label className="block text-slate-900 dark:text-[#EBFF00] font-bold mb-2">
               Question #{index + 1}
             </label>
             <input
@@ -366,7 +366,7 @@ function QuestionCard({
 
           {/* Prompt */}
           <div>
-            <label className="block text-slate-900 dark:text-yellow-500 font-bold mb-2">
+            <label className="block text-slate-900 dark:text-[#EBFF00] font-bold mb-2">
               Question Text (HTML/KaTeX)
             </label>
             <textarea
@@ -381,7 +381,7 @@ function QuestionCard({
           {/* Passage */}
           {editData.passage && (
             <div>
-              <label className="block text-slate-900 dark:text-yellow-500 font-bold mb-2">
+              <label className="block text-slate-900 dark:text-[#EBFF00] font-bold mb-2">
                 Stimulus/Passage
               </label>
               <textarea
@@ -396,7 +396,7 @@ function QuestionCard({
 
           {/* Options */}
           <div>
-            <label className="block text-slate-900 dark:text-yellow-500 font-bold mb-2">
+            <label className="block text-slate-900 dark:text-[#EBFF00] font-bold mb-2">
               Options
             </label>
             <div className="space-y-2 bg-slate-100 dark:bg-[#1c1b1b] p-3 rounded border border-slate-600">
@@ -423,7 +423,7 @@ function QuestionCard({
 
           {/* Correct Answer */}
           <div>
-            <label className="block text-slate-900 dark:text-yellow-500 font-bold mb-2">
+            <label className="block text-slate-900 dark:text-[#EBFF00] font-bold mb-2">
               Correct Answer
             </label>
             <select
@@ -444,7 +444,7 @@ function QuestionCard({
           {/* Metadata */}
           <div className="grid grid-cols-2 gap-3">
             <div>
-              <label className="block text-slate-900 dark:text-yellow-500 font-bold mb-2 text-sm">
+              <label className="block text-slate-900 dark:text-[#EBFF00] font-bold mb-2 text-sm">
                 Difficulty
               </label>
               <select
@@ -463,7 +463,7 @@ function QuestionCard({
               </select>
             </div>
             <div>
-              <label className="block text-slate-900 dark:text-yellow-500 font-bold mb-2 text-sm">
+              <label className="block text-slate-900 dark:text-[#EBFF00] font-bold mb-2 text-sm">
                 Module
               </label>
               <select
@@ -491,7 +491,7 @@ function QuestionCard({
           {/* Domain & Skill */}
           <div className="grid grid-cols-2 gap-3">
             <div>
-              <label className="block text-slate-900 dark:text-yellow-500 font-bold mb-2 text-sm">
+              <label className="block text-slate-900 dark:text-[#EBFF00] font-bold mb-2 text-sm">
                 Domain
               </label>
               <input
@@ -504,7 +504,7 @@ function QuestionCard({
               />
             </div>
             <div>
-              <label className="block text-slate-900 dark:text-yellow-500 font-bold mb-2 text-sm">
+              <label className="block text-slate-900 dark:text-[#EBFF00] font-bold mb-2 text-sm">
                 Skill
               </label>
               <input
@@ -520,7 +520,7 @@ function QuestionCard({
 
           {/* Explanation */}
           <div>
-            <label className="block text-slate-900 dark:text-yellow-500 font-bold mb-2">
+            <label className="block text-slate-900 dark:text-[#EBFF00] font-bold mb-2">
               Explanation
             </label>
             <textarea
@@ -534,7 +534,7 @@ function QuestionCard({
 
           {/* Image Upload */}
           <div className="bg-slate-100 dark:bg-[#1c1b1b] border border-slate-600 rounded p-4">
-            <label className="block text-slate-900 dark:text-yellow-500 font-bold mb-3">
+            <label className="block text-slate-900 dark:text-[#EBFF00] font-bold mb-3">
               Question Image (Optional)
             </label>
             {editData.imageUrl && (
@@ -550,7 +550,7 @@ function QuestionCard({
                 </Button>
               </div>
             )}
-            <label className="flex items-center justify-center w-full px-4 py-6 border-2 border-dashed border-slate-600 rounded cursor-pointer hover:border-yellow-600 transition-colors">
+            <label className="flex items-center justify-center w-full px-4 py-6 border-2 border-dashed border-slate-600 rounded cursor-pointer hover:border-[#EBFF00] transition-colors">
               <div className="text-center">
                 <Upload className="w-6 h-6 text-slate-500 dark:text-slate-400 mx-auto mb-2" />
                 <span className="text-slate-500 dark:text-slate-400 text-sm">
@@ -594,10 +594,10 @@ function QuestionCard({
   }
 
   return (
-    <Card className="bg-white dark:bg-[#131313] border-slate-200 dark:border-white/10 p-4 hover:border-yellow-600/30 transition-colors">
+    <Card className="bg-white dark:bg-[#131313] border-slate-200 dark:border-white/10 p-4 hover:border-[#EBFF00]/30 transition-colors">
       <div className="flex items-start justify-between mb-3">
         <div>
-          <h3 className="text-slate-900 dark:text-yellow-500 font-bold">
+          <h3 className="text-slate-900 dark:text-[#EBFF00] font-bold">
             Question #{index + 1}
           </h3>
           <p className="text-xs text-slate-500 dark:text-slate-400">
@@ -633,7 +633,7 @@ function QuestionCard({
       {showPreview && (
         <div className="bg-slate-100 dark:bg-[#1c1b1b]/50 p-4 rounded mb-3 space-y-3 text-sm text-slate-600 dark:text-slate-400">
           <div>
-            <strong className="text-slate-900 dark:text-yellow-500">
+            <strong className="text-slate-900 dark:text-[#EBFF00]">
               Question:
             </strong>
             <div className="mt-1 whitespace-pre-wrap break-words">
@@ -642,7 +642,7 @@ function QuestionCard({
           </div>
           {question.passage && (
             <div>
-              <strong className="text-slate-900 dark:text-yellow-500">
+              <strong className="text-slate-900 dark:text-[#EBFF00]">
                 Passage:
               </strong>
               <div className="mt-1 whitespace-pre-wrap break-words">
@@ -652,7 +652,7 @@ function QuestionCard({
           )}
           {question.imageUrl && (
             <div>
-              <strong className="text-slate-900 dark:text-yellow-500">
+              <strong className="text-slate-900 dark:text-[#EBFF00]">
                 Image:
               </strong>
               <div className="mt-1 text-xs text-slate-500 dark:text-slate-400">
@@ -661,7 +661,7 @@ function QuestionCard({
             </div>
           )}
           <div>
-            <strong className="text-slate-900 dark:text-yellow-500">
+            <strong className="text-slate-900 dark:text-[#EBFF00]">
               Options:
             </strong>
             <div className="mt-1 space-y-1">
@@ -681,7 +681,7 @@ function QuestionCard({
           </div>
           {question.explanation && (
             <div>
-              <strong className="text-slate-900 dark:text-yellow-500">
+              <strong className="text-slate-900 dark:text-[#EBFF00]">
                 Explanation:
               </strong>
               <div className="mt-1">{question.explanation}</div>

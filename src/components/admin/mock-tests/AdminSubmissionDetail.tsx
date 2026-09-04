@@ -161,7 +161,7 @@ export function AdminSubmissionDetail({
       <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4">
         <Link
           href={backUrl}
-          className="inline-flex items-center gap-2 text-slate-900 dark:text-yellow-500 hover:text-yellow-700 font-medium transition-colors"
+          className="inline-flex items-center gap-2 text-slate-900 dark:text-[#EBFF00] hover:text-[#d9ff00] font-medium transition-colors"
         >
           <ArrowLeft className="w-4 h-4" />
           Back to Mock Tests
@@ -227,7 +227,7 @@ export function AdminSubmissionDetail({
           {/* Student Info */}
           <div className="lg:col-span-2 space-y-4">
             <div className="flex items-center gap-4">
-              <div className="w-14 h-14 rounded-2xl bg-gradient-to-br from-yellow-500 to-yellow-700 flex items-center justify-center text-slate-900 dark:text-white font-bold text-xl shadow-md">
+              <div className="w-14 h-14 rounded-2xl bg-gradient-to-br from-[#EBFF00] to-[#d9ff00] flex items-center justify-center text-slate-900 dark:text-white font-bold text-xl shadow-md">
                 {test.student?.firstName?.[0] || "S"}
                 {test.student?.lastName?.[0] || "T"}
               </div>
@@ -284,8 +284,8 @@ export function AdminSubmissionDetail({
             <div className="flex items-center gap-2 mb-3">
               {isPending && (
                 <>
-                  <Clock className="w-5 h-5 text-slate-900 dark:text-yellow-500 " />
-                  <span className="text-lg font-bold text-yellow-700 ">
+                  <Clock className="w-5 h-5 text-slate-900 dark:text-[#EBFF00] " />
+                  <span className="text-lg font-bold text-[#d9ff00] ">
                     Pending Admin Review
                   </span>
                 </>
@@ -322,7 +322,7 @@ export function AdminSubmissionDetail({
       {/* SAT Score Cards Grid */}
       <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
         {/* Total Score */}
-        <div className="bg-gradient-to-br from-yellow-600 to-yellow-800 rounded-2xl p-6 text-slate-900 dark:text-white shadow-lg relative overflow-hidden">
+        <div className="bg-gradient-to-br from-[#EBFF00] to-yellow-800 rounded-2xl p-6 text-slate-900 dark:text-white shadow-lg relative overflow-hidden">
           <div className="relative z-10">
             <div className="flex items-center justify-between mb-2">
               <span className="text-sm font-semibold uppercase tracking-wider text-yellow-200">
@@ -353,7 +353,7 @@ export function AdminSubmissionDetail({
             <span className="text-sm font-semibold text-slate-600 dark:text-slate-400 ">
               Math Section
             </span>
-            <span className="text-xs font-bold px-2 py-0.5 rounded bg-yellow-100 dark:bg-yellow-900/30 text-yellow-700 dark:text-yellow-300 ">
+            <span className="text-xs font-bold px-2 py-0.5 rounded bg-yellow-100 dark:bg-yellow-900/30 text-[#d9ff00] dark:text-yellow-300 ">
               200–800
             </span>
           </div>
@@ -381,7 +381,7 @@ export function AdminSubmissionDetail({
             <span className="text-sm font-semibold text-slate-600 dark:text-slate-400 ">
               Reading & Writing Section
             </span>
-            <span className="text-xs font-bold px-2 py-0.5 rounded bg-yellow-100 dark:bg-yellow-900/30 text-yellow-700 dark:text-yellow-300 ">
+            <span className="text-xs font-bold px-2 py-0.5 rounded bg-yellow-100 dark:bg-yellow-900/30 text-[#d9ff00] dark:text-yellow-300 ">
               200–800
             </span>
           </div>
@@ -408,7 +408,7 @@ export function AdminSubmissionDetail({
       {topicList.length > 0 && (
         <div className="bg-white dark:bg-[#131313] rounded-2xl border border-slate-200 dark:border-white/10 p-6 md:p-8 shadow-sm">
           <h2 className="text-xl font-bold text-slate-900 dark:text-white mb-6 flex items-center gap-2">
-            <Target className="w-5 h-5 text-slate-900 dark:text-yellow-500 " />
+            <Target className="w-5 h-5 text-slate-900 dark:text-[#EBFF00] " />
             SAT Topic Performance Breakdown
           </h2>
 
@@ -436,7 +436,7 @@ export function AdminSubmissionDetail({
                         isHigh
                           ? "text-green-600 "
                           : isMedium
-                          ? "text-slate-900 dark:text-yellow-500 "
+                          ? "text-slate-900 dark:text-[#EBFF00] "
                           : "text-red-600 "
                       }`}
                     >
@@ -527,7 +527,7 @@ export function AdminSubmissionDetail({
       {/* AI Analysis & Recommendations */}
       <div className="bg-white dark:bg-[#131313] rounded-2xl border border-slate-200 dark:border-white/10 p-6 md:p-8 shadow-sm space-y-6">
         <div className="flex items-center gap-3">
-          <div className="w-10 h-10 rounded-xl bg-gradient-to-r from-yellow-500 to-violet-600 flex items-center justify-center text-slate-900 dark:text-white shadow-md">
+          <div className="w-10 h-10 rounded-xl bg-gradient-to-r from-[#EBFF00] to-violet-600 flex items-center justify-center text-slate-900 dark:text-white shadow-md">
             <Sparkles className="w-5 h-5" />
           </div>
           <div>
@@ -563,7 +563,7 @@ export function AdminSubmissionDetail({
                   key={i}
                   className="flex items-start gap-3 p-3.5 rounded-xl bg-slate-50 dark:bg-[#0a0a0a] border border-slate-200 dark:border-white/10 text-sm text-slate-800 dark:text-slate-200 "
                 >
-                  <div className="w-6 h-6 rounded-full bg-yellow-100 dark:bg-yellow-900/30 text-yellow-700 flex items-center justify-center text-xs font-bold flex-shrink-0 mt-0.5">
+                  <div className="w-6 h-6 rounded-full bg-yellow-100 dark:bg-yellow-900/30 text-[#d9ff00] flex items-center justify-center text-xs font-bold flex-shrink-0 mt-0.5">
                     {i + 1}
                   </div>
                   <span>{rec}</span>
@@ -598,7 +598,7 @@ export function AdminSubmissionDetail({
       {Array.isArray(questions) && questions.length > 0 && (
         <div className="bg-white dark:bg-[#131313] rounded-2xl border border-slate-200 dark:border-white/10 p-6 md:p-8 shadow-sm">
           <h2 className="text-xl font-bold text-slate-900 dark:text-white mb-6 flex items-center gap-2">
-            <FileText className="w-5 h-5 text-slate-900 dark:text-yellow-500 " />
+            <FileText className="w-5 h-5 text-slate-900 dark:text-[#EBFF00] " />
             Question-by-Question Review ({questions.length} Questions)
           </h2>
 

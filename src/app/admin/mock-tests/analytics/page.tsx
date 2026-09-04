@@ -215,12 +215,12 @@ export default async function AdminAnalyticsPage({
 
       {/* Summary Cards */}
       <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4 mb-8 animate-fade-in">
-        <div className="bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 rounded-lg p-6 shadow-sm hover:border-slate-300 dark:hover:border-slate-700 transition-colors group">
+        <div className="bg-white dark:bg-[#131313] border border-slate-200 dark:border-white/10 rounded-lg p-6 shadow-sm hover:border-slate-300 dark:hover:border-slate-700 transition-colors group">
           <div className="flex items-start justify-between mb-4">
             <div className="w-10 h-10 rounded-lg bg-slate-100 dark:bg-slate-800 flex items-center justify-center group-hover:bg-slate-200 dark:group-hover:bg-slate-700 transition-colors">
               <Users className="w-5 h-5 text-slate-600 dark:text-slate-400" />
             </div>
-            <span className="bg-yellow-100 dark:bg-yellow-900/30 text-yellow-700 dark:text-yellow-300 px-2 py-1 rounded text-[10px] font-semibold">
+            <span className="bg-yellow-100 dark:bg-yellow-900/30 text-[#d9ff00] dark:text-yellow-300 px-2 py-1 rounded text-[10px] font-semibold">
               Tests
             </span>
           </div>
@@ -232,7 +232,7 @@ export default async function AdminAnalyticsPage({
           </div>
         </div>
 
-        <div className="bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 rounded-lg p-6 shadow-sm hover:border-slate-300 dark:hover:border-slate-700 transition-colors group">
+        <div className="bg-white dark:bg-[#131313] border border-slate-200 dark:border-white/10 rounded-lg p-6 shadow-sm hover:border-slate-300 dark:hover:border-slate-700 transition-colors group">
           <div className="flex items-start justify-between mb-4">
             <div className="w-10 h-10 rounded-lg bg-slate-100 dark:bg-slate-800 flex items-center justify-center group-hover:bg-slate-200 dark:group-hover:bg-slate-700 transition-colors">
               <Target className="w-5 h-5 text-slate-600 dark:text-slate-400" />
@@ -246,7 +246,7 @@ export default async function AdminAnalyticsPage({
           </div>
         </div>
 
-        <div className="bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 rounded-lg p-6 shadow-sm hover:border-slate-300 dark:hover:border-slate-700 transition-colors group">
+        <div className="bg-white dark:bg-[#131313] border border-slate-200 dark:border-white/10 rounded-lg p-6 shadow-sm hover:border-slate-300 dark:hover:border-slate-700 transition-colors group">
           <div className="flex items-start justify-between mb-4">
             <div className="w-10 h-10 rounded-lg bg-slate-100 dark:bg-slate-800 flex items-center justify-center group-hover:bg-slate-200 dark:group-hover:bg-slate-700 transition-colors">
               <BookOpen className="w-5 h-5 text-slate-600 dark:text-slate-400" />
@@ -260,7 +260,7 @@ export default async function AdminAnalyticsPage({
           </div>
         </div>
 
-        <div className="bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 rounded-lg p-6 shadow-sm hover:border-slate-300 dark:hover:border-slate-700 transition-colors group">
+        <div className="bg-white dark:bg-[#131313] border border-slate-200 dark:border-white/10 rounded-lg p-6 shadow-sm hover:border-slate-300 dark:hover:border-slate-700 transition-colors group">
           <div className="flex items-start justify-between mb-4">
             <div className="w-10 h-10 rounded-lg bg-slate-100 dark:bg-slate-800 flex items-center justify-center group-hover:bg-slate-200 dark:group-hover:bg-slate-700 transition-colors">
               <Calculator className="w-5 h-5 text-slate-600 dark:text-slate-400" />
@@ -279,7 +279,7 @@ export default async function AdminAnalyticsPage({
       {attempts.length > 0 ? (
         <PerformanceBenchmarks analytics={analytics} />
       ) : (
-        <div className="bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 rounded-lg p-12 mb-8 text-center">
+        <div className="bg-white dark:bg-[#131313] border border-slate-200 dark:border-white/10 rounded-lg p-12 mb-8 text-center">
           <BarChart2 className="w-12 h-12 text-slate-400 dark:text-slate-500 mx-auto mb-3" />
           <p className="font-semibold text-slate-900 dark:text-white mb-1">No data available</p>
           <p className="text-sm text-slate-600 dark:text-slate-400">

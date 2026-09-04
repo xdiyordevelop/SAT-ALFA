@@ -52,7 +52,7 @@ export function StudentsListClient({
           <div className="flex flex-col sm:flex-row gap-3 w-full md:w-auto">
             <a
               href="/api/admin/students/export"
-              className="px-4 py-2.5 bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 hover:bg-slate-50 dark:hover:bg-slate-800 text-slate-700 dark:text-slate-300 rounded-lg font-medium transition-colors w-full sm:w-auto text-center flex items-center justify-center gap-2"
+              className="px-4 py-2.5 bg-white dark:bg-[#131313] border border-slate-200 dark:border-white/10 hover:bg-slate-50 dark:hover:bg-slate-800 text-slate-700 dark:text-slate-300 rounded-lg font-medium transition-colors w-full sm:w-auto text-center flex items-center justify-center gap-2"
             >
               <Download className="w-4 h-4" />
               Export
@@ -67,7 +67,7 @@ export function StudentsListClient({
       </div>
 
       {/* Filters Section */}
-      <div className="bg-white dark:bg-slate-900 rounded-lg border border-slate-200 dark:border-slate-800 p-4 md:p-6 mb-6 animate-slide-up">
+      <div className="bg-white dark:bg-[#131313] rounded-lg border border-slate-200 dark:border-white/10 p-4 md:p-6 mb-6 animate-slide-up">
         <div className="flex flex-col md:flex-row gap-3">
           <div className="flex-1 relative">
             <Search className="absolute left-3 top-1/2 -translate-y-1/2 w-5 h-5 text-slate-400" />
@@ -76,13 +76,13 @@ export function StudentsListClient({
               placeholder="Search by name or email..."
               value={searchQuery}
               onChange={(e) => setSearchQuery(e.target.value)}
-              className="w-full pl-10 pr-4 py-2.5 rounded-lg border border-slate-200 dark:border-slate-800 bg-white dark:bg-slate-800 text-slate-900 dark:text-white placeholder-slate-500 dark:placeholder-slate-400 focus:border-[#EBFF00] focus:ring-2 focus:ring-[#EBFF00]/20 outline-none transition-all"
+              className="w-full pl-10 pr-4 py-2.5 rounded-lg border border-slate-200 dark:border-white/10 bg-white dark:bg-[#131313] text-slate-900 dark:text-white placeholder-slate-500 dark:placeholder-slate-400 focus:border-[#EBFF00] focus:ring-2 focus:ring-[#EBFF00]/20 outline-none transition-all"
             />
           </div>
           <select
             value={selectedGroup}
             onChange={(e) => setSelectedGroup(e.target.value)}
-            className="px-4 py-2.5 rounded-lg border border-slate-200 dark:border-slate-800 bg-white dark:bg-slate-800 text-slate-900 dark:text-white focus:border-[#EBFF00] focus:ring-2 focus:ring-[#EBFF00]/20 outline-none transition-all text-sm"
+            className="px-4 py-2.5 rounded-lg border border-slate-200 dark:border-white/10 bg-white dark:bg-[#131313] text-slate-900 dark:text-white focus:border-[#EBFF00] focus:ring-2 focus:ring-[#EBFF00]/20 outline-none transition-all text-sm"
           >
             <option value="All Groups">All Groups</option>
             {groups.map((g) => (
@@ -94,7 +94,7 @@ export function StudentsListClient({
           <select
             value={selectedStatus}
             onChange={(e) => setSelectedStatus(e.target.value)}
-            className="px-4 py-2.5 rounded-lg border border-slate-200 dark:border-slate-800 bg-white dark:bg-slate-800 text-slate-900 dark:text-white focus:border-[#EBFF00] focus:ring-2 focus:ring-[#EBFF00]/20 outline-none transition-all text-sm"
+            className="px-4 py-2.5 rounded-lg border border-slate-200 dark:border-white/10 bg-white dark:bg-[#131313] text-slate-900 dark:text-white focus:border-[#EBFF00] focus:ring-2 focus:ring-[#EBFF00]/20 outline-none transition-all text-sm"
           >
             <option value="All Status">All Status</option>
             <option value="Active">Active</option>
@@ -105,14 +105,14 @@ export function StudentsListClient({
 
       {/* Students Table */}
       <div
-        className="bg-white dark:bg-slate-900 rounded-lg border border-slate-200 dark:border-slate-800 overflow-hidden animate-slide-up"
+        className="bg-white dark:bg-[#131313] rounded-lg border border-slate-200 dark:border-white/10 overflow-hidden animate-slide-up"
         style={{ animationDelay: "100ms" }}
       >
         {filteredStudents.length > 0 ? (
           <div className="overflow-x-auto">
             <table className="w-full">
               <thead>
-                <tr className="border-b border-slate-200 dark:border-slate-800 bg-slate-50 dark:bg-slate-800/50">
+                <tr className="border-b border-slate-200 dark:border-white/10 bg-slate-50 dark:bg-[#1c1b1b]">
                   <th className="px-6 py-3 text-left text-xs font-semibold text-slate-900 dark:text-white uppercase tracking-wider">
                     Name
                   </th>
@@ -140,7 +140,7 @@ export function StudentsListClient({
                 {filteredStudents.map((student, index) => (
                   <tr
                     key={student.id}
-                    className="border-b border-slate-200 dark:border-slate-800 hover:bg-slate-50 dark:hover:bg-slate-800/50 transition-colors"
+                    className="border-b border-slate-200 dark:border-white/10 hover:bg-slate-50 dark:hover:bg-[#1c1b1b]/50 transition-colors"
                     style={{
                       animation: `slideUp 0.3s ease-out ${200 + index * 30}ms backwards`,
                     }}
@@ -191,7 +191,7 @@ export function StudentsListClient({
                         className={`inline-flex items-center gap-2 px-3 py-1 rounded-full text-xs font-semibold ${
                           student.status === "ACTIVE"
                             ? "bg-emerald-100 dark:bg-emerald-900/30 text-emerald-700 dark:text-emerald-300"
-                            : "bg-slate-100 dark:bg-slate-800 text-slate-700 dark:text-slate-300"
+                            : "bg-slate-100 dark:bg-[#1c1b1b] text-slate-700 dark:text-slate-300"
                         }`}
                       >
                         <span
@@ -207,7 +207,7 @@ export function StudentsListClient({
                     <td className="px-6 py-4 text-right">
                       <Link
                         href={`/admin/students/${student.id}`}
-                        className="inline-flex items-center gap-2 px-3 py-2 rounded-lg text-sm font-medium text-slate-700 dark:text-slate-300 hover:bg-slate-50 dark:hover:bg-slate-800 transition-colors"
+                        className="inline-flex items-center gap-2 px-3 py-2 rounded-lg text-sm font-medium text-slate-700 dark:text-slate-300 hover:bg-slate-50 dark:hover:bg-[#1c1b1b] transition-colors"
                       >
                         View
                       </Link>

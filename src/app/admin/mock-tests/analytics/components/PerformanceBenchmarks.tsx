@@ -29,7 +29,7 @@ export function PerformanceBenchmarks({
   return (
     <div className="grid grid-cols-1 lg:grid-cols-2 gap-6 mb-8 animate-fade-in">
       {/* Score Distribution */}
-      <div className="bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 rounded-lg p-6 shadow-sm">
+      <div className="bg-white dark:bg-[#131313] border border-slate-200 dark:border-white/10 rounded-lg p-6 shadow-sm">
         <h3 className="text-lg font-semibold text-slate-900 dark:text-white mb-4">
           Score Distribution
         </h3>
@@ -57,7 +57,7 @@ export function PerformanceBenchmarks({
       </div>
 
       {/* Completion Rate */}
-      <div className="bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 rounded-lg p-6 shadow-sm">
+      <div className="bg-white dark:bg-[#131313] border border-slate-200 dark:border-white/10 rounded-lg p-6 shadow-sm">
         <h3 className="text-lg font-semibold text-slate-900 dark:text-white mb-4">
           Completion Rate
         </h3>
@@ -110,7 +110,7 @@ export function PerformanceBenchmarks({
       </div>
 
       {/* Completions Over Time */}
-      <div className="bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 rounded-lg p-6">
+      <div className="bg-white dark:bg-[#131313] border border-slate-200 dark:border-white/10 rounded-lg p-6">
         <h3 className="text-lg font-semibold text-slate-900 dark:text-white mb-4">
           Completions Over Time
         </h3>
@@ -145,7 +145,7 @@ export function PerformanceBenchmarks({
       </div>
 
       {/* Average Scores */}
-      <div className="bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 rounded-lg p-6">
+      <div className="bg-white dark:bg-[#131313] border border-slate-200 dark:border-white/10 rounded-lg p-6">
         <h3 className="text-lg font-semibold text-slate-900 dark:text-white mb-4">
           Average Scores by Section
         </h3>

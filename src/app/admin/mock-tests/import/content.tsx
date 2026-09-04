@@ -392,7 +392,7 @@ export function TestImporterContent() {
               value={selectedTestId}
               onChange={(e) => setSelectedTestId(e.target.value)}
               disabled={isProcessing}
-              className="w-full px-4 py-3 rounded-xl border border-slate-200 dark:border-white/10 bg-white dark:bg-[#131313] text-slate-900 dark:text-white outline-none focus:border-yellow-500 focus:ring-1 focus:ring-yellow-500 transition-all text-sm mb-3"
+              className="w-full px-4 py-3 rounded-xl border border-slate-200 dark:border-white/10 bg-white dark:bg-[#131313] text-slate-900 dark:text-white outline-none focus:border-[#EBFF00] focus:ring-1 focus:ring-[#EBFF00] transition-all text-sm mb-3"
             >
               <option value="">-- Create New Test --</option>
               {existingTests.map((t) => (
@@ -414,7 +414,7 @@ export function TestImporterContent() {
                 onChange={(e) => setTestName(e.target.value)}
                 disabled={isProcessing}
                 placeholder="e.g. SAT Practice Test 1"
-                className="w-full px-4 py-3 rounded-xl border border-slate-200 dark:border-white/10 bg-white dark:bg-[#131313] text-slate-900 dark:text-white outline-none focus:border-yellow-500 focus:ring-1 focus:ring-yellow-500 transition-all text-sm"
+                className="w-full px-4 py-3 rounded-xl border border-slate-200 dark:border-white/10 bg-white dark:bg-[#131313] text-slate-900 dark:text-white outline-none focus:border-[#EBFF00] focus:ring-1 focus:ring-[#EBFF00] transition-all text-sm"
               />
             </div>
           )}
@@ -427,7 +427,7 @@ export function TestImporterContent() {
               value={targetModule}
               onChange={(e) => setTargetModule(e.target.value as any)}
               disabled={isProcessing}
-              className="w-full px-4 py-3 rounded-xl border border-slate-200 dark:border-white/10 bg-white dark:bg-[#131313] text-slate-900 dark:text-white outline-none focus:border-yellow-500 focus:ring-1 focus:ring-yellow-500 transition-all text-sm"
+              className="w-full px-4 py-3 rounded-xl border border-slate-200 dark:border-white/10 bg-white dark:bg-[#131313] text-slate-900 dark:text-white outline-none focus:border-[#EBFF00] focus:ring-1 focus:ring-[#EBFF00] transition-all text-sm"
             >
               {(() => {
                 const currentTest = existingTests.find(
@@ -476,7 +476,7 @@ export function TestImporterContent() {
               className={`border-2 border-dashed rounded-xl p-8 text-center cursor-pointer transition-all ${
                 isProcessing
                   ? "opacity-50 border-slate-200 dark:border-white/10"
-                  : "border-slate-300 dark:border-white/5 hover:border-yellow-500 hover:bg-yellow-50 dark:hover:bg-yellow-900/10"
+                  : "border-slate-300 dark:border-white/5 hover:border-[#EBFF00] hover:bg-yellow-50 dark:hover:bg-yellow-900/10"
               }`}
             >
               <input
@@ -519,7 +519,7 @@ export function TestImporterContent() {
           <div className="mt-6 p-6 rounded-xl bg-slate-50 dark:bg-[#1c1b1b]/50 border border-slate-200 dark:border-white/5">
             <div className="flex items-center justify-between mb-4">
               <div className="flex items-center gap-3">
-                <Loader2 className="w-5 h-5 text-yellow-600 animate-spin" />
+                <Loader2 className="w-5 h-5 text-[#EBFF00] animate-spin" />
                 <span className="font-medium text-slate-900 dark:text-white">
                   Processing...
                 </span>
@@ -556,12 +556,12 @@ export function TestImporterContent() {
         {successData && (
           <div className="mt-6 p-6 rounded-xl bg-yellow-50 dark:bg-yellow-900/20 border border-yellow-200 dark:border-yellow-900/50">
             <div className="flex items-start gap-3">
-              <CheckCircle className="w-6 h-6 text-yellow-600 dark:text-yellow-400 shrink-0 mt-0.5" />
+              <CheckCircle className="w-6 h-6 text-[#EBFF00] dark:text-[#d9ff00] shrink-0 mt-0.5" />
               <div>
                 <h3 className="font-bold text-yellow-800 dark:text-yellow-300 mb-1">
                   Import Complete!
                 </h3>
-                <p className="text-sm text-yellow-700 dark:text-yellow-400 mb-4">
+                <p className="text-sm text-[#d9ff00] dark:text-[#d9ff00] mb-4">
                   Successfully extracted and saved {successData.count} questions
                   to "{successData.name}".
                 </p>

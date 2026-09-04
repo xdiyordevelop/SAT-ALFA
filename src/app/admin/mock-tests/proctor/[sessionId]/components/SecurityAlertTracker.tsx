@@ -31,9 +31,9 @@ export function SecurityAlertTracker({
       case "high":
         return "border-red-600 bg-red-950/30";
       case "medium":
-        return "border-yellow-600 bg-yellow-950/30";
+        return "border-[#EBFF00] bg-yellow-950/30";
       case "low":
-        return "border-yellow-600 bg-yellow-950/30";
+        return "border-[#EBFF00] bg-yellow-950/30";
     }
   };
 
@@ -42,9 +42,9 @@ export function SecurityAlertTracker({
       case "high":
         return "text-red-600";
       case "medium":
-        return "text-slate-900 dark:text-yellow-500";
+        return "text-slate-900 dark:text-[#EBFF00]";
       case "low":
-        return "text-slate-900 dark:text-yellow-500";
+        return "text-slate-900 dark:text-[#EBFF00]";
     }
   };
 

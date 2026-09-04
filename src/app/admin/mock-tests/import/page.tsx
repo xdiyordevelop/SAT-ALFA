@@ -34,7 +34,7 @@ export default async function AdminTestImporterPage() {
         </Link>
 
             <div className="mb-6">
-              <h1 className="text-3xl font-bold text-yellow-400 mb-2">
+              <h1 className="text-3xl font-bold text-[#d9ff00] mb-2">
                 AI-Powered Test Importer
               </h1>
               <p className="text-slate-500 dark:text-slate-400">

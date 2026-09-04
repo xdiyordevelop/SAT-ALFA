@@ -143,7 +143,7 @@ export default function TopicsDashboardClient({ topics, groups }: Props) {
           onClick={() => setActiveMode("bank")}
           className={`flex items-center gap-2 px-4 py-3 font-medium text-sm transition-all border-b-2 ${
             activeMode === "bank"
-              ? "border-yellow-500 text-slate-900 dark:text-yellow-400"
+              ? "border-[#EBFF00] text-slate-900 dark:text-[#EBFF00]"
               : "border-transparent text-slate-600 dark:text-slate-400 hover:text-slate-900 dark:hover:text-slate-300"
           }`}
         >
@@ -154,7 +154,7 @@ export default function TopicsDashboardClient({ topics, groups }: Props) {
           onClick={() => setActiveMode("roadmap")}
           className={`flex items-center gap-2 px-4 py-3 font-medium text-sm transition-all border-b-2 ${
             activeMode === "roadmap"
-              ? "border-yellow-500 text-slate-900 dark:text-yellow-400"
+              ? "border-[#EBFF00] text-slate-900 dark:text-[#EBFF00]"
               : "border-transparent text-slate-600 dark:text-slate-400 hover:text-slate-900 dark:hover:text-slate-300"
           }`}
         >
@@ -174,13 +174,13 @@ export default function TopicsDashboardClient({ topics, groups }: Props) {
                 value={searchQuery}
                 onChange={(e) => setSearchQuery(e.target.value)}
                 placeholder="Search topics by title..."
-                className="w-full pl-12 pr-4 py-2.5 rounded-lg border border-slate-200 dark:border-white/10 bg-slate-50 dark:bg-[#0a0a0a] text-slate-900 dark:text-white placeholder-neutral-400 focus:border-yellow-500 outline-none transition-all"
+                className="w-full pl-12 pr-4 py-2.5 rounded-lg border border-slate-200 dark:border-white/10 bg-slate-50 dark:bg-[#0a0a0a] text-slate-900 dark:text-white placeholder-neutral-400 focus:border-[#EBFF00] focus:ring-2 focus:ring-[#EBFF00] outline-none transition-all"
               />
             </div>
             <select
               value={subjectFilter}
               onChange={(e) => setSubjectFilter(e.target.value)}
-              className="px-4 py-2.5 rounded-lg border border-slate-200 dark:border-white/10 bg-slate-50 dark:bg-[#0a0a0a] text-slate-900 dark:text-white focus:border-yellow-500 outline-none transition-all min-w-[200px]"
+              className="px-4 py-2.5 rounded-lg border border-slate-200 dark:border-white/10 bg-slate-50 dark:bg-[#0a0a0a] text-slate-900 dark:text-white focus:border-[#EBFF00] focus:ring-2 focus:ring-[#EBFF00] outline-none transition-all min-w-[200px]"
             >
               <option value="ALL">All Subjects</option>
               <option value="MATH">Math</option>
@@ -193,7 +193,7 @@ export default function TopicsDashboardClient({ topics, groups }: Props) {
             {filteredTopics.map((topic) => (
               <div
                 key={topic.id}
-                className="bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 rounded-lg p-4 hover:border-slate-300 dark:hover:border-slate-700 transition-all flex flex-col"
+                className="bg-white dark:bg-[#131313] border border-slate-200 dark:border-white/10 rounded-lg p-4 hover:border-slate-300 dark:hover:border-white/20 transition-all flex flex-col"
               >
                 <div className="flex justify-between items-start gap-2 mb-3">
                   <span
@@ -208,7 +208,7 @@ export default function TopicsDashboardClient({ topics, groups }: Props) {
                   <div className="flex gap-1">
                     <Link
                       href={`/admin/topics/${topic.id}/edit`}
-                      className="p-1 text-slate-500 dark:text-slate-400 hover:text-yellow-600 dark:hover:text-yellow-400 hover:bg-slate-100 dark:hover:bg-slate-800 rounded transition-colors"
+                      className="p-1 text-slate-500 dark:text-slate-400 hover:text-[#EBFF00] dark:hover:text-[#d9ff00] hover:bg-slate-100 dark:hover:bg-slate-800 rounded transition-colors"
                     >
                       <Edit className="w-4 h-4" />
                     </Link>
@@ -243,7 +243,7 @@ export default function TopicsDashboardClient({ topics, groups }: Props) {
 
                 <button
                   onClick={() => setAssignModalOpen(topic.id)}
-                  className="w-full py-2 bg-[#EBFF00] hover:bg-[#EBFF00] dark:bg-[#EBFF00] dark:hover:bg-[#d9ff00] text-slate-900 dark:text-white rounded font-medium text-xs transition-colors mt-auto"
+                  className="w-full py-2 bg-[#EBFF00] hover:bg-[#d9ff00] dark:bg-[#EBFF00] dark:hover:bg-[#d9ff00] text-slate-900 rounded font-medium text-xs transition-colors mt-auto"
                 >
                   + Assign to Group
                 </button>
@@ -272,7 +272,7 @@ export default function TopicsDashboardClient({ topics, groups }: Props) {
               <select
                 value={selectedGroupId}
                 onChange={(e) => setSelectedGroupId(e.target.value)}
-                className="w-full px-4 py-2.5 rounded-lg border border-slate-200 dark:border-white/10 bg-slate-50 dark:bg-[#0a0a0a] text-slate-900 dark:text-white focus:border-yellow-500 outline-none transition-all font-medium"
+                className="w-full px-4 py-2.5 rounded-lg border border-slate-200 dark:border-white/10 bg-slate-50 dark:bg-[#0a0a0a] text-slate-900 dark:text-white focus:border-[#EBFF00] focus:ring-2 focus:ring-[#EBFF00] outline-none transition-all font-medium"
               >
                 {groups.length === 0 && (
                   <option value="">No groups available</option>
@@ -417,7 +417,7 @@ export default function TopicsDashboardClient({ topics, groups }: Props) {
                                   progress.topicId,
                                 )
                               }
-                              className="p-2 text-slate-500 dark:text-slate-400 hover:text-red-500 hover:bg-red-50 rounded-lg transition-colors ml-1"
+                              className="p-2 text-slate-500 dark:text-slate-400 hover:text-red-500 dark:hover:text-red-400 hover:bg-red-50 dark:hover:bg-red-950/20 rounded-lg transition-colors ml-1"
                               title="Remove from syllabus"
                             >
                               <X className="w-5 h-5" />
@@ -454,7 +454,7 @@ export default function TopicsDashboardClient({ topics, groups }: Props) {
               </h3>
               <button
                 onClick={() => setAssignModalOpen(null)}
-                className="text-slate-500 dark:text-slate-400 hover:text-slate-900 dark:text-white "
+                className="text-slate-500 dark:text-slate-400 hover:text-slate-900 dark:hover:text-white transition-colors"
               >
                 <X className="w-5 h-5" />
               </button>
@@ -473,14 +473,14 @@ export default function TopicsDashboardClient({ topics, groups }: Props) {
                       key={g.id}
                       disabled={isAssigned}
                       onClick={() => handleAssignToGroup(g.id, assignModalOpen)}
-                      className="w-full text-left px-4 py-3 rounded-lg border border-slate-200 dark:border-white/10 bg-slate-50 dark:bg-[#0a0a0a] hover:border-yellow-500 flex justify-between items-center transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
+                      className="w-full text-left px-4 py-3 rounded-lg border border-slate-200 dark:border-white/10 bg-slate-50 dark:bg-[#0a0a0a] hover:border-[#EBFF00] flex justify-between items-center transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
                     >
                       <span className="font-medium text-slate-900 dark:text-white ">
                         {g.name}
                       </span>
                       {isAssigned && (
                         <span className="text-xs text-emerald-600 font-bold bg-emerald-100 px-2 py-0.5 rounded">
-                          Biriktirilgan
+                          Assigned
                         </span>
                       )}
                     </button>
@@ -502,7 +502,7 @@ export default function TopicsDashboardClient({ topics, groups }: Props) {
               </h3>
               <button
                 onClick={() => setRoadmapAssignModal(false)}
-                className="text-slate-500 dark:text-slate-400 hover:text-slate-900 dark:text-white "
+                className="text-slate-500 dark:text-slate-400 hover:text-slate-900 dark:hover:text-white transition-colors"
               >
                 <X className="w-5 h-5" />
               </button>
@@ -518,9 +518,9 @@ export default function TopicsDashboardClient({ topics, groups }: Props) {
                       key={t.id}
                       disabled={isAssigned}
                       onClick={() => handleAssignToGroup(activeGroup.id, t.id)}
-                      className="w-full text-left p-3 rounded-lg border border-slate-200 dark:border-white/10 bg-slate-50 dark:bg-[#0a0a0a] hover:border-yellow-500 transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
+                      className="w-full text-left p-3 rounded-lg border border-slate-200 dark:border-white/10 bg-slate-50 dark:bg-[#0a0a0a] hover:border-[#EBFF00] transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
                     >
-                      <div className="text-xs font-bold text-yellow-500 mb-1">
+                      <div className="text-xs font-bold text-[#EBFF00] mb-1">
                         {t.subject === "MATH" ? "Math" : "Reading & Writing"}
                       </div>
                       <div className="font-medium text-slate-900 dark:text-white line-clamp-1">

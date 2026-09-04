@@ -204,11 +204,11 @@ export default function ProctorDashboardClient() {
             </div>
             <div className="bg-white dark:bg-[#131313] border border-slate-200 dark:border-white/10 rounded-xl p-5 flex flex-col gap-2 shadow-sm">
               <span className="font-bold text-[11px] uppercase tracking-wider text-slate-500 dark:text-slate-400">Alerts (Tab Exits)</span>
-              <span className="text-3xl font-black text-yellow-600 dark:text-yellow-500">{totalExits}</span>
+              <span className="text-3xl font-black text-[#EBFF00] dark:text-[#EBFF00]">{totalExits}</span>
             </div>
             <div className="bg-white dark:bg-[#131313] border border-slate-200 dark:border-white/10 rounded-xl p-5 flex flex-col gap-2 shadow-sm">
               <span className="font-bold text-[11px] uppercase tracking-wider text-slate-500 dark:text-slate-400">Paused</span>
-              <span className="text-3xl font-black text-yellow-600 dark:text-yellow-500">{pausedCount}</span>
+              <span className="text-3xl font-black text-[#EBFF00] dark:text-[#EBFF00]">{pausedCount}</span>
             </div>
             <div className="bg-white dark:bg-[#131313] border border-slate-200 dark:border-white/10 rounded-xl p-5 flex flex-col gap-2 shadow-sm">
               <span className="font-bold text-[11px] uppercase tracking-wider text-slate-500 dark:text-slate-400">Total</span>
@@ -260,12 +260,12 @@ export default function ProctorDashboardClient() {
                           </span>
                         )}
                         {p.status === "PAUSED" && (
-                           <span className="inline-flex items-center gap-1.5 px-2.5 py-1 rounded bg-yellow-50 dark:bg-yellow-900/30 border border-yellow-200 dark:border-yellow-700/50 text-yellow-700 dark:text-yellow-500 text-[10px] font-black uppercase tracking-wider">
+                           <span className="inline-flex items-center gap-1.5 px-2.5 py-1 rounded bg-yellow-50 dark:bg-yellow-900/30 border border-yellow-200 dark:border-[#d9ff00]/50 text-[#d9ff00] dark:text-[#EBFF00] text-[10px] font-black uppercase tracking-wider">
                             Paused
                           </span>
                         )}
                         {p.status === "COMPLETED" && (
-                           <span className="inline-flex items-center gap-1.5 px-2.5 py-1 rounded bg-yellow-50 dark:bg-yellow-900/30 border border-yellow-200 dark:border-yellow-700/50 text-yellow-700 dark:text-[#EBFF00] text-[10px] font-black uppercase tracking-wider">
+                           <span className="inline-flex items-center gap-1.5 px-2.5 py-1 rounded bg-yellow-50 dark:bg-yellow-900/30 border border-yellow-200 dark:border-[#d9ff00]/50 text-[#d9ff00] dark:text-[#EBFF00] text-[10px] font-black uppercase tracking-wider">
                             Completed
                           </span>
                         )}
@@ -275,7 +275,7 @@ export default function ProctorDashboardClient() {
                           </span>
                         )}
                         {p.status === "DISQUALIFIED" && (
-                           <span className="inline-flex items-center gap-1.5 px-2.5 py-1 rounded bg-yellow-50 dark:bg-yellow-900/30 border border-yellow-200 dark:border-yellow-700/50 text-yellow-700 dark:text-yellow-500 text-[10px] font-black uppercase tracking-wider">
+                           <span className="inline-flex items-center gap-1.5 px-2.5 py-1 rounded bg-yellow-50 dark:bg-yellow-900/30 border border-yellow-200 dark:border-[#d9ff00]/50 text-[#d9ff00] dark:text-[#EBFF00] text-[10px] font-black uppercase tracking-wider">
                             Disqualified
                           </span>
                         )}
@@ -297,7 +297,7 @@ export default function ProctorDashboardClient() {
                       </td>
                       <td className="p-4 text-center">
                         {p.fullscreenExitCount > 0 ? (
-                          <span className="inline-flex items-center justify-center min-w-[24px] h-6 px-1.5 rounded-md bg-yellow-100 dark:bg-yellow-950/50 text-yellow-700 dark:text-yellow-400 border border-yellow-200 dark:border-yellow-900/50 font-black text-xs shadow-sm">
+                          <span className="inline-flex items-center justify-center min-w-[24px] h-6 px-1.5 rounded-md bg-yellow-100 dark:bg-yellow-950/50 text-[#d9ff00] dark:text-[#d9ff00] border border-yellow-200 dark:border-yellow-900/50 font-black text-xs shadow-sm">
                             {p.fullscreenExitCount}
                           </span>
                         ) : (
@@ -326,7 +326,7 @@ export default function ProctorDashboardClient() {
                             <button
                               onClick={() => handleAction(p.id, "PAUSE_TEST")}
                               disabled={actionLoading === p.id}
-                              className="p-1.5 text-yellow-600 dark:text-yellow-500 bg-yellow-50 dark:bg-yellow-900/20 hover:bg-yellow-100 dark:hover:bg-yellow-900/40 rounded border border-yellow-200 dark:border-yellow-700/30 transition-colors"
+                              className="p-1.5 text-[#EBFF00] dark:text-[#EBFF00] bg-yellow-50 dark:bg-yellow-900/20 hover:bg-yellow-100 dark:hover:bg-yellow-900/40 rounded border border-yellow-200 dark:border-[#d9ff00]/30 transition-colors"
                               title="Pause"
                             >
                               <Pause className="w-4 h-4" />
@@ -356,7 +356,7 @@ export default function ProctorDashboardClient() {
                                 })
                               }
                               disabled={actionLoading === p.id}
-                              className="p-1.5 text-yellow-600 dark:text-yellow-400 bg-yellow-50 dark:bg-yellow-900/20 hover:bg-yellow-100 dark:hover:bg-yellow-900/40 rounded border border-yellow-200 dark:border-yellow-700/30 transition-colors"
+                              className="p-1.5 text-[#EBFF00] dark:text-[#d9ff00] bg-yellow-50 dark:bg-yellow-900/20 hover:bg-yellow-100 dark:hover:bg-yellow-900/40 rounded border border-yellow-200 dark:border-[#d9ff00]/30 transition-colors"
                               title="Force Submit"
                             >
                               <CheckCircle className="w-4 h-4" />
@@ -372,7 +372,7 @@ export default function ProctorDashboardClient() {
                                 })
                               }
                               disabled={actionLoading === p.id}
-                              className="p-1.5 text-yellow-600 dark:text-yellow-400 bg-yellow-50 dark:bg-yellow-950/30 hover:bg-yellow-100 dark:hover:bg-yellow-900/50 rounded border border-yellow-200 dark:border-yellow-900/40 transition-colors"
+                              className="p-1.5 text-[#EBFF00] dark:text-[#d9ff00] bg-yellow-50 dark:bg-yellow-950/30 hover:bg-yellow-100 dark:hover:bg-yellow-900/50 rounded border border-yellow-200 dark:border-yellow-900/40 transition-colors"
                               title="Disqualify"
                             >
                               <StopCircle className="w-4 h-4" />

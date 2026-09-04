@@ -143,7 +143,7 @@ export function CreateStudentForm() {
             </div>
           </div>
 
-          <div className="space-y-4 mb-8 p-6 bg-white dark:bg-slate-900 rounded-lg border border-emerald-200 dark:border-emerald-900/50">
+          <div className="space-y-4 mb-8 p-6 bg-white dark:bg-[#131313] rounded-lg border border-emerald-200 dark:border-emerald-900/50">
             <div className="flex items-center justify-between p-4 bg-slate-50 dark:bg-slate-800 rounded-lg">
               <div>
                 <p className="text-xs font-medium text-slate-600 dark:text-slate-400 uppercase tracking-wide">
@@ -227,7 +227,7 @@ export function CreateStudentForm() {
 
   return (
     <form onSubmit={handleSubmit} className="max-w-2xl animate-slide-up">
-      <div className="bg-white dark:bg-slate-900 rounded-lg border border-slate-200 dark:border-slate-800 p-8">
+      <div className="bg-white dark:bg-[#131313] rounded-lg border border-slate-200 dark:border-white/10 p-8">
         {error && (
           <div className="mb-6 p-4 bg-red-50 dark:bg-red-950/30 border border-red-200 dark:border-red-900/50 rounded-lg text-red-700 dark:text-red-400 flex items-center gap-3">
             <AlertCircle className="w-5 h-5 flex-shrink-0" />
@@ -252,7 +252,7 @@ export function CreateStudentForm() {
                 value={formData.firstName}
                 onChange={handleChange}
                 placeholder="Ali"
-                className="w-full px-4 py-2.5 rounded-lg border border-slate-200 dark:border-slate-800 bg-white dark:bg-slate-800 text-slate-900 dark:text-white placeholder-slate-500 dark:placeholder-slate-400 focus:border-[#EBFF00] focus:ring-2 focus:ring-[#EBFF00]/20 outline-none transition-all"
+                className="w-full px-4 py-2.5 rounded-lg border border-slate-200 dark:border-white/10 bg-white dark:bg-slate-800 text-slate-900 dark:text-white placeholder-slate-500 dark:placeholder-slate-400 focus:border-[#EBFF00] focus:ring-2 focus:ring-[#EBFF00]/20 outline-none transition-all"
               />
             </div>
             <div>
@@ -265,7 +265,7 @@ export function CreateStudentForm() {
                 value={formData.lastName}
                 onChange={handleChange}
                 placeholder="Valiyev"
-                className="w-full px-4 py-2.5 rounded-lg border border-slate-200 dark:border-slate-800 bg-white dark:bg-slate-800 text-slate-900 dark:text-white placeholder-slate-500 dark:placeholder-slate-400 focus:border-[#EBFF00] focus:ring-2 focus:ring-[#EBFF00]/20 outline-none transition-all"
+                className="w-full px-4 py-2.5 rounded-lg border border-slate-200 dark:border-white/10 bg-white dark:bg-slate-800 text-slate-900 dark:text-white placeholder-slate-500 dark:placeholder-slate-400 focus:border-[#EBFF00] focus:ring-2 focus:ring-[#EBFF00]/20 outline-none transition-all"
               />
             </div>
           </div>
@@ -280,7 +280,7 @@ export function CreateStudentForm() {
               value={formData.phone}
               onChange={handleChange}
               placeholder="+998 99 123 45 67"
-              className="w-full px-4 py-2.5 rounded-lg border border-slate-200 dark:border-slate-800 bg-white dark:bg-slate-800 text-slate-900 dark:text-white placeholder-slate-500 dark:placeholder-slate-400 focus:border-[#EBFF00] focus:ring-2 focus:ring-[#EBFF00]/20 outline-none transition-all"
+              className="w-full px-4 py-2.5 rounded-lg border border-slate-200 dark:border-white/10 bg-white dark:bg-slate-800 text-slate-900 dark:text-white placeholder-slate-500 dark:placeholder-slate-400 focus:border-[#EBFF00] focus:ring-2 focus:ring-[#EBFF00]/20 outline-none transition-all"
             />
           </div>
         </div>
@@ -301,7 +301,7 @@ export function CreateStudentForm() {
               value={formData.username}
               onChange={handleChange}
               placeholder="e.g. john_doe"
-              className="w-full px-4 py-2.5 rounded-lg border border-slate-200 dark:border-slate-800 bg-white dark:bg-slate-800 text-slate-900 dark:text-white placeholder-slate-500 dark:placeholder-slate-400 focus:border-[#EBFF00] focus:ring-2 focus:ring-[#EBFF00]/20 outline-none transition-all mb-4"
+              className="w-full px-4 py-2.5 rounded-lg border border-slate-200 dark:border-white/10 bg-white dark:bg-slate-800 text-slate-900 dark:text-white placeholder-slate-500 dark:placeholder-slate-400 focus:border-[#EBFF00] focus:ring-2 focus:ring-[#EBFF00]/20 outline-none transition-all mb-4"
             />
           </div>
 
@@ -316,7 +316,7 @@ export function CreateStudentForm() {
                 value={formData.password}
                 onChange={handleChange}
                 placeholder="Minimum 6 characters"
-                className="w-full px-4 py-2.5 rounded-lg border border-slate-200 dark:border-slate-800 bg-white dark:bg-slate-800 text-slate-900 dark:text-white placeholder-slate-500 dark:placeholder-slate-400 focus:border-[#EBFF00] focus:ring-2 focus:ring-[#EBFF00]/20 outline-none transition-all"
+                className="w-full px-4 py-2.5 rounded-lg border border-slate-200 dark:border-white/10 bg-white dark:bg-slate-800 text-slate-900 dark:text-white placeholder-slate-500 dark:placeholder-slate-400 focus:border-[#EBFF00] focus:ring-2 focus:ring-[#EBFF00]/20 outline-none transition-all"
               />
               <button
                 type="button"
@@ -347,7 +347,7 @@ export function CreateStudentForm() {
               name="status"
               value={formData.status}
               onChange={handleChange}
-              className="w-full px-4 py-2.5 rounded-lg border border-slate-200 dark:border-slate-800 bg-white dark:bg-slate-800 text-slate-900 dark:text-white focus:border-[#EBFF00] focus:ring-2 focus:ring-[#EBFF00]/20 outline-none transition-all"
+              className="w-full px-4 py-2.5 rounded-lg border border-slate-200 dark:border-white/10 bg-white dark:bg-slate-800 text-slate-900 dark:text-white focus:border-[#EBFF00] focus:ring-2 focus:ring-[#EBFF00]/20 outline-none transition-all"
             >
               <option value="ACTIVE">Active</option>
               <option value="INACTIVE">Inactive</option>
@@ -360,7 +360,7 @@ export function CreateStudentForm() {
               Group (Optional)
             </label>
             {groupsLoading ? (
-              <div className="px-4 py-2.5 rounded-lg border border-slate-200 dark:border-slate-800 bg-white dark:bg-slate-800 text-slate-600 dark:text-slate-400">
+              <div className="px-4 py-2.5 rounded-lg border border-slate-200 dark:border-white/10 bg-white dark:bg-slate-800 text-slate-600 dark:text-slate-400">
                 Loading groups...
               </div>
             ) : (
@@ -368,7 +368,7 @@ export function CreateStudentForm() {
                 name="groupId"
                 value={formData.groupId}
                 onChange={handleChange}
-                className="w-full px-4 py-2.5 rounded-lg border border-slate-200 dark:border-slate-800 bg-white dark:bg-slate-800 text-slate-900 dark:text-white focus:border-[#EBFF00] focus:ring-2 focus:ring-[#EBFF00]/20 outline-none transition-all"
+                className="w-full px-4 py-2.5 rounded-lg border border-slate-200 dark:border-white/10 bg-white dark:bg-slate-800 text-slate-900 dark:text-white focus:border-[#EBFF00] focus:ring-2 focus:ring-[#EBFF00]/20 outline-none transition-all"
               >
                 <option value="">Select a group...</option>
                 {groups.map((group) => (
@@ -403,7 +403,7 @@ export function CreateStudentForm() {
                 value={formData.parentName}
                 onChange={handleChange}
                 placeholder="Parent full name"
-                className="w-full px-4 py-2.5 rounded-lg border border-slate-200 dark:border-slate-800 bg-white dark:bg-slate-800 text-slate-900 dark:text-white placeholder-slate-500 dark:placeholder-slate-400 focus:border-[#EBFF00] focus:ring-2 focus:ring-[#EBFF00]/20 outline-none transition-all"
+                className="w-full px-4 py-2.5 rounded-lg border border-slate-200 dark:border-white/10 bg-white dark:bg-slate-800 text-slate-900 dark:text-white placeholder-slate-500 dark:placeholder-slate-400 focus:border-[#EBFF00] focus:ring-2 focus:ring-[#EBFF00]/20 outline-none transition-all"
               />
             </div>
             <div>
@@ -416,7 +416,7 @@ export function CreateStudentForm() {
                 value={formData.parentPhone}
                 onChange={handleChange}
                 placeholder="+998 99 123 45 67"
-                className="w-full px-4 py-2.5 rounded-lg border border-slate-200 dark:border-slate-800 bg-white dark:bg-slate-800 text-slate-900 dark:text-white placeholder-slate-500 dark:placeholder-slate-400 focus:border-[#EBFF00] focus:ring-2 focus:ring-[#EBFF00]/20 outline-none transition-all"
+                className="w-full px-4 py-2.5 rounded-lg border border-slate-200 dark:border-white/10 bg-white dark:bg-slate-800 text-slate-900 dark:text-white placeholder-slate-500 dark:placeholder-slate-400 focus:border-[#EBFF00] focus:ring-2 focus:ring-[#EBFF00]/20 outline-none transition-all"
               />
             </div>
           </div>
@@ -431,17 +431,17 @@ export function CreateStudentForm() {
               value={formData.parentRelationship}
               onChange={handleChange}
               placeholder="Father, Mother, Guardian, etc."
-              className="w-full px-4 py-2.5 rounded-lg border border-slate-200 dark:border-slate-800 bg-white dark:bg-slate-800 text-slate-900 dark:text-white placeholder-slate-500 dark:placeholder-slate-400 focus:border-[#EBFF00] focus:ring-2 focus:ring-[#EBFF00]/20 outline-none transition-all"
+              className="w-full px-4 py-2.5 rounded-lg border border-slate-200 dark:border-white/10 bg-white dark:bg-slate-800 text-slate-900 dark:text-white placeholder-slate-500 dark:placeholder-slate-400 focus:border-[#EBFF00] focus:ring-2 focus:ring-[#EBFF00]/20 outline-none transition-all"
             />
           </div>
         </div>
 
         {/* Form Actions */}
-        <div className="flex gap-4 pt-8 border-t border-slate-200 dark:border-slate-800">
+        <div className="flex gap-4 pt-8 border-t border-slate-200 dark:border-white/10">
           <button
             type="button"
             onClick={() => window.history.back()}
-            className="flex-1 px-6 py-2.5 border border-slate-200 dark:border-slate-800 rounded-lg font-medium text-slate-700 dark:text-slate-300 hover:bg-slate-50 dark:hover:bg-slate-800 transition-colors"
+            className="flex-1 px-6 py-2.5 border border-slate-200 dark:border-white/10 rounded-lg font-medium text-slate-700 dark:text-slate-300 hover:bg-slate-50 dark:hover:bg-slate-800 transition-colors"
           >
             Cancel
           </button>

@@ -153,7 +153,7 @@ export function AdminMockTestsRoom({
             <span className="text-xs font-semibold uppercase tracking-wider text-slate-500 dark:text-slate-400">
               Total Mock Tests
             </span>
-            <span className="p-2 rounded-xl bg-yellow-400/10 text-slate-900 dark:text-yellow-500">
+            <span className="p-2 rounded-xl bg-[#d9ff00]/10 text-slate-900 dark:text-[#EBFF00]">
               <FileText className="w-5 h-5" />
             </span>
           </div>
@@ -201,14 +201,14 @@ export function AdminMockTestsRoom({
 
         <div className="bg-white dark:bg-[#131313] border border-slate-200 dark:border-white/10 rounded-2xl p-5 backdrop-blur-sm">
           <div className="flex items-center justify-between">
-            <span className="text-xs font-semibold uppercase tracking-wider text-slate-900 dark:text-yellow-500">
+            <span className="text-xs font-semibold uppercase tracking-wider text-slate-900 dark:text-[#EBFF00]">
               Total Questions
             </span>
-            <span className="p-2 rounded-xl bg-yellow-400/10 text-slate-900 dark:text-yellow-500">
+            <span className="p-2 rounded-xl bg-[#d9ff00]/10 text-slate-900 dark:text-[#EBFF00]">
               <Layers className="w-5 h-5" />
             </span>
           </div>
-          <div className="text-3xl font-extrabold text-slate-900 dark:text-yellow-500 mt-2">
+          <div className="text-3xl font-extrabold text-slate-900 dark:text-[#EBFF00] mt-2">
             {totalQuestions}
           </div>
           <div className="text-xs text-slate-500 dark:text-slate-400 mt-1">
@@ -227,7 +227,7 @@ export function AdminMockTestsRoom({
             placeholder="Search mock tests by name..."
             value={searchQuery}
             onChange={(e) => setSearchQuery(e.target.value)}
-            className="w-full bg-white dark:bg-[#131313] border border-slate-200 dark:border-white/10 rounded-xl pl-10 pr-4 py-2.5 text-sm text-slate-800 dark:text-slate-200 placeholder-slate-500 focus:outline-none focus:border-yellow-400 transition-colors"
+            className="w-full bg-white dark:bg-[#131313] border border-slate-200 dark:border-white/10 rounded-xl pl-10 pr-4 py-2.5 text-sm text-slate-800 dark:text-slate-200 placeholder-slate-500 focus:outline-none focus:border-[#d9ff00] transition-colors"
           />
         </div>
 
@@ -237,7 +237,7 @@ export function AdminMockTestsRoom({
             onClick={() => setStatusFilter("all")}
             className={`px-4 py-2 rounded-xl text-xs font-semibold transition-all whitespace-nowrap {
  statusFilter === 'all'
- ? 'bg-yellow-400 text-slate-950 shadow-md shadow-yellow-400/20'
+ ? 'bg-[#d9ff00] text-slate-950 shadow-md shadow-[#d9ff00]/20'
  : 'bg-white dark:bg-[#131313] text-slate-500 dark:text-slate-400 hover:text-slate-900 dark:text-white border border-slate-200 dark:border-white/10'
  }`}
           >
@@ -269,7 +269,7 @@ export function AdminMockTestsRoom({
         <div className="w-full md:w-auto">
           <Link
             href="/admin/mock-tests/create"
-            className="w-full md:w-auto inline-flex items-center justify-center gap-2 bg-gradient-to-r from-yellow-400 to-yellow-500 hover:from-yellow-300 hover:to-yellow-400 text-slate-950 font-bold px-5 py-2.5 rounded-xl shadow-lg shadow-yellow-400/15 hover:shadow-yellow-400/30 transition-all text-sm"
+            className="w-full md:w-auto inline-flex items-center justify-center gap-2 bg-gradient-to-r from-[#d9ff00] to-[#EBFF00] hover:from-yellow-300 hover:to-[#d9ff00] text-slate-950 font-bold px-5 py-2.5 rounded-xl shadow-lg shadow-[#d9ff00]/15 hover:shadow-[#d9ff00]/30 transition-all text-sm"
           >
             <Plus className="w-4 h-4 stroke-[3]" />
             Create Mock Test
@@ -280,7 +280,7 @@ export function AdminMockTestsRoom({
       {/* Mock Tests Room List */}
       {filteredTests.length === 0 ? (
         <Card className="bg-white dark:bg-[#131313] border-slate-200 dark:border-white/10 p-12 text-center rounded-2xl">
-          <div className="w-16 h-16 rounded-2xl bg-yellow-400/10 border border-yellow-400/20 flex items-center justify-center mx-auto mb-4 text-slate-900 dark:text-yellow-500">
+          <div className="w-16 h-16 rounded-2xl bg-[#d9ff00]/10 border border-[#d9ff00]/20 flex items-center justify-center mx-auto mb-4 text-slate-900 dark:text-[#EBFF00]">
             <FileText className="w-8 h-8" />
           </div>
           <h3 className="text-xl font-bold text-slate-900 dark:text-white mb-2">
@@ -293,7 +293,7 @@ export function AdminMockTestsRoom({
           </p>
           <Link
             href="/admin/mock-tests/import"
-            className="inline-flex items-center gap-2 bg-yellow-400 hover:bg-[#d9ff00] text-slate-950 font-bold px-6 py-2.5 rounded-xl text-sm transition-colors"
+            className="inline-flex items-center gap-2 bg-[#d9ff00] hover:bg-[#d9ff00] text-slate-950 font-bold px-6 py-2.5 rounded-xl text-sm transition-colors"
           >
             <Sparkles className="w-4 h-4" />
             Import New Test Now
@@ -315,7 +315,7 @@ export function AdminMockTestsRoom({
                 {/* Left Info */}
                 <div className="flex-1 min-w-0">
                   <div className="flex items-center gap-3 flex-wrap mb-1.5">
-                    <h3 className="text-lg font-bold text-slate-900 dark:text-white group-hover:text-slate-900 dark:text-yellow-500 transition-colors truncate">
+                    <h3 className="text-lg font-bold text-slate-900 dark:text-white group-hover:text-slate-900 dark:text-[#EBFF00] transition-colors truncate">
                       {test.name}
                     </h3>
 
@@ -343,7 +343,7 @@ export function AdminMockTestsRoom({
                     </button>
 
                     {test.activeSessionsCount > 0 && (
-                      <span className="inline-flex items-center gap-1 bg-yellow-400/10 border border-yellow-400/30 text-slate-900 dark:text-yellow-500 text-xs px-2.5 py-0.5 rounded-full font-semibold">
+                      <span className="inline-flex items-center gap-1 bg-[#d9ff00]/10 border border-[#d9ff00]/30 text-slate-900 dark:text-[#EBFF00] text-xs px-2.5 py-0.5 rounded-full font-semibold">
                         <Radio className="w-3 h-3 animate-pulse" />
                         {test.activeSessionsCount} Live Session
                       </span>
@@ -359,7 +359,7 @@ export function AdminMockTestsRoom({
                   {/* Modules & Question Count Badges */}
                   <div className="flex items-center gap-3 text-xs text-slate-500 dark:text-slate-400 flex-wrap">
                     <span className="flex items-center gap-1.5 font-medium text-slate-700 dark:text-slate-300 bg-white dark:bg-[#131313] px-2.5 py-1 rounded-lg border border-slate-200 dark:border-white/10">
-                      <Layers className="w-3.5 h-3.5 text-slate-900 dark:text-yellow-500" />
+                      <Layers className="w-3.5 h-3.5 text-slate-900 dark:text-[#EBFF00]" />
                       {test.questionCount} Questions
                     </span>
                     <span className="text-slate-600 dark:text-slate-400">
@@ -383,9 +383,9 @@ export function AdminMockTestsRoom({
                   {/* Button 1: Edit Test */}
                   <Link
                     href={`/admin/mock-tests/${test.id}/edit`}
-                    className="inline-flex items-center gap-1.5 bg-slate-100 dark:bg-[#1c1b1b]/90 hover:bg-slate-750 text-slate-800 dark:text-slate-200 hover:text-slate-900 dark:text-white border border-slate-200 dark:border-white/10 font-semibold px-4 py-2.5 rounded-xl text-xs transition-all hover:border-yellow-400/40"
+                    className="inline-flex items-center gap-1.5 bg-slate-100 dark:bg-[#1c1b1b]/90 hover:bg-slate-750 text-slate-800 dark:text-slate-200 hover:text-slate-900 dark:text-white border border-slate-200 dark:border-white/10 font-semibold px-4 py-2.5 rounded-xl text-xs transition-all hover:border-[#d9ff00]/40"
                   >
-                    <Edit className="w-3.5 h-3.5 text-slate-900 dark:text-yellow-500" />
+                    <Edit className="w-3.5 h-3.5 text-slate-900 dark:text-[#EBFF00]" />
                     Edit Test
                   </Link>
 
@@ -393,7 +393,7 @@ export function AdminMockTestsRoom({
                   <button
                     onClick={() => handleStartProctorSession(test.id)}
                     disabled={isActionBusy}
-                    className="inline-flex items-center gap-2 bg-gradient-to-r from-yellow-400 to-yellow-500 hover:from-yellow-300 hover:to-yellow-400 text-slate-950 font-bold px-4 py-2.5 rounded-xl text-xs shadow-md shadow-yellow-400/10 hover:shadow-yellow-400/25 transition-all disabled:opacity-50"
+                    className="inline-flex items-center gap-2 bg-gradient-to-r from-[#d9ff00] to-[#EBFF00] hover:from-yellow-300 hover:to-[#d9ff00] text-slate-950 font-bold px-4 py-2.5 rounded-xl text-xs shadow-md shadow-[#d9ff00]/10 hover:shadow-[#d9ff00]/25 transition-all disabled:opacity-50"
                   >
                     {loadingAction[test.id] === "proctor" ? (
                       <Loader2 className="w-3.5 h-3.5 animate-spin" />

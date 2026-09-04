@@ -68,7 +68,7 @@ export default async function ProctoredControlPage({
     >
       {/* Test Title */}
       <div className="mb-6">
-        <h1 className="text-3xl font-bold text-slate-900 dark:text-yellow-500 mb-2">
+        <h1 className="text-3xl font-bold text-slate-900 dark:text-[#EBFF00] mb-2">
           {proctoredSession.satTest.name}
         </h1>
         <p className="text-slate-500 dark:text-slate-400">
