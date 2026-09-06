@@ -1,5 +1,6 @@
 import { NextRequest, NextResponse } from "next/server";
 import { getSession } from "@/lib/auth/session";
+import { canManageAcademics, isStaff } from "@/lib/permissions/auth";
 import { prisma } from "@/lib/db/prisma";
 
 export const runtime = "nodejs";
@@ -11,9 +12,9 @@ interface RouteParams {
 export async function GET(request: NextRequest, { params }: RouteParams) {
  try {
  const session = await getSession();
- if (!session || session.role !== "ADMIN") {
+ if (!session || !isStaff(session)) {
  return NextResponse.json(
- { error: "Unauthorized - Admin access required" },
+ { error: "Unauthorized - Staff access required" },
  { status: 401 }
  );
  }
@@ -108,9 +109,9 @@ export async function GET(request: NextRequest, { params }: RouteParams) {
 export async function PUT(request: NextRequest, { params }: RouteParams) {
  try {
  const session = await getSession();
- if (!session || session.role !== "ADMIN") {
+ if (!session || !canManageAcademics(session)) {
  return NextResponse.json(
- { error: "Unauthorized - Admin access required" },
+ { error: "Unauthorized - Curriculum permissions required" },
  { status: 401 }
  );
  }
@@ -144,9 +145,9 @@ export async function PUT(request: NextRequest, { params }: RouteParams) {
 export async function DELETE(request: NextRequest, { params }: RouteParams) {
  try {
  const session = await getSession();
- if (!session || session.role !== "ADMIN") {
+ if (!session || !canManageAcademics(session)) {
  return NextResponse.json(
- { error: "Unauthorized - Admin access required" },
+ { error: "Unauthorized - Curriculum permissions required" },
  { status: 401 }
  );
  }

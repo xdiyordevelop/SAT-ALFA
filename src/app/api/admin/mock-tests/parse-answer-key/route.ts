@@ -1,5 +1,6 @@
 import { NextRequest, NextResponse } from "next/server";
 import { getSession } from "@/lib/auth/session";
+import { canManageAcademics } from "@/lib/permissions/auth";
 import { generateStructured } from "@/lib/ai/core";
 import { z } from "zod";
 
@@ -30,7 +31,7 @@ const AnswerKeySchema = z.object({
 export async function POST(request: NextRequest) {
  try {
  const session = await getSession();
- if (!session || session.role !== "ADMIN") {
+ if (!session || !canManageAcademics(session)) {
  return NextResponse.json({ success: false, error: "Unauthorized" }, { status: 401 });
  }
 

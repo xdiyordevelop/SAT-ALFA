@@ -83,38 +83,91 @@ export default async function StudentArticlesPage({
 
       <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
         {articles.length === 0 ? (
-          <div className="col-span-full py-20 text-center text-slate-500 dark:text-slate-400 bg-slate-50 dark:bg-[#0a0a0a] rounded-2xl border border-slate-200 dark:border-white/10 border-dashed">
-            No articles found matching your criteria.
+          <div className="col-span-full py-20 text-center text-slate-500 dark:text-slate-400 bg-slate-50 dark:bg-[#131313] rounded-2xl border border-slate-200 dark:border-white/10 border-dashed">
+            <BookOpen className="w-10 h-10 mx-auto mb-3 text-slate-400 opacity-40" />
+            <p className="font-bold text-slate-800 dark:text-white">No articles found matching your criteria.</p>
+            <p className="text-xs text-slate-500 dark:text-slate-400 mt-1">
+              Try exploring other categories or clearing your search query.
+            </p>
           </div>
         ) : (
-          articles.map((article) => (
-            <Link
-              href={`/student/articles/${article.slug}`}
-              key={article.id}
-              className="block group bg-white dark:bg-[#131313] border border-slate-200 dark:border-white/10 rounded-2xl p-6 hover:border-[#EBFF00]/50 transition-all hover:-translate-y-1"
-            >
-              <div className="flex items-center justify-between mb-4">
-                <span className="text-xs font-bold uppercase tracking-wider text-[#EBFF00] bg-[#EBFF00]/10 px-2.5 py-1 rounded-md">
-                  {article.category}
-                </span>
-                <div className="flex items-center gap-1.5 text-xs text-slate-500 dark:text-slate-400 font-medium">
-                  <Clock className="w-3.5 h-3.5" /> {article.readTimeMin}m
+          articles.map((article) => {
+            let vocabCount = 0;
+            try {
+              if (Array.isArray(article.vocabulary)) {
+                vocabCount = article.vocabulary.length;
+              } else if (typeof article.vocabulary === "string") {
+                const parsed = JSON.parse(article.vocabulary);
+                if (Array.isArray(parsed)) vocabCount = parsed.length;
+              }
+            } catch {
+              vocabCount = 0;
+            }
+
+            return (
+              <Link
+                href={`/student/articles/${article.slug}`}
+                key={article.id}
+                className="group flex flex-col bg-white dark:bg-[#131313] border border-slate-200 dark:border-white/10 rounded-2xl overflow-hidden hover:border-[#EBFF00]/50 transition-all duration-300 hover:-translate-y-1 hover:shadow-xl hover:shadow-black/20"
+              >
+                {/* Cover Image or Aesthetic Fallback */}
+                {article.coverImage ? (
+                  <div className="relative aspect-[16/9] w-full overflow-hidden bg-slate-900">
+                    <img
+                      src={article.coverImage}
+                      alt={article.title}
+                      className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500"
+                    />
+                    <div className="absolute inset-0 bg-gradient-to-t from-black/80 via-black/20 to-transparent" />
+                    <div className="absolute top-3 left-3">
+                      <span className="text-[11px] font-bold uppercase tracking-wider text-black bg-[#EBFF00] px-2.5 py-1 rounded-md shadow-sm">
+                        {article.category}
+                      </span>
+                    </div>
+                  </div>
+                ) : (
+                  <div className="relative aspect-[21/9] w-full bg-gradient-to-br from-slate-100 via-slate-50 to-slate-200 dark:from-[#1a1a1a] dark:via-[#161616] dark:to-[#0f0f0f] p-4 flex flex-col justify-between border-b border-slate-200 dark:border-white/5">
+                    <div className="flex items-center justify-between">
+                      <span className="text-[11px] font-bold uppercase tracking-wider text-[#EBFF00] bg-[#EBFF00]/10 px-2.5 py-1 rounded-md border border-[#EBFF00]/20">
+                        {article.category}
+                      </span>
+                      <BookOpen className="w-4 h-4 text-slate-400 group-hover:text-[#EBFF00] transition-colors" />
+                    </div>
+                  </div>
+                )}
+
+                <div className="p-6 flex-1 flex flex-col">
+                  {!article.coverImage && null}
+                  <div className="flex items-center gap-3 text-xs text-slate-500 dark:text-slate-400 mb-3">
+                    <span className="flex items-center gap-1 font-medium">
+                      <Clock className="w-3.5 h-3.5 text-slate-400" />
+                      {article.readTimeMin} min read
+                    </span>
+                    {vocabCount > 0 && (
+                      <span className="text-[11px] bg-yellow-500/10 text-yellow-600 dark:text-[#EBFF00] px-2 py-0.5 rounded-full font-bold">
+                        {vocabCount} vocab words
+                      </span>
+                    )}
+                  </div>
+
+                  <h3 className="text-xl font-bold text-slate-900 dark:text-white mb-2 group-hover:text-[#EBFF00] transition-colors line-clamp-2 leading-snug">
+                    {article.title}
+                  </h3>
+
+                  <p className="text-sm text-slate-500 dark:text-slate-400 line-clamp-3 mb-6 leading-relaxed">
+                    {article.summary}
+                  </p>
+
+                  <div className="text-xs text-slate-500 dark:text-slate-400 flex items-center justify-between mt-auto pt-4 border-t border-slate-100 dark:border-white/5">
+                    <span>{article.viewsCount} views</span>
+                    <span className="text-slate-900 dark:text-white group-hover:text-[#EBFF00] font-bold flex items-center gap-1 transition-colors">
+                      Read Article &rarr;
+                    </span>
+                  </div>
                 </div>
-              </div>
-              <h3 className="text-xl font-bold text-slate-900 dark:text-white mb-2 group-hover:text-slate-900 dark:text-[#EBFF00] transition-colors line-clamp-2">
-                {article.title}
-              </h3>
-              <p className="text-sm text-slate-500 dark:text-slate-400 line-clamp-3 mb-4">
-                {article.summary}
-              </p>
-              <div className="text-xs text-slate-500 dark:text-slate-400 flex items-center justify-between mt-auto pt-4 border-t border-slate-200 dark:border-white/10">
-                <span>{article.viewsCount} views</span>
-                <span className="text-[#EBFF00] font-medium group-hover:underline">
-                  Read Article &rarr;
-                </span>
-              </div>
-            </Link>
-          ))
+              </Link>
+            );
+          })
         )}
       </div>
     </StudentLayout>

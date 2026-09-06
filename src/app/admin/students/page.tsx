@@ -1,13 +1,14 @@
 import { prisma } from "@/lib/db/prisma";
 import { getSession } from "@/lib/auth/session";
 import { redirect } from "next/navigation";
+import { canManagePayments } from "@/lib/permissions/auth";
 import { AdminLayout } from "@/components/admin/AdminLayout";
 import { StudentsListClient } from "@/components/admin/students/StudentsListClient";
 
 export default async function StudentsPage() {
   const session = await getSession();
 
-  if (!session || session.role !== "ADMIN") {
+  if (!session || session.role === "STUDENT") {
     redirect("/login");
   }
 
@@ -41,7 +42,11 @@ export default async function StudentsPage() {
       userEmail={session.username || ""}
       userRole={session.role}
     >
-      <StudentsListClient students={students} groups={groups} />
+      <StudentsListClient
+        students={students}
+        groups={groups}
+        canCreateStudent={canManagePayments(session)}
+      />
     </AdminLayout>
   );
 }

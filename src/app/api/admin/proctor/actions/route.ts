@@ -1,12 +1,13 @@
 import { NextResponse } from 'next/server'
-import { prisma } from '@/lib/prisma'
+import { prisma } from '@/lib/db/prisma'
 import { getSession } from '@/lib/auth/session'
+import { canManageAcademics } from '@/lib/permissions/auth'
 
 export async function POST(request: Request) {
  try {
  const session = await getSession()
- if (!session || session.role !== 'ADMIN') {
- return NextResponse.json({ error: 'Unauthorized' }, { status: 401 })
+ if (!session || !canManageAcademics(session)) {
+ return NextResponse.json({ error: 'Unauthorized. Academic management access required.' }, { status: 401 })
  }
 
  const { action, participantId, sessionId, timeToAdd } = await request.json()
@@ -33,6 +34,9 @@ export async function POST(request: Request) {
  break
  case 'DISQUALIFY':
  updateData = { status: 'DISQUALIFIED', completedAt: new Date() }
+ break
+ case 'CLEAR_WARNINGS':
+ updateData = { fullscreenExitCount: 0 }
  break
  default:
  return NextResponse.json({ error: 'Invalid action' }, { status: 400 })

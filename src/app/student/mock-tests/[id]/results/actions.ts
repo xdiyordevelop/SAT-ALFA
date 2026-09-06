@@ -15,6 +15,17 @@ export async function generateAIAnalysis(attemptId: string) {
       throw new Error("Attempt or review data not found");
     }
 
+    // Return cached analysis if already generated
+    if (attempt.aiEstimatedScore && typeof attempt.aiEstimatedScore === "object") {
+      const cached = attempt.aiEstimatedScore as any;
+      if (cached.strengths && cached.weaknesses && cached.roadmap) {
+        return {
+          success: true,
+          analysis: cached,
+        };
+      }
+    }
+
     const reviewData = attempt.reviewIndex as any[];
     const domainStats: Record<string, { correct: number; total: number }> = {};
     
@@ -50,6 +61,14 @@ Return EXACTLY a JSON object matching this structure:
       userPrompt: prompt,
       temperature: 0.4,
     });
+
+    // Save to database so subsequent loads are instant and free
+    if (parsed) {
+      await prisma.studentTestAttempt.update({
+        where: { id: attemptId },
+        data: { aiEstimatedScore: parsed },
+      });
+    }
 
     return {
       success: true,

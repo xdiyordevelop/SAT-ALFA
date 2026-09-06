@@ -8,9 +8,16 @@ import { Users, Calendar, Plus, BookOpen, DollarSign } from "lucide-react";
 export default async function GroupsPage() {
   const session = await getSession();
 
-  if (!session || session.role !== "ADMIN") {
+  if (!session || session.role === "STUDENT") {
     redirect("/login");
   }
+
+  const isUserTeacher = session.role === "TEACHER";
+  const staffProfile = isUserTeacher
+    ? await prisma.staffProfile.findUnique({ where: { userId: session.userId } })
+    : null;
+  const teacherNames = [session.username.toLowerCase()];
+  if (staffProfile?.fullName) teacherNames.push(staffProfile.fullName.toLowerCase());
 
   const groups = await prisma.group.findMany({
     orderBy: { createdAt: "desc" },
@@ -21,9 +28,18 @@ export default async function GroupsPage() {
       const studentCount = await prisma.studentProfile.count({
         where: { groupId: group.id },
       });
-      return { ...group, studentCount };
+      const isMyGroup =
+        isUserTeacher &&
+        !!group.teacher &&
+        teacherNames.includes(group.teacher.toLowerCase());
+      return { ...group, studentCount, isMyGroup };
     }),
   );
+
+  // If teacher, show their assigned groups first, or all if none assigned
+  const displayedGroups = isUserTeacher
+    ? groupsWithCounts.sort((a, b) => (b.isMyGroup ? 1 : 0) - (a.isMyGroup ? 1 : 0))
+    : groupsWithCounts;
 
   return (
     <AdminLayout
@@ -40,22 +56,26 @@ export default async function GroupsPage() {
             Group Management
           </h1>
           <p className="text-slate-500 dark:text-slate-400">
-            Manage and organize student groups, memberships, and billing.
+            {isUserTeacher
+              ? "View your assigned classes, track student attendance, and guide curriculum roadmaps."
+              : "Manage and organize student groups, memberships, and billing."}
           </p>
         </div>
-        <Link
-          href="/admin/groups/create"
-          className="px-6 py-3 bg-[#EBFF00] hover:bg-[#d9ff00] text-slate-900 rounded-xl font-bold transition-colors flex items-center justify-center gap-2 shadow-lg shadow-[#EBFF00]/10"
-        >
-          <Plus className="w-5 h-5" />
-          New Group
-        </Link>
+        {!isUserTeacher && (
+          <Link
+            href="/admin/groups/create"
+            className="px-6 py-3 bg-[#EBFF00] hover:bg-[#d9ff00] text-slate-900 rounded-xl font-bold transition-colors flex items-center justify-center gap-2 shadow-lg shadow-[#EBFF00]/10"
+          >
+            <Plus className="w-5 h-5" />
+            New Group
+          </Link>
+        )}
       </div>
 
       {/* Groups Grid */}
       <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-            {groupsWithCounts.length > 0 ? (
-              groupsWithCounts.map((group, index) => (
+            {displayedGroups.length > 0 ? (
+              displayedGroups.map((group, index) => (
                 <div
                   key={group.id}
                   className="animate-slide-up"
@@ -74,6 +94,11 @@ export default async function GroupsPage() {
                         <span className="inline-flex px-2 py-0.5 bg-emerald-500/10 text-emerald-600 border border-emerald-500/20 rounded-md text-[10px] font-bold tracking-wider uppercase">
                           {group.status}
                         </span>
+                        {group.isMyGroup && (
+                          <span className="inline-flex ml-2 px-2 py-0.5 bg-[#EBFF00]/10 text-yellow-600 dark:text-[#EBFF00] border border-[#EBFF00]/30 rounded-md text-[10px] font-bold tracking-wider uppercase">
+                            My Class
+                          </span>
+                        )}
                       </div>
                     </div>
 

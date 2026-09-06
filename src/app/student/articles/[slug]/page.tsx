@@ -21,17 +21,28 @@ export default async function ArticleReadingRoom({
     article = await prisma.article.findUnique({ where: { slug } });
   }
   if (!article || !article.published) notFound();
+
+  const relatedArticles = await prisma.article.findMany({
+    where: {
+      published: true,
+      category: article.category,
+      id: { not: article.id },
+    },
+    take: 3,
+    orderBy: { viewsCount: "desc" },
+  });
+
   return (
     <StudentLayout
       title={article.title}
       breadcrumbs={[
         { label: "Student" },
         { label: "Reading Room", href: "/student/articles" },
-        { label: "Read" },
+        { label: article.category },
       ]}
     >
       <div className="flex-1 w-full min-w-0">
-        <ArticleReader article={article} />
+        <ArticleReader article={article} relatedArticles={relatedArticles} />
       </div>
     </StudentLayout>
   );

@@ -4,13 +4,16 @@ import { AI_CONFIG } from '../core/config';
 
 export class GeminiProvider implements AiProvider {
  name = 'gemini';
- 
+ private currentKeyIndex = 0;
+
  private getApiKey(): string {
  const keys = (process.env.GEMINI_API_KEY || '').split(',').map(k => k.trim()).filter(Boolean);
  if (keys.length === 0) {
  throw new Error('GEMINI_API_KEY environment variable is not configured');
  }
- return keys[Math.floor(Math.random() * keys.length)];
+ const key = keys[this.currentKeyIndex % keys.length];
+ this.currentKeyIndex = (this.currentKeyIndex + 1) % keys.length;
+ return key;
  }
 
  async generateContent(req: AiGenerateRequest): Promise<AiGenerateResponse> {
@@ -48,6 +51,9 @@ export class GeminiProvider implements AiProvider {
  break;
  } else if (error.code === 'MODEL_NOT_FOUND') {
  console.warn(`[Gemini] Model ${model} not found. Skipping to next model.`);
+ break;
+ } else if (error.message?.includes('RECITATION') || error.message?.includes('SAFETY')) {
+ console.warn(`[Gemini] Filter triggered (${error.message}) on ${model}. Skipping to next model immediately.`);
  break;
  } else {
  // Non-retryable error, try next model just in case it's a weird edge case, 

@@ -5,6 +5,8 @@ import { useParams, useRouter } from "next/navigation";
 import { Card } from "@/components/ui/Card";
 import { Button } from "@/components/ui/Button";
 import { Save, Upload, X, Plus, Trash2, Eye, EyeOff } from "lucide-react";
+import { AdminLayout } from "@/components/admin/AdminLayout";
+import { AccessDeniedView } from "@/components/admin/AccessDeniedView";
 import "katex/dist/katex.min.css";
 
 interface QuestionOption {
@@ -46,6 +48,7 @@ export default function MockTestEditPage() {
 
   const [mockTest, setMockTest] = useState<MockTest | null>(null);
   const [loading, setLoading] = useState(true);
+  const [isUnauthorized, setIsUnauthorized] = useState(false);
   const [editingQuestionIndex, setEditingQuestionIndex] = useState<
     number | null
   >(null);
@@ -58,6 +61,10 @@ export default function MockTestEditPage() {
     async function fetchTest() {
       try {
         const response = await fetch(`/api/admin/mock-tests/${testId}`);
+        if (response.status === 401 || response.status === 403) {
+          setIsUnauthorized(true);
+          return;
+        }
         if (!response.ok) throw new Error("Failed to fetch test");
         const data = await response.json();
         setMockTest(data);
@@ -131,6 +138,25 @@ export default function MockTestEditPage() {
       console.error("Delete error:", error);
     }
   };
+
+  if (isUnauthorized) {
+    return (
+      <AdminLayout
+        title="Access Denied"
+        breadcrumbs={[
+          { label: "Admin" },
+          { label: "Mock Tests", href: "/admin/mock-tests" },
+          { label: "Edit" },
+        ]}
+      >
+        <AccessDeniedView
+          title="Exam Editing Restricted"
+          message="Editing mock test questions, answer keys, and exam details is restricted to Teachers and Super Administrators."
+          requiredRole="Super Admin or Teacher"
+        />
+      </AdminLayout>
+    );
+  }
 
   if (loading) {
     return <div className="text-center py-8">Loading...</div>;

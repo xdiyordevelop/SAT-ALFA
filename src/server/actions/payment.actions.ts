@@ -3,10 +3,11 @@
 import { prisma } from "@/lib/db/prisma";
 import { revalidatePath } from "next/cache";
 import { getSession } from "@/lib/auth/session";
+import { canManagePayments } from "@/lib/permissions/auth";
 
 export async function getPaymentsData(selectedMonth: string) {
  const session = await getSession();
- if (!session || session.role !== 'ADMIN') throw new Error('Unauthorized');
+ if (!session || !canManagePayments(session)) throw new Error('Unauthorized');
 
  // Format selectedMonth cleanly as YYYY-MM
  const monthRegex = /^\d{4}-\d{2}$/;
@@ -55,6 +56,8 @@ export async function getPaymentsData(selectedMonth: string) {
  id: student.id,
  name: `${student.firstName} ${student.lastName}`,
  username: student.user?.username || "",
+ groupId: group.id,
+ groupName: group.name,
  fee,
  amountPaid,
  debt,
@@ -95,7 +98,7 @@ export async function recordStudentPayment({
  notes?: string;
 }) {
  const session = await getSession();
- if (!session || session.role !== 'ADMIN') throw new Error('Unauthorized');
+ if (!session || !canManagePayments(session)) throw new Error('Unauthorized');
 
  const group = await prisma.group.findUnique({
  where: { id: groupId }
@@ -134,6 +137,27 @@ export async function recordStudentPayment({
  notes
  }
  });
+
+ try {
+    const student = await prisma.studentProfile.findUnique({
+      where: { id: studentId },
+      select: { userId: true }
+    });
+
+    if (student?.userId) {
+      const { createNotification } = await import("@/server/actions/notification.actions");
+      const formattedAmount = Number(amountPaid).toLocaleString();
+      const statusTitle = status === "PAID" ? "Payment Confirmed" : status === "PARTIAL" ? "Partial Payment Recorded" : "Payment Update";
+      await createNotification(student.userId, {
+        title: statusTitle,
+        message: `Payment for ${month} has been recorded: ${formattedAmount} UZS (${status}).`,
+        type: "PAYMENT",
+        link: "/student/payments"
+      });
+    }
+  } catch (err) {
+    console.error("Failed to dispatch payment notification:", err);
+  }
 
  revalidatePath("/admin/payments");
  return { success: true };

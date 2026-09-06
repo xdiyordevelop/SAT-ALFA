@@ -2,6 +2,7 @@
 
 import { prisma } from "@/lib/db/prisma";
 import { getSession } from "@/lib/auth/session";
+import { isStaff, canManagePayments } from "@/lib/permissions/auth";
 import { revalidatePath } from "next/cache";
 
 export async function createGroup(data: {
@@ -11,8 +12,8 @@ export async function createGroup(data: {
 }) {
  const session = await getSession();
 
- if (!session || session.role !== "ADMIN") {
- throw new Error("Unauthorized");
+ if (!session || !canManagePayments(session)) {
+ throw new Error("Unauthorized: Only Administrators and Managers can create groups");
  }
 
  const existingGroup = await prisma.group.findUnique({
@@ -43,8 +44,8 @@ export async function updateGroup(groupId: string, data: {
 }) {
  const session = await getSession();
 
- if (!session || session.role !== "ADMIN") {
- throw new Error("Unauthorized");
+ if (!session || !canManagePayments(session)) {
+ throw new Error("Unauthorized: Only Administrators and Managers can update groups");
  }
 
  const group = await prisma.group.update({
@@ -64,7 +65,7 @@ export async function updateGroup(groupId: string, data: {
 export async function addStudentToGroup(groupId: string, studentId: string) {
  const session = await getSession();
 
- if (!session || session.role !== "ADMIN") {
+ if (!session || !isStaff(session)) {
  throw new Error("Unauthorized");
  }
 
@@ -89,7 +90,7 @@ export async function addStudentToGroup(groupId: string, studentId: string) {
 export async function removeStudentFromGroup(studentId: string, groupId: string) {
  const session = await getSession();
 
- if (!session || session.role !== "ADMIN") {
+ if (!session || !isStaff(session)) {
  throw new Error("Unauthorized");
  }
 
@@ -104,11 +105,11 @@ export async function removeStudentFromGroup(studentId: string, groupId: string)
 }
 
 export async function deleteGroup(groupId: string) {
- const session = await getSession();
+  const session = await getSession();
 
- if (!session || session.role !== "ADMIN") {
- throw new Error("Unauthorized");
- }
+  if (!session || !canManagePayments(session)) {
+    throw new Error("Unauthorized: Only Administrators and Managers can delete groups");
+  }
 
  await prisma.group.delete({
  where: { id: groupId },
@@ -121,7 +122,7 @@ export async function deleteGroup(groupId: string) {
 export async function getGroupDetails(groupId: string) {
  const session = await getSession();
 
- if (!session || session.role !== "ADMIN") {
+ if (!session || !isStaff(session)) {
  throw new Error("Unauthorized");
  }
 

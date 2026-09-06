@@ -1,6 +1,7 @@
 import { prisma } from "@/lib/db/prisma";
 import { getSession } from "@/lib/auth/session";
 import { redirect, notFound } from "next/navigation";
+import { canManagePayments } from "@/lib/permissions/auth";
 import { AdminLayout } from "@/components/admin/AdminLayout";
 import { GroupDetailContent } from "@/components/admin/groups/GroupDetailContent";
 
@@ -12,9 +13,11 @@ export default async function GroupDetailPage({
   params,
 }: GroupDetailPageProps) {
   const session = await getSession();
-  if (!session || session.role !== "ADMIN") {
+  if (!session || session.role === "STUDENT") {
     redirect("/login");
   }
+
+  const canManageBilling = canManagePayments(session);
 
   const { id } = await params;
   const d = new Date();
@@ -24,7 +27,10 @@ export default async function GroupDetailPage({
     where: { id },
     include: {
       studentProfiles: {
-        include: { user: true, payments: { where: { month: currentMonth } } },
+        include: {
+          user: true,
+          ...(canManageBilling ? { payments: { where: { month: currentMonth } } } : {}),
+        },
         orderBy: { firstName: "asc" },
       },
     },
@@ -35,7 +41,7 @@ export default async function GroupDetailPage({
   }
 
   const otherStudents = await prisma.studentProfile.findMany({
-    where: { status: "ACTIVE", NOT: { groupId: id } },
+    where: { status: "ACTIVE", groupId: null },
     include: {
       user: { select: { username: true } },
       group: { select: { name: true } },
@@ -59,11 +65,7 @@ export default async function GroupDetailPage({
         group={group}
         otherStudents={otherStudents}
         currentMonth={currentMonth}
-      />
-      <GroupDetailContent
-        group={group}
-        otherStudents={otherStudents}
-        currentMonth={currentMonth}
+        canManagePayments={canManageBilling}
       />
     </AdminLayout>
   );

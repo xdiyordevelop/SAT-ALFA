@@ -1,6 +1,7 @@
 import { prisma } from "@/lib/db/prisma";
 import { getSession } from "@/lib/auth/session";
 import { redirect, notFound } from "next/navigation";
+import { canManagePayments } from "@/lib/permissions/auth";
 import { AdminLayout } from "@/components/admin/AdminLayout";
 import { StudentDetailContent } from "@/components/admin/students/StudentDetailContent";
 import {
@@ -17,21 +18,35 @@ export default async function StudentDetailPage({
   params,
 }: StudentDetailPageProps) {
   const session = await getSession();
-  if (!session || session.role !== "ADMIN") {
+  if (!session || session.role === "STUDENT") {
     redirect("/login");
   }
 
+  const canManageBilling = canManagePayments(session);
+
   const { id } = await params;
-  const student = await prisma.studentProfile.findUnique({ where: { id } });
+  const student = await prisma.studentProfile.findUnique({
+    where: { id },
+    include: {
+      group: true,
+      parent: true,
+    },
+  });
   if (!student) {
     notFound();
   }
 
   const user = await prisma.user.findUnique({ where: { id: student.userId } });
-  const payments = await prisma.payment.findMany({
-    where: { studentId: id },
-    orderBy: { createdAt: "desc" },
+  const groups = await prisma.group.findMany({
+    orderBy: { name: "asc" },
   });
+
+  const payments = canManageBilling
+    ? await prisma.payment.findMany({
+        where: { studentId: id },
+        orderBy: { createdAt: "desc" },
+      })
+    : [];
 
   const approvedTests = await getApprovedTestsForStudent(id);
   const pendingTests = await getPendingTestsForStudent(id);
@@ -56,11 +71,13 @@ export default async function StudentDetailPage({
       <StudentDetailContent
         student={student}
         user={user}
+        groups={groups}
         payments={payments}
         approvedTests={approvedTests}
         pendingTests={pendingTests}
         metrics={metrics}
         attendance={attendance}
+        canManagePayments={canManageBilling}
       />
     </AdminLayout>
   );

@@ -15,7 +15,7 @@ export default async function AdminResultDetailRoute({
   params,
 }: ResultDetailPageProps) {
   const session = await getSession();
-  if (!session || session.role !== "ADMIN") {
+  if (!session || session.role === "STUDENT") {
     redirect("/login");
   }
 

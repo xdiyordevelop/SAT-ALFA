@@ -49,30 +49,37 @@ export function AIAnalysisLoader({
   if (!analysis) return null;
 
   return (
-    <Card className="p-8 bg-white dark:bg-[#131313] shadow border border-slate-200 dark:border-white/10">
+    <Card className="p-8 bg-white dark:bg-[#131313] shadow-lg border border-slate-200 dark:border-white/10 rounded-2xl">
       <div className="flex items-center gap-3 mb-6">
-        <div className="p-2 bg-indigo-100 rounded-lg">
-          <Brain className="w-6 h-6 text-indigo-600" />
+        <div className="p-2.5 bg-[#EBFF00]/15 rounded-xl border border-[#EBFF00]/30">
+          <Brain className="w-6 h-6 text-slate-900 dark:text-[#EBFF00]" />
         </div>
-        <h2 className="text-2xl font-bold text-slate-800 dark:text-slate-200">
-          AI Performance Diagnostic
-        </h2>
+        <div>
+          <h2 className="text-2xl font-black text-slate-900 dark:text-white">
+            AI Performance Diagnostic
+          </h2>
+          <p className="text-xs text-slate-500 dark:text-slate-400">
+            Powered by Gemini AI Diagnostic Engine
+          </p>
+        </div>
       </div>
 
-      <div className="grid md:grid-cols-2 gap-8">
+      <div className="grid md:grid-cols-2 gap-6">
         {/* Strengths */}
-        <div className="bg-emerald-50 rounded-xl p-6 border border-emerald-100">
+        <div className="bg-emerald-500/5 dark:bg-emerald-950/20 rounded-2xl p-6 border border-emerald-500/20">
           <div className="flex items-center gap-2 mb-4">
-            <TrendingUp className="w-5 h-5 text-emerald-600" />
-            <h3 className="font-bold text-emerald-900">Strong Points</h3>
+            <TrendingUp className="w-5 h-5 text-emerald-600 dark:text-emerald-400" />
+            <h3 className="font-bold text-emerald-950 dark:text-emerald-300">
+              Strong Points & Mastered Skills
+            </h3>
           </div>
           <ul className="space-y-3">
-            {analysis.strengths.map((str: string, i: number) => (
+            {analysis.strengths?.map((str: string, i: number) => (
               <li
                 key={i}
-                className="flex items-start gap-2 text-sm text-emerald-800"
+                className="flex items-start gap-2.5 text-sm text-slate-700 dark:text-emerald-200/90 leading-relaxed"
               >
-                <span className="mt-1 text-emerald-500">•</span>
+                <span className="mt-1 text-emerald-500 font-bold">✓</span>
                 <span>{str}</span>
               </li>
             ))}
@@ -80,18 +87,20 @@ export function AIAnalysisLoader({
         </div>
 
         {/* Weaknesses */}
-        <div className="bg-rose-50 rounded-xl p-6 border border-rose-100">
+        <div className="bg-rose-500/5 dark:bg-rose-950/20 rounded-2xl p-6 border border-rose-500/20">
           <div className="flex items-center gap-2 mb-4">
-            <AlertCircle className="w-5 h-5 text-rose-600" />
-            <h3 className="font-bold text-rose-900">Areas for Improvement</h3>
+            <AlertCircle className="w-5 h-5 text-rose-600 dark:text-rose-400" />
+            <h3 className="font-bold text-rose-950 dark:text-rose-300">
+              Target Areas for Improvement
+            </h3>
           </div>
           <ul className="space-y-3">
-            {analysis.weaknesses.map((wk: string, i: number) => (
+            {analysis.weaknesses?.map((wk: string, i: number) => (
               <li
                 key={i}
-                className="flex items-start gap-2 text-sm text-rose-800"
+                className="flex items-start gap-2.5 text-sm text-slate-700 dark:text-rose-200/90 leading-relaxed"
               >
-                <span className="mt-1 text-rose-500">•</span>
+                <span className="mt-1 text-rose-500 font-bold">!</span>
                 <span>{wk}</span>
               </li>
             ))}
@@ -100,23 +109,29 @@ export function AIAnalysisLoader({
       </div>
 
       {/* Roadmap */}
-      <div className="mt-8 bg-blue-50 rounded-xl p-6 border border-blue-100">
-        <div className="flex items-center gap-2 mb-4">
-          <Map className="w-5 h-5 text-blue-600" />
-          <h3 className="font-bold text-blue-900">Actionable Study Roadmap</h3>
+      {analysis.roadmap && analysis.roadmap.length > 0 && (
+        <div className="mt-6 bg-slate-50 dark:bg-[#0a0a0a] rounded-2xl p-6 border border-slate-200 dark:border-white/10">
+          <div className="flex items-center gap-2 mb-4">
+            <Map className="w-5 h-5 text-slate-900 dark:text-[#EBFF00]" />
+            <h3 className="font-bold text-slate-900 dark:text-white">
+              Actionable Study Roadmap
+            </h3>
+          </div>
+          <ul className="grid sm:grid-cols-2 md:grid-cols-3 gap-4">
+            {analysis.roadmap.map((rm: string, i: number) => (
+              <li
+                key={i}
+                className="flex flex-col gap-2 text-sm text-slate-700 dark:text-slate-300 bg-white dark:bg-[#131313] p-4 rounded-xl border border-slate-200 dark:border-white/10 shadow-sm"
+              >
+                <span className="inline-flex items-center px-2 py-0.5 rounded text-xs font-bold uppercase tracking-wider bg-[#EBFF00]/15 text-slate-900 dark:text-[#EBFF00] border border-[#EBFF00]/30 w-fit">
+                  Step {i + 1}
+                </span>
+                <span className="leading-relaxed font-medium">{rm}</span>
+              </li>
+            ))}
+          </ul>
         </div>
-        <ul className="space-y-3">
-          {analysis.roadmap.map((rm: string, i: number) => (
-            <li
-              key={i}
-              className="flex items-start gap-3 text-sm text-blue-800 bg-white dark:bg-[#131313] p-3 rounded-lg border border-blue-100 shadow-sm"
-            >
-              <span className="font-bold text-blue-500">Step {i + 1}:</span>
-              <span>{rm}</span>
-            </li>
-          ))}
-        </ul>
-      </div>
+      )}
     </Card>
   );
 }

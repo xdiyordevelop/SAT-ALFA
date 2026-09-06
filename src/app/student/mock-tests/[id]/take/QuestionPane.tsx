@@ -43,8 +43,8 @@ export function QuestionPane({
   };
 
   const handleFillInChange = (value: string) => {
-    // Limit to 5 characters for fill-in
-    const limited = value.slice(0, 5);
+    // Limit to 7 characters for fill-in (allows negative decimals or fractions like -12/13)
+    const limited = value.slice(0, 7);
     selectAnswer(question.id, limited);
   };
 
@@ -98,21 +98,21 @@ export function QuestionPane({
                     onClick={() => handleSelectAnswer(key)}
                     className={`flex-1 text-left p-4 rounded-xl border transition-all duration-200 relative group ${
                       isSelected
-                        ? "border-blue-500 bg-blue-500/5 shadow-[0_0_0_1px_rgba(59,130,246,1)]"
+                        ? "border-[#EBFF00] bg-[#EBFF00]/10 dark:bg-[#EBFF00]/15 shadow-[0_0_15px_rgba(235,255,0,0.15)] ring-1 ring-[#EBFF00]/50"
                         : isEliminated
                           ? "border-slate-200 dark:border-white/10 opacity-50 bg-transparent"
-                          : "border-slate-200 dark:border-white/10 bg-transparent hover:border-slate-500"
+                          : "border-slate-200 dark:border-white/10 bg-transparent hover:border-slate-400 dark:hover:border-white/30"
                     }`}
                   >
                     <div className="flex items-start gap-4">
                       {/* Circle Indicator */}
                       <div
-                        className={`w-7 h-7 rounded-full border-2 flex items-center justify-center flex-shrink-0 font-bold text-sm transition-colors ${
+                        className={`w-7 h-7 rounded-full border-2 flex items-center justify-center flex-shrink-0 font-black text-sm transition-all ${
                           isSelected
-                            ? "border-blue-500 bg-blue-500 text-slate-900 dark:text-white"
+                            ? "border-[#EBFF00] bg-[#EBFF00] text-slate-950 shadow-[0_0_10px_rgba(235,255,0,0.35)]"
                             : isEliminated
                               ? "border-slate-200 dark:border-white/10 text-slate-600 dark:text-slate-400"
-                              : "border-slate-500 text-slate-600 dark:text-slate-400 group-hover:border-slate-400"
+                              : "border-slate-400 dark:border-white/20 text-slate-600 dark:text-slate-400 group-hover:border-slate-300"
                         }`}
                       >
                         {key}
@@ -121,7 +121,7 @@ export function QuestionPane({
                       <MathRenderer
                         text={String(value)}
                         inline
-                        className={`text-slate-700 dark:text-slate-300 flex-1 leading-relaxed ${
+                        className={`text-slate-700 dark:text-slate-300 flex-1 leading-relaxed font-medium ${
                           isEliminated
                             ? "line-through text-slate-500 dark:text-slate-400"
                             : ""
@@ -151,18 +151,22 @@ export function QuestionPane({
         ) : (
           // Fill-in-the-Blank
           <div className="bg-slate-50 dark:bg-[#0a0a0a] border border-slate-200 dark:border-white/10 rounded-xl p-6 mt-4">
-            <div className="space-y-4">
-              <label className="block text-sm font-semibold text-slate-600 dark:text-slate-400">
-                Student-Produced Response
-              </label>
+              <div className="flex items-center justify-between">
+                <label className="block text-sm font-semibold text-slate-600 dark:text-slate-400">
+                  Student-Produced Response
+                </label>
+                <span className="text-xs text-slate-500 dark:text-slate-400">
+                  Fractions (e.g., 3/4) & decimals permitted
+                </span>
+              </div>
               <div className="flex items-center gap-2">
                 <input
                   type="text"
                   value={selectedAnswer || ""}
                   onChange={(e) => handleFillInChange(e.target.value)}
                   placeholder="Enter your answer"
-                  maxLength={5}
-                  className="w-full max-w-xs px-4 py-3 bg-slate-50 dark:bg-[#0a0a0a] border-2 border-slate-200 dark:border-white/10 text-slate-900 dark:text-white placeholder-slate-600 rounded-lg focus:outline-none focus:border-blue-500 transition-colors duration-200 text-lg"
+                  maxLength={7}
+                  className="w-full max-w-xs px-4 py-3 bg-slate-50 dark:bg-[#0a0a0a] border-2 border-slate-200 dark:border-white/10 text-slate-900 dark:text-white placeholder-slate-600 rounded-lg focus:outline-none focus:border-[#EBFF00] focus:ring-2 focus:ring-[#EBFF00]/20 transition-all duration-200 text-lg font-mono"
                 />
                 {selectedAnswer && (
                   <button
@@ -175,7 +179,6 @@ export function QuestionPane({
                 )}
               </div>
             </div>
-          </div>
         )}
       </div>
     </div>

@@ -2,12 +2,13 @@
 
 import { prisma } from "@/lib/db/prisma";
 import { getSession } from "@/lib/auth/session";
+import { isStaff } from "@/lib/permissions/auth";
 import { getSmsProvider, formatTestResultMessage, formatProgressUpdateMessage } from "@/lib/sms/provider";
 
 export async function sendTestResultNotification(mockTestId: string) {
  try {
  const session = await getSession();
- if (!session || session.role !== "ADMIN") {
+ if (!session || !isStaff(session)) {
  return { error: "Unauthorized" };
  }
 
@@ -73,7 +74,7 @@ export async function sendTestResultNotification(mockTestId: string) {
 export async function sendProgressUpdateNotification(studentId: string) {
  try {
  const session = await getSession();
- if (!session || session.role !== "ADMIN") {
+ if (!session || !isStaff(session)) {
  return { error: "Unauthorized" };
  }
 
@@ -148,7 +149,7 @@ export async function sendProgressUpdateNotification(studentId: string) {
 export async function getSmsNotifications(limit: number = 50) {
  try {
  const session = await getSession();
- if (!session || session.role !== "ADMIN") {
+ if (!session || !isStaff(session)) {
  return { error: "Unauthorized" };
  }
 

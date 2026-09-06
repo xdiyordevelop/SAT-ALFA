@@ -9,9 +9,11 @@ import { EmptyState } from "@/components/ui/EmptyState";
 export function StudentsListClient({
   students,
   groups,
+  canCreateStudent = true,
 }: {
   students: any[];
   groups: any[];
+  canCreateStudent?: boolean;
 }) {
   const [searchQuery, setSearchQuery] = useState("");
   const [selectedGroup, setSelectedGroup] = useState("All Groups");
@@ -57,11 +59,13 @@ export function StudentsListClient({
               <Download className="w-4 h-4" />
               Export
             </a>
-            <Link href="/admin/students/create" className="w-full sm:w-auto">
-              <Button variant="primary" size="md" className="w-full">
-                Add Student
-              </Button>
-            </Link>
+            {canCreateStudent && (
+              <Link href="/admin/students/create" className="w-full sm:w-auto">
+                <Button variant="primary" size="md" className="w-full">
+                  Add Student
+                </Button>
+              </Link>
+            )}
           </div>
         </div>
       </div>

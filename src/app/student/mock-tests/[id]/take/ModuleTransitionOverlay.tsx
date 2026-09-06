@@ -15,8 +15,11 @@ export function ModuleTransitionOverlay(): React.ReactElement {
     setBreakActive,
   } = useTestContext();
 
-  const { getTestProgress, advanceToNextModule } = useTestState();
-  const progress = getTestProgress();
+  const { getModuleProgress, advanceToNextModule } = useTestState();
+  const progress = useMemo(
+    () => getModuleProgress(currentModule),
+    [getModuleProgress, currentModule, isTransitionActive],
+  );
 
   const handleContinue = () => {
     setTransitionActive(false);
@@ -39,34 +42,34 @@ export function ModuleTransitionOverlay(): React.ReactElement {
       : `Math Module ${currentModule - 2}`;
 
   return (
-    <div className="fixed inset-0 z-50 bg-slate-50 dark:bg-[#0a0a0a] flex flex-col items-center justify-center p-4 backdrop-blur-sm">
-      <div className="max-w-md w-full bg-white dark:bg-[#131313] border border-slate-200 dark:border-white/10 rounded-xl p-8 shadow-2xl relative overflow-hidden">
+    <div className="fixed inset-0 z-50 bg-slate-950/80 flex flex-col items-center justify-center p-4 backdrop-blur-sm animate-fade-in">
+      <div className="max-w-md w-full bg-white dark:bg-[#131313] border border-slate-200 dark:border-white/10 rounded-2xl p-8 shadow-2xl relative overflow-hidden">
         {/* Top accent bar */}
-        <div className="absolute top-0 left-0 right-0 h-1 bg-[#EBFF00]" />
+        <div className="absolute top-0 left-0 right-0 h-1.5 bg-[#EBFF00]" />
 
-        <h2 className="text-2xl font-bold text-slate-900 dark:text-white mb-2">
+        <h2 className="text-2xl font-black text-slate-900 dark:text-white mb-1">
           End of {moduleName}
         </h2>
-        <p className="text-slate-500 dark:text-slate-400 mb-6">
-          Review your progress before moving on.
+        <p className="text-slate-500 dark:text-slate-400 text-sm mb-6">
+          Review your module progress before moving forward.
         </p>
 
         {/* Progress Summary Box */}
-        <div className="bg-slate-50 dark:bg-[#0a0a0a] border border-slate-200 dark:border-white/10 rounded-lg p-5 mb-6 space-y-4">
+        <div className="bg-slate-50 dark:bg-[#0a0a0a] border border-slate-200 dark:border-white/10 rounded-xl p-5 mb-6 space-y-4">
           <div className="flex justify-between items-center">
             <div className="flex items-center gap-2 text-slate-600 dark:text-slate-400">
-              <CheckCircle2 className="w-5 h-5 text-emerald-600" />
-              <span>Answered Questions</span>
+              <CheckCircle2 className="w-5 h-5 text-emerald-500" />
+              <span>Answered</span>
             </div>
             <span className="font-bold text-slate-900 dark:text-white">
-              {progress.answered}
+              {progress.answered} / {progress.total}
             </span>
           </div>
 
           <div className="flex justify-between items-center">
             <div className="flex items-center gap-2 text-slate-600 dark:text-slate-400">
               <AlertCircle className="w-5 h-5 text-slate-900 dark:text-[#EBFF00]" />
-              <span>Flagged for Review</span>
+              <span>Marked for Review</span>
             </div>
             <span className="font-bold text-slate-900 dark:text-white">
               {progress.marked}
@@ -75,13 +78,13 @@ export function ModuleTransitionOverlay(): React.ReactElement {
 
           <div className="flex justify-between items-center">
             <div className="flex items-center gap-2 text-slate-600 dark:text-slate-400">
-              <div className="w-5 h-5 rounded-full border-2 border-slate-600 flex items-center justify-center text-[10px] font-bold">
+              <div className="w-5 h-5 rounded-full border-2 border-slate-400 flex items-center justify-center text-[10px] font-bold">
                 ?
               </div>
               <span>Unanswered</span>
             </div>
-            <span className="font-bold text-red-600">
-              {progress.total - progress.answered}
+            <span className={`font-bold ${progress.unanswered > 0 ? "text-amber-500" : "text-emerald-500"}`}>
+              {progress.unanswered}
             </span>
           </div>
         </div>

@@ -106,7 +106,7 @@ export function StudentDashboardView({
   return (
     <div className="flex flex-col gap-6 lg:gap-8 w-full">
       {/* Dashboard Header */}
-      <div className="flex justify-between items-end mb-2">
+      <div className="flex flex-col sm:flex-row justify-between items-start sm:items-end gap-4 mb-2">
         <div>
           <h2 className="text-3xl md:text-4xl font-black text-slate-900 dark:text-white mb-2 tracking-tight">
             Welcome, {studentName.split(" ")[0] || "Student"}.
@@ -115,6 +115,16 @@ export function StudentDashboardView({
             Target Score: 1550 | <span className="text-slate-900 dark:text-[#EBFF00]">Average Score: {metrics.averageScore > 0 ? Math.round(metrics.averageScore) : '---'}</span>
           </p>
         </div>
+        <Link
+          href="/student/mock-tests/proctor/join"
+          className="flex items-center gap-2.5 px-5 py-3 rounded-xl bg-[#EBFF00] hover:bg-[#d4e600] text-slate-950 font-black text-sm shadow-[0_0_15px_rgba(235,255,0,0.25)] transition-all active:scale-[0.98] whitespace-nowrap"
+        >
+          <span className="relative flex h-2.5 w-2.5">
+            <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-slate-950 opacity-75"></span>
+            <span className="relative inline-flex rounded-full h-2.5 w-2.5 bg-slate-950"></span>
+          </span>
+          Join Live Exam
+        </Link>
       </div>
 
       {/* Bento Grid Layout */}

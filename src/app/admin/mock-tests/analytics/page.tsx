@@ -26,8 +26,8 @@ export default async function AdminAnalyticsPage({
 }) {
   const session = await getSession();
 
-  // Verify admin access
-  if (!session || session.role !== "ADMIN") {
+  // Verify staff access
+  if (!session || session.role === "STUDENT") {
     redirect("/login");
   }
 

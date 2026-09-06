@@ -1,5 +1,6 @@
 import { NextRequest, NextResponse } from "next/server";
 import { getSession } from "@/lib/auth/session";
+import { canManageAcademics, isStaff } from "@/lib/permissions/auth";
 import { prisma } from "@/lib/db/prisma";
 
 export const runtime = "nodejs";
@@ -34,7 +35,7 @@ interface ImportPayload {
 export async function GET(request: NextRequest) {
   try {
     const session = await getSession();
-    if (!session || session.role !== "ADMIN") return NextResponse.json([], { status: 401 });
+    if (!session || !isStaff(session)) return NextResponse.json([], { status: 401 });
     
     const tests = await prisma.sATMockTest.findMany({
       orderBy: { createdAt: 'desc' },
@@ -61,9 +62,9 @@ export async function POST(request: NextRequest) {
  try {
  const session = await getSession();
 
- if (!session || session.role !== "ADMIN") {
+ if (!session || !canManageAcademics(session)) {
  return NextResponse.json(
- { success: false, error: "Unauthorized - Admin access required" },
+ { success: false, error: "Unauthorized - Academic management access required" },
  { status: 401 }
  );
  }
@@ -135,11 +136,12 @@ export async function POST(request: NextRequest) {
 
     let satTest;
     if (existingTest) {
-      // First, delete any existing questions for this specific module to prevent duplicates
+      // Delete existing questions only for the modules included in this upload
+      const modulesToReplace = Array.from(new Set(questionsToCreate.map(q => q.module)));
       await prisma.sATQuestion.deleteMany({
         where: {
           satTestId: existingTest.id,
-          module: questionsToCreate[0].module // assume all uploaded are for the same module
+          module: { in: modulesToReplace }
         }
       });
       

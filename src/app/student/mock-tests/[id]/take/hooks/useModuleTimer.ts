@@ -3,8 +3,10 @@
 import { useEffect, useRef, useCallback } from 'react';
 import { useTestContext } from '../../context/TestContext';
 import { getModuleDuration, SAT_CONFIG } from '@/lib/constants/sat-config';
+import { useTestCompletion } from './useTestCompletion';
 
 export function useModuleTimer(userId: string, testId: string): void {
+ const completeTest = useTestCompletion(userId, testId);
  const {
  currentModule,
  testStatus,
@@ -95,7 +97,7 @@ export function useModuleTimer(userId: string, testId: string): void {
  // If last module (4), finish test
  if (currentModule === 4) {
  setPaused(true);
- // Trigger test completion workflow (handled by TestEngine)
+ completeTest();
  } else {
  // Show transition overlay
  setTransitionActive(true);

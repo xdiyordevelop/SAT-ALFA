@@ -1,10 +1,12 @@
 import { cookies } from "next/headers";
 import { SignJWT, jwtVerify } from "jose";
 
+export type UserRole = "SUPER_ADMIN" | "ADMIN" | "TEACHER" | "MANAGER" | "STUDENT";
+
 export interface Session {
  userId: string;
  username: string;
- role: "ADMIN" | "STUDENT";
+ role: UserRole;
 }
 
 const SESSION_COOKIE = "sat_alfa_session";

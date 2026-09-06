@@ -16,6 +16,7 @@ interface TestHeaderProps {
 
 export function TestHeader({
   moduleNumber,
+  proctorCode,
 }: TestHeaderProps): React.ReactElement {
   const {
     remainingTimeMs,
@@ -57,17 +58,23 @@ export function TestHeader({
               {getSectionName()} <span className="opacity-50">/</span> {getSubTitle()}
             </span>
           </div>
+          {proctorCode && (
+            <div className="flex items-center gap-1.5 px-2.5 py-1 rounded-full bg-rose-500/10 border border-rose-500/20 text-rose-500 text-xs font-bold tracking-wider">
+              <span className="w-2 h-2 rounded-full bg-rose-500 animate-pulse" />
+              LIVE PROCTORING
+            </div>
+          )}
         </div>
 
         {/* Center: Timer */}
-        <div className="absolute left-1/2 top-1/2 -translate-x-1/2 -translate-y-1/2 flex items-center gap-4">
+        <div className="absolute left-1/2 top-1/2 -translate-x-1/2 -translate-y-1/2 flex items-center gap-3">
           <div className="flex items-center justify-center bg-slate-100 dark:bg-[#1c1b1b] px-4 py-1.5 rounded-md border border-slate-200 dark:border-white/5 min-w-[120px] shadow-[0_0_10px_rgba(235,255,0,0.05)]">
             {!isTimerHidden ? (
               <TimerDisplay remainingTimeMs={remainingTimeMs} isPaused={isPaused} />
             ) : (
               <div className="flex items-center gap-2">
                 <Clock className="w-4 h-4 text-slate-500 dark:text-slate-400" />
-                <span className="font-mono text-sm font-bold text-slate-500 dark:text-slate-400">Yashirilgan</span>
+                <span className="font-mono text-sm font-bold text-slate-500 dark:text-slate-400">Hidden</span>
               </div>
             )}
           </div>
@@ -75,7 +82,7 @@ export function TestHeader({
             onClick={() => setIsTimerHidden(!isTimerHidden)}
             className="text-[11px] font-black uppercase tracking-wider text-slate-500 dark:text-slate-400 hover:text-slate-900 dark:hover:text-white transition-colors"
           >
-            {isTimerHidden ? "Ko'rsatish" : "Yashirish"}
+            {isTimerHidden ? "Show" : "Hide"}
           </button>
         </div>
 
@@ -85,7 +92,7 @@ export function TestHeader({
           <button
             onClick={() => requestFullscreen()}
             className="flex items-center justify-center p-2 rounded-md text-slate-500 dark:text-slate-400 hover:bg-slate-100 dark:hover:bg-[#1c1b1b] hover:text-slate-900 dark:hover:text-white transition-colors"
-            title="To'liq ekran"
+            title="Toggle Fullscreen"
           >
             <Maximize className="w-5 h-5" />
           </button>
@@ -99,10 +106,10 @@ export function TestHeader({
                 ? "bg-[#EBFF00]/10 dark:bg-[#EBFF00]/10 text-yellow-800 dark:text-[#EBFF00] border border-yellow-300 dark:border-[#EBFF00]/30 shadow-[0_0_10px_rgba(235,255,0,0.1)]"
                 : "text-slate-500 dark:text-slate-400 hover:bg-slate-100 dark:hover:bg-[#1c1b1b] hover:text-slate-900 dark:hover:text-white"
             }`}
-            title={isAnnotateActive ? "Belgilash rejimi faol" : "Belgilash"}
+            title={isAnnotateActive ? "Highlighter active" : "Annotate"}
           >
             <Edit3 className="w-4 h-4" />
-            <span className="hidden sm:inline-block">Belgilash</span>
+            <span className="hidden sm:inline-block">Annotate</span>
           </button>
 
           {moduleNumber >= 3 && (
@@ -116,10 +123,10 @@ export function TestHeader({
                     ? "bg-emerald-100 dark:bg-[#EBFF00]/10 text-emerald-800 dark:text-[#EBFF00] border border-emerald-300 dark:border-[#EBFF00]/30 shadow-[0_0_10px_rgba(235,255,0,0.1)]"
                     : "text-slate-500 dark:text-slate-400 hover:bg-slate-100 dark:hover:bg-[#1c1b1b] hover:text-slate-900 dark:hover:text-white"
                 }`}
-                title="Formulalar"
+                title="Math Reference Sheet"
               >
                 <BookOpen className="w-4 h-4" />
-                <span className="hidden sm:inline-block">Formulalar</span>
+                <span className="hidden sm:inline-block">Reference</span>
               </button>
 
               <button
@@ -129,10 +136,10 @@ export function TestHeader({
                     ? "bg-blue-100 dark:bg-[#EBFF00]/10 text-blue-800 dark:text-[#EBFF00] border border-blue-300 dark:border-[#EBFF00]/30 shadow-[0_0_10px_rgba(235,255,0,0.1)]"
                     : "text-slate-500 dark:text-slate-400 hover:bg-slate-100 dark:hover:bg-[#1c1b1b] hover:text-slate-900 dark:hover:text-white"
                 }`}
-                title="Kalkulyator"
+                title="Desmos Graphing Calculator"
               >
                 <Calculator className="w-4 h-4" />
-                <span className="hidden sm:inline-block">Kalkulyator</span>
+                <span className="hidden sm:inline-block">Calculator</span>
               </button>
             </>
           )}

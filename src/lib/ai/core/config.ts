@@ -1,7 +1,7 @@
 export const AI_CONFIG = {
  gemini: {
- primaryModel: 'gemini-3.5-flash-lite',
- fallbackModels: ['gemini-3.5-flash', 'gemini-3.6-flash', 'gemini-3.7-flash'],
+ primaryModel: 'gemini-3.7-flash',
+ fallbackModels: ['gemini-3.6-flash', 'gemini-3.1-flash-lite'],
  maxRetries: 3,
  initialRetryDelayMs: 1000,
  maxRetryDelayMs: 10000,

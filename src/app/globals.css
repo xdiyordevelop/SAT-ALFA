@@ -370,7 +370,70 @@ body {
   tbody {
     @apply divide-y divide-slate-100 dark:divide-slate-800/50;
   }
-  td {
-    @apply px-4 py-3 text-sm text-slate-700 dark:text-slate-300;
+}
+
+/* Article and Prose Image Constraints */
+.prose img,
+.math-content img {
+  max-height: 440px !important;
+  width: auto !important;
+  max-width: 100% !important;
+  margin-left: auto !important;
+  margin-right: auto !important;
+  object-fit: contain !important;
+  border-radius: 1rem !important;
+  box-shadow: 0 10px 25px -5px rgba(0, 0, 0, 0.15) !important;
+  transition: transform 0.2s ease;
+}
+
+.prose img:hover,
+.math-content img:hover {
+  transform: scale(1.01);
+}
+
+
+/* Print Optimization Styles */
+@media print {
+  @page {
+    size: A4 portrait;
+    margin: 8mm 10mm;
+  }
+
+  html, body {
+    background-color: #ffffff !important;
+    color: #000000 !important;
+    -webkit-print-color-adjust: exact !important;
+    print-color-adjust: exact !important;
+    margin: 0 !important;
+    padding: 0 !important;
+  }
+
+  .dark {
+    background-color: #ffffff !important;
+    color: #000000 !important;
+  }
+
+  .no-print,
+  nav,
+  header,
+  aside,
+  button,
+  .print-hidden {
+    display: none !important;
+  }
+
+  .avoid-break {
+    break-inside: avoid !important;
+    page-break-inside: avoid !important;
+  }
+
+  /* When printing score report, ensure perfect fit */
+  .score-report-print {
+    width: 100% !important;
+    max-width: none !important;
+    margin: 0 !important;
+    padding: 0 !important;
+    border: none !important;
+    box-shadow: none !important;
   }
 }

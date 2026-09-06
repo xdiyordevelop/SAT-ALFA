@@ -1,5 +1,6 @@
 import { NextRequest, NextResponse } from "next/server";
 import { getSession } from "@/lib/auth/session";
+import { canManageAcademics } from "@/lib/permissions/auth";
 import { generateStructured } from "@/lib/ai/core";
 import { ArticleSchema } from "@/lib/ai/validation/common";
 import pdfParse from "pdf-parse";
@@ -28,10 +29,10 @@ const ARTICLE_USER_PROMPT = `Analyze the DOCUMENT TEXT below and produce the fol
  ]
 }
 
-CONTENT RULES (CRITICAL — follow every rule):
-1. Do NOT summarize, paraphrase, or shorten the article body. Convert the FULL original text from start to finish into clean Markdown.
-2. Preserve ALL sections, headings, paragraphs, lists, and sub-sections exactly as they appear.
-3. Wrap every inline math expression in $...$ and every display/block equation in $$...$$ (KaTeX format).
+CRITICAL RULES:
+1. Preserve ALL analytical depth. Do NOT summarize or shorten the core arguments.
+2. If the document has multiple sections, convert each into an appropriate Markdown H2 (##) or H3 (###).
+3. The content field must be rich, well-formatted Markdown suitable for rendering on the SAT Alfa platform.
 4. Insert figure image tags where images, charts, or diagrams are seen in the pages. OUTPUT EXACTLY THIS FORMAT: [IMAGE_BOX: page_index, ymin, xmin, ymax, xmax]. 
    Example: [IMAGE_BOX: 1, 100, 200, 500, 800]. The page_index is 1-indexed. The coordinates must be 0-1000 scaled relative to that page's dimensions.
 5. Use proper Markdown: ## for H2, ### for H3, **bold**, *italic*, - for bullet lists, 1. for numbered lists.
@@ -48,32 +49,45 @@ Return ONLY the JSON object. No prose before or after.`;
 export async function POST(req: NextRequest) {
  try {
  const session = await getSession();
- if (!session || session.role !== "ADMIN") {
+ if (!session || !canManageAcademics(session)) {
  return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
  }
 
  const formData = await req.formData();
  
- // We now receive `page_1`, `page_2`, etc. as base64 strings
- const imagesBase64: { mimeType: string, data: string }[] = [];
+ // Support both direct PDF file and rendered page images
+ const pdfFile = (formData.get("pdf") || formData.get("file")) as File | null;
+ let pdfBase64: string | undefined;
+
+ if (pdfFile && typeof pdfFile.arrayBuffer === "function") {
+   const arrayBuffer = await pdfFile.arrayBuffer();
+   pdfBase64 = Buffer.from(arrayBuffer).toString("base64");
+ }
+
+ // We also receive `page_1`, `page_2`, etc. as base64 strings if provided
+ const imagesBase64: { mimeType: string; data: string }[] = [];
  let i = 1;
  while (true) {
    const pageData = formData.get(`page_${i}`) as string;
    if (!pageData) break;
-   imagesBase64.push({ mimeType: 'image/jpeg', data: pageData });
+   imagesBase64.push({ mimeType: "image/jpeg", data: pageData });
    i++;
  }
 
- if (imagesBase64.length === 0) {
- return NextResponse.json({ error: "No page images provided." }, { status: 400 });
+ if (!pdfBase64 && imagesBase64.length === 0) {
+   return NextResponse.json(
+     { error: "No PDF document or page images provided." },
+     { status: 400 },
+   );
  }
 
  const { parsed, raw } = await generateStructured({
- systemPrompt: ARTICLE_SYSTEM_PROMPT,
- userPrompt: ARTICLE_USER_PROMPT,
- imagesBase64,
- temperature: 0.2,
- maxTokens: 8192
+   systemPrompt: ARTICLE_SYSTEM_PROMPT,
+   userPrompt: ARTICLE_USER_PROMPT,
+   pdfBase64: pdfBase64 || undefined,
+   imagesBase64: !pdfBase64 && imagesBase64.length > 0 ? imagesBase64 : undefined,
+   temperature: 0.2,
+   maxTokens: 8192,
  });
 
  if ((parsed as any)?.success === false) {

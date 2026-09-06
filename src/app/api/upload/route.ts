@@ -1,5 +1,6 @@
 import { NextRequest, NextResponse } from "next/server";
 import { getSession } from "@/lib/auth/session";
+import { isStaff } from "@/lib/permissions/auth";
 import { writeFile } from "fs/promises";
 import path from "path";
 import crypto from "crypto";
@@ -7,7 +8,7 @@ import crypto from "crypto";
 export async function POST(request: NextRequest) {
  try {
  const session = await getSession();
- if (!session || session.role !== "ADMIN") {
+ if (!session || !isStaff(session)) {
  return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
  }
 
@@ -34,10 +35,10 @@ export async function POST(request: NextRequest) {
  }
  subDir = "books";
  } else if (type === "video") {
- if (![".mp4", ".mov", ".webm"].includes(fileExt)) {
- return NextResponse.json({ error: "Invalid video format. Allowed: mp4, mov, webm" }, { status: 400 });
- }
- subDir = "videos";
+ return NextResponse.json(
+   { error: "Direct video upload is disabled to save server storage. Please use YouTube links instead." },
+   { status: 400 }
+ );
  } else if (type === "image") {
  if (![".jpg", ".jpeg", ".png", ".webp", ".gif"].includes(fileExt)) {
  return NextResponse.json({ error: "Invalid image format. Allowed: jpg, png, webp, gif" }, { status: 400 });

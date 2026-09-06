@@ -1,5 +1,6 @@
 import { NextRequest, NextResponse } from "next/server";
 import { getSession } from "@/lib/auth/session";
+import { isStaff } from "@/lib/permissions/auth";
 import { writeFile, mkdir } from "fs/promises";
 import { join } from "path";
 
@@ -8,7 +9,7 @@ export const runtime = "nodejs";
 export async function POST(request: NextRequest) {
  try {
  const session = await getSession();
- if (!session || session.role !== "ADMIN") {
+ if (!session || !isStaff(session)) {
  return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
  }
 

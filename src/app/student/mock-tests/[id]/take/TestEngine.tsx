@@ -31,6 +31,7 @@ interface TestEngineProps {
   testId: string;
   studentId: string;
   userId: string;
+  studentName?: string;
   proctorCode?: string | null;
 }
 
@@ -38,6 +39,7 @@ export function TestEngine({
   testId,
   studentId,
   userId,
+  studentName = "SAT Student",
   proctorCode = null,
 }: TestEngineProps): React.ReactElement {
   const [isHydrated, setIsHydrated] = useState(false);
@@ -84,14 +86,12 @@ export function TestEngine({
     try {
       await requestFullscreen();
       setFullscreenActive(true);
+    } catch (err) {
+      console.warn("Could not enter fullscreen mode:", err);
+    } finally {
       setTestStatus("testing");
       setPaused(false);
       setPreFlightPassed(true);
-    } catch (err) {
-      console.error("Could not start fullscreen", err);
-      alert(
-        "Your browser blocked fullscreen mode. Please click again or allow fullscreen permissions.",
-      );
     }
   };
 
@@ -101,7 +101,7 @@ export function TestEngine({
         <div className="text-center">
           <Skeleton count={3} height="h-12" width="w-64" />
           <p className="text-slate-500 dark:text-slate-400 mt-6 font-bold uppercase tracking-widest text-xs">
-            Test muhiti yuklanmoqda...
+            Loading test environment...
           </p>
         </div>
       </div>
@@ -112,7 +112,7 @@ export function TestEngine({
   if (!preFlightPassed) {
     return (
       <div className="min-h-screen bg-slate-50 dark:bg-[#0a0a0a] flex items-center justify-center p-4">
-        <div className="max-w-md w-full bg-white dark:bg-[#131313] border border-slate-200 dark:border-white/10 rounded-xl p-8 shadow-2xl relative overflow-hidden text-center">
+        <div className="max-w-md w-full bg-white dark:bg-[#131313] border border-slate-200 dark:border-white/10 rounded-2xl p-8 shadow-2xl relative overflow-hidden text-center">
           <div className="absolute top-0 right-0 w-32 h-32 bg-[#EBFF00] dark:bg-[#EBFF00] opacity-10 blur-[40px]"></div>
           <div className="flex justify-center mb-6 relative z-10">
             <div className="w-16 h-16 bg-slate-100 dark:bg-[#1c1b1b] rounded-full flex items-center justify-center border border-slate-200 dark:border-white/5 shadow-sm">
@@ -120,16 +120,16 @@ export function TestEngine({
             </div>
           </div>
           <h2 className="text-2xl font-black text-slate-900 dark:text-white mb-2 relative z-10">
-            Xavfsizlik Tekshiruvi
+            Security & Fullscreen Check
           </h2>
           <p className="text-slate-600 dark:text-slate-400 mb-8 font-medium text-sm leading-relaxed relative z-10">
-            Digital SAT to'liq ekran (Fullscreen) rejimini talab qiladi. Ekrandan chiqish yoki boshqa oynaga o'tish qoidabuzarlik sifatida qayd etiladi.
+            The Digital SAT requires full-screen mode. Exiting full screen or navigating to another window will be logged as an irregularity.
           </p>
           <button
             onClick={startExam}
-            className="w-full py-4 rounded-xl font-bold flex items-center justify-center gap-2 transition-all duration-200 bg-[#EBFF00] dark:bg-[#EBFF00] text-slate-950 hover:bg-[#d9ff00] dark:hover:bg-white shadow-[0_0_15px_rgba(235,255,0,0.15)] relative z-10"
+            className="w-full py-4 rounded-xl font-bold flex items-center justify-center gap-2 transition-all duration-200 bg-[#EBFF00] dark:bg-[#EBFF00] text-slate-950 hover:bg-[#d9ff00] dark:hover:bg-white shadow-[0_0_15px_rgba(235,255,0,0.15)] relative z-10 cursor-pointer"
           >
-            <Maximize2 className="w-5 h-5" /> To'liq ekranga o'tish va Boshlash
+            <Maximize2 className="w-5 h-5" /> Enter Fullscreen & Begin Test
           </button>
         </div>
       </div>
@@ -145,7 +145,7 @@ export function TestEngine({
     return (
       <div className="min-h-screen bg-slate-50 dark:bg-[#0a0a0a] flex items-center justify-center">
         <div className="text-center">
-          <p className="text-rose-600 text-lg font-bold">Savol topilmadi</p>
+          <p className="text-rose-600 text-lg font-bold">Question not found</p>
         </div>
       </div>
     );
@@ -161,10 +161,10 @@ export function TestEngine({
         currentQuestionNumber={currentQuestion.questionNumber}
         totalQuestionsInModule={moduleQuestions.length}
       />
-      <main className="flex-1 flex overflow-hidden">
+      <main className="flex-1 flex flex-col lg:flex-row overflow-y-auto lg:overflow-hidden">
         {hasStimulus ? (
           <>
-            <div className="w-1/2 h-full overflow-y-auto p-6 lg:p-10 border-r border-slate-200 dark:border-white/10 bg-slate-50 dark:bg-[#131313] custom-scrollbar relative">
+            <div className="w-full lg:w-1/2 min-h-[250px] lg:h-full overflow-y-auto p-6 lg:p-10 border-b lg:border-b-0 lg:border-r border-slate-200 dark:border-white/10 bg-slate-50 dark:bg-[#131313] custom-scrollbar relative">
               <div className="max-w-2xl mx-auto">
                 <StimulusPane
                   passage={currentQuestion.passage}
@@ -173,8 +173,8 @@ export function TestEngine({
                 />
               </div>
             </div>
-            <div className="w-1/2 h-full overflow-y-auto p-6 lg:p-10 bg-white dark:bg-[#0a0a0a] custom-scrollbar flex flex-col justify-center">
-              <div className="max-w-xl mx-auto w-full">
+            <div className="w-full lg:w-1/2 min-h-[350px] lg:h-full overflow-y-auto p-6 lg:p-10 bg-white dark:bg-[#0a0a0a] custom-scrollbar flex flex-col justify-start">
+              <div className="max-w-xl mx-auto w-full my-auto py-4">
                 <QuestionPane
                   question={currentQuestion}
                   moduleNumber={currentModule}
@@ -183,8 +183,8 @@ export function TestEngine({
             </div>
           </>
         ) : (
-          <div className="w-full h-full overflow-y-auto p-6 lg:p-10 bg-white dark:bg-[#0a0a0a] custom-scrollbar flex flex-col justify-center">
-            <div className="max-w-3xl mx-auto w-full">
+          <div className="w-full h-full overflow-y-auto p-6 lg:p-10 bg-white dark:bg-[#0a0a0a] custom-scrollbar flex flex-col justify-start">
+            <div className="max-w-3xl mx-auto w-full my-auto py-4">
               <QuestionPane
                 question={currentQuestion}
                 moduleNumber={currentModule}
@@ -205,6 +205,7 @@ export function TestEngine({
         totalQuestionsInModule={moduleQuestions.length}
         canGoPrevious={currentQuestionIndex > 0}
         canGoNext={true}
+        studentName={studentName}
         isLastQuestionOfModule={
           currentQuestionIndex === moduleQuestions.length - 1
         }

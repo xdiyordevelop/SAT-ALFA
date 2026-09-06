@@ -15,7 +15,7 @@ export default async function AdminMockTestDetailPage({
   params,
 }: AdminMockTestDetailPageProps) {
   const session = await getSession();
-  if (!session || session.role !== "ADMIN") {
+  if (!session || session.role === "STUDENT") {
     redirect("/login");
   }
 

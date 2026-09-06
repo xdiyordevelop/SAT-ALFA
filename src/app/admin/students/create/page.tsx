@@ -1,13 +1,37 @@
 import { getSession } from "@/lib/auth/session";
 import { redirect } from "next/navigation";
 import { AdminLayout } from "@/components/admin/AdminLayout";
+import { AccessDeniedView } from "@/components/admin/AccessDeniedView";
+import { canManagePayments } from "@/lib/permissions/auth";
 import { CreateStudentForm } from "@/components/admin/students/CreateStudentForm";
 
 export default async function CreateStudentPage() {
   const session = await getSession();
 
-  if (!session || session.role !== "ADMIN") {
+  if (!session || session.role === "STUDENT") {
     redirect("/login");
+  }
+
+  if (!canManagePayments(session)) {
+    return (
+      <AdminLayout
+        title="Access Denied"
+        breadcrumbs={[
+          { label: "Admin" },
+          { label: "Students" },
+          { label: "Create" },
+        ]}
+        userName={session.username}
+        userEmail={session.username || ""}
+        userRole={session.role}
+      >
+        <AccessDeniedView
+          title="Student Registration Restricted"
+          message="Student enrollment, user account provisioning, and tuition profiles are restricted to Administrators and Managers."
+          requiredRole="Admin or Manager"
+        />
+      </AdminLayout>
+    );
   }
 
   return (

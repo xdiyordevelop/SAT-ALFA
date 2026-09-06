@@ -24,18 +24,20 @@ export async function proxy(request: NextRequest) {
  }
 
  try {
- const { payload } = await jwtVerify(sessionCookie.value, secretKey)
- const role = payload.role as string
+    const { payload } = await jwtVerify(sessionCookie.value, secretKey)
+    const role = payload.role as string
 
- if (isAdminRoute && role !== 'ADMIN') {
- return NextResponse.redirect(new URL('/student/dashboard', request.url))
- }
+    const isStaff = role === 'SUPER_ADMIN' || role === 'ADMIN' || role === 'TEACHER' || role === 'MANAGER'
 
- if (isStudentRoute && role !== 'STUDENT') {
- return NextResponse.redirect(new URL('/admin/dashboard', request.url))
- }
+    if (isAdminRoute && !isStaff) {
+      return NextResponse.redirect(new URL('/student/dashboard', request.url))
+    }
 
- return NextResponse.next()
+    if (isStudentRoute && isStaff) {
+      return NextResponse.redirect(new URL('/admin/dashboard', request.url))
+    }
+
+    return NextResponse.next()
  } catch (err) {
  return NextResponse.redirect(new URL('/login', request.url))
  }

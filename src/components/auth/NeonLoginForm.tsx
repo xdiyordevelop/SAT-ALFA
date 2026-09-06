@@ -101,7 +101,7 @@ export function NeonLoginForm() {
         {/* Username Field */}
         <div className="flex flex-col gap-2">
           <label htmlFor="username" className="text-sm font-semibold text-slate-700 dark:text-slate-300">
-            Email or Username
+            Username or Email
           </label>
           <div className="relative">
             <input
@@ -111,9 +111,9 @@ export function NeonLoginForm() {
               value={username}
               onChange={(e) => setUsername(e.target.value)}
               disabled={loading}
-              placeholder={role === "STUDENT" ? "Enter your phone or ID" : "Enter admin username"}
+              placeholder={role === "STUDENT" ? "Enter your username or email" : "Enter admin username or email"}
               className="w-full px-10 py-3 bg-white dark:bg-[#1c1b1b] border border-slate-300 dark:border-white/10 rounded-lg text-sm text-slate-900 dark:text-white placeholder-slate-500 focus:outline-none focus:border-[#EBFF00] focus:ring-2 focus:ring-[#EBFF00] focus:ring-offset-2 dark:focus:ring-offset-[#0a0a0a] transition-all duration-200 disabled:opacity-50 disabled:cursor-not-allowed"
-              aria-label="Username"
+              aria-label="Username or Email"
             />
             <UserIcon className="absolute left-3 top-3.5 w-5 h-5 text-slate-400 dark:text-slate-500 pointer-events-none" />
           </div>

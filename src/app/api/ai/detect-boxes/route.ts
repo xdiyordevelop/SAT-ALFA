@@ -1,4 +1,5 @@
 import { NextResponse } from 'next/server';
+import { fetchWithGeminiFailover } from '@/lib/ai/gemini-pool';
 
 export async function POST(req: Request) {
   try {
@@ -7,23 +8,25 @@ export async function POST(req: Request) {
       return NextResponse.json({ error: 'Missing imageBase64' }, { status: 400 });
     }
 
-    const keys = (process.env.GEMINI_API_KEY || "").split(",").map(k => k.trim());
-    const apiKey = keys[Math.floor(Math.random() * keys.length)];
-    if (!apiKey) throw new Error("GEMINI_API_KEY is not configured.");
+    const prompt = `Analyze this SAT test page image. 
+1. Check if there is a module title or section header printed on this page (e.g., "Reading and Writing Module 1", "Reading and Writing Module 2", "Math Module 1", "Math Module 2").
+2. Identify the bounding boxes for every distinct multiple-choice or math question present on the page.
+A question starts with a bold question number (e.g. 1, 2, 3... up to 35) followed by passage/context, prompt, graphic/chart (if any), and answer choices (A, B, C, D or math grid-in).
 
-    const prompt = `Analyze this SAT test page image. Identify the bounding boxes for every distinct multiple-choice or math question present on the page.
-A question typically includes the passage/context (if any), the prompt, the graphic/chart (if any), and all answer choices.
-Return an array of objects. Each object should represent a single question area and must contain exactly these fields:
-- "questionNumber": the integer number printed next to the question (e.g., 3).
-- "ymin", "xmin", "ymax", "xmax": exactly these 4 integer values between 0 and 1000 representing scaled coordinates relative to the image dimensions.
-- "isValid": a boolean (true/false) that is true ONLY if the box successfully captures the FULL context, the prompt, and ALL 4 answer choices (if multiple choice). Mark it false if it is cut off or missing choices.
-- "hasImage": a boolean. true if the question contains a graph, chart, figure, table, or any visual diagram that is essential to answering the question. false if it is text-only.
-- "imageBBox": if "hasImage" is true, provide the bounding box of JUST the image/graph/chart using the same 0-1000 coordinate system. If "hasImage" is false, set it to a dummy object or omit it.
-CRITICAL: YOU MUST EXTRACT EVERY SINGLE QUESTION VISIBLE ON THIS PAGE! Do not skip any questions!
-If no questions are found, return an empty array [].`;
+IMPORTANT GUIDELINES:
+- DO NOT mistake page numbers, margin section indicators (like "1" or "2" in the top/bottom page corners), or "CONTINUE" labels for questions!
+- Ensure the bounding box FULLY encompasses any diagram, geometry figure, coordinate plane, data chart, or table associated with the question.
+- Do NOT skip any questions visible on this page.
 
-    const apiUrl = `https://generativelanguage.googleapis.com/v1beta/models/gemini-3.5-flash-lite:generateContent?key=${apiKey}`;
-    
+Return a JSON object with:
+- "moduleHeader": string or empty string if no module header on this page.
+- "boxes": an array of question areas with:
+  - "questionNumber": integer question number printed next to the question (e.g. 1, 2, 3).
+  - "ymin", "xmin", "ymax", "xmax": scaled integer coordinates (0 to 1000).
+  - "isValid": boolean (set to true for all valid questions on this page).
+  - "hasImage": boolean (true if the question contains a diagram, graph, chart, table, or geometry illustration).
+  - "imageBBox": if hasImage is true, bounding box of JUST the diagram/chart inside the page (0-1000 scale).`;
+
     const payload = {
       contents: [
         {
@@ -37,29 +40,36 @@ If no questions are found, return an empty array [].`;
       generationConfig: {
         responseMimeType: "application/json",
         responseSchema: {
-          type: "ARRAY",
-          items: {
-            type: "OBJECT",
-            properties: {
-              questionNumber: { type: "INTEGER" },
-              ymin: { type: "INTEGER" },
-              xmin: { type: "INTEGER" },
-              ymax: { type: "INTEGER" },
-              xmax: { type: "INTEGER" },
-              isValid: { type: "BOOLEAN" },
-              hasImage: { type: "BOOLEAN" },
-              imageBBox: {
+          type: "OBJECT",
+          properties: {
+            moduleHeader: { type: "STRING" },
+            boxes: {
+              type: "ARRAY",
+              items: {
                 type: "OBJECT",
                 properties: {
+                  questionNumber: { type: "INTEGER" },
                   ymin: { type: "INTEGER" },
                   xmin: { type: "INTEGER" },
                   ymax: { type: "INTEGER" },
-                  xmax: { type: "INTEGER" }
-                }
+                  xmax: { type: "INTEGER" },
+                  isValid: { type: "BOOLEAN" },
+                  hasImage: { type: "BOOLEAN" },
+                  imageBBox: {
+                    type: "OBJECT",
+                    properties: {
+                      ymin: { type: "INTEGER" },
+                      xmin: { type: "INTEGER" },
+                      ymax: { type: "INTEGER" },
+                      xmax: { type: "INTEGER" }
+                    }
+                  }
+                },
+                required: ["questionNumber", "ymin", "xmin", "ymax", "xmax", "isValid", "hasImage"]
               }
-            },
-            required: ["questionNumber", "ymin", "xmin", "ymax", "xmax", "isValid", "hasImage"]
-          }
+            }
+          },
+          required: ["boxes"]
         }
       },
       safetySettings: [
@@ -70,18 +80,7 @@ If no questions are found, return an empty array [].`;
       ]
     };
 
-    const res = await fetch(apiUrl, {
-      method: 'POST',
-      headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify(payload)
-    });
-
-    if (!res.ok) {
-      const errData = await res.json().catch(() => ({}));
-      throw new Error(errData.error?.message || 'Failed to detect boxes');
-    }
-
-    const result = await res.json();
+    const result = await fetchWithGeminiFailover('gemini-3.5-flash-lite', payload);
     const candidate = result?.candidates?.[0];
     const part = candidate?.content?.parts?.[0];
     if (!part?.text) {
@@ -90,7 +89,9 @@ If no questions are found, return an empty array [].`;
 
     let jsonText = part.text;
     const parsedData = JSON.parse(jsonText);
-    return NextResponse.json({ success: true, boxes: parsedData });
+    const boxes = Array.isArray(parsedData) ? parsedData : (parsedData.boxes || []);
+    const moduleHeader = parsedData.moduleHeader || null;
+    return NextResponse.json({ success: true, boxes, moduleHeader });
   } catch (error: any) {
     console.error('[API] Detect Boxes Error:', error);
     return NextResponse.json({ error: error.message }, { status: 500 });

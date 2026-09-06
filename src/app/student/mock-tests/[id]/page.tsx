@@ -1,504 +1,335 @@
-"use client";
-
-import { useState, useEffect } from "react";
-import { useRouter, useParams } from "next/navigation";
+import { redirect, notFound } from "next/navigation";
+import { getSession } from "@/lib/auth/session";
+import { prisma } from "@/lib/db/prisma";
 import { StudentLayout } from "@/components/student/StudentLayout";
-import {
-  Clock,
-  CheckCircle2,
-  AlertCircle,
-  ArrowLeft,
-  Loader2,
-  Sparkles,
-} from "lucide-react";
 import Link from "next/link";
+import {
+  ArrowLeft,
+  BookOpen,
+  Calculator,
+  CheckCircle2,
+  Clock,
+  FileText,
+  HelpCircle,
+  History,
+  Maximize2,
+  Play,
+  ShieldAlert,
+  Sparkles,
+  Trophy,
+} from "lucide-react";
 
-interface Question {
-  id: string;
-  text: string;
-  options: string[];
-  correctAnswer: number;
-  explanation?: string;
-  section?: string;
-  topic?: string;
+interface PageProps {
+  params: Promise<{ id: string }>;
 }
 
-interface MockTest {
-  id: string;
-  testName: string;
-  description: string;
-  subject: string;
-  maxScore: number;
-  duration: number;
-  questions: string;
-  status: string;
-}
+export default async function MockTestLobbyPage({ params }: PageProps) {
+  const { id } = await params;
+  const session = await getSession();
 
-export default function TakeMockTestPage() {
-  const router = useRouter();
-  const params = useParams();
-  const testId = params.id as string;
-
-  const [test, setTest] = useState<MockTest | null>(null);
-  const [questions, setQuestions] = useState<Question[]>([]);
-  const [loading, setLoading] = useState(true);
-  const [submitting, setSubmitting] = useState(false);
-  const [error, setError] = useState("");
-  const [currentQuestion, setCurrentQuestion] = useState(0);
-  const [answers, setAnswers] = useState<number[]>([]);
-  const [timeLeft, setTimeLeft] = useState(0);
-  const [testStarted, setTestStarted] = useState(false);
-  const [testSubmitted, setTestSubmitted] = useState(false);
-  const [submissionResult, setSubmissionResult] = useState<any>(null);
-
-  useEffect(() => {
-    fetchTest();
-  }, [testId]);
-
-  useEffect(() => {
-    if (!testStarted || testSubmitted) return;
-    const timer = setInterval(() => {
-      setTimeLeft((prev) => {
-        if (prev <= 1) {
-          handleSubmitTest();
-          return 0;
-        }
-        return prev - 1;
-      });
-    }, 1000);
-    return () => clearInterval(timer);
-  }, [testStarted, testSubmitted]);
-
-  const fetchTest = async () => {
-    try {
-      const response = await fetch(`/api/student/mock-tests/${testId}`);
-      if (!response.ok) throw new Error("Failed to fetch test");
-      const data = await response.json();
-      setTest(data.data);
-      const parsedQuestions = JSON.parse(data.data.questions);
-      setQuestions(parsedQuestions);
-      setAnswers(new Array(parsedQuestions.length).fill(-1));
-      setTimeLeft(data.data.duration * 60);
-    } catch (err) {
-      setError(err instanceof Error ? err.message : "Failed to load test");
-    } finally {
-      setLoading(false);
-    }
-  };
-
-  const handleSelectAnswer = (optionIndex: number) => {
-    const newAnswers = [...answers];
-    newAnswers[currentQuestion] = optionIndex;
-    setAnswers(newAnswers);
-  };
-
-  const handleSubmitTest = async () => {
-    if (!test || submitting) return;
-    setSubmitting(true);
-    setError("");
-    try {
-      const timeSpent = test.duration * 60 - timeLeft;
-      const response = await fetch(`/api/student/mock-tests/${testId}/submit`, {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({
-          answers,
-          timeSpent,
-        }),
-      });
-      if (!response.ok) {
-        const errData = await response.json();
-        throw new Error(errData.message || "Failed to submit test");
-      }
-      const resData = await response.json();
-      setSubmissionResult(resData.data || resData);
-      setTestSubmitted(true);
-    } catch (err) {
-      setError(err instanceof Error ? err.message : "Failed to submit test");
-    } finally {
-      setSubmitting(false);
-    }
-  };
-
-  const formatTime = (seconds: number) => {
-    const mins = Math.floor(seconds / 60);
-    const secs = seconds % 60;
-    return `${mins.toString().padStart(2, "0")}:${secs.toString().padStart(2, "0")}`;
-  };
-
-  const progress =
-    questions.length > 0 ? ((currentQuestion + 1) / questions.length) * 100 : 0;
-  const answeredCount = answers.filter((a) => a >= 0).length;
-
-  if (loading) {
-    return (
-      <StudentLayout
-        title="Mock Test"
-        breadcrumbs={[{ label: "Student" }, { label: "Mock Tests" }]}
-      >
-        <div className="flex justify-center items-center min-h-[60vh]">
-          <div className="text-center">
-            <Loader2 className="w-10 h-10 text-slate-900 dark:text-[#EBFF00] animate-spin mx-auto mb-4" />
-            <p className="text-slate-600 dark:text-slate-400 font-medium">
-              Loading test...
-            </p>
-          </div>
-        </div>
-      </StudentLayout>
-    );
+  if (!session || session.role !== "STUDENT") {
+    redirect("/login");
   }
 
-  if (error && !test) {
-    return (
-      <StudentLayout
-        title="Mock Test"
-        breadcrumbs={[{ label: "Student" }, { label: "Mock Tests" }]}
-      >
-        <Link
-          href="/student/mock-tests"
-          className="inline-flex items-center gap-2 text-slate-900 dark:text-[#EBFF00] hover:text-[#d9ff00] font-medium mb-6"
-        >
-          <ArrowLeft className="w-4 h-4" /> Back to Mock Tests
-        </Link>
-        <div className="bg-red-50 border border-red-200 rounded-2xl p-6 text-red-700">
-          <AlertCircle className="w-6 h-6 mb-2" />
-          <p className="font-semibold">{error}</p>
-        </div>
-      </StudentLayout>
-    );
+  const studentProfile = await prisma.studentProfile.findUnique({
+    where: { userId: session.userId },
+  });
+
+  if (!studentProfile) {
+    redirect("/login");
   }
 
-  // Submitted Confirmation Screen
-  if (testSubmitted) {
-    return (
-      <StudentLayout
-        title="Test Submitted"
-        breadcrumbs={[
-          { label: "Student" },
-          { label: "Mock Tests" },
-          { label: "Submitted" },
-        ]}
-      >
-        <div className="max-w-2xl mx-auto animate-fade-in">
-          <div className="bg-white dark:bg-[#131313] rounded-3xl border border-slate-200 dark:border-white/10 p-8 sm:p-12 text-center shadow-xl">
-            <div className="w-20 h-20 rounded-3xl bg-green-100 flex items-center justify-center text-green-600 mx-auto mb-6 shadow-md">
-              <CheckCircle2 className="w-10 h-10" />
-            </div>
-            <span className="text-xs font-bold px-3 py-1 rounded-full bg-[#EBFF00]/10 dark:bg-[#EBFF00]/50/30 text-[#d9ff00] uppercase tracking-wider">
-              Status: Pending Review
-            </span>
-            <h1 className="text-3xl font-extrabold text-slate-900 dark:text-white mt-4 mb-2">
-              Test Submitted Successfully!
-            </h1>
-            <p className="text-slate-600 dark:text-slate-400 text-sm max-w-md mx-auto mb-8 leading-relaxed">
-              Your answers for <strong>{test?.testName}</strong> have been
-              recorded. Your submission is now in the administrator's review
-              queue.
-            </p>
-            <div className="grid grid-cols-2 gap-4 mb-8 p-6 rounded-2xl bg-slate-50 dark:bg-[#0a0a0a] border border-slate-200 dark:border-white/10">
-              <div>
-                <span className="text-xs text-slate-500 dark:text-slate-400 block mb-1">
-                  Questions Answered
-                </span>
-                <span className="text-2xl font-bold text-slate-900 dark:text-white">
-                  {answeredCount} / {questions.length}
-                </span>
-              </div>
-              <div>
-                <span className="text-xs text-slate-500 dark:text-slate-400 block mb-1">
-                  Time Spent
-                </span>
-                <span className="text-2xl font-bold text-slate-900 dark:text-[#EBFF00]">
-                  {formatTime((test?.duration || 0) * 60 - timeLeft)}
-                </span>
-              </div>
-            </div>
-            <div className="p-4 rounded-xl bg-slate-50 dark:bg-[#0a0a0a] border border-yellow-200 text-xs text-[#EBFF00]/50 mb-8 text-left">
-              <p className="font-semibold mb-1">ℹ️ What happens next?</p>
-              <p>
-                Your instructor will review your performance and approve
-                your scores. Once approved, your total score, section
-                breakdown, and full AI diagnostic analysis will be visible
-                on your dashboard.
-              </p>
-            </div>
-            <div className="flex flex-col sm:flex-row gap-3">
-              <Link
-                href="/student/mock-tests"
-                className="flex-1 px-6 py-3 rounded-xl bg-[#EBFF00] hover:bg-[#d9ff00] text-slate-900 font-semibold text-sm transition-colors text-center shadow-sm"
-              >
-                View My Mock Tests
-              </Link>
-              <Link
-                href="/student/dashboard"
-                className="flex-1 px-6 py-3 rounded-xl bg-slate-100 dark:bg-[#1c1b1b] hover:bg-neutral-200 text-slate-800 dark:text-slate-200 font-semibold text-sm transition-colors text-center"
-              >
-                Go to Dashboard
-              </Link>
-            </div>
-          </div>
-        </div>
-      </StudentLayout>
-    );
+  // Fetch the mock test
+  const test = await prisma.sATMockTest.findUnique({
+    where: { id },
+    include: {
+      questions: {
+        select: {
+          id: true,
+          module: true,
+          format: true,
+        },
+      },
+      studentAttempts: {
+        where: { studentId: studentProfile.id },
+        orderBy: { completedAt: "desc" },
+      },
+    },
+  });
+
+  if (!test) {
+    notFound();
   }
 
-  // Pre-test Instructions Screen
-  if (!testStarted) {
-    return (
-      <StudentLayout
-        title="Start Mock Test"
-        breadcrumbs={[
-          { label: "Student" },
-          { label: "Mock Tests" },
-          { label: test?.testName || "Start" },
-        ]}
-      >
-        <div className="max-w-2xl mx-auto">
+  const m1Count = test.questions.filter((q) => q.module === "MODULE_1").length || 27;
+  const m2Count = test.questions.filter((q) => q.module === "MODULE_2").length || 27;
+  const m3Count = test.questions.filter((q) => q.module === "MODULE_3").length || 22;
+  const m4Count = test.questions.filter((q) => q.module === "MODULE_4").length || 22;
+  const totalQuestions = test.questions.length || m1Count + m2Count + m3Count + m4Count;
+
+  const previousAttempts = test.studentAttempts.filter((a) => a.completedAt !== null);
+  const bestScore = previousAttempts.length > 0
+    ? Math.max(...previousAttempts.map((a) => a.totalScore || 0))
+    : null;
+
+  return (
+    <StudentLayout title={test.name}>
+      <div className="max-w-5xl mx-auto space-y-8 animate-fade-in pb-12">
+        {/* Navigation Breadcrumb */}
+        <div className="flex items-center gap-3">
           <Link
             href="/student/mock-tests"
-            className="inline-flex items-center gap-2 text-slate-900 dark:text-[#EBFF00] hover:text-[#d9ff00] font-medium text-sm mb-6 transition-colors"
+            className="inline-flex items-center gap-2 text-sm font-semibold text-slate-500 dark:text-slate-400 hover:text-slate-900 dark:hover:text-white transition-colors"
           >
-            <ArrowLeft className="w-4 h-4" /> Back to Mock Tests
+            <ArrowLeft className="w-4 h-4" />
+            Back to Mock Tests
           </Link>
-          <div className="bg-white dark:bg-[#131313] rounded-3xl border border-slate-200 dark:border-white/10 p-8 sm:p-10 shadow-lg space-y-6">
-            <div>
-              <span className="text-xs font-bold px-3 py-1 rounded-full bg-[#EBFF00]/10 dark:bg-[#EBFF00]/50/30 text-[#d9ff00] uppercase tracking-wider">
-                {test?.subject} Section
+        </div>
+
+        {/* Hero Header Card */}
+        <div className="bg-white dark:bg-[#131313] border border-slate-200 dark:border-white/10 rounded-2xl p-8 relative overflow-hidden shadow-xl shadow-black/10">
+          <div className="absolute top-0 right-0 w-80 h-80 bg-[#EBFF00]/10 rounded-full blur-3xl -translate-y-1/2 translate-x-1/3 pointer-events-none" />
+
+          <div className="relative z-10">
+            <div className="flex flex-wrap items-center gap-2 mb-4">
+              <span className="px-3 py-1 bg-[#EBFF00]/15 text-slate-900 dark:text-[#EBFF00] border border-[#EBFF00]/30 rounded-lg text-xs font-bold tracking-wider uppercase">
+                Digital SAT Simulation
               </span>
-              <h1 className="text-3xl font-extrabold text-slate-900 dark:text-white mt-3">
-                {test?.testName}
-              </h1>
-              <p className="text-sm text-slate-600 dark:text-slate-400 mt-2">
-                {test?.description ||
-                  "Prepare yourself under standard timed SAT exam conditions."}
+              <span className="px-3 py-1 bg-slate-100 dark:bg-white/5 text-slate-600 dark:text-slate-300 border border-slate-200 dark:border-white/10 rounded-lg text-xs font-medium">
+                Official 4-Module Structure
+              </span>
+            </div>
+
+            <h1 className="text-3xl sm:text-4xl font-black text-slate-900 dark:text-white tracking-tight mb-3">
+              {test.name}
+            </h1>
+
+            {test.description ? (
+              <p className="text-slate-600 dark:text-slate-400 text-base max-w-3xl mb-6 leading-relaxed">
+                {test.description}
+              </p>
+            ) : (
+              <p className="text-slate-600 dark:text-slate-400 text-base max-w-3xl mb-6 leading-relaxed">
+                Full-length adaptive digital SAT practice test mirroring the official College Board Bluebook testing environment.
+              </p>
+            )}
+
+            {/* Quick Metrics Bar */}
+            <div className="grid grid-cols-2 sm:grid-cols-4 gap-4 pt-6 border-t border-slate-200 dark:border-white/10">
+              <div className="flex items-center gap-3">
+                <div className="w-10 h-10 rounded-xl bg-blue-500/10 flex items-center justify-center text-blue-600 dark:text-blue-400 shrink-0">
+                  <Clock className="w-5 h-5" />
+                </div>
+                <div>
+                  <p className="text-xs font-medium text-slate-500 dark:text-slate-400">Total Duration</p>
+                  <p className="text-base font-bold text-slate-900 dark:text-white">134 Minutes</p>
+                </div>
+              </div>
+
+              <div className="flex items-center gap-3">
+                <div className="w-10 h-10 rounded-xl bg-emerald-500/10 flex items-center justify-center text-emerald-600 dark:text-emerald-400 shrink-0">
+                  <FileText className="w-5 h-5" />
+                </div>
+                <div>
+                  <p className="text-xs font-medium text-slate-500 dark:text-slate-400">Questions</p>
+                  <p className="text-base font-bold text-slate-900 dark:text-white">{totalQuestions} Total</p>
+                </div>
+              </div>
+
+              <div className="flex items-center gap-3">
+                <div className="w-10 h-10 rounded-xl bg-purple-500/10 flex items-center justify-center text-purple-600 dark:text-purple-400 shrink-0">
+                  <BookOpen className="w-5 h-5" />
+                </div>
+                <div>
+                  <p className="text-xs font-medium text-slate-500 dark:text-slate-400">Sections</p>
+                  <p className="text-base font-bold text-slate-900 dark:text-white">R&W + Math</p>
+                </div>
+              </div>
+
+              <div className="flex items-center gap-3">
+                <div className="w-10 h-10 rounded-xl bg-[#EBFF00]/15 flex items-center justify-center text-slate-900 dark:text-[#EBFF00] shrink-0">
+                  <Trophy className="w-5 h-5" />
+                </div>
+                <div>
+                  <p className="text-xs font-medium text-slate-500 dark:text-slate-400">Your Best Score</p>
+                  <p className="text-base font-bold text-slate-900 dark:text-white">
+                    {bestScore ? `${bestScore} / 1600` : "Not attempted"}
+                  </p>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        {/* Test Structure Breakdown */}
+        <div className="space-y-4">
+          <h2 className="text-xl font-bold text-slate-900 dark:text-white flex items-center gap-2">
+            <Sparkles className="w-5 h-5 text-slate-900 dark:text-[#EBFF00]" />
+            Test Structure & Modules
+          </h2>
+
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+            {/* Section 1: Reading and Writing */}
+            <div className="bg-white dark:bg-[#131313] border border-slate-200 dark:border-white/10 rounded-2xl p-6 space-y-4 shadow-sm">
+              <div className="flex items-center justify-between pb-3 border-b border-slate-200 dark:border-white/10">
+                <div className="flex items-center gap-2">
+                  <span className="w-3 h-3 rounded-full bg-blue-500" />
+                  <h3 className="font-bold text-slate-900 dark:text-white">
+                    Section 1: Reading and Writing
+                  </h3>
+                </div>
+                <span className="text-xs font-bold px-2 py-1 bg-blue-500/10 text-blue-600 dark:text-blue-400 rounded-md">
+                  64 mins total
+                </span>
+              </div>
+
+              <div className="space-y-3 text-sm">
+                <div className="flex justify-between items-center p-3 rounded-xl bg-slate-50 dark:bg-[#0a0a0a] border border-slate-200 dark:border-white/5">
+                  <div>
+                    <p className="font-semibold text-slate-900 dark:text-white">Module 1</p>
+                    <p className="text-xs text-slate-500 dark:text-slate-400">Reading comprehension & writing craft</p>
+                  </div>
+                  <div className="text-right">
+                    <p className="font-bold text-slate-900 dark:text-white">{m1Count} questions</p>
+                    <p className="text-xs text-slate-500 dark:text-slate-400">32 minutes</p>
+                  </div>
+                </div>
+
+                <div className="flex justify-between items-center p-3 rounded-xl bg-slate-50 dark:bg-[#0a0a0a] border border-slate-200 dark:border-white/5">
+                  <div>
+                    <p className="font-semibold text-slate-900 dark:text-white">Module 2</p>
+                    <p className="text-xs text-slate-500 dark:text-slate-400">Expression of ideas & standard English</p>
+                  </div>
+                  <div className="text-right">
+                    <p className="font-bold text-slate-900 dark:text-white">{m2Count} questions</p>
+                    <p className="text-xs text-slate-500 dark:text-slate-400">32 minutes</p>
+                  </div>
+                </div>
+              </div>
+
+              <p className="text-xs text-slate-500 dark:text-slate-400">
+                Followed by a scheduled 10-minute break before Section 2 begins.
               </p>
             </div>
-            <div className="grid grid-cols-2 gap-4 p-6 rounded-2xl bg-slate-50 dark:bg-[#0a0a0a] border border-slate-200 dark:border-white/10">
-              <div>
-                <span className="text-xs text-slate-500 dark:text-slate-400 block mb-1">
-                  Total Questions
-                </span>
-                <span className="text-2xl font-bold text-slate-900 dark:text-white">
-                  {questions.length} Items
-                </span>
-              </div>
-              <div>
-                <span className="text-xs text-slate-500 dark:text-slate-400 block mb-1">
-                  Time Allowed
-                </span>
-                <span className="text-2xl font-bold text-slate-900 dark:text-[#EBFF00]">
-                  {test?.duration} Minutes
+
+            {/* Section 2: Math */}
+            <div className="bg-white dark:bg-[#131313] border border-slate-200 dark:border-white/10 rounded-2xl p-6 space-y-4 shadow-sm">
+              <div className="flex items-center justify-between pb-3 border-b border-slate-200 dark:border-white/10">
+                <div className="flex items-center gap-2">
+                  <span className="w-3 h-3 rounded-full bg-emerald-500" />
+                  <h3 className="font-bold text-slate-900 dark:text-white">
+                    Section 2: Math
+                  </h3>
+                </div>
+                <span className="text-xs font-bold px-2 py-1 bg-emerald-500/10 text-emerald-600 dark:text-emerald-400 rounded-md">
+                  70 mins total
                 </span>
               </div>
-            </div>
-            <div className="p-4 rounded-xl bg-slate-50 dark:bg-[#0a0a0a] border border-yellow-200 text-xs text-[#EBFF00]/50 leading-relaxed space-y-1">
-              <p className="font-bold">Exam Guidelines:</p>
-              <ul className="list-disc list-inside space-y-1">
-                <li>
-                  Once you click Start Test, the timer begins automatically.
-                </li>
-                <li>
-                  You can navigate back and forth between questions using
-                  the question palette.
-                </li>
-                <li>
-                  When finished, click Submit Test to send your answers for
-                  review.
-                </li>
-              </ul>
-            </div>
-            <div className="flex gap-4 pt-2">
-              <button
-                onClick={() => setTestStarted(true)}
-                className="flex-1 py-3.5 px-6 rounded-xl bg-[#EBFF00] hover:bg-[#d9ff00] text-slate-900 font-bold text-sm transition-all shadow-md hover:shadow-lg"
-              >
-                Start Test Now
-              </button>
-              <Link
-                href="/student/mock-tests"
-                className="px-6 py-3.5 rounded-xl border border-slate-200 dark:border-white/10 text-slate-700 dark:text-slate-300 font-semibold text-sm hover:bg-slate-50 dark:bg-[#0a0a0a] transition-colors text-center"
-              >
-                Cancel
-              </Link>
+
+              <div className="space-y-3 text-sm">
+                <div className="flex justify-between items-center p-3 rounded-xl bg-slate-50 dark:bg-[#0a0a0a] border border-slate-200 dark:border-white/5">
+                  <div>
+                    <p className="font-semibold text-slate-900 dark:text-white">Module 1</p>
+                    <p className="text-xs text-slate-500 dark:text-slate-400">Algebra, Advanced Math & Problem Solving</p>
+                  </div>
+                  <div className="text-right">
+                    <p className="font-bold text-slate-900 dark:text-white">{m3Count} questions</p>
+                    <p className="text-xs text-slate-500 dark:text-slate-400">35 minutes</p>
+                  </div>
+                </div>
+
+                <div className="flex justify-between items-center p-3 rounded-xl bg-slate-50 dark:bg-[#0a0a0a] border border-slate-200 dark:border-white/5">
+                  <div>
+                    <p className="font-semibold text-slate-900 dark:text-white">Module 2</p>
+                    <p className="text-xs text-slate-500 dark:text-slate-400">Geometry, Trigonometry & Data Analysis</p>
+                  </div>
+                  <div className="text-right">
+                    <p className="font-bold text-slate-900 dark:text-white">{m4Count} questions</p>
+                    <p className="text-xs text-slate-500 dark:text-slate-400">35 minutes</p>
+                  </div>
+                </div>
+              </div>
+
+              <p className="text-xs text-slate-500 dark:text-slate-400">
+                Integrated Desmos graphing calculator and official formula sheet enabled.
+              </p>
             </div>
           </div>
         </div>
-      </StudentLayout>
-    );
-  }
 
-  // Active Exam Taking Screen
-  const q = questions[currentQuestion];
-  return (
-    <StudentLayout title={test?.testName || "SAT Exam"}>
-      <div className="space-y-6">
-        {/* Top Bar: Timer & Progress */}
-        <div className="bg-white dark:bg-[#131313] rounded-2xl border border-slate-200 dark:border-white/10 p-5 flex items-center justify-between shadow-sm">
-          <div className="flex items-center gap-3">
-            <span className="text-xs font-bold px-2.5 py-1 rounded-full bg-[#EBFF00]/10 dark:bg-[#EBFF00]/50/30 text-[#d9ff00]">
-              Question {currentQuestion + 1} of {questions.length}
-            </span>
-            <span className="text-xs text-slate-500 dark:text-slate-400 hidden sm:inline">
-              {answeredCount} answered
-            </span>
-          </div>
-          <div
-            className={`flex items-center gap-2 font-mono text-xl font-extrabold ${
-              timeLeft < 300
-                ? "text-red-600 animate-pulse"
-                : "text-slate-900 dark:text-white"
-            }`}
-          >
-            <Clock className="w-5 h-5 text-slate-500 dark:text-slate-400" />
-            {formatTime(timeLeft)}
-          </div>
-        </div>
+        {/* Pre-Exam Checklist & Guidelines */}
+        <div className="bg-white dark:bg-[#131313] border border-slate-200 dark:border-white/10 rounded-2xl p-6 space-y-4">
+          <h2 className="text-lg font-bold text-slate-900 dark:text-white flex items-center gap-2">
+            <CheckCircle2 className="w-5 h-5 text-emerald-500" />
+            Exam Room Checklist & Rules
+          </h2>
 
-        {/* Progress bar */}
-        <div className="w-full bg-neutral-200 rounded-full h-2 overflow-hidden">
-          <div
-            className="bg-[#EBFF00] h-2 rounded-full transition-all duration-300"
-            style={{ width: `${progress}%` }}
-          />
-        </div>
-
-        {/* Error banner if any */}
-        {error && (
-          <div className="p-4 rounded-xl bg-red-50 border border-red-200 text-red-800 text-sm flex items-center gap-2">
-            <AlertCircle className="w-4 h-4" />
-            {error}
-          </div>
-        )}
-
-        {/* Question Card */}
-        {q && (
-          <div className="bg-white dark:bg-[#131313] rounded-2xl border border-slate-200 dark:border-white/10 p-6 md:p-8 shadow-sm space-y-6">
-            <div className="flex items-center justify-between pb-4 border-b border-slate-100">
-              <span className="text-xs font-semibold px-2.5 py-1 rounded bg-slate-100 dark:bg-[#1c1b1b] text-slate-700 dark:text-slate-300">
-                {q.topic || q.section || "Question"}
-              </span>
-              <span className="text-xs text-slate-500 dark:text-slate-400">
-                SAT Practice Item
-              </span>
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-4 text-sm">
+            <div className="flex items-start gap-3 p-3 rounded-xl bg-slate-50 dark:bg-[#0a0a0a] border border-slate-200 dark:border-white/5">
+              <Maximize2 className="w-5 h-5 text-slate-600 dark:text-slate-300 shrink-0 mt-0.5" />
+              <div>
+                <p className="font-bold text-slate-900 dark:text-white">Fullscreen Enforced</p>
+                <p className="text-xs text-slate-500 dark:text-slate-400">
+                  The test must remain in full-screen mode. Leaving full screen or switching tabs will be logged as an irregularity.
+                </p>
+              </div>
             </div>
-            <p className="text-base sm:text-lg font-medium text-slate-900 dark:text-white leading-relaxed">
-              {q.text}
+
+            <div className="flex items-start gap-3 p-3 rounded-xl bg-slate-50 dark:bg-[#0a0a0a] border border-slate-200 dark:border-white/5">
+              <Calculator className="w-5 h-5 text-slate-600 dark:text-slate-300 shrink-0 mt-0.5" />
+              <div>
+                <p className="font-bold text-slate-900 dark:text-white">Built-in Desmos Calculator</p>
+                <p className="text-xs text-slate-500 dark:text-slate-400">
+                  You may use the embedded graphing calculator on all Math questions via the calculator button in the top bar.
+                </p>
+              </div>
+            </div>
+
+            <div className="flex items-start gap-3 p-3 rounded-xl bg-slate-50 dark:bg-[#0a0a0a] border border-slate-200 dark:border-white/5">
+              <ShieldAlert className="w-5 h-5 text-slate-600 dark:text-slate-300 shrink-0 mt-0.5" />
+              <div>
+                <p className="font-bold text-slate-900 dark:text-white">No Return Policy</p>
+                <p className="text-xs text-slate-500 dark:text-slate-400">
+                  Once time runs out or you submit a module, you cannot return to any questions from earlier modules.
+                </p>
+              </div>
+            </div>
+
+            <div className="flex items-start gap-3 p-3 rounded-xl bg-slate-50 dark:bg-[#0a0a0a] border border-slate-200 dark:border-white/5">
+              <History className="w-5 h-5 text-slate-600 dark:text-slate-300 shrink-0 mt-0.5" />
+              <div>
+                <p className="font-bold text-slate-900 dark:text-white">Auto-Saving Progress</p>
+                <p className="text-xs text-slate-500 dark:text-slate-400">
+                  Answers and bookmarks are automatically saved locally and synchronized with the server every 10 seconds.
+                </p>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        {/* Action Bottom Bar */}
+        <div className="bg-slate-50 dark:bg-[#0a0a0a] border border-slate-200 dark:border-white/10 rounded-2xl p-6 flex flex-col sm:flex-row items-center justify-between gap-4 shadow-lg">
+          <div>
+            <h3 className="font-bold text-slate-900 dark:text-white text-lg">Ready to Begin?</h3>
+            <p className="text-sm text-slate-500 dark:text-slate-400">
+              Ensure you have a quiet environment and a stable internet connection.
             </p>
-
-            {/* Options List */}
-            <div className="space-y-3 pt-2">
-              {q.options?.map((opt, optIdx) => {
-                const isSelected = answers[currentQuestion] === optIdx;
-                return (
-                  <button
-                    key={optIdx}
-                    type="button"
-                    onClick={() => handleSelectAnswer(optIdx)}
-                    className={`w-full p-4 rounded-xl border text-left transition-all flex items-start gap-4 ${
-                      isSelected
-                        ? "border-yellow-600 bg-slate-50 dark:bg-[#0a0a0a]/70 ring-2 ring-yellow-600/30"
-                        : "border-slate-200 dark:border-white/10 bg-white dark:bg-[#131313] hover:border-neutral-300"
-                    }`}
-                  >
-                    <div
-                      className={`w-7 h-7 rounded-lg font-bold text-xs flex items-center justify-center flex-shrink-0 transition-colors ${
-                        isSelected
-                          ? "bg-yellow- text-slate-900 dark:text-white"
-                          : "bg-slate-100 dark:bg-[#1c1b1b] text-slate-700 dark:text-slate-300"
-                      }`}
-                    >
-                      {String.fromCharCode(65 + optIdx)}
-                    </div>
-                    <span className="text-sm font-medium text-slate-900 dark:text-white pt-0.5">
-                      {opt}
-                    </span>
-                  </button>
-                );
-              })}
-            </div>
           </div>
-        )}
 
-        {/* Navigation & Submit Controls */}
-        <div className="flex items-center justify-between gap-4">
-          <button
-            type="button"
-            onClick={() =>
-              setCurrentQuestion(Math.max(0, currentQuestion - 1))
-            }
-            disabled={currentQuestion === 0}
-            className="px-5 py-2.5 rounded-xl border border-slate-200 dark:border-white/10 bg-white dark:bg-[#131313] text-slate-700 dark:text-slate-300 font-semibold text-sm disabled:opacity-40 disabled:cursor-not-allowed hover:bg-slate-50 dark:bg-[#0a0a0a] transition-colors"
-          >
-            Previous
-          </button>
-          <div className="flex gap-3">
-            {currentQuestion < questions.length - 1 ? (
-              <button
-                type="button"
-                onClick={() => setCurrentQuestion(currentQuestion + 1)}
-                className="px-6 py-2.5 rounded-xl bg-[#EBFF00] hover:bg-[#d9ff00] text-slate-900 font-semibold text-sm transition-colors shadow-sm"
-              >
-                Next Question
-              </button>
-            ) : (
-              <button
-                type="button"
-                onClick={handleSubmitTest}
-                disabled={submitting}
-                className="px-6 py-2.5 rounded-xl bg-green-600 hover:bg-green-700 text-slate-900 dark:text-white font-bold text-sm transition-all shadow-md flex items-center gap-2"
-              >
-                {submitting ? (
-                  <>
-                    <Loader2 className="w-4 h-4 animate-spin" />
-                    Submitting...
-                  </>
-                ) : (
-                  "Submit Mock Test"
-                )}
-              </button>
-            )}
-          </div>
-        </div>
-
-        {/* Questions Palette Map */}
-        <div className="bg-white dark:bg-[#131313] rounded-2xl border border-slate-200 dark:border-white/10 p-6 shadow-sm">
-          <div className="flex items-center justify-between mb-4">
-            <span className="text-xs font-bold uppercase tracking-wider text-slate-500 dark:text-slate-400">
-              Questions Overview ({answeredCount}/{questions.length}{" "}
-              answered)
-            </span>
-            {currentQuestion === questions.length - 1 && (
-              <button
-                onClick={handleSubmitTest}
-                disabled={submitting}
-                className="text-xs font-bold text-green-600 hover:text-green-700"
-              >
-                Ready to Submit →
-              </button>
-            )}
-          </div>
-          <div className="grid grid-cols-6 sm:grid-cols-10 md:grid-cols-12 gap-2">
-            {questions.map((_, idx) => {
-              const isCurrent = currentQuestion === idx;
-              const isAnswered =
-                answers[idx] !== undefined && answers[idx] >= 0;
-              return (
-                <button
-                  key={idx}
-                  type="button"
-                  onClick={() => setCurrentQuestion(idx)}
-                  className={`h-9 rounded-xl font-bold text-xs transition-all ${
-                    isCurrent
-                      ? "ring-2 ring-yellow-600 bg-yellow- text-slate-900 dark:text-white"
-                      : isAnswered
-                        ? "bg-green-100 text-green-700 border border-green-300"
-                        : "bg-slate-100 dark:bg-[#1c1b1b] text-slate-600 dark:text-slate-400 hover:bg-neutral-200"
-                  }`}
-                >
-                  {idx + 1}
-                </button>
-              );
-            })}
+          <div className="flex items-center gap-3 w-full sm:w-auto">
+            <Link
+              href="/student/mock-tests"
+              className="w-full sm:w-auto px-5 py-3.5 border border-slate-200 dark:border-white/10 rounded-xl font-bold text-sm text-slate-700 dark:text-slate-300 hover:bg-slate-100 dark:hover:bg-white/5 transition-colors text-center"
+            >
+              Cancel
+            </Link>
+            <Link
+              href={`/student/mock-tests/${test.id}/take`}
+              className="w-full sm:w-auto px-8 py-3.5 bg-[#EBFF00] hover:bg-[#d9ff00] text-slate-950 rounded-xl font-black text-sm flex items-center justify-center gap-2 transition-all shadow-[0_0_20px_rgba(235,255,0,0.25)] hover:shadow-[0_0_25px_rgba(235,255,0,0.4)] whitespace-nowrap"
+            >
+              <Play className="w-4 h-4 fill-current" />
+              Enter Testing Room & Begin
+            </Link>
           </div>
         </div>
       </div>

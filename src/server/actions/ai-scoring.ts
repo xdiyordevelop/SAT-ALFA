@@ -32,10 +32,18 @@ export async function processSessionScores(proctorCode: string) {
  return { success: false, error: 'Session not found' };
  }
 
- const attempts = await prisma.studentTestAttempt.findMany({
- where: { proctorCode, completedAt: { not: null } },
- include: { student: { include: { user: true } } },
- });
+    const attempts = await prisma.studentTestAttempt.findMany({
+      where: {
+        satTestId: session.satTestId,
+        completedAt: { not: null },
+        OR: [
+          { proctorCode },
+          { proctorCode: session.id },
+          { studentId: { in: session.participants.map((p) => p.studentId) } },
+        ],
+      },
+      include: { student: { include: { user: true } } },
+    });
 
  if (attempts.length === 0) {
  return { success: false, error: 'No completed attempts found' };

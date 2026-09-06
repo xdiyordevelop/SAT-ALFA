@@ -1,12 +1,13 @@
 import { prisma } from "@/lib/db/prisma";
 import { getSession } from "@/lib/auth/session";
+import { canManageAcademics } from "@/lib/permissions/auth";
 import { NextRequest, NextResponse } from "next/server";
 
 export async function POST(request: NextRequest) {
  try {
  const session = await getSession();
 
- if (!session || session.role !== "ADMIN") {
+ if (!session || !canManageAcademics(session)) {
  return NextResponse.json(
  { message: "Unauthorized" },
  { status: 401 }

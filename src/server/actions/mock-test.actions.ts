@@ -2,9 +2,11 @@
 
 import { prisma } from "@/lib/db/prisma";
 import { getSession } from "@/lib/auth/session";
+import { isStaff } from "@/lib/permissions/auth";
 import { analyzeTestPerformance } from "@/lib/ai/analysis";
 import { revalidatePath } from "next/cache";
 import { sendTestResultNotification } from "@/server/actions/sms.actions";
+import { createNotification } from "@/server/actions/notification.actions";
 
 /**
  * Approve a pending mock test submission (Admin only)
@@ -12,7 +14,7 @@ import { sendTestResultNotification } from "@/server/actions/sms.actions";
 export async function approveMockTestAction(testId: string) {
  try {
  const session = await getSession();
- if (!session || session.role !== "ADMIN") {
+ if (!session || !isStaff(session)) {
  return { error: "Unauthorized. Admin role required." };
  }
 
@@ -79,6 +81,16 @@ export async function approveMockTestAction(testId: string) {
  },
  });
 
+  // Send In-App Notification to student
+  if (test.student?.userId) {
+    createNotification(test.student.userId, {
+      title: "Mock Test Results Approved",
+      message: `Your results for "${test.testName}" have been approved. Total Score: ${test.totalScore || test.score} / ${test.maxScore}.`,
+      type: "RESULT",
+      link: `/student/results/${testId}`,
+    }).catch((err) => console.error("Test result notification error:", err));
+  }
+
  // Send SMS notification to parent if enabled and not duplicate
  if (test.studentId) {
  try {
@@ -132,7 +144,7 @@ export async function approveMockTestAction(testId: string) {
 export async function rejectMockTestAction(testId: string, reason: string) {
  try {
  const session = await getSession();
- if (!session || session.role !== "ADMIN") {
+ if (!session || !isStaff(session)) {
  return { error: "Unauthorized. Admin role required." };
  }
 
@@ -157,18 +169,33 @@ export async function rejectMockTestAction(testId: string, reason: string) {
  }
  }
 
- const updatedTest = await prisma.mockTest.update({
- where: { id: testId },
- data: {
- status: "REJECTED",
- notes: JSON.stringify({
- ...existingData,
- rejectionReason: reason.trim(),
- rejectedAt: new Date().toISOString(),
- rejectedBy: session.username,
- }),
- },
- });
+  const updatedTest = await prisma.mockTest.update({
+    where: { id: testId },
+    data: {
+      status: "REJECTED",
+      notes: JSON.stringify({
+        ...existingData,
+        rejectionReason: reason.trim(),
+        rejectedAt: new Date().toISOString(),
+        rejectedBy: session.username,
+      }),
+    },
+  });
+
+  if (test.studentId) {
+    const studentProfile = await prisma.studentProfile.findUnique({
+      where: { id: test.studentId },
+      select: { userId: true },
+    });
+    if (studentProfile?.userId) {
+      createNotification(studentProfile.userId, {
+        title: "Mock Test Submission Rejected",
+        message: `Your submission for "${test.testName}" was rejected. Reason: ${reason.trim()}.`,
+        type: "MOCK_TEST",
+        link: "/student/mock-tests",
+      }).catch((err) => console.error("Test reject notification error:", err));
+    }
+  }
 
  revalidatePath("/admin/mock-tests");
  revalidatePath("/admin/mock-tests/results");

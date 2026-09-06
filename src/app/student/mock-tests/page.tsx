@@ -62,8 +62,8 @@ export default async function StudentMockTestsPage() {
 
   return (
     <StudentLayout
-      title="Mock Tests"
-      breadcrumbs={[{ label: "Talaba" }, { label: "Mock Imtihonlar" }]}
+      title="Mock Examinations"
+      breadcrumbs={[{ label: "Student" }, { label: "Mock Examinations" }]}
       userName={`${student.firstName} ${student.lastName}`}
       userEmail={session.username || ""}
     >

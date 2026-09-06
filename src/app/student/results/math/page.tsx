@@ -20,13 +20,25 @@ export default async function MathResultsPage() {
     redirect("/login");
   }
 
-  const mathTests = await prisma.mockTest.findMany({
+  const attempts = await prisma.studentTestAttempt.findMany({
     where: {
       studentId: student.id,
-      testName: { contains: "Math" },
+      completedAt: { not: null },
+      mathScore: { not: null },
     },
-    orderBy: { createdAt: "desc" },
+    include: {
+      satTest: { select: { id: true, name: true } },
+    },
+    orderBy: { completedAt: "desc" },
   });
+
+  const mathTests = attempts.map((a) => ({
+    id: a.id,
+    testName: a.satTest?.name || "Digital SAT Practice",
+    score: a.mathScore || 0,
+    maxScore: 800,
+    createdAt: a.completedAt || a.createdAt,
+  }));
 
   // Calculate stats
   const avgScore =

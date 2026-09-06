@@ -129,6 +129,16 @@ exports.Prisma.UserScalarFieldEnum = {
   updatedAt: 'updatedAt'
 };
 
+exports.Prisma.StaffProfileScalarFieldEnum = {
+  id: 'id',
+  userId: 'userId',
+  fullName: 'fullName',
+  phone: 'phone',
+  roleTitle: 'roleTitle',
+  createdAt: 'createdAt',
+  updatedAt: 'updatedAt'
+};
+
 exports.Prisma.GroupScalarFieldEnum = {
   id: 'id',
   name: 'name',
@@ -473,6 +483,17 @@ exports.Prisma.AIJobScalarFieldEnum = {
   updatedAt: 'updatedAt'
 };
 
+exports.Prisma.NotificationScalarFieldEnum = {
+  id: 'id',
+  userId: 'userId',
+  title: 'title',
+  message: 'message',
+  type: 'type',
+  link: 'link',
+  isRead: 'isRead',
+  createdAt: 'createdAt'
+};
+
 exports.Prisma.SortOrder = {
   asc: 'asc',
   desc: 'desc'
@@ -503,7 +524,10 @@ exports.Prisma.JsonNullValueFilter = {
   AnyNull: Prisma.AnyNull
 };
 exports.Role = exports.$Enums.Role = {
+  SUPER_ADMIN: 'SUPER_ADMIN',
   ADMIN: 'ADMIN',
+  TEACHER: 'TEACHER',
+  MANAGER: 'MANAGER',
   STUDENT: 'STUDENT'
 };
 
@@ -593,8 +617,19 @@ exports.AIJobStatus = exports.$Enums.AIJobStatus = {
   CANCELLED: 'CANCELLED'
 };
 
+exports.NotificationType = exports.$Enums.NotificationType = {
+  MOCK_TEST: 'MOCK_TEST',
+  RESULT: 'RESULT',
+  LESSON: 'LESSON',
+  ARTICLE: 'ARTICLE',
+  PAYMENT: 'PAYMENT',
+  ATTENDANCE: 'ATTENDANCE',
+  ANNOUNCEMENT: 'ANNOUNCEMENT'
+};
+
 exports.Prisma.ModelName = {
   User: 'User',
+  StaffProfile: 'StaffProfile',
   Group: 'Group',
   StudentProfile: 'StudentProfile',
   MonthlyResult: 'MonthlyResult',
@@ -617,7 +652,8 @@ exports.Prisma.ModelName = {
   Referral: 'Referral',
   StudyGroup: 'StudyGroup',
   Article: 'Article',
-  AIJob: 'AIJob'
+  AIJob: 'AIJob',
+  Notification: 'Notification'
 };
 
 /**

@@ -31,17 +31,17 @@ export async function loginAction(formData: { username: string; password: string
  return { error: "Invalid username or password", success: false };
  }
 
- const session = {
- userId: user.id,
- username: user.username,
- role: user.role as "ADMIN" | "STUDENT",
- };
+  const session = {
+    userId: user.id,
+    username: user.username,
+    role: user.role as import("@/lib/auth/session").UserRole,
+  };
 
- await setSession(session);
+  await setSession(session);
 
- // Return success with redirect URL instead of calling redirect()
- const redirectUrl = user.role === "ADMIN" ? "/admin/dashboard" : "/student/dashboard";
- return { success: true, redirectUrl };
+  // Return success with redirect URL instead of calling redirect()
+  const redirectUrl = user.role !== "STUDENT" ? "/admin/dashboard" : "/student/dashboard";
+  return { success: true, redirectUrl };
  } catch (error) {
  const message = error instanceof Error ? error.message : "Login failed";
  return { error: message, success: false };

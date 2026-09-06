@@ -2,8 +2,7 @@
 
 import { useState, useEffect, FormEvent, useRef, DragEvent } from "react";
 import { useRouter } from "next/navigation";
-import { Sidebar } from "@/components/layout/Sidebar";
-import { Topbar } from "@/components/layout/Topbar";
+import { AdminLayout } from "@/components/admin/AdminLayout";
 import {
   ArrowLeft,
   Trash2,
@@ -13,8 +12,19 @@ import {
   Film,
   CheckCircle2,
   AlertCircle,
+  Save,
+  Loader2,
+  Check,
+  BookOpen,
+  Link2,
 } from "lucide-react";
 import Link from "next/link";
+import {
+  extractYoutubeVideoId,
+  getYoutubeEmbedUrl,
+  isValidYoutubeUrl,
+  YoutubeIcon,
+} from "@/lib/utils/youtube";
 
 interface Group {
   id: string;
@@ -32,43 +42,35 @@ export default function EditTopicClient({
 }) {
   const router = useRouter();
 
+  const isInitialYoutube = isValidYoutubeUrl(topic.videoPath);
+
   // Basic Info
   const [title, setTitle] = useState(topic.title || "");
   const [description, setDescription] = useState(topic.description || "");
   const [subject, setSubject] = useState(topic.subject || "MATH");
   const [selectedGroups, setSelectedGroups] = useState<string[]>(
-    topic.groupProgress ? topic.groupProgress.map((gp: any) => gp.groupId) : [],
+    topic.groupProgress ? topic.groupProgress.map((gp: any) => gp.groupId) : []
   );
   const [groups, setGroups] = useState<Group[]>([]);
 
   // Materials
   const [bookTitle, setBookTitle] = useState(topic.bookTitle || "");
   const [bookPdfPath, setBookPdfPath] = useState(topic.bookPdfPath || "");
-  const [videoPath, setVideoPath] = useState(topic.videoPath || "");
+  const [youtubeUrl, setYoutubeUrl] = useState(topic.videoPath || "");
 
-  // Upload States
+  // Upload States (PDF Books only)
   const [pdfFile, setPdfFile] = useState<{ name: string; size: number } | null>(
     topic.bookPdfPath
       ? { name: topic.bookPdfPath.split("/").pop() || "Existing PDF", size: 0 }
-      : null,
-  );
-  const [videoFile, setVideoFile] = useState<{
-    name: string;
-    size: number;
-  } | null>(
-    topic.videoPath
-      ? { name: topic.videoPath.split("/").pop() || "Existing Video", size: 0 }
-      : null,
+      : null
   );
   const [pdfUploading, setPdfUploading] = useState(false);
-  const [videoUploading, setVideoUploading] = useState(false);
-  const [videoProgress, setVideoProgress] = useState(0);
   const [loading, setLoading] = useState(false);
+  const [deleting, setDeleting] = useState(false);
   const [error, setError] = useState("");
   const [success, setSuccess] = useState("");
 
   const pdfInputRef = useRef<HTMLInputElement>(null);
-  const videoInputRef = useRef<HTMLInputElement>(null);
 
   useEffect(() => {
     fetch("/api/admin/groups")
@@ -76,6 +78,8 @@ export default function EditTopicClient({
       .then((data) => {
         if (data.groups) {
           setGroups(data.groups);
+        } else if (Array.isArray(data)) {
+          setGroups(data);
         }
       })
       .catch(console.error);
@@ -83,70 +87,38 @@ export default function EditTopicClient({
 
   const handleGroupToggle = (id: string) => {
     setSelectedGroups((prev) =>
-      prev.includes(id) ? prev.filter((g) => g !== id) : [...prev, id],
+      prev.includes(id) ? prev.filter((g) => g !== id) : [...prev, id]
     );
   };
 
-  const uploadFile = (file: File, type: "pdf" | "video") => {
-    if (type === "pdf") {
-      if (file.type !== "application/pdf") {
-        setError("Only PDF files are allowed for books");
-        return;
-      }
-      setPdfUploading(true);
-      setError("");
-      const formData = new FormData();
-      formData.append("file", file);
-      formData.append("type", "pdf");
-      fetch("/api/upload", {
-        method: "POST",
-        body: formData,
-      })
-        .then((res) => res.json())
-        .then((data) => {
-          if (data.error) throw new Error(data.error);
-          setBookPdfPath(data.url);
-          setPdfFile({ name: data.name, size: data.size });
-        })
-        .catch((err) => setError(err.message))
-        .finally(() => setPdfUploading(false));
-    } else {
-      if (!file.type.includes("video/")) {
-        setError("Invalid video format");
-        return;
-      }
-      setVideoUploading(true);
-      setError("");
-      setVideoProgress(10);
-      const interval = setInterval(() => {
-        setVideoProgress((p) => (p >= 90 ? 90 : p + 10));
-      }, 500);
-      const formData = new FormData();
-      formData.append("file", file);
-      formData.append("type", "video");
-      fetch("/api/upload", {
-        method: "POST",
-        body: formData,
-      })
-        .then((res) => res.json())
-        .then((data) => {
-          if (data.error) throw new Error(data.error);
-          setVideoPath(data.url);
-          setVideoFile({ name: data.name, size: data.size });
-          setVideoProgress(100);
-        })
-        .catch((err) => setError(err.message))
-        .finally(() => {
-          clearInterval(interval);
-          setTimeout(() => setVideoUploading(false), 500);
-        });
+  const uploadPdfFile = (file: File) => {
+    if (file.type !== "application/pdf") {
+      setError("Only PDF files are allowed for books");
+      return;
     }
+    setPdfUploading(true);
+    setError("");
+    const formData = new FormData();
+    formData.append("file", file);
+    formData.append("type", "pdf");
+    fetch("/api/upload", {
+      method: "POST",
+      body: formData,
+    })
+      .then((res) => res.json())
+      .then((data) => {
+        if (data.error) throw new Error(data.error);
+        setBookPdfPath(data.url);
+        setPdfFile({ name: data.name || file.name, size: data.size || file.size });
+      })
+      .catch((err) => setError(err.message))
+      .finally(() => setPdfUploading(false));
   };
 
-  const handleDrop = (e: DragEvent<HTMLDivElement>, type: "pdf" | "video") => {
+  const handlePdfDrop = (e: DragEvent<HTMLDivElement>) => {
     e.preventDefault();
     const file = e.dataTransfer.files?.[0];
-    if (file) uploadFile(file, type);
+    if (file) uploadPdfFile(file);
   };
 
   const formatSize = (bytes: number) => {
@@ -155,8 +127,8 @@ export default function EditTopicClient({
     return (bytes / (1024 * 1024)).toFixed(1) + " MB";
   };
 
-  const handleSubmit = async (e: FormEvent<HTMLFormElement>) => {
-    e.preventDefault();
+  const handleSubmit = async (e?: FormEvent) => {
+    if (e) e.preventDefault();
     setError("");
     setSuccess("");
     setLoading(true);
@@ -164,6 +136,15 @@ export default function EditTopicClient({
       if (!title.trim()) {
         throw new Error("Topic title is required");
       }
+      let finalVideoPath = "";
+      const trimmed = youtubeUrl.trim();
+      if (trimmed) {
+        if (!isValidYoutubeUrl(trimmed)) {
+          throw new Error("Please enter a valid YouTube video link (watch, youtu.be, embed, or shorts)");
+        }
+        finalVideoPath = trimmed;
+      }
+
       const response = await fetch(`/api/admin/topics/${topic.id}`, {
         method: "PATCH",
         headers: { "Content-Type": "application/json" },
@@ -173,7 +154,7 @@ export default function EditTopicClient({
           subject,
           bookTitle,
           bookPdfPath,
-          videoPath,
+          videoPath: finalVideoPath,
           groupIds: selectedGroups,
         }),
       });
@@ -193,8 +174,10 @@ export default function EditTopicClient({
   };
 
   const handleDelete = async () => {
-    if (!confirm("Are you sure you want to delete this topic?")) return;
-    setLoading(true);
+    if (!confirm("Are you sure you want to delete this topic? This action cannot be undone.")) {
+      return;
+    }
+    setDeleting(true);
     try {
       const response = await fetch(`/api/admin/topics/${topic.id}`, {
         method: "DELETE",
@@ -204,376 +187,436 @@ export default function EditTopicClient({
       router.refresh();
     } catch (err) {
       setError(err instanceof Error ? err.message : "Something went wrong");
-      setLoading(false);
+      setDeleting(false);
     }
   };
 
   return (
-    <div className="min-h-screen bg-slate-50 dark:bg-[#0a0a0a] text-slate-900 dark:text-white font-sans">
-      <Sidebar username={username} role={role} />
-      <div className="lg:ml-64">
-        <Topbar
-          title="Edit Topic"
-          breadcrumbs={[
-            { label: "Admin" },
-            { label: "Topics" },
-            { label: "Edit" },
-          ]}
-        />
-        <main className="pt-24 px-6 pb-16 max-w-7xl mx-auto">
-          {/* Header */}
-          <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 mb-8">
-            <div>
-              <Link
-                href="/admin/topics"
-                className="inline-flex items-center gap-2 text-slate-900 dark:text-yellow-500 hover:text-yellow-700 font-medium mb-2 transition-colors"
-              >
-                <ArrowLeft className="w-4 h-4" /> Back to Topics
-              </Link>
-              <h1 className="text-3xl font-bold text-slate-900 dark:text-white">
-                {" "}
-                Edit Topic{" "}
-              </h1>
+    <AdminLayout
+      title="Edit Topic"
+      breadcrumbs={[
+        { label: "Admin" },
+        { label: "Topics", href: "/admin/topics" },
+        { label: "Edit" },
+      ]}
+      userName={username}
+      userEmail={username ? `${username}@satalfa.uz` : "admin@satalfa.uz"}
+      userRole={role}
+    >
+      {/* Top Header & Actions */}
+      <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 mb-8">
+        <div>
+          <Link
+            href="/admin/topics"
+            className="inline-flex items-center gap-1.5 text-xs font-semibold text-slate-500 hover:text-slate-900 dark:text-slate-400 dark:hover:text-[#EBFF00] mb-2 transition-colors"
+          >
+            <ArrowLeft className="w-3.5 h-3.5" />
+            <span>Back to Topics</span>
+          </Link>
+          <h1 className="text-3xl font-bold text-slate-900 dark:text-white mb-1">
+            Edit Topic
+          </h1>
+          <p className="text-slate-500 dark:text-slate-400 text-sm">
+            Update lesson details, subject classification, assigned groups, and curriculum materials.
+          </p>
+        </div>
+
+        <div className="flex items-center gap-3">
+          <button
+            type="button"
+            onClick={handleDelete}
+            disabled={loading || deleting}
+            className="px-4 py-2.5 bg-rose-500/10 hover:bg-rose-500/20 text-rose-600 dark:text-rose-400 border border-rose-500/20 rounded-2xl text-sm font-bold transition-all flex items-center justify-center gap-2 disabled:opacity-50"
+          >
+            {deleting ? (
+              <Loader2 className="w-4 h-4 animate-spin" />
+            ) : (
+              <Trash2 className="w-4 h-4" />
+            )}
+            <span>Delete Topic</span>
+          </button>
+
+          <button
+            type="button"
+            onClick={() => handleSubmit()}
+            disabled={loading || deleting}
+            className="px-6 py-2.5 bg-[#EBFF00] hover:bg-[#d9ff00] text-slate-900 rounded-2xl text-sm font-bold shadow-sm transition-all flex items-center justify-center gap-2 disabled:opacity-50 disabled:cursor-not-allowed min-w-[140px]"
+          >
+            {loading ? (
+              <Loader2 className="w-4 h-4 animate-spin" />
+            ) : (
+              <Save className="w-4 h-4" />
+            )}
+            <span>{loading ? "Saving..." : "Save Changes"}</span>
+          </button>
+        </div>
+      </div>
+
+      {/* Notifications */}
+      {error && (
+        <div className="mb-6 p-4 rounded-2xl bg-rose-500/10 border border-rose-500/20 text-rose-600 dark:text-rose-400 flex items-center gap-3 animate-fade-in">
+          <AlertCircle className="w-5 h-5 shrink-0" />
+          <p className="text-sm font-medium">{error}</p>
+        </div>
+      )}
+
+      {success && (
+        <div className="mb-6 p-4 rounded-2xl bg-emerald-500/10 border border-emerald-500/20 text-emerald-600 dark:text-emerald-400 flex items-center gap-3 animate-fade-in">
+          <CheckCircle2 className="w-5 h-5 shrink-0" />
+          <p className="text-sm font-medium">{success}</p>
+        </div>
+      )}
+
+      <form onSubmit={handleSubmit} className="grid grid-cols-1 lg:grid-cols-12 gap-6">
+        {/* Left Column - Main Info */}
+        <div className="lg:col-span-7 space-y-6">
+          {/* Card 1: Basic Information */}
+          <div className="bg-white dark:bg-[#131313] rounded-3xl border border-slate-200 dark:border-white/10 p-6 sm:p-7 shadow-sm">
+            <div className="flex items-center gap-2.5 mb-6">
+              <span className="w-7 h-7 rounded-xl bg-[#EBFF00]/10 text-slate-900 dark:text-[#EBFF00] font-bold text-xs flex items-center justify-center border border-[#EBFF00]/20">
+                1
+              </span>
+              <h2 className="text-base font-bold text-slate-900 dark:text-white">
+                Basic Information
+              </h2>
             </div>
-            <div className="flex items-center gap-3">
-              <button
-                onClick={handleDelete}
-                disabled={loading}
-                className="px-4 py-3 bg-red-50 hover:bg-red-100 text-red-600 rounded-xl font-medium transition-all flex items-center justify-center gap-2 border border-red-200"
-              >
-                <Trash2 className="w-4 h-4" /> Delete
-              </button>
-              <button
-                onClick={(e) => {
-                  e.preventDefault();
-                  document.getElementById("submit-btn")?.click();
-                }}
-                disabled={loading}
-                className="px-6 py-3 bg-[#EBFF00] hover:bg-[#d9ff00] text-slate-900 rounded-xl font-medium transition-all shadow-lg shadow-yellow-500/20 disabled:opacity-50 disabled:cursor-not-allowed flex items-center justify-center min-w-[150px]"
-              >
-                {loading ? "Saving..." : "Save Changes"}
-              </button>
+
+            <div className="space-y-5">
+              {/* Title */}
+              <div>
+                <label className="block text-xs font-semibold text-slate-600 dark:text-slate-400 uppercase tracking-wider mb-2">
+                  Topic Title <span className="text-rose-500">*</span>
+                </label>
+                <input
+                  type="text"
+                  value={title}
+                  onChange={(e) => setTitle(e.target.value)}
+                  placeholder="e.g., Linear Equations in One Variable"
+                  className="w-full px-4 py-3 rounded-2xl border border-slate-200 dark:border-white/10 bg-slate-50 dark:bg-[#0a0a0a] text-slate-900 dark:text-white placeholder-slate-400 text-sm focus:border-[#EBFF00] outline-none transition-all"
+                />
+              </div>
+
+              {/* Subject Selector */}
+              <div>
+                <label className="block text-xs font-semibold text-slate-600 dark:text-slate-400 uppercase tracking-wider mb-2.5">
+                  Subject Classification <span className="text-rose-500">*</span>
+                </label>
+                <div className="grid grid-cols-2 gap-3">
+                  <label
+                    className={`cursor-pointer p-4 rounded-2xl border transition-all flex items-center gap-3 ${
+                      subject === "MATH"
+                        ? "border-[#EBFF00] bg-[#EBFF00]/10 text-slate-900 dark:text-white shadow-sm"
+                        : "border-slate-200 dark:border-white/10 bg-slate-50 dark:bg-[#0a0a0a] hover:border-slate-300 dark:hover:border-white/20 text-slate-600 dark:text-slate-400"
+                    }`}
+                  >
+                    <input
+                      type="radio"
+                      name="subject"
+                      value="MATH"
+                      checked={subject === "MATH"}
+                      onChange={(e) => setSubject(e.target.value)}
+                      className="sr-only"
+                    />
+                    <div
+                      className={`w-4 h-4 rounded-full border flex items-center justify-center transition-all ${
+                        subject === "MATH"
+                          ? "border-[#EBFF00] bg-[#EBFF00]"
+                          : "border-slate-400 dark:border-slate-600"
+                      }`}
+                    >
+                      {subject === "MATH" && (
+                        <span className="w-1.5 h-1.5 rounded-full bg-slate-900" />
+                      )}
+                    </div>
+                    <span className="font-bold text-sm">SAT Math</span>
+                  </label>
+
+                  <label
+                    className={`cursor-pointer p-4 rounded-2xl border transition-all flex items-center gap-3 ${
+                      subject === "READING_WRITING"
+                        ? "border-[#EBFF00] bg-[#EBFF00]/10 text-slate-900 dark:text-white shadow-sm"
+                        : "border-slate-200 dark:border-white/10 bg-slate-50 dark:bg-[#0a0a0a] hover:border-slate-300 dark:hover:border-white/20 text-slate-600 dark:text-slate-400"
+                    }`}
+                  >
+                    <input
+                      type="radio"
+                      name="subject"
+                      value="READING_WRITING"
+                      checked={subject === "READING_WRITING"}
+                      onChange={(e) => setSubject(e.target.value)}
+                      className="sr-only"
+                    />
+                    <div
+                      className={`w-4 h-4 rounded-full border flex items-center justify-center transition-all ${
+                        subject === "READING_WRITING"
+                          ? "border-[#EBFF00] bg-[#EBFF00]"
+                          : "border-slate-400 dark:border-slate-600"
+                      }`}
+                    >
+                      {subject === "READING_WRITING" && (
+                        <span className="w-1.5 h-1.5 rounded-full bg-slate-900" />
+                      )}
+                    </div>
+                    <span className="font-bold text-sm">Reading & Writing</span>
+                  </label>
+                </div>
+              </div>
+
+              {/* Description */}
+              <div>
+                <label className="block text-xs font-semibold text-slate-600 dark:text-slate-400 uppercase tracking-wider mb-2">
+                  Topic Overview / Description
+                </label>
+                <textarea
+                  value={description}
+                  onChange={(e) => setDescription(e.target.value)}
+                  placeholder="Outline the core rules, formulas, and skills covered in this topic..."
+                  rows={4}
+                  className="w-full px-4 py-3 rounded-2xl border border-slate-200 dark:border-white/10 bg-slate-50 dark:bg-[#0a0a0a] text-slate-900 dark:text-white placeholder-slate-400 text-sm focus:border-[#EBFF00] outline-none transition-all resize-none"
+                />
+              </div>
             </div>
           </div>
 
-          {error && (
-            <div className="mb-6 p-4 rounded-xl bg-red-50 border border-red-200 text-red-600 flex items-center gap-3 animate-fade-in">
-              <AlertCircle className="w-5 h-5 flex-shrink-0" />
-              <p>{error}</p>
-            </div>
-          )}
-
-          {success && (
-            <div className="mb-6 p-4 rounded-xl bg-green-50 border border-green-200 text-green-600 flex items-center gap-3 animate-fade-in">
-              <CheckCircle2 className="w-5 h-5 flex-shrink-0" />
-              <p>{success}</p>
-            </div>
-          )}
-
-          <form
-            onSubmit={handleSubmit}
-            className="grid grid-cols-1 xl:grid-cols-12 gap-8"
-          >
-            <button type="submit" id="submit-btn" className="hidden">
-              submit
-            </button>
-
-            {/* Left Column - Basic Info */}
-            <div className="xl:col-span-7 space-y-6">
-              <div className="bg-white dark:bg-[#131313] rounded-2xl border border-slate-200 dark:border-white/10 p-8 shadow-sm backdrop-blur-xl">
-                <h2 className="text-lg font-bold text-slate-900 dark:text-white mb-6 flex items-center gap-2">
-                  <span className="w-8 h-8 rounded-lg bg-yellow-100 dark:bg-yellow-900/30 flex items-center justify-center text-slate-900 dark:text-yellow-500">
-                    1
-                  </span>{" "}
-                  Basic Information
+          {/* Card 2: Assigned Groups */}
+          <div className="bg-white dark:bg-[#131313] rounded-3xl border border-slate-200 dark:border-white/10 p-6 sm:p-7 shadow-sm">
+            <div className="flex items-center justify-between mb-4">
+              <div className="flex items-center gap-2.5">
+                <span className="w-7 h-7 rounded-xl bg-[#EBFF00]/10 text-slate-900 dark:text-[#EBFF00] font-bold text-xs flex items-center justify-center border border-[#EBFF00]/20">
+                  2
+                </span>
+                <h2 className="text-base font-bold text-slate-900 dark:text-white">
+                  Assign to Student Groups
                 </h2>
-                <div className="space-y-6">
-                  <div>
-                    <label className="block text-sm font-semibold text-slate-700 dark:text-slate-300 mb-2">
-                      Topic Title <span className="text-red-500">*</span>
-                    </label>
-                    <input
-                      type="text"
-                      value={title}
-                      onChange={(e) => setTitle(e.target.value)}
-                      placeholder="e.g., Linear Equations"
-                      className="w-full px-4 py-3 rounded-xl border border-slate-200 dark:border-white/10 bg-slate-50 dark:bg-[#0a0a0a] text-slate-900 dark:text-white placeholder-slate-400 focus:border-yellow-500 focus:ring-2 focus:ring-yellow-500/20 outline-none transition-all"
-                    />
-                  </div>
-                  <div>
-                    <label className="block text-sm font-semibold text-slate-700 dark:text-slate-300 mb-3">
-                      Subject <span className="text-red-500">*</span>
-                    </label>
-                    <div className="grid grid-cols-2 gap-4">
-                      <label
-                        className={`cursor-pointer p-4 rounded-xl border-2 transition-all flex items-center gap-3 ${subject === "MATH" ? "border-yellow-500 bg-slate-50 dark:bg-[#0a0a0a]" : "border-slate-200 dark:border-white/10 bg-slate-50 dark:bg-[#0a0a0a] hover:border-yellow-300"}`}
+              </div>
+              <span className="text-xs font-semibold text-slate-400">
+                {selectedGroups.length} of {groups.length} selected
+              </span>
+            </div>
+            <p className="text-xs text-slate-500 dark:text-slate-400 mb-5">
+              Select which groups should have this topic in their learning syllabus and track completion.
+            </p>
+
+            {groups.length === 0 ? (
+              <div className="p-8 rounded-2xl border border-dashed border-slate-200 dark:border-white/10 text-center">
+                <p className="text-sm text-slate-400">No active groups found in system.</p>
+              </div>
+            ) : (
+              <div className="grid grid-cols-1 sm:grid-cols-2 gap-2.5 max-h-72 overflow-y-auto pr-1">
+                {groups.map((group) => {
+                  const isChecked = selectedGroups.includes(group.id);
+                  return (
+                    <label
+                      key={group.id}
+                      className={`flex items-center gap-3 p-3.5 rounded-2xl border transition-all cursor-pointer ${
+                        isChecked
+                          ? "border-[#EBFF00] bg-[#EBFF00]/10 text-slate-900 dark:text-white"
+                          : "border-slate-200 dark:border-white/10 bg-slate-50 dark:bg-[#0a0a0a] hover:border-slate-300 dark:hover:border-white/20 text-slate-600 dark:text-slate-400"
+                      }`}
+                    >
+                      <div
+                        className={`w-4 h-4 rounded-md border flex items-center justify-center transition-all ${
+                          isChecked
+                            ? "border-[#EBFF00] bg-[#EBFF00] text-slate-900"
+                            : "border-slate-400 dark:border-slate-600"
+                        }`}
                       >
-                        <input
-                          type="radio"
-                          name="subject"
-                          value="MATH"
-                          checked={subject === "MATH"}
-                          onChange={(e) => setSubject(e.target.value)}
-                          className="w-4 h-4 text-slate-900 dark:text-yellow-500 focus:ring-yellow-500"
-                        />
-                        <span className="font-semibold text-slate-900 dark:text-white">
-                          Math
-                        </span>
-                      </label>
-                      <label
-                        className={`cursor-pointer p-4 rounded-xl border-2 transition-all flex items-center gap-3 ${subject === "READING_WRITING" ? "border-yellow-500 bg-slate-50 dark:bg-[#0a0a0a]" : "border-slate-200 dark:border-white/10 bg-slate-50 dark:bg-[#0a0a0a] hover:border-yellow-300"}`}
-                      >
-                        <input
-                          type="radio"
-                          name="subject"
-                          value="READING_WRITING"
-                          checked={subject === "READING_WRITING"}
-                          onChange={(e) => setSubject(e.target.value)}
-                          className="w-4 h-4 text-slate-900 dark:text-yellow-500 focus:ring-yellow-500"
-                        />
-                        <span className="font-semibold text-slate-900 dark:text-white">
-                          Reading & Writing
-                        </span>
-                      </label>
-                    </div>
-                  </div>
-                  <div>
-                    <label className="block text-sm font-semibold text-slate-700 dark:text-slate-300 mb-2">
-                      {" "}
-                      Description{" "}
+                        {isChecked && <Check className="w-3 h-3 stroke-[3]" />}
+                      </div>
+                      <span className="text-sm font-semibold truncate">
+                        {group.name}
+                      </span>
                     </label>
-                    <textarea
-                      value={description}
-                      onChange={(e) => setDescription(e.target.value)}
-                      placeholder="Write a comprehensive description of what students will learn..."
-                      rows={5}
-                      className="w-full px-4 py-3 rounded-xl border border-slate-200 dark:border-white/10 bg-slate-50 dark:bg-[#0a0a0a] text-slate-900 dark:text-white placeholder-slate-400 focus:border-yellow-500 focus:ring-2 focus:ring-yellow-500/20 outline-none transition-all resize-none"
-                    />
-                  </div>
+                  );
+                })}
+              </div>
+            )}
+          </div>
+        </div>
+
+        {/* Right Column - Materials & Uploads */}
+        <div className="lg:col-span-5 space-y-6">
+          <div className="bg-white dark:bg-[#131313] rounded-3xl border border-slate-200 dark:border-white/10 p-6 sm:p-7 shadow-sm">
+            <div className="flex items-center gap-2.5 mb-6">
+              <span className="w-7 h-7 rounded-xl bg-[#EBFF00]/10 text-slate-900 dark:text-[#EBFF00] font-bold text-xs flex items-center justify-center border border-[#EBFF00]/20">
+                3
+              </span>
+              <h2 className="text-base font-bold text-slate-900 dark:text-white">
+                Curriculum Materials
+              </h2>
+            </div>
+
+            <div className="space-y-6">
+              {/* Book Title */}
+              <div>
+                <label className="block text-xs font-semibold text-slate-600 dark:text-slate-400 uppercase tracking-wider mb-2">
+                  Textbook Title <span className="font-normal text-slate-400 lowercase">(optional)</span>
+                </label>
+                <div className="relative">
+                  <BookOpen className="w-4 h-4 absolute left-3.5 top-1/2 -translate-y-1/2 text-slate-400" />
+                  <input
+                    type="text"
+                    value={bookTitle}
+                    onChange={(e) => setBookTitle(e.target.value)}
+                    placeholder="e.g., College Panda SAT Math Chapter 3"
+                    className="w-full pl-10 pr-4 py-2.5 rounded-2xl border border-slate-200 dark:border-white/10 bg-slate-50 dark:bg-[#0a0a0a] text-slate-900 dark:text-white placeholder-slate-400 text-sm focus:border-[#EBFF00] outline-none transition-all"
+                  />
                 </div>
               </div>
 
-              <div className="bg-white dark:bg-[#131313] rounded-2xl border border-slate-200 dark:border-white/10 p-8 shadow-sm backdrop-blur-xl">
-                <h2 className="text-lg font-bold text-slate-900 dark:text-white mb-6 flex items-center gap-2">
-                  <span className="w-8 h-8 rounded-lg bg-yellow-100 dark:bg-yellow-900/30 flex items-center justify-center text-slate-900 dark:text-yellow-500">
-                    2
-                  </span>{" "}
-                  Assign to Groups
-                </h2>
-                {groups.length === 0 ? (
-                  <div className="p-6 rounded-xl border border-dashed border-slate-300 dark:border-white/5 text-center">
-                    <p className="text-slate-500 dark:text-slate-400">
-                      No active groups found in the system.
-                    </p>
+              {/* PDF Upload */}
+              <div>
+                <label className="block text-xs font-semibold text-slate-600 dark:text-slate-400 uppercase tracking-wider mb-2">
+                  PDF Book / Worksheet
+                </label>
+
+                {!pdfFile && !bookPdfPath ? (
+                  <div
+                    onDragOver={(e) => e.preventDefault()}
+                    onDrop={handlePdfDrop}
+                    onClick={() => pdfInputRef.current?.click()}
+                    className={`w-full p-6 rounded-2xl border-2 border-dashed flex flex-col items-center justify-center cursor-pointer transition-all ${
+                      pdfUploading
+                        ? "border-[#EBFF00] bg-[#EBFF00]/5"
+                        : "border-slate-200 dark:border-white/10 hover:border-[#EBFF00] hover:bg-slate-50 dark:hover:bg-[#1a1a1a]"
+                    }`}
+                  >
+                    <input
+                      type="file"
+                      accept=".pdf"
+                      ref={pdfInputRef}
+                      onChange={(e) => {
+                        const file = e.target.files?.[0];
+                        if (file) uploadPdfFile(file);
+                      }}
+                      className="hidden"
+                    />
+                    {pdfUploading ? (
+                      <div className="flex flex-col items-center gap-2">
+                        <Loader2 className="w-7 h-7 animate-spin text-[#EBFF00]" />
+                        <span className="text-xs font-semibold text-slate-600 dark:text-slate-300">
+                          Uploading PDF...
+                        </span>
+                      </div>
+                    ) : (
+                      <>
+                        <div className="w-10 h-10 rounded-2xl bg-slate-100 dark:bg-white/5 flex items-center justify-center text-slate-500 dark:text-slate-400 mb-2">
+                          <UploadCloud className="w-5 h-5 text-[#EBFF00]" />
+                        </div>
+                        <p className="text-xs font-bold text-slate-700 dark:text-slate-300 mb-0.5">
+                          Click or drag PDF file here
+                        </p>
+                        <p className="text-[11px] text-slate-400">PDF up to 50MB</p>
+                      </>
+                    )}
                   </div>
                 ) : (
-                  <div className="grid grid-cols-1 sm:grid-cols-2 gap-3 max-h-80 overflow-y-auto custom-scrollbar pr-2">
-                    {groups.map((group) => (
-                      <label
-                        key={group.id}
-                        className={`flex items-center gap-3 p-4 rounded-xl border transition-all cursor-pointer ${selectedGroups.includes(group.id) ? "border-yellow-500 bg-slate-50 dark:bg-[#0a0a0a]/50" : "border-slate-200 dark:border-white/10 bg-slate-50 dark:bg-[#0a0a0a] hover:border-yellow-300"}`}
-                      >
-                        <div className="flex-shrink-0 w-5 h-5 flex items-center justify-center">
-                          <input
-                            type="checkbox"
-                            checked={selectedGroups.includes(group.id)}
-                            onChange={() => handleGroupToggle(group.id)}
-                            className="w-4 h-4 rounded text-slate-900 dark:text-yellow-500 focus:ring-yellow-500 bg-slate-100 dark:bg-[#1c1b1b] border-slate-300 dark:border-white/5"
-                          />
-                        </div>
-                        <span className="text-sm font-semibold text-slate-700 dark:text-slate-300 truncate">
-                          {group.name}
-                        </span>
-                      </label>
-                    ))}
+                  <div className="p-3.5 rounded-2xl border border-slate-200 dark:border-white/10 bg-slate-50 dark:bg-[#0a0a0a] flex items-center justify-between group">
+                    <div className="flex items-center gap-3 overflow-hidden">
+                      <div className="w-9 h-9 rounded-xl bg-rose-500/10 text-rose-600 dark:text-rose-400 flex items-center justify-center shrink-0 border border-rose-500/20">
+                        <FileText className="w-4 h-4" />
+                      </div>
+                      <div className="truncate">
+                        <p className="text-xs font-bold text-slate-900 dark:text-white truncate">
+                          {pdfFile?.name || "Uploaded PDF Document"}
+                        </p>
+                        {pdfFile?.size ? (
+                          <p className="text-[11px] text-slate-400">{formatSize(pdfFile.size)}</p>
+                        ) : (
+                          <p className="text-[11px] text-emerald-500 font-medium">Ready</p>
+                        )}
+                      </div>
+                    </div>
+                    <button
+                      type="button"
+                      onClick={() => {
+                        setPdfFile(null);
+                        setBookPdfPath("");
+                      }}
+                      className="p-1.5 text-slate-400 hover:text-rose-500 hover:bg-rose-50 dark:hover:bg-rose-950/30 rounded-lg transition-colors shrink-0"
+                      title="Remove PDF"
+                    >
+                      <X className="w-4 h-4" />
+                    </button>
                   </div>
                 )}
               </div>
-            </div>
 
-            {/* Right Column - Uploads */}
-            <div className="xl:col-span-5 space-y-6">
-              <div className="bg-white dark:bg-[#131313] rounded-2xl border border-slate-200 dark:border-white/10 p-8 shadow-sm backdrop-blur-xl">
-                <h2 className="text-lg font-bold text-slate-900 dark:text-white mb-6 flex items-center gap-2">
-                  <span className="w-8 h-8 rounded-lg bg-yellow-100 dark:bg-yellow-900/30 flex items-center justify-center text-slate-900 dark:text-yellow-500">
-                    3
-                  </span>{" "}
-                  Learning Materials
-                </h2>
-                <div className="space-y-8">
-                  {/* Book / PDF Upload */}
-                  <div>
-                    <label className="block text-sm font-semibold text-slate-700 dark:text-slate-300 mb-2">
-                      Book Title{" "}
-                      <span className="text-slate-500 dark:text-slate-400 font-normal">
-                        (Optional)
-                      </span>
-                    </label>
+              {/* YouTube Video Lesson Section */}
+              <div>
+                <div className="flex items-center justify-between mb-2">
+                  <label className="block text-xs font-semibold text-slate-600 dark:text-slate-400 uppercase tracking-wider">
+                    YouTube Video Lesson
+                  </label>
+                  <span className="inline-flex items-center gap-1 text-[11px] font-bold text-red-500 bg-red-500/10 border border-red-500/20 px-2 py-0.5 rounded-md">
+                    <YoutubeIcon className="w-3 h-3" />
+                    <span>0 MB Server Space</span>
+                  </span>
+                </div>
+
+                <div className="space-y-3">
+                  <div className="relative">
+                    <div className="absolute inset-y-0 left-0 pl-3.5 flex items-center pointer-events-none text-red-500">
+                      <YoutubeIcon className="w-4 h-4" />
+                    </div>
                     <input
                       type="text"
-                      value={bookTitle}
-                      onChange={(e) => setBookTitle(e.target.value)}
-                      placeholder="e.g., College Panda SAT Math"
-                      className="w-full px-4 py-3 mb-4 rounded-xl border border-slate-200 dark:border-white/10 bg-slate-50 dark:bg-[#0a0a0a] text-slate-900 dark:text-white placeholder-slate-400 focus:border-yellow-500 focus:ring-2 focus:ring-yellow-500/20 outline-none transition-all"
+                      value={youtubeUrl}
+                      onChange={(e) => setYoutubeUrl(e.target.value)}
+                      placeholder="e.g. https://www.youtube.com/watch?v=... or https://youtu.be/..."
+                      className="w-full pl-10 pr-10 py-2.5 text-xs sm:text-sm rounded-xl border border-slate-200 dark:border-white/10 bg-slate-50 dark:bg-[#0a0a0a] text-slate-900 dark:text-white placeholder-slate-400 focus:border-red-500 focus:ring-2 focus:ring-red-500/20 outline-none transition-all font-mono"
                     />
-                    <label className="block text-sm font-semibold text-slate-700 dark:text-slate-300 mb-2">
-                      {" "}
-                      Upload PDF Book{" "}
-                    </label>
-                    {!pdfFile && !bookPdfPath ? (
-                      <div
-                        onDragOver={(e) => e.preventDefault()}
-                        onDrop={(e) => handleDrop(e, "pdf")}
-                        onClick={() => pdfInputRef.current?.click()}
-                        className={`relative w-full h-32 rounded-xl border-2 border-dashed flex flex-col items-center justify-center p-4 cursor-pointer transition-colors ${pdfUploading ? "border-yellow-500 bg-slate-50 dark:bg-[#0a0a0a]" : "border-slate-300 dark:border-white/5 hover:border-yellow-500 hover:bg-slate-50 dark:bg-[#0a0a0a]"}`}
+                    {youtubeUrl && (
+                      <button
+                        type="button"
+                        onClick={() => setYoutubeUrl("")}
+                        className="absolute inset-y-0 right-0 pr-3 flex items-center text-slate-400 hover:text-slate-600 dark:hover:text-white transition-colors"
+                        title="Clear URL"
                       >
-                        <input
-                          type="file"
-                          accept=".pdf"
-                          ref={pdfInputRef}
-                          onChange={(e) => {
-                            const file = e.target.files?.[0];
-                            if (file) uploadFile(file, "pdf");
-                          }}
-                          className="hidden"
-                        />
-                        {pdfUploading ? (
-                          <div className="flex flex-col items-center">
-                            <div className="w-8 h-8 mb-2 border-4 border-yellow-200 border-t-yellow-600 rounded-full animate-spin"></div>
-                            <span className="text-sm font-medium text-slate-900 dark:text-yellow-500">
-                              Uploading PDF...
-                            </span>
-                          </div>
-                        ) : (
-                          <>
-                            <UploadCloud className="w-8 h-8 text-slate-500 dark:text-slate-400 mb-2" />
-                            <p className="text-sm font-medium text-slate-700 dark:text-slate-300">
-                              Click or drag PDF here
-                            </p>
-                            <p className="text-xs text-slate-500 dark:text-slate-400 mt-1">
-                              Maximum file size: 50MB
-                            </p>
-                          </>
-                        )}
-                      </div>
-                    ) : (
-                      <div className="p-4 rounded-xl border border-slate-200 dark:border-white/10 bg-slate-50 dark:bg-[#0a0a0a] flex items-center justify-between group">
-                        <div className="flex items-center gap-3 overflow-hidden">
-                          <div className="w-10 h-10 rounded-lg bg-red-100 flex items-center justify-center text-red-600 flex-shrink-0">
-                            <FileText className="w-5 h-5" />
-                          </div>
-                          <div className="truncate">
-                            <p className="text-sm font-semibold text-slate-900 dark:text-white truncate">
-                              {pdfFile?.name || "Uploaded PDF"}
-                            </p>
-                            {pdfFile?.size ? (
-                              <p className="text-xs text-slate-500 dark:text-slate-400">
-                                {formatSize(pdfFile.size)}
-                              </p>
-                            ) : null}
-                          </div>
-                        </div>
-                        <button
-                          type="button"
-                          onClick={() => {
-                            setPdfFile(null);
-                            setBookPdfPath("");
-                          }}
-                          className="p-2 text-slate-500 dark:text-slate-400 hover:text-red-500 hover:bg-red-50 rounded-lg transition-colors flex-shrink-0"
-                        >
-                          <X className="w-4 h-4" />
-                        </button>
-                      </div>
+                        <X className="w-4 h-4" />
+                      </button>
                     )}
                   </div>
 
-                  <div className="w-full h-px bg-slate-200 dark:bg-slate-700"></div>
-
-                  {/* Video Upload */}
-                  <div>
-                    <label className="block text-sm font-semibold text-slate-700 dark:text-slate-300 mb-2">
-                      {" "}
-                      Upload Video Lesson{" "}
-                    </label>
-                    {!videoFile && !videoPath ? (
-                      <div
-                        onDragOver={(e) => e.preventDefault()}
-                        onDrop={(e) => handleDrop(e, "video")}
-                        onClick={() => videoInputRef.current?.click()}
-                        className={`relative w-full h-36 rounded-xl border-2 border-dashed flex flex-col items-center justify-center p-4 cursor-pointer transition-colors ${videoUploading ? "border-yellow-500 bg-slate-50 dark:bg-[#0a0a0a]" : "border-slate-300 dark:border-white/5 hover:border-yellow-500 hover:bg-slate-50 dark:bg-[#0a0a0a]"}`}
-                      >
-                        <input
-                          type="file"
-                          accept="video/mp4,video/quicktime,video/webm"
-                          ref={videoInputRef}
-                          onChange={(e) => {
-                            const file = e.target.files?.[0];
-                            if (file) uploadFile(file, "video");
-                          }}
-                          className="hidden"
-                        />
-                        {videoUploading ? (
-                          <div className="w-full max-w-[200px] flex flex-col items-center">
-                            <div className="w-full h-2 bg-slate-200 dark:bg-slate-700 rounded-full overflow-hidden mb-3">
-                              <div
-                                className="h-full bg-[#EBFF00] transition-all duration-300 ease-out"
-                                style={{ width: `${videoProgress}%` }}
-                              ></div>
-                            </div>
-                            <span className="text-sm font-medium text-slate-900 dark:text-yellow-500">
-                              Uploading... {videoProgress}%
-                            </span>
-                          </div>
-                        ) : (
-                          <>
-                            <div className="w-10 h-10 mb-2 rounded-full bg-slate-100 dark:bg-[#1c1b1b] flex items-center justify-center text-slate-500 dark:text-slate-400">
-                              <Film className="w-5 h-5" />
-                            </div>
-                            <p className="text-sm font-medium text-slate-700 dark:text-slate-300">
-                              Click or drag Video here
-                            </p>
-                            <p className="text-xs text-slate-500 dark:text-slate-400 mt-1">
-                              MP4, MOV, WEBM up to 500MB
-                            </p>
-                          </>
-                        )}
+                  {/* YouTube URL Validation & Preview */}
+                  {youtubeUrl.trim() ? (
+                    isValidYoutubeUrl(youtubeUrl) ? (
+                      <div className="space-y-2 animate-in fade-in duration-200">
+                        <div className="flex items-center gap-2 text-xs font-semibold text-emerald-600 dark:text-emerald-400 bg-emerald-500/10 border border-emerald-500/20 px-3 py-1.5 rounded-lg">
+                          <CheckCircle2 className="w-3.5 h-3.5 shrink-0" />
+                          <span>
+                            Valid YouTube link detected (Video ID:{" "}
+                            <code className="font-mono">{extractYoutubeVideoId(youtubeUrl)}</code>)
+                          </span>
+                        </div>
+                        <div className="relative w-full aspect-video rounded-xl overflow-hidden bg-black border border-slate-200 dark:border-white/10 shadow-inner">
+                          <iframe
+                            src={getYoutubeEmbedUrl(youtubeUrl) || undefined}
+                            className="absolute inset-0 w-full h-full border-0"
+                            allowFullScreen
+                            allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
+                          />
+                        </div>
                       </div>
                     ) : (
-                      <div className="p-4 rounded-xl border border-slate-200 dark:border-white/10 bg-slate-50 dark:bg-[#0a0a0a] flex items-center justify-between group">
-                        <div className="flex items-center gap-3 overflow-hidden">
-                          <div className="w-10 h-10 rounded-lg bg-yellow-100 dark:bg-yellow-900/30 flex items-center justify-center text-slate-900 dark:text-yellow-500 flex-shrink-0">
-                            <Film className="w-5 h-5" />
-                          </div>
-                          <div className="truncate">
-                            <p className="text-sm font-semibold text-slate-900 dark:text-white truncate">
-                              {videoFile?.name || "Uploaded Video"}
-                            </p>
-                            {videoFile?.size ? (
-                              <p className="text-xs text-slate-500 dark:text-slate-400">
-                                {formatSize(videoFile.size)}
-                              </p>
-                            ) : null}
-                          </div>
-                        </div>
-                        <button
-                          type="button"
-                          onClick={() => {
-                            setVideoFile(null);
-                            setVideoPath("");
-                          }}
-                          className="p-2 text-slate-500 dark:text-slate-400 hover:text-red-500 hover:bg-red-50 rounded-lg transition-colors flex-shrink-0"
-                        >
-                          <X className="w-4 h-4" />
-                        </button>
+                      <div className="flex items-center gap-2 text-xs text-amber-600 dark:text-amber-400 bg-amber-500/10 border border-amber-500/20 px-3 py-2 rounded-lg">
+                        <AlertCircle className="w-4 h-4 shrink-0" />
+                        <span>
+                          Incomplete or unrecognized YouTube link. Please paste a standard video or shorts URL.
+                        </span>
                       </div>
-                    )}
-                  </div>
+                    )
+                  ) : (
+                    <p className="text-[11px] text-slate-500 dark:text-slate-400 leading-relaxed">
+                      💡 Paste an <strong>Unlisted (Доступ по ссылке)</strong> YouTube video URL. Zero storage consumed on your server with instant adaptive streaming.
+                    </p>
+                  )}
                 </div>
               </div>
             </div>
-          </form>
-        </main>
-      </div>
-    </div>
+          </div>
+        </div>
+      </form>
+    </AdminLayout>
   );
 }

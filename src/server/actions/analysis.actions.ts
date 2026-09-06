@@ -2,12 +2,13 @@
 
 import { prisma } from "@/lib/db/prisma";
 import { getSession } from "@/lib/auth/session";
+import { isStaff } from "@/lib/permissions/auth";
 import { analyzeTestPerformance } from "@/lib/ai/analysis";
 
 export async function triggerTestAnalysis(mockTestId: string) {
  try {
  const session = await getSession();
- if (!session || session.role !== "ADMIN") {
+ if (!session || !isStaff(session)) {
  return { error: "Unauthorized" };
  }
 
@@ -65,7 +66,7 @@ export async function triggerTestAnalysis(mockTestId: string) {
 export async function approveTestAnalysis(mockTestId: string) {
  try {
  const session = await getSession();
- if (!session || session.role !== "ADMIN") {
+ if (!session || !isStaff(session)) {
  return { error: "Unauthorized" };
  }
 
@@ -100,7 +101,7 @@ export async function approveTestAnalysis(mockTestId: string) {
 export async function rejectTestAnalysis(mockTestId: string, reason: string) {
  try {
  const session = await getSession();
- if (!session || session.role !== "ADMIN") {
+ if (!session || !isStaff(session)) {
  return { error: "Unauthorized" };
  }
 

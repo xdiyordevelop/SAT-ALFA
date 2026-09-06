@@ -293,22 +293,38 @@ export function CreateStudentForm() {
 
           <div>
             <label className="block text-sm font-semibold text-slate-900 dark:text-white mb-2">
-              Username *
+              Username or Email *
             </label>
             <input
               type="text"
               name="username"
               value={formData.username}
               onChange={handleChange}
-              placeholder="e.g. john_doe"
-              className="w-full px-4 py-2.5 rounded-lg border border-slate-200 dark:border-white/10 bg-white dark:bg-slate-800 text-slate-900 dark:text-white placeholder-slate-500 dark:placeholder-slate-400 focus:border-[#EBFF00] focus:ring-2 focus:ring-[#EBFF00]/20 outline-none transition-all mb-4"
+              placeholder="e.g. nodirbek or nodir@gmail.com"
+              className="w-full px-4 py-2.5 rounded-lg border border-slate-200 dark:border-white/10 bg-white dark:bg-slate-800 text-slate-900 dark:text-white placeholder-slate-500 dark:placeholder-slate-400 focus:border-[#EBFF00] focus:ring-2 focus:ring-[#EBFF00]/20 outline-none transition-all mb-1"
             />
+            <p className="text-xs text-slate-500 dark:text-slate-400 mb-4">
+              Enter either a username, phone number, or email address. The student will use this to sign in.
+            </p>
           </div>
 
           <div>
-            <label className="block text-sm font-semibold text-slate-900 dark:text-white mb-2">
-              Password *
-            </label>
+            <div className="flex items-center justify-between mb-2">
+              <label className="block text-sm font-semibold text-slate-900 dark:text-white">
+                Password *
+              </label>
+              <button
+                type="button"
+                onClick={() => {
+                  const randomDigits = Math.floor(1000 + Math.random() * 9000);
+                  setFormData((prev) => ({ ...prev, password: `sat${randomDigits}!` }));
+                  setShowPassword(true);
+                }}
+                className="text-xs font-semibold text-[#EBFF00] hover:underline"
+              >
+                + Auto-generate password
+              </button>
+            </div>
             <div className="relative">
               <input
                 type={showPassword ? "text" : "password"}

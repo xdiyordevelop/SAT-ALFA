@@ -3,12 +3,28 @@
 import { prisma } from "@/lib/db/prisma";
 import { revalidatePath } from "next/cache";
 
+import { createGroupNotification } from "@/server/actions/notification.actions";
+
 export async function toggleTopicApproval(groupId: string, topicId: string, isApproved: boolean) {
  try {
  await prisma.groupTopicProgress.update({
  where: { groupId_topicId: { groupId, topicId } },
  data: { isApproved, approvedAt: isApproved ? new Date() : null }
  });
+
+ if (isApproved) {
+   const topic = await prisma.topic.findUnique({
+     where: { id: topicId },
+     select: { title: true }
+   });
+   await createGroupNotification(groupId, {
+     title: "New Lesson Unlocked!",
+     message: topic?.title ? `"${topic.title}" is now available to study.` : "A new lesson is now available in your syllabus.",
+     type: "LESSON",
+     link: "/student/topics"
+   });
+ }
+
  revalidatePath("/admin/topics");
  return { success: true };
  } catch (error) {

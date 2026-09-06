@@ -13,6 +13,7 @@ export function useTestCompletion(userId: string, testId: string) {
  markedQuestions,
  setTestStatus,
  setPaused,
+ proctorCode,
  } = useTestContext();
 
  const completeTest = useCallback(async () => {
@@ -37,6 +38,7 @@ export function useTestCompletion(userId: string, testId: string) {
  timeSpent: 1200, // Assuming a mock value for time spent
  markedQuestions,
  timestamp: new Date().toISOString(),
+ proctorCode: proctorCode || undefined,
  }),
  });
 

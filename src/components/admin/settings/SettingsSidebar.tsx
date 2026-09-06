@@ -1,76 +1,60 @@
 "use client";
 
 import Link from "next/link";
-import { usePathname } from "next/navigation";
+import { usePathname, useSearchParams } from "next/navigation";
 import {
-  Settings,
-  User,
-  Lock,
-  Bell,
-  Clock,
-  CreditCard,
-  Info,
+  ShieldAlert,
+  Building2,
+  GraduationCap,
+  Users,
 } from "lucide-react";
+import { Suspense } from "react";
 
-export function SettingsSidebar() {
+function SettingsSidebarInner() {
   const pathname = usePathname();
+  const searchParams = useSearchParams();
+  const currentTab = searchParams.get("tab") || "credentials";
 
   const menuItems = [
     {
-      icon: <Settings className="w-5 h-5" />,
-      label: "General",
-      href: "/admin/settings",
-      active: pathname === "/admin/settings",
+      icon: <ShieldAlert className="w-5 h-5 text-amber-500" />,
+      label: "Super Admin Security",
+      href: "/admin/settings?tab=credentials",
+      active:
+        (pathname === "/admin/settings" && currentTab === "credentials") ||
+        pathname === "/admin/settings/security",
     },
     {
-      icon: <User className="w-5 h-5" />,
-      label: "Profile",
-      href: "/admin/settings/profile",
-      active: pathname === "/admin/settings/profile",
+      icon: <Building2 className="w-5 h-5 text-blue-500" />,
+      label: "Center Profile",
+      href: "/admin/settings?tab=profile",
+      active: pathname === "/admin/settings" && currentTab === "profile",
     },
     {
-      icon: <Lock className="w-5 h-5" />,
-      label: "Security",
-      href: "/admin/settings/security",
-      active: pathname === "/admin/settings/security",
+      icon: <GraduationCap className="w-5 h-5 text-emerald-500" />,
+      label: "Academic & Exam Rules",
+      href: "/admin/settings?tab=academic",
+      active: pathname === "/admin/settings" && currentTab === "academic",
     },
     {
-      icon: <Bell className="w-5 h-5" />,
-      label: "Notifications",
-      href: "/admin/settings/notifications",
-      active: pathname === "/admin/settings/notifications",
-    },
-    {
-      icon: <Clock className="w-5 h-5" />,
-      label: "Attendance",
-      href: "/admin/settings/attendance",
-      active: pathname === "/admin/settings/attendance",
-    },
-    {
-      icon: <CreditCard className="w-5 h-5" />,
-      label: "Payments",
-      href: "/admin/settings/payments",
-      active: pathname === "/admin/settings/payments",
-    },
-    {
-      icon: <Info className="w-5 h-5" />,
-      label: "System",
-      href: "/admin/settings/system",
-      active: pathname === "/admin/settings/system",
+      icon: <Users className="w-5 h-5 text-purple-500" />,
+      label: "Team & Staff",
+      href: "/admin/settings/team",
+      active: pathname === "/admin/settings/team",
     },
   ];
 
   return (
     <div className="bg-transparent h-fit sticky top-24">
-      <nav className="space-y-1">
+      <nav className="space-y-1.5">
         {menuItems.map((item) => (
           <Link
             key={item.href}
             href={item.href}
-            className={`flex items-center gap-3 px-4 py-2.5 rounded-lg transition-all ${
+            className={`flex items-center gap-3 px-4 py-3 rounded-xl text-sm font-medium transition-all ${
               item.active
-                ? "bg-slate-100 dark:bg-slate-800/80 text-slate-900 dark:text-white font-medium border-l-2 border-yellow-500"
-                : "text-slate-700 dark:text-slate-300 hover:bg-slate-50 dark:hover:bg-slate-800/40 border-l-2 border-transparent"
+                ? "bg-white dark:bg-[#1C1C1E] text-slate-900 dark:text-white shadow-sm border-l-4 border-amber-500 font-semibold"
+                : "text-slate-600 dark:text-slate-400 hover:bg-slate-100 dark:hover:bg-white/5 border-l-4 border-transparent"
             }`}
           >
             {item.icon}
@@ -79,5 +63,17 @@ export function SettingsSidebar() {
         ))}
       </nav>
     </div>
+  );
+}
+
+export function SettingsSidebar() {
+  return (
+    <Suspense
+      fallback={
+        <div className="h-44 bg-slate-100 dark:bg-white/5 rounded-xl animate-pulse" />
+      }
+    >
+      <SettingsSidebarInner />
+    </Suspense>
   );
 }

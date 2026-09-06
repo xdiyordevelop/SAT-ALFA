@@ -36,13 +36,19 @@ interface AttendanceRecord {
   note: string;
 }
 
+const getLocalDateStr = (d: Date = new Date()) => {
+  const y = d.getFullYear();
+  const m = String(d.getMonth() + 1).padStart(2, "0");
+  const day = String(d.getDate()).padStart(2, "0");
+  return `${y}-${m}-${day}`;
+};
+
 export function AttendanceMarkingForm() {
   const router = useRouter();
+  const todayStr = getLocalDateStr();
   const [groups, setGroups] = useState<any[]>([]);
   const [selectedGroup, setSelectedGroup] = useState<string>("");
-  const [selectedDate, setSelectedDate] = useState<string>(
-    new Date().toISOString().split("T")[0],
-  );
+  const [selectedDate, setSelectedDate] = useState<string>(todayStr);
   const [students, setStudents] = useState<Student[]>([]);
   const [attendance, setAttendance] = useState<
     Record<string, AttendanceRecord>
@@ -52,6 +58,8 @@ export function AttendanceMarkingForm() {
   const [saving, setSaving] = useState(false);
   const [error, setError] = useState("");
   const [success, setSuccess] = useState("");
+
+  const isFutureDate = selectedDate > todayStr;
 
   // Load groups on mount
   useEffect(() => {
@@ -143,6 +151,11 @@ export function AttendanceMarkingForm() {
       return;
     }
 
+    if (isFutureDate) {
+      setError("This date has not arrived yet! Attendance cannot be recorded for future dates.");
+      return;
+    }
+
     setSaving(true);
     try {
       const records = Object.values(attendance).map((record) => ({
@@ -206,6 +219,18 @@ export function AttendanceMarkingForm() {
   return (
     <div className="space-y-4">
       {/* Alerts */}
+      {isFutureDate && (
+        <div className="mb-6 p-4 bg-amber-50 dark:bg-amber-950/30 border border-amber-200 dark:border-amber-900/50 rounded-2xl text-amber-800 dark:text-amber-300 flex items-center gap-3">
+          <AlertCircle className="w-5 h-5 shrink-0 text-amber-600 dark:text-amber-400" />
+          <div>
+            <p className="text-sm font-bold">This date has not arrived yet ({selectedDate})</p>
+            <p className="text-xs opacity-90">
+              You cannot record or mark attendance for future dates. Please select today or an earlier date.
+            </p>
+          </div>
+        </div>
+      )}
+
       {error && (
         <div className="mb-6 p-4 bg-red-50 dark:bg-red-950/30 border border-red-200 dark:border-red-900/50 rounded-lg text-red-700 dark:text-red-300 flex items-center gap-3">
           <AlertCircle className="w-5 h-5" />
@@ -247,6 +272,7 @@ export function AttendanceMarkingForm() {
             </label>
             <input
               type="date"
+              max={todayStr}
               value={selectedDate}
               onChange={(e) => setSelectedDate(e.target.value)}
               className="w-full px-4 py-2 rounded-lg border border-slate-200 dark:border-white/10 bg-slate-50 dark:bg-[#0a0a0a] text-slate-900 dark:text-white focus:border-yellow-500 dark:focus:border-yellow-600 focus:ring-2 focus:ring-yellow-200 dark:focus:ring-yellow-600/30 outline-none transition-all"
@@ -275,14 +301,16 @@ export function AttendanceMarkingForm() {
           <div className="flex flex-wrap gap-2 pt-4 border-t border-slate-200 dark:border-white/10 ">
             <button
               onClick={() => handleSelectAll("PRESENT")}
-              className="px-4 py-2 bg-green-50 dark:bg-green-950/30 text-green-700 dark:text-green-300 rounded-lg font-medium text-sm hover:bg-green-100 dark:hover:bg-green-950/50 transition-colors flex items-center gap-2"
+              disabled={isFutureDate}
+              className="px-4 py-2 bg-green-50 dark:bg-green-950/30 text-green-700 dark:text-green-300 disabled:opacity-50 disabled:cursor-not-allowed rounded-lg font-medium text-sm hover:bg-green-100 dark:hover:bg-green-950/50 transition-colors flex items-center gap-2"
             >
               <CheckSquare className="w-4 h-4" />
               Mark All Present
             </button>
             <button
               onClick={() => handleSelectAll("ABSENT")}
-              className="px-4 py-2 bg-red-50 dark:bg-red-950/30 text-red-700 dark:text-red-300 rounded-lg font-medium text-sm hover:bg-red-100 dark:hover:bg-red-950/50 transition-colors flex items-center gap-2"
+              disabled={isFutureDate}
+              className="px-4 py-2 bg-red-50 dark:bg-red-950/30 text-red-700 dark:text-red-300 disabled:opacity-50 disabled:cursor-not-allowed rounded-lg font-medium text-sm hover:bg-red-100 dark:hover:bg-red-950/50 transition-colors flex items-center gap-2"
             >
               <X className="w-4 h-4" />
               Mark All Absent
@@ -410,7 +438,7 @@ export function AttendanceMarkingForm() {
           </button>
           <button
             onClick={handleSave}
-            disabled={saving || !selectedGroup}
+            disabled={saving || !selectedGroup || isFutureDate}
             className="px-6 py-3 bg-[#EBFF00] hover:bg-[#d9ff00] disabled:opacity-50 text-slate-900 rounded-lg font-medium transition-colors flex items-center gap-2"
           >
             <Save className="w-5 h-5" />

@@ -6,6 +6,7 @@ import { useState } from "react";
 import { LogOut, Bell, User, Menu } from "lucide-react";
 import { logoutAction } from "@/server/actions/auth.actions";
 import { ThemeToggle } from "@/components/layout/ThemeToggle";
+import { NotificationBell } from "./NotificationBell";
 
 export function AdminTopNav({ userName, userEmail, pageTitle }: { userName?: string; userEmail?: string; pageTitle?: string }) {
   const router = useRouter();
@@ -39,11 +40,8 @@ export function AdminTopNav({ userName, userEmail, pageTitle }: { userName?: str
 
           <ThemeToggle />
 
-          {/* Notifications */}
-          <button className="p-2 text-slate-500 dark:text-slate-400 hover:text-slate-900 dark:hover:text-white hover:bg-slate-100 dark:hover:bg-slate-900/50 rounded-lg transition-colors relative flex-shrink-0">
-            <Bell className="w-5 h-5" />
-            <span className="absolute top-1.5 right-1.5 w-2 h-2 rounded-full bg-rose-500 animate-pulse"></span>
-          </button>
+          {/* Real-time Notifications */}
+          <NotificationBell />
 
           {/* Profile Dropdown */}
           <div className="relative">

@@ -23,6 +23,7 @@ export function GroupDetailContent({
   group,
   otherStudents,
   currentMonth,
+  canManagePayments = true,
 }: any) {
   const router = useRouter();
   const [isPending, startTransition] = useTransition();
@@ -44,7 +45,7 @@ export function GroupDetailContent({
   });
 
   const formatUZS = (num: number) => {
-    return num.toLocaleString() + " so'm";
+    return num.toLocaleString() + " UZS";
   };
 
   const handleEditChange = (
@@ -132,21 +133,23 @@ export function GroupDetailContent({
           </p>
           <div className="flex items-center gap-6 mt-4">
             <div className="flex items-center gap-2">
-              <div className="w-8 h-8 rounded-lg bg-[#EBFF00]/10 flex items-center justify-center text-yellow-500">
+              <div className="w-8 h-8 rounded-lg bg-[#EBFF00]/10 flex items-center justify-center text-[#EBFF00]">
                 <Users className="w-4 h-4" />
               </div>
               <span className="text-sm font-medium text-slate-700 dark:text-slate-300">
                 {group.studentProfiles.length} Students
               </span>
             </div>
-            <div className="flex items-center gap-2">
-              <div className="w-8 h-8 rounded-lg bg-[#EBFF00]/10 flex items-center justify-center text-yellow-500 font-bold">
-                $
+            {canManagePayments && (
+              <div className="flex items-center gap-2">
+                <div className="w-8 h-8 rounded-lg bg-[#EBFF00]/10 flex items-center justify-center text-[#EBFF00] font-bold">
+                  $
+                </div>
+                <span className="text-sm font-medium text-slate-700 dark:text-slate-300">
+                  {formatUZS(group.monthlyFee)} / month
+                </span>
               </div>
-              <span className="text-sm font-medium text-slate-700 dark:text-slate-300">
-                {formatUZS(group.monthlyFee)} / oy
-              </span>
-            </div>
+            )}
           </div>
         </div>
 
@@ -155,23 +158,27 @@ export function GroupDetailContent({
             href={`/admin/groups/${group.id}/curriculum`}
             className="flex items-center gap-2 px-4 py-2 bg-slate-100 dark:bg-[#1c1b1b] hover:bg-slate-700 text-slate-900 dark:text-white rounded-lg font-medium transition-colors"
           >
-            <BookOpen className="w-4 h-4 text-slate-900 dark:text-yellow-500" />
+            <BookOpen className="w-4 h-4 text-slate-900 dark:text-[#EBFF00]" />
             Syllabus Roadmap
           </Link>
-          <button
-            onClick={() => setShowEditModal(true)}
-            className="flex items-center gap-2 px-4 py-2 bg-[#EBFF00] hover:bg-[#d9ff00] text-slate-950 rounded-lg font-bold transition-colors"
-          >
-            <Edit2 className="w-4 h-4" />
-            Edit Group
-          </button>
-          <button
-            onClick={() => setShowDeleteModal(true)}
-            className="flex items-center gap-2 px-4 py-2 bg-red-500/10 hover:bg-red-500/20 text-red-600 border border-red-500/20 rounded-lg font-medium transition-colors"
-          >
-            <Trash2 className="w-4 h-4" />
-            Delete
-          </button>
+          {canManagePayments && (
+            <>
+              <button
+                onClick={() => setShowEditModal(true)}
+                className="flex items-center gap-2 px-4 py-2 bg-[#EBFF00] hover:bg-[#d9ff00] text-slate-950 rounded-lg font-bold transition-colors"
+              >
+                <Edit2 className="w-4 h-4" />
+                Edit Group
+              </button>
+              <button
+                onClick={() => setShowDeleteModal(true)}
+                className="flex items-center gap-2 px-4 py-2 bg-red-500/10 hover:bg-red-500/20 text-red-600 border border-red-500/20 rounded-lg font-medium transition-colors"
+              >
+                <Trash2 className="w-4 h-4" />
+                Delete
+              </button>
+            </>
+          )}
         </div>
       </div>
 
@@ -213,7 +220,9 @@ export function GroupDetailContent({
                   <th className="py-4 px-6">Student</th>
                   <th className="py-4 px-6">Phone Number</th>
                   <th className="py-4 px-6">Enrolled Date</th>
-                  <th className="py-4 px-6">Payment ({currentMonth})</th>
+                  {canManagePayments && (
+                    <th className="py-4 px-6">Payment ({currentMonth})</th>
+                  )}
                   <th className="py-4 px-6 text-right">Action</th>
                 </tr>
               </thead>
@@ -250,23 +259,25 @@ export function GroupDetailContent({
                       <td className="py-4 px-6 text-slate-500 dark:text-slate-400">
                         {new Date(student.createdAt).toLocaleDateString()}
                       </td>
-                      <td className="py-4 px-6">
-                        {status === "PAID" && (
-                          <span className="inline-block px-2.5 py-1 bg-emerald-500/10 text-emerald-600 border border-emerald-500/20 rounded-md text-[11px] font-bold tracking-wider">
-                            PAID
-                          </span>
-                        )}
-                        {status === "PARTIAL" && (
-                          <span className="inline-block px-2.5 py-1 bg-[#EBFF00]/10 text-slate-900 dark:text-yellow-500 border border-yellow-500/20 rounded-md text-[11px] font-bold tracking-wider">
-                            PARTIAL (-{formatUZS(debt)})
-                          </span>
-                        )}
-                        {status === "UNPAID" && (
-                          <span className="inline-block px-2.5 py-1 bg-red-500/10 text-red-600 border border-red-500/20 rounded-md text-[11px] font-bold tracking-wider">
-                            UNPAID
-                          </span>
-                        )}
-                      </td>
+                      {canManagePayments && (
+                        <td className="py-4 px-6">
+                          {status === "PAID" && (
+                            <span className="inline-block px-2.5 py-1 bg-emerald-500/10 text-emerald-600 border border-emerald-500/20 rounded-md text-[11px] font-bold tracking-wider">
+                              PAID
+                            </span>
+                          )}
+                          {status === "PARTIAL" && (
+                            <span className="inline-block px-2.5 py-1 bg-[#EBFF00]/10 text-slate-900 dark:text-[#EBFF00] border border-[#EBFF00]/20 rounded-md text-[11px] font-bold tracking-wider">
+                              PARTIAL (-{formatUZS(debt)})
+                            </span>
+                          )}
+                          {status === "UNPAID" && (
+                            <span className="inline-block px-2.5 py-1 bg-red-500/10 text-red-600 border border-red-500/20 rounded-md text-[11px] font-bold tracking-wider">
+                              UNPAID
+                            </span>
+                          )}
+                        </td>
+                      )}
                       <td className="py-4 px-6 text-right">
                         <button
                           onClick={() => handleRemoveStudent(student.id)}
@@ -302,7 +313,7 @@ export function GroupDetailContent({
                   name="name"
                   value={editForm.name}
                   onChange={handleEditChange}
-                  className="w-full px-4 py-2.5 rounded-xl border border-slate-200 dark:border-white/10 bg-white dark:bg-[#131313] text-slate-900 dark:text-white focus:outline-none focus:border-yellow-500 focus:ring-1 focus:ring-yellow-500 transition-all"
+                  className="w-full px-4 py-2.5 rounded-xl border border-slate-200 dark:border-white/10 bg-white dark:bg-[#131313] text-slate-900 dark:text-white focus:outline-none focus:border-[#EBFF00] focus:ring-1 focus:ring-[#EBFF00] transition-all"
                 />
               </div>
               <div>
@@ -314,7 +325,7 @@ export function GroupDetailContent({
                   name="monthlyFee"
                   value={editForm.monthlyFee}
                   onChange={handleEditChange}
-                  className="w-full px-4 py-2.5 rounded-xl border border-slate-200 dark:border-white/10 bg-white dark:bg-[#131313] text-slate-900 dark:text-white focus:outline-none focus:border-yellow-500 focus:ring-1 focus:ring-yellow-500 transition-all"
+                  className="w-full px-4 py-2.5 rounded-xl border border-slate-200 dark:border-white/10 bg-white dark:bg-[#131313] text-slate-900 dark:text-white focus:outline-none focus:border-[#EBFF00] focus:ring-1 focus:ring-[#EBFF00] transition-all"
                 />
               </div>
               <div>
@@ -326,7 +337,7 @@ export function GroupDetailContent({
                   value={editForm.description}
                   onChange={handleEditChange}
                   rows={3}
-                  className="w-full px-4 py-2.5 rounded-xl border border-slate-200 dark:border-white/10 bg-white dark:bg-[#131313] text-slate-900 dark:text-white focus:outline-none focus:border-yellow-500 focus:ring-1 focus:ring-yellow-500 transition-all resize-none"
+                  className="w-full px-4 py-2.5 rounded-xl border border-slate-200 dark:border-white/10 bg-white dark:bg-[#131313] text-slate-900 dark:text-white focus:outline-none focus:border-[#EBFF00] focus:ring-1 focus:ring-[#EBFF00] transition-all resize-none"
                 />
               </div>
             </div>
@@ -409,7 +420,7 @@ export function GroupDetailContent({
                   placeholder="Search students by name or username..."
                   value={searchQuery}
                   onChange={(e) => setSearchQuery(e.target.value)}
-                  className="w-full pl-12 pr-4 py-3 rounded-xl border border-slate-200 dark:border-white/10 bg-white dark:bg-[#131313] text-slate-900 dark:text-white placeholder-slate-500 focus:outline-none focus:border-yellow-500 focus:ring-1 focus:ring-yellow-500 transition-all"
+                  className="w-full pl-12 pr-4 py-3 rounded-xl border border-slate-200 dark:border-white/10 bg-white dark:bg-[#131313] text-slate-900 dark:text-white placeholder-slate-500 focus:outline-none focus:border-[#EBFF00] focus:ring-1 focus:ring-[#EBFF00] transition-all"
                 />
               </div>
             </div>
@@ -423,7 +434,7 @@ export function GroupDetailContent({
                   {filteredStudents.map((student: any) => (
                     <div
                       key={student.id}
-                      className="flex items-center justify-between p-4 rounded-xl border border-slate-200 dark:border-white/10 bg-white dark:bg-[#131313] hover:border-slate-200 dark:border-white/10 transition-colors"
+                      className="flex items-center justify-between p-4 rounded-xl border border-slate-200 dark:border-white/10 bg-white dark:bg-[#131313] hover:border-[#EBFF00]/30 transition-colors"
                     >
                       <div>
                         <p className="font-medium text-slate-900 dark:text-white">
@@ -434,7 +445,7 @@ export function GroupDetailContent({
                             ? `@${student.user.username}`
                             : "No username"}
                           {student.group && (
-                            <span className="ml-2 text-yellow-500/80">
+                            <span className="ml-2 text-[#EBFF00]/80">
                               • Currently in {student.group.name}
                             </span>
                           )}
@@ -443,7 +454,7 @@ export function GroupDetailContent({
                       <button
                         onClick={() => handleAddStudent(student.id)}
                         disabled={isPending}
-                        className="px-4 py-2 text-sm bg-[#EBFF00]/10 hover:bg-[#EBFF00]/20 text-slate-900 dark:text-yellow-500 border border-yellow-500/20 rounded-lg font-medium transition-colors disabled:opacity-50"
+                        className="px-4 py-2 text-sm bg-[#EBFF00] hover:bg-[#d9ff00] text-slate-950 font-bold rounded-lg transition-colors disabled:opacity-50"
                       >
                         Add to Group
                       </button>

@@ -1,5 +1,6 @@
 import { NextRequest, NextResponse } from "next/server";
 import { getSession } from "@/lib/auth/session";
+import { canManageAcademics } from "@/lib/permissions/auth";
 import { generateStructured } from "@/lib/ai/core";
 import { SATQuestionSchema } from "@/lib/ai/validation/common";
 import { z } from "zod";
@@ -43,7 +44,7 @@ export async function POST(request: NextRequest) {
  const startTime = Date.now();
  try {
  const session = await getSession();
- if (!session || session.role !== "ADMIN") {
+ if (!session || !canManageAcademics(session)) {
  return NextResponse.json({ success: false, error: "Unauthorized" }, { status: 401 });
  }
 

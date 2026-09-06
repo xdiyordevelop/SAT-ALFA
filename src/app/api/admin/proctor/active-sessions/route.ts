@@ -1,34 +1,45 @@
 import { NextResponse } from 'next/server'
 import { prisma } from '@/lib/prisma'
 import { getSession } from '@/lib/auth/session'
+import { canManageAcademics } from '@/lib/permissions/auth'
 
 export async function GET(request: Request) {
  try {
  const session = await getSession()
- if (!session || session.role !== 'ADMIN') {
- return NextResponse.json({ error: 'Unauthorized' }, { status: 401 })
+ if (!session || !canManageAcademics(session)) {
+ return NextResponse.json({ error: 'Unauthorized. Academic management access required.' }, { status: 401 })
  }
 
- const { searchParams } = new URL(request.url)
- const proctorSessionId = searchParams.get('proctorSessionId')
+  const { searchParams } = new URL(request.url)
+  const proctorSessionId = searchParams.get('proctorSessionId')
+  const statusParam = searchParams.get('status')
 
- if (!proctorSessionId) {
- // Return all active proctor sessions
- const activeSessions = await prisma.proctoredSession.findMany({
- where: { status: 'ACTIVE' },
- include: {
- satTest: {
- select: { name: true }
- },
- _count: {
- select: { participants: true }
- }
- },
- orderBy: { createdAt: 'desc' }
- })
- 
- return NextResponse.json(activeSessions)
- }
+  if (!proctorSessionId) {
+    // Return proctor sessions based on status filter
+    const whereClause: any = {}
+    if (statusParam === 'COMPLETED') {
+      whereClause.status = 'COMPLETED'
+    } else if (statusParam === 'all') {
+      // no filter
+    } else {
+      whereClause.status = 'ACTIVE'
+    }
+
+    const sessions = await prisma.proctoredSession.findMany({
+      where: whereClause,
+      include: {
+        satTest: {
+          select: { name: true }
+        },
+        _count: {
+          select: { participants: true }
+        }
+      },
+      orderBy: { createdAt: 'desc' }
+    })
+    
+    return NextResponse.json(sessions)
+  }
 
  // Return detailed participants for a specific session
  const participants = await prisma.proctoredParticipant.findMany({

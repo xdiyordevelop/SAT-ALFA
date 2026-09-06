@@ -6,10 +6,13 @@ import { TestEngine } from "./TestEngine";
 
 interface PageProps {
   params: Promise<{ id: string }>;
+  searchParams?: Promise<{ proctorSessionId?: string; proctorCode?: string; code?: string }>;
 }
 
-export default async function TakeTestPage({ params }: PageProps) {
+export default async function TakeTestPage({ params, searchParams }: PageProps) {
   const { id } = await params;
+  const sParams = searchParams ? await searchParams : {};
+  const proctorParam = sParams.proctorSessionId || sParams.proctorCode || sParams.code || null;
   const session = await getSession();
   if (!session || session.role !== "STUDENT") {
     redirect("/login");
@@ -32,6 +35,7 @@ export default async function TakeTestPage({ params }: PageProps) {
   // Find student profile using userId
   const studentProfile = await prisma.studentProfile.findUnique({
     where: { userId: session.userId },
+    include: { user: true },
   });
 
   if (!studentProfile) {
@@ -66,12 +70,54 @@ export default async function TakeTestPage({ params }: PageProps) {
     difficulty: q.difficulty.toLowerCase(),
   }));
 
+  // Resolve proctor session if provided
+  let resolvedSessionId: string | null = null;
+  if (proctorParam) {
+    const proctorSession = await prisma.proctoredSession.findFirst({
+      where: {
+        OR: [
+          { id: proctorParam },
+          { code: proctorParam },
+        ],
+        satTestId: test.id,
+        status: "ACTIVE",
+      },
+    });
+
+    if (proctorSession) {
+      resolvedSessionId = proctorSession.id;
+      // Register or update participant to TAKING
+      await prisma.proctoredParticipant.upsert({
+        where: {
+          sessionId_studentId: {
+            sessionId: proctorSession.id,
+            studentId: studentProfile.id,
+          },
+        },
+        update: {
+          status: "TAKING",
+          startedAt: new Date(),
+          lastHeartbeat: new Date(),
+        },
+        create: {
+          sessionId: proctorSession.id,
+          studentId: studentProfile.id,
+          userName: `${studentProfile.firstName} ${studentProfile.lastName}`.trim() || session.username,
+          email: studentProfile.user?.username || `${session.username}@student.alfa`,
+          status: "TAKING",
+          startedAt: new Date(),
+          lastHeartbeat: new Date(),
+        },
+      });
+    }
+  }
+
   return (
     <TestProvider
       testId={test.id}
       studentId={studentProfile.id}
       userId={session.userId}
-      proctorCode={null}
+      proctorCode={resolvedSessionId}
       totalQuestions={questions.length}
       questionsPerModule={{
         1: questions.filter((q) => q.module === 1).length,
@@ -85,7 +131,8 @@ export default async function TakeTestPage({ params }: PageProps) {
         testId={test.id}
         studentId={studentProfile.id}
         userId={session.userId}
-        proctorCode={null}
+        studentName={`${studentProfile.firstName} ${studentProfile.lastName}`}
+        proctorCode={resolvedSessionId}
       />
     </TestProvider>
   );

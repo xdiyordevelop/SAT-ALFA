@@ -21,6 +21,7 @@ import {
   Settings,
   FileText,
   HelpCircle,
+  Bell,
 } from "lucide-react";
 import { logoutAction } from "@/server/actions/auth.actions";
 
@@ -40,40 +41,93 @@ export function Sidebar({ username, role }: SidebarProps) {
     await logoutAction();
   };
 
-  const adminMenu = [
-    {
-      label: "Main",
-      items: [
-        { href: "/admin/dashboard", icon: LayoutDashboard, label: "Dashboard" },
-        { href: "/admin/students", icon: Users, label: "Students" },
-        { href: "/admin/groups", icon: GraduationCap, label: "Groups" },
-        { href: "/admin/payments", icon: CreditCard, label: "Payments" },
-        { href: "/admin/attendance", icon: Clock, label: "Attendance" },
-      ],
-    },
-    {
-      label: "Academics",
-      items: [
-        { href: "/admin/topics", icon: BookOpen, label: "Topics & Lessons" },
-        { href: "/admin/mock-tests", icon: PenTool, label: "Test Bank" },
-        { href: "/admin/mock-tests/proctor", icon: Target, label: "Proctoring" },
-        { href: "/admin/mock-tests/analytics", icon: FileBarChart, label: "Analytics" },
-      ],
-    },
-    {
-      label: "Content",
-      items: [
-        { href: "/admin/articles", icon: FileText, label: "Articles & Reading" },
-      ],
-    },
-  ];
+  const isSuperAdmin = role === "SUPER_ADMIN" || role === "ADMIN";
+  const isTeacher = role === "TEACHER";
+  const isManager = role === "MANAGER";
+
+  const getStaffMenu = () => {
+    if (isTeacher) {
+      return [
+        {
+          label: "Academics",
+          items: [
+            { href: "/admin/dashboard", icon: LayoutDashboard, label: "Dashboard" },
+            { href: "/admin/topics", icon: BookOpen, label: "Topics & Lessons" },
+            { href: "/admin/mock-tests", icon: PenTool, label: "Test Bank" },
+            { href: "/admin/mock-tests/proctor", icon: Target, label: "Proctoring" },
+            { href: "/admin/mock-tests/analytics", icon: FileBarChart, label: "Analytics" },
+          ],
+        },
+        {
+          label: "Classes",
+          items: [
+            { href: "/admin/groups", icon: GraduationCap, label: "Groups" },
+            { href: "/admin/attendance", icon: Clock, label: "Attendance" },
+            { href: "/admin/notifications", icon: Bell, label: "Notifications" },
+          ],
+        },
+        {
+          label: "Content",
+          items: [
+            { href: "/admin/articles", icon: FileText, label: "Articles & Reading" },
+          ],
+        },
+      ];
+    }
+
+    if (isManager) {
+      return [
+        {
+          label: "Management",
+          items: [
+            { href: "/admin/dashboard", icon: LayoutDashboard, label: "Dashboard" },
+            { href: "/admin/students", icon: Users, label: "Students" },
+            { href: "/admin/groups", icon: GraduationCap, label: "Groups" },
+            { href: "/admin/payments", icon: CreditCard, label: "Payments" },
+            { href: "/admin/attendance", icon: Clock, label: "Attendance" },
+            { href: "/admin/notifications", icon: Bell, label: "Notifications" },
+          ],
+        },
+      ];
+    }
+
+    // Default Super Admin / Admin menu
+    return [
+      {
+        label: "Main",
+        items: [
+          { href: "/admin/dashboard", icon: LayoutDashboard, label: "Dashboard" },
+          { href: "/admin/students", icon: Users, label: "Students" },
+          { href: "/admin/groups", icon: GraduationCap, label: "Groups" },
+          { href: "/admin/payments", icon: CreditCard, label: "Payments" },
+          { href: "/admin/attendance", icon: Clock, label: "Attendance" },
+          { href: "/admin/notifications", icon: Bell, label: "Notifications" },
+        ],
+      },
+      {
+        label: "Academics",
+        items: [
+          { href: "/admin/topics", icon: BookOpen, label: "Topics & Lessons" },
+          { href: "/admin/mock-tests", icon: PenTool, label: "Test Bank" },
+          { href: "/admin/mock-tests/proctor", icon: Target, label: "Proctoring" },
+          { href: "/admin/mock-tests/analytics", icon: FileBarChart, label: "Analytics" },
+        ],
+      },
+      {
+        label: "Content",
+        items: [
+          { href: "/admin/articles", icon: FileText, label: "Articles & Reading" },
+        ],
+      },
+    ];
+  };
 
   const studentMenu = [
     {
       label: "Study Portal",
       items: [
         { href: "/student/dashboard", icon: LayoutDashboard, label: "Dashboard" },
-        { href: "/student/topics", icon: BookOpen, label: "Practice" },
+        { href: "/student/topics", icon: BookOpen, label: "Lessons" },
         { href: "/student/mock-tests", icon: PenTool, label: "Mock Tests" },
         { href: "/student/articles", icon: FileText, label: "Reading Library" },
         { href: "/student/results", icon: History, label: "Results" },
@@ -82,7 +136,7 @@ export function Sidebar({ username, role }: SidebarProps) {
     },
   ];
 
-  const menuGroups = role === "ADMIN" ? adminMenu : studentMenu;
+  const menuGroups = role === "STUDENT" ? studentMenu : getStaffMenu();
 
   return (
     <>
@@ -111,7 +165,7 @@ export function Sidebar({ username, role }: SidebarProps) {
       >
         {/* Top Header & Profile Area */}
         <div className="px-6 py-4 border-b border-slate-200 dark:border-white/5 flex flex-col gap-3">
-          <Link href={role === "ADMIN" ? "/admin/dashboard" : "/student/dashboard"} className="flex items-center gap-3 group">
+          <Link href={role !== "STUDENT" ? "/admin/dashboard" : "/student/dashboard"} className="flex items-center gap-3 group">
              <div className="w-10 h-10 rounded-lg overflow-hidden bg-white dark:bg-slate-900 shadow-sm flex items-center justify-center shrink-0 border border-slate-200 dark:border-white/10 relative">
               <Image
                 src="/images/sat-alfa.jpg"
@@ -137,7 +191,13 @@ export function Sidebar({ username, role }: SidebarProps) {
                 {username}
               </p>
               <p className="text-[10px] text-slate-500 dark:text-slate-400 font-medium">
-                {role === "ADMIN" ? "Admin" : "Student"}
+                {role === "SUPER_ADMIN" || role === "ADMIN"
+                  ? "Super Admin"
+                  : role === "TEACHER"
+                  ? "Teacher"
+                  : role === "MANAGER"
+                  ? "Manager"
+                  : "Student"}
               </p>
             </div>
           </div>
@@ -181,7 +241,7 @@ export function Sidebar({ username, role }: SidebarProps) {
 
         {/* Bottom Actions */}
         <div className="border-t border-slate-200 dark:border-white/5 px-3 py-4 flex flex-col gap-1">
-          {role === "ADMIN" && (
+          {isSuperAdmin && (
             <Link
               href="/admin/settings"
               className="px-4 py-2.5 flex items-center gap-3 text-slate-600 dark:text-slate-400 hover:text-slate-900 dark:hover:text-slate-200 hover:bg-slate-50 dark:hover:bg-slate-900/20 rounded-lg transition-colors font-medium text-sm"
@@ -190,13 +250,27 @@ export function Sidebar({ username, role }: SidebarProps) {
               <span>Settings</span>
             </Link>
           )}
-          <Link
-            href="#"
-            className="px-4 py-2.5 flex items-center gap-3 text-slate-600 dark:text-slate-400 hover:text-slate-900 dark:hover:text-slate-200 hover:bg-slate-50 dark:hover:bg-slate-900/20 rounded-lg transition-colors font-medium text-sm"
-          >
-            <HelpCircle className="w-5 h-5 flex-shrink-0" />
-            <span>Help Center</span>
-          </Link>
+          {(() => {
+            const helpHref = role === "STUDENT" ? "/student/help" : "/admin/help";
+            const isHelpActive = pathname === helpHref;
+            return (
+              <Link
+                href={helpHref}
+                className={`px-4 py-2.5 flex items-center gap-3 rounded-lg transition-colors font-medium text-sm ${
+                  isHelpActive
+                    ? "bg-[#EBFF00]/10 text-slate-900 dark:text-[#EBFF00] font-semibold"
+                    : "text-slate-600 dark:text-slate-400 hover:text-slate-900 dark:hover:text-slate-200 hover:bg-slate-50 dark:hover:bg-slate-900/20"
+                }`}
+              >
+                <HelpCircle
+                  className={`w-5 h-5 flex-shrink-0 ${
+                    isHelpActive ? "text-slate-900 dark:text-[#EBFF00]" : ""
+                  }`}
+                />
+                <span>Help Center</span>
+              </Link>
+            );
+          })()}
           <button
             onClick={handleLogout}
             disabled={isLoggingOut}

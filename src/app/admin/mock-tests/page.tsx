@@ -2,6 +2,8 @@ import { getSession } from "@/lib/auth/session";
 import { redirect } from "next/navigation";
 import { prisma } from "@/lib/db/prisma";
 import { AdminLayout } from "@/components/admin/AdminLayout";
+import { AccessDeniedView } from "@/components/admin/AccessDeniedView";
+import { canManageAcademics } from "@/lib/permissions/auth";
 import {
   AdminMockTestsRoom,
   AdminSATTest,
@@ -10,8 +12,26 @@ import {
 export default async function AdminMockTestsPage() {
   const session = await getSession();
 
-  if (!session || session.role !== "ADMIN") {
+  if (!session || session.role === "STUDENT") {
     redirect("/login");
+  }
+
+  if (!canManageAcademics(session)) {
+    return (
+      <AdminLayout
+        title="Access Denied"
+        breadcrumbs={[{ label: "Admin" }, { label: "Test Bank" }]}
+        userName={session.username}
+        userEmail={session.username || ""}
+        userRole={session.role}
+      >
+        <AccessDeniedView
+          title="Test Bank Restricted"
+          message="Managing mock tests, test questions, and exam blueprints is restricted to Teachers and Administrators."
+          requiredRole="Teacher or Admin"
+        />
+      </AdminLayout>
+    );
   }
 
   // Fetch all SAT Mock Tests with questions and active sessions
