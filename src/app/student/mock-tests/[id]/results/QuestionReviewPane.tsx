@@ -251,20 +251,32 @@ export function QuestionReviewPane({
                   {/* Stimulus Image (if any) */}
                   {q.imageUrl && (
                     <div className="relative group rounded-xl overflow-hidden border border-slate-200 dark:border-white/10 bg-white dark:bg-[#131313] flex justify-center items-center p-3">
-                      <img
-                        src={q.imageUrl}
-                        alt="Question figure"
-                        className="max-h-[300px] w-auto max-w-full object-contain cursor-zoom-in"
-                        loading="lazy"
-                        onClick={() => setZoomedImage(q.imageUrl)}
-                      />
-                      <button
-                        onClick={() => setZoomedImage(q.imageUrl)}
-                        className="absolute bottom-2 right-2 p-1.5 rounded-lg bg-black/60 hover:bg-black/80 text-white text-xs flex items-center gap-1 opacity-0 group-hover:opacity-100 transition-opacity"
-                      >
-                        <ZoomIn className="w-3.5 h-3.5" />
-                        <span>Enlarge Figure</span>
-                      </button>
+                      {(() => {
+                        const resolvedImg =
+                          q.imageUrl.startsWith("http") ||
+                          q.imageUrl.startsWith("/") ||
+                          q.imageUrl.startsWith("data:")
+                            ? q.imageUrl
+                            : `/uploads/questions/${q.imageUrl}`;
+                        return (
+                          <>
+                            <img
+                              src={resolvedImg}
+                              alt="Question figure"
+                              className="max-h-[300px] w-auto max-w-full object-contain cursor-zoom-in"
+                              loading="lazy"
+                              onClick={() => setZoomedImage(resolvedImg)}
+                            />
+                            <button
+                              onClick={() => setZoomedImage(resolvedImg)}
+                              className="absolute bottom-2 right-2 p-1.5 rounded-lg bg-black/60 hover:bg-black/80 text-white text-xs flex items-center gap-1 opacity-0 group-hover:opacity-100 transition-opacity"
+                            >
+                              <ZoomIn className="w-3.5 h-3.5" />
+                              <span>Enlarge Figure</span>
+                            </button>
+                          </>
+                        );
+                      })()}
                     </div>
                   )}
 

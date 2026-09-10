@@ -377,6 +377,12 @@ model SATMockTest {
   studentAttempts StudentTestAttempt[]
   proctorSessions ProctoredSession[]
 
+  // Original Source Document (PDF/DOCX) for Ground-Truth AI Verification
+  sourceFileUrl     String?
+  sourceFileName    String?
+  sourceFileType    String?
+  moduleSourceFiles Json? // Per-module source files mapping: { "MODULE_1": { url, fileName, fileType }, ... }
+
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
 
@@ -400,6 +406,10 @@ model SATQuestion {
 
   options       Json // { A: "...", B: "...", C: "...", D: "..." }
   correctAnswer String // "A" or "B" for MCQ, "0.75" or "3/4" for fill-in
+
+  // Source tracking for targeted Ground-Truth AI Verification
+  sourceFileUrl  String? // Exact source file from which this question was imported
+  sourceFileName String? // Original source file name
 
   // AI Verification and Answer Key Workflow
   answerSource       String? @default("missing") // "test_pdf_answer_key", "separate_answer_key", "admin", "missing"

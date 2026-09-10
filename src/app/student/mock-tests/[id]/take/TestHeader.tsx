@@ -4,7 +4,7 @@ import React, { useState } from "react";
 import { useTestContext } from "../context/TestContext";
 import { TimerDisplay } from "./TimerDisplay";
 import { AnnotateColorPicker } from "./AnnotateTool";
-import { Calculator, Edit3, BookOpen, Clock, Maximize } from "lucide-react";
+import { Calculator, Edit3, BookOpen, Clock, Maximize, Bug } from "lucide-react";
 import { useRequestFullscreen } from "./hooks/useFullscreenTracking";
 
 interface TestHeaderProps {
@@ -27,6 +27,9 @@ export function TestHeader({
     setReferenceOpen,
     isAnnotateActive,
     setAnnotateActive,
+    setBugReportOpen,
+    fontSize,
+    setFontSize,
   } = useTestContext();
 
   const [isTimerHidden, setIsTimerHidden] = useState(false);
@@ -97,6 +100,23 @@ export function TestHeader({
             <Maximize className="w-5 h-5" />
           </button>
 
+          {/* Text Size (Aa) Toggle Button */}
+          <button
+            type="button"
+            onClick={() => setFontSize(fontSize === "standard" ? "large" : "standard")}
+            className={`flex items-center gap-1.5 px-2.5 py-1.5 rounded-lg border transition-all text-xs font-bold cursor-pointer ${
+              fontSize === "large"
+                ? "bg-slate-900 text-white dark:bg-white dark:text-slate-950 border-slate-900 dark:border-white shadow-sm"
+                : "border-slate-300 dark:border-zinc-700 text-slate-700 dark:text-slate-300 hover:border-slate-400 dark:hover:border-zinc-500 bg-transparent"
+            }`}
+            title={`Text Size: ${fontSize === "large" ? "Large (115%)" : "Standard (100%)"}. Click to toggle.`}
+          >
+            <span className="text-[13px] font-black tracking-tight">Aa</span>
+            <span className="hidden md:inline text-[11px] font-semibold opacity-80">
+              {fontSize === "large" ? "Large" : "Standard"}
+            </span>
+          </button>
+
           <AnnotateColorPicker />
 
           <button
@@ -110,6 +130,17 @@ export function TestHeader({
           >
             <Edit3 className="w-4 h-4" />
             <span className="hidden sm:inline-block">Annotate</span>
+          </button>
+
+          <div className="w-px h-6 bg-slate-200 dark:bg-white/10 mx-0.5 sm:mx-1"></div>
+
+          <button
+            onClick={() => setBugReportOpen(true)}
+            className="flex items-center gap-1.5 px-2.5 py-1.5 rounded-md text-slate-700 dark:text-[#EBFF00] hover:bg-[#EBFF00]/15 dark:hover:bg-[#EBFF00]/15 border border-slate-300 dark:border-[#EBFF00]/30 hover:border-[#EBFF00] transition-all text-xs font-bold shadow-[0_0_10px_rgba(235,255,0,0.05)] cursor-pointer"
+            title="Report an Issue (Wrong Answer, Typo, Missing Content)"
+          >
+            <Bug className="w-4 h-4 text-slate-800 dark:text-[#EBFF00] shrink-0" />
+            <span className="hidden sm:inline-block">Report</span>
           </button>
 
           {moduleNumber >= 3 && (

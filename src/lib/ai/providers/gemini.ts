@@ -6,14 +6,22 @@ export class GeminiProvider implements AiProvider {
  name = 'gemini';
  private currentKeyIndex = 0;
 
- private getApiKey(): string {
- const keys = (process.env.GEMINI_API_KEY || '').split(',').map(k => k.trim()).filter(Boolean);
- if (keys.length === 0) {
- throw new Error('GEMINI_API_KEY environment variable is not configured');
- }
- const key = keys[this.currentKeyIndex % keys.length];
- this.currentKeyIndex = (this.currentKeyIndex + 1) % keys.length;
- return key;
+ getApiKey(preferredKey?: string): string {
+  if (preferredKey) return preferredKey;
+  let raw = (process.env.GEMINI_API_KEY || '').trim();
+  if (raw.startsWith('"') && raw.endsWith('"')) raw = raw.slice(1, -1);
+  if (raw.startsWith("'") && raw.endsWith("'")) raw = raw.slice(1, -1);
+  const keys = raw
+   .split(',')
+   .map(k => k.trim().replace(/^["']|["']$/g, ''))
+   .filter(Boolean);
+
+  if (keys.length === 0) {
+   throw new Error('GEMINI_API_KEY environment variable is not configured');
+  }
+  const key = keys[this.currentKeyIndex % keys.length];
+  this.currentKeyIndex = (this.currentKeyIndex + 1) % keys.length;
+  return key;
  }
 
  async generateContent(req: AiGenerateRequest): Promise<AiGenerateResponse> {
@@ -69,7 +77,8 @@ export class GeminiProvider implements AiProvider {
  }
 
  private async executeRequest(model: string, req: AiGenerateRequest): Promise<AiGenerateResponse> {
- const url = `https://generativelanguage.googleapis.com/v1beta/models/${model}:generateContent?key=${this.getApiKey()}`;
+ const activeKey = req.apiKey || this.getApiKey();
+ const url = `https://generativelanguage.googleapis.com/v1beta/models/${model}:generateContent?key=${activeKey}`;
  
  const parts: any[] = [];
  const fullText = (req.systemPrompt ? req.systemPrompt + '\n\n' : '') + req.userPrompt;
@@ -78,13 +87,19 @@ export class GeminiProvider implements AiProvider {
  parts.push({ text: fullText });
  }
 
- if (req.pdfBase64) {
- parts.push({ inlineData: { mimeType: 'application/pdf', data: req.pdfBase64 } });
- } else if (req.imagesBase64 && req.imagesBase64.length > 0) {
+ if (req.pdfFileUri) {
+   parts.push({ fileData: { mimeType: 'application/pdf', fileUri: req.pdfFileUri } });
+ } else if (req.pdfBase64) {
+   parts.push({ inlineData: { mimeType: 'application/pdf', data: req.pdfBase64 } });
+ }
+
+ if (req.imagesBase64 && req.imagesBase64.length > 0) {
  for (const img of req.imagesBase64) {
  parts.push({ inlineData: { mimeType: img.mimeType, data: img.data } });
  }
- } else if (req.imageBase64 && req.imageMimeType) {
+ }
+ 
+ if (req.imageBase64 && req.imageMimeType) {
  parts.push({ inlineData: { mimeType: req.imageMimeType, data: req.imageBase64 } });
  }
 

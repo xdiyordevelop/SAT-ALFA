@@ -17,10 +17,12 @@ import {
   Layers,
   Radio,
   Loader2,
+  Upload,
   Sparkles,
   ExternalLink,
   ShieldCheck,
   AlertTriangle,
+  Bug,
 } from "lucide-react";
 import {
   startProctorSessionAction,
@@ -32,6 +34,8 @@ export interface AdminSATTest {
   name: string;
   description?: string | null;
   status: string;
+  sourceFileUrl?: string | null;
+  sourceFileName?: string | null;
   questionCount: number;
   activeSessionsCount: number;
   createdAt: Date | string;
@@ -265,8 +269,16 @@ export function AdminMockTestsRoom({
           </button>
         </div>
 
-        {/* Primary CTA: Create Mock Test */}
-        <div className="w-full md:w-auto">
+        {/* Action CTAs: Bug Reports & Create Mock Test */}
+        <div className="w-full md:w-auto flex items-center gap-2.5">
+          <Link
+            href="/admin/mock-tests/bugs"
+            className="inline-flex items-center justify-center gap-2 bg-[#EBFF00]/10 hover:bg-[#EBFF00]/20 text-slate-800 dark:text-[#EBFF00] border border-slate-300 dark:border-[#EBFF00]/30 font-bold px-4 py-2.5 rounded-xl transition-all text-sm shadow-sm"
+            title="Questions Bug Reports & AI Auto-Fix Monitoring"
+          >
+            <Bug className="w-4 h-4 text-slate-900 dark:text-[#EBFF00]" />
+            <span>Bug Reports & AI</span>
+          </Link>
           <Link
             href="/admin/mock-tests/create"
             className="w-full md:w-auto inline-flex items-center justify-center gap-2 bg-gradient-to-r from-[#d9ff00] to-[#EBFF00] hover:from-yellow-300 hover:to-[#d9ff00] text-slate-950 font-bold px-5 py-2.5 rounded-xl shadow-lg shadow-[#d9ff00]/15 hover:shadow-[#d9ff00]/30 transition-all text-sm"
@@ -357,18 +369,28 @@ export function AdminMockTestsRoom({
                   )}
 
                   {/* Modules & Question Count Badges */}
-                  <div className="flex items-center gap-3 text-xs text-slate-500 dark:text-slate-400 flex-wrap">
-                    <span className="flex items-center gap-1.5 font-medium text-slate-700 dark:text-slate-300 bg-white dark:bg-[#131313] px-2.5 py-1 rounded-lg border border-slate-200 dark:border-white/10">
-                      <Layers className="w-3.5 h-3.5 text-slate-900 dark:text-[#EBFF00]" />
+                  <div className="flex items-center gap-2.5 text-xs text-slate-500 dark:text-slate-400 flex-wrap">
+                    <span className="flex items-center gap-1.5 font-bold text-slate-900 dark:text-white bg-slate-100 dark:bg-white/5 px-2.5 py-1 rounded-lg border border-slate-200 dark:border-white/10">
+                      <Layers className="w-3.5 h-3.5 text-amber-500 dark:text-[#EBFF00]" />
                       {test.questionCount} Questions
                     </span>
-                    <span className="text-slate-600 dark:text-slate-400">
-                      •
-                    </span>
-                    <span>
-                      RW: {test.modulesSummary.m1 + test.modulesSummary.m2} Qs |
-                      Math: {test.modulesSummary.m3 + test.modulesSummary.m4} Qs
-                    </span>
+
+                    {/* Per Module Indicators */}
+                    <div className="flex items-center gap-1.5 flex-wrap">
+                      <span className={`px-2 py-0.5 rounded-md text-[11px] font-semibold border ${test.modulesSummary.m1 > 0 ? "bg-blue-500/10 text-blue-600 dark:text-blue-400 border-blue-500/20" : "bg-slate-100 dark:bg-white/5 text-slate-400 border-dashed border-slate-300 dark:border-white/10"}`}>
+                        RW 1: {test.modulesSummary.m1 > 0 ? `${test.modulesSummary.m1} Qs` : "—"}
+                      </span>
+                      <span className={`px-2 py-0.5 rounded-md text-[11px] font-semibold border ${test.modulesSummary.m2 > 0 ? "bg-blue-500/10 text-blue-600 dark:text-blue-400 border-blue-500/20" : "bg-slate-100 dark:bg-white/5 text-slate-400 border-dashed border-slate-300 dark:border-white/10"}`}>
+                        RW 2: {test.modulesSummary.m2 > 0 ? `${test.modulesSummary.m2} Qs` : "—"}
+                      </span>
+                      <span className={`px-2 py-0.5 rounded-md text-[11px] font-semibold border ${test.modulesSummary.m3 > 0 ? "bg-emerald-500/10 text-emerald-600 dark:text-emerald-400 border-emerald-500/20" : "bg-slate-100 dark:bg-white/5 text-slate-400 border-dashed border-slate-300 dark:border-white/10"}`}>
+                        Math 1: {test.modulesSummary.m3 > 0 ? `${test.modulesSummary.m3} Qs` : "—"}
+                      </span>
+                      <span className={`px-2 py-0.5 rounded-md text-[11px] font-semibold border ${test.modulesSummary.m4 > 0 ? "bg-emerald-500/10 text-emerald-600 dark:text-emerald-400 border-emerald-500/20" : "bg-slate-100 dark:bg-white/5 text-slate-400 border-dashed border-slate-300 dark:border-white/10"}`}>
+                        Math 2: {test.modulesSummary.m4 > 0 ? `${test.modulesSummary.m4} Qs` : "—"}
+                      </span>
+                    </div>
+
                     <span className="text-slate-600 dark:text-slate-400">
                       •
                     </span>
@@ -380,6 +402,30 @@ export function AdminMockTestsRoom({
 
                 {/* Right Action Buttons */}
                 <div className="flex items-center gap-2.5 w-full lg:w-auto justify-end flex-wrap">
+                  {/* PDF Source Document Button */}
+                  {test.sourceFileUrl ? (
+                    <a
+                      href={test.sourceFileUrl}
+                      target="_blank"
+                      rel="noopener noreferrer"
+                      title={`Original source document: ${test.sourceFileName || "PDF"}`}
+                      className="inline-flex items-center gap-1.5 bg-sky-500/10 hover:bg-sky-500/20 text-sky-600 dark:text-sky-400 border border-sky-500/30 font-semibold px-3 py-2.5 rounded-xl text-xs transition-all shadow-sm"
+                    >
+                      <FileText className="w-3.5 h-3.5" />
+                      <span>Original PDF</span>
+                      <ExternalLink className="w-3 h-3 opacity-70" />
+                    </a>
+                  ) : (
+                    <Link
+                      href={`/admin/mock-tests/${test.id}/edit`}
+                      title="No PDF document attached. Click to attach original exam PDF"
+                      className="inline-flex items-center gap-1.5 bg-slate-100 dark:bg-white/5 hover:bg-slate-200 dark:hover:bg-white/10 text-slate-500 dark:text-slate-400 border border-dashed border-slate-300 dark:border-white/20 font-medium px-3 py-2.5 rounded-xl text-xs transition-all"
+                    >
+                      <Upload className="w-3.5 h-3.5" />
+                      <span>+ Attach PDF</span>
+                    </Link>
+                  )}
+
                   {/* Button 1: Edit Test */}
                   <Link
                     href={`/admin/mock-tests/${test.id}/edit`}

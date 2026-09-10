@@ -26,6 +26,9 @@ export function useTestCompletion(userId: string, testId: string) {
  status: 'submitted',
  };
  localStorage.setItem(`completedTest_${userId}_${testId}`, JSON.stringify(testState));
+  try {
+    localStorage.removeItem(`inProgressTest_${userId}_${testId}`);
+  } catch {}
 
  // Call server action to finalize test
  const response = await fetch('/api/student/complete-test', {

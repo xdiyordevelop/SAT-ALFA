@@ -89,10 +89,17 @@ export function ResultsDashboard({ attempt, questions, student }: any) {
         <div className="flex flex-wrap items-center gap-3">
           <Button
             variant="secondary"
-            onClick={() =>
-              router.push(`/student/mock-tests/${attempt.satTestId}/take`)
-            }
-            className="border-slate-200 dark:border-white/10"
+            onClick={() => {
+              try {
+                const uId = student?.userId || attempt?.studentId;
+                if (uId) {
+                  localStorage.removeItem(`inProgressTest_${uId}_${attempt.satTestId}`);
+                  localStorage.removeItem(`completedTest_${uId}_${attempt.satTestId}`);
+                }
+              } catch {}
+              router.push(`/student/mock-tests/${attempt.satTestId}/take?retake=true`);
+            }}
+            className="border-slate-200 dark:border-white/10 cursor-pointer"
           >
             <RotateCcw className="w-4 h-4 mr-2" /> Retake Test
           </Button>

@@ -4,7 +4,12 @@ import { prisma } from "@/lib/db/prisma";
 import { StudentLayout } from "@/components/student/StudentLayout";
 import { StudentMockTestsHub } from "./StudentMockTestsHub";
 
-export default async function StudentMockTestsPage() {
+interface PageProps {
+  searchParams?: Promise<{ error?: string }>;
+}
+
+export default async function StudentMockTestsPage({ searchParams }: PageProps) {
+  const sParams = searchParams ? await searchParams : {};
   const session = await getSession();
 
   if (!session || session.role !== "STUDENT") {
@@ -34,6 +39,7 @@ export default async function StudentMockTestsPage() {
           completedAt: true,
           mathScore: true,
           rwScore: true,
+          fullscreenExitCount: true,
         },
       },
     },
@@ -54,11 +60,12 @@ export default async function StudentMockTestsPage() {
     orderBy: { completedAt: "desc" },
   });
 
-  // Calculate highest score
-  const highestScore =
-    completedAttempts.length > 0
-      ? Math.max(...completedAttempts.map((a) => a.totalScore || 0))
-      : null;
+  // Calculate highest score (excluding 0 or disqualified scores)
+  const validScores = completedAttempts
+    .filter((a) => (a.totalScore || 0) > 0 && a.fullscreenExitCount < 5)
+    .map((a) => a.totalScore || 0);
+
+  const highestScore = validScores.length > 0 ? Math.max(...validScores) : null;
 
   return (
     <StudentLayout
@@ -71,6 +78,7 @@ export default async function StudentMockTestsPage() {
         availableTests={availableTests}
         completedAttempts={completedAttempts}
         highestScore={highestScore}
+        initialError={sParams.error || null}
       />
     </StudentLayout>
   );

@@ -1,6 +1,6 @@
 "use client";
 
-import React, { useState, useRef, useEffect } from "react";
+import React, { useState, useRef, useEffect, useMemo } from "react";
 import { useRouter } from "next/navigation";
 import { Card } from "@/components/ui/Card";
 import { Button } from "@/components/ui/Button";
@@ -44,6 +44,8 @@ export interface ExtractedQuestion {
   skill: string;
   explanation?: string | null;
   requiresReview?: boolean;
+  questionCropBase64?: string;
+  isExisting?: boolean;
 }
 
 const MODULE_LABELS: Record<SatModuleKey, { title: string; subject: "rw" | "math"; defaultCount: number }> = {
@@ -100,6 +102,9 @@ export function TestImporterContent() {
   const [existingTests, setExistingTests] = useState<{ id: string; name: string; modules: string[] }[]>([]);
   const [selectedTestId, setSelectedTestId] = useState<string>("");
   const [testName, setTestName] = useState("");
+  const [existingQuestions, setExistingQuestions] = useState<ExtractedQuestion[]>([]);
+  const [existingTestDetails, setExistingTestDetails] = useState<{ id: string; name: string; questions: any[] } | null>(null);
+  const [isLoadingExisting, setIsLoadingExisting] = useState(false);
 
   // Step wizard: 'UPLOAD' | 'EXTRACTING' | 'VERIFY' | 'SUCCESS'
   const [currentStep, setCurrentStep] = useState<"UPLOAD" | "EXTRACTING" | "VERIFY" | "SUCCESS">("UPLOAD");
@@ -148,6 +153,43 @@ export function TestImporterContent() {
       })
       .catch((err) => console.error("Failed to load existing tests:", err));
   }, []);
+
+  // Fetch full details and existing questions whenever a target test is selected
+  useEffect(() => {
+    if (!selectedTestId) {
+      setExistingTestDetails(null);
+      setExistingQuestions([]);
+      return;
+    }
+    setIsLoadingExisting(true);
+    fetch(`/api/admin/mock-tests/${selectedTestId}`)
+      .then((r) => r.json())
+      .then((data) => {
+        if (data && !data.error && Array.isArray(data.questions)) {
+          setExistingTestDetails(data);
+          const mapped: ExtractedQuestion[] = data.questions.map((q: any) => ({
+            id: q.id,
+            module: q.module,
+            format: q.format === "FILL_IN" ? "FILL_IN" : "MCQ",
+            questionNumber: q.questionNumber,
+            prompt: q.prompt,
+            passage: q.passage || null,
+            imageUrl: q.imageUrl || null,
+            options: q.options || {},
+            correctAnswer: q.correctAnswer,
+            difficulty: q.difficulty || "MEDIUM",
+            domain: q.domain || "General",
+            skill: q.skill || "General Skills",
+            explanation: q.explanation || null,
+            requiresReview: false,
+            isExisting: true,
+          }));
+          setExistingQuestions(mapped);
+        }
+      })
+      .catch((err) => console.error("Failed to load existing test questions:", err))
+      .finally(() => setIsLoadingExisting(false));
+  }, [selectedTestId]);
 
   const handleFileDrop = (e: React.DragEvent<HTMLDivElement>) => {
     e.preventDefault();
@@ -390,8 +432,8 @@ export function TestImporterContent() {
       const pagesToProcess: number[] = [];
       for (let p = 1; p <= numPages; p++) {
         if (importMode === "SINGLE_MODULE") {
-          // If single module, only process pages matching that module or all if not recognized
-          if (pageModuleMap[p] === singleTargetModule || pageModuleMap[p] !== null) {
+          // In single module mode, process all pages of the document that are not cover/scoring sheets
+          if (pageModuleMap[p] !== null) {
             pagesToProcess.push(p);
           }
         } else {
@@ -600,33 +642,122 @@ export function TestImporterContent() {
           }
         }
 
-        // Image auto-cropping logic:
-        let savedImageUrl: string | null = null;
-        let diagramDescription: string | null = null;
+        // 1. Format Resolution
+        const rawFormat = (parsedData?.format || "").toLowerCase().trim();
+        const hasValidOptions =
+          parsedData?.options &&
+          typeof parsedData.options === "object" &&
+          Object.values(parsedData.options).some((v) => typeof v === "string" && v.trim().length > 0);
 
-        // Layer 1: Check if parse-question identified visual stimulus inside the question
+        let resolvedFormat: "MCQ" | "FILL_IN" = "MCQ";
         if (
-          parsedData?.hasVisualStimulus &&
-          parsedData?.stimulusBBox &&
-          (parsedData.stimulusBBox.ymax > parsedData.stimulusBBox.ymin + 30 ||
-            parsedData.stimulusBBox.xmax > parsedData.stimulusBBox.xmin + 30)
+          rawFormat === "fill-in" ||
+          rawFormat === "fill_in" ||
+          rawFormat === "free_response" ||
+          rawFormat === "grid-in" ||
+          rawFormat === "grid_in" ||
+          (isMath && !hasValidOptions) ||
+          (isMath && parsedData?.correctAnswer && !/^[A-D]$/i.test(parsedData.correctAnswer.trim()))
         ) {
-          diagramDescription = parsedData.diagramDescription || null;
-          try {
-            // Crop stimulus directly from the question crop (using question crop's natural dimensions)
-            const stimulusBase64 = await cropImageRegion(questionCropBase64, parsedData.stimulusBBox, 0.03);
-            savedImageUrl = await uploadBase64Image(stimulusBase64, `q${qNum}-${modKey}-diagram.jpg`);
-          } catch (cErr) {
-            console.warn("Failed to crop question stimulus:", cErr);
+          resolvedFormat = "FILL_IN";
+        }
+
+        // 2. Options Extraction & Fallback
+        let resolvedPrompt = parsedData?.prompt || `Question ${qNum}`;
+        let resolvedOptions: Record<string, string> | null = null;
+
+        if (resolvedFormat === "MCQ") {
+          if (hasValidOptions) {
+            resolvedOptions = {
+              A: parsedData.options.A || "",
+              B: parsedData.options.B || "",
+              C: parsedData.options.C || "",
+              D: parsedData.options.D || "",
+            };
+          } else {
+            // Check if options were placed inside prompt (e.g. A) ... B) ... C) ... D) ...)
+            const optMatch = resolvedPrompt.match(
+              /(?:^|\n)\s*(?:\(?A\)?[\.\:\-\s]+)([\s\S]*?)(?:\n\s*(?:\(?B\)?[\.\:\-\s]+))([\s\S]*?)(?:\n\s*(?:\(?C\)?[\.\:\-\s]+))([\s\S]*?)(?:\n\s*(?:\(?D\)?[\.\:\-\s]+))([\s\S]*?)$/i
+            );
+            if (optMatch) {
+              resolvedOptions = {
+                A: optMatch[1].trim(),
+                B: optMatch[2].trim(),
+                C: optMatch[3].trim(),
+                D: optMatch[4].trim(),
+              };
+              resolvedPrompt = resolvedPrompt.substring(0, optMatch.index).trim();
+            } else {
+              resolvedOptions = { A: "", B: "", C: "", D: "" };
+            }
+          }
+        } else {
+          // If FILL_IN, options MUST be null
+          resolvedOptions = null;
+        }
+
+        // 3. Passage Extraction & Separation for Reading & Writing
+        let resolvedPassage =
+          parsedData?.passage && parsedData.passage.trim().length > 0 ? parsedData.passage.trim() : null;
+
+        if (!isMath && !resolvedPassage && resolvedPrompt) {
+          // If prompt contains reading text followed by an interrogative stem, split them
+          const stemMatch = resolvedPrompt.match(
+            /(?:^|\n\n|\.\s+)(Which choice\b[\s\S]*|Based on the text[\s\S]*|Which quotation[\s\S]*|Which finding[\s\S]*|The author of[\s\S]*|What does the text[\s\S]*|Which choice completes the text[\s\S]*|Which choice most logically[\s\S]*)/i
+          );
+          if (stemMatch && stemMatch.index && stemMatch.index > 30) {
+            resolvedPassage = resolvedPrompt.substring(0, stemMatch.index + (stemMatch[0].startsWith(".") ? 1 : 0)).trim();
+            resolvedPrompt = stemMatch[1].trim();
           }
         }
-        // Layer 2: Fallback to detect-boxes page-level imageBBox
-        else if (item.box.hasImage && item.box.imageBBox) {
-          try {
-            const stimulusBase64 = await cropImageRegion(item.pageImage.base64Data, item.box.imageBBox, 0.02);
-            savedImageUrl = await uploadBase64Image(stimulusBase64, `q${qNum}-${modKey}-figure.jpg`);
-          } catch (cErr) {
-            console.warn("Failed to crop page figure:", cErr);
+
+        // 4. Visual Stimulus / Diagram Auto-Cropping with Guaranteed Fallback
+        let savedImageUrl: string | null = null;
+        let diagramDescription: string | null = parsedData?.diagramDescription || null;
+
+        const textMentionsFigure = /\b(in the figure|the figure shows|shown in the|coordinate plane|xy-plane|shown above|shown below|in the circle|triangle [A-Z]{2,3}|graph of|table shows|the scatterplot|the bar graph|the polygon|trapezoid|parallelogram)\b/i.test(
+          resolvedPrompt + " " + (resolvedPassage || "")
+        );
+
+        const hasDiagramSignal = parsedData?.hasVisualStimulus || item.box.hasImage || textMentionsFigure;
+
+        if (hasDiagramSignal) {
+          // Priority 1: If parsedData identified visual stimulus bounding box within question crop
+          if (
+            parsedData?.stimulusBBox &&
+            parsedData.stimulusBBox.ymax > parsedData.stimulusBBox.ymin + 30 &&
+            parsedData.stimulusBBox.xmax > parsedData.stimulusBBox.xmin + 30 &&
+            parsedData.stimulusBBox.ymax <= 1000 &&
+            parsedData.stimulusBBox.xmax <= 1000
+          ) {
+            try {
+              const stimulusBase64 = await cropImageRegion(questionCropBase64, parsedData.stimulusBBox, 0.03);
+              savedImageUrl = await uploadBase64Image(stimulusBase64, `q${qNum}-${modKey}-diagram.jpg`);
+            } catch (cErr) {
+              console.warn(`Failed to crop stimulus bbox for Q${qNum}:`, cErr);
+            }
+          }
+
+          // Priority 2: Fallback to detect-boxes page-level imageBBox
+          if (!savedImageUrl && item.box.hasImage && item.box.imageBBox) {
+            try {
+              const stimulusBase64 = await cropImageRegion(item.pageImage.base64Data, item.box.imageBBox, 0.02);
+              savedImageUrl = await uploadBase64Image(stimulusBase64, `q${qNum}-${modKey}-figure.jpg`);
+            } catch (cErr) {
+              console.warn(`Failed to crop page figure for Q${qNum}:`, cErr);
+            }
+          }
+
+          // Note: Full question crop (questionCropBase64) must NEVER be auto-attached as imageUrl!
+          // Only actual tight visual diagrams or figures should be saved as imageUrl.
+        }
+
+        // 5. Correct Answer Resolution
+        let resolvedCorrectAnswer = (parsedData?.correctAnswer || "").trim();
+        if (resolvedFormat === "MCQ") {
+          resolvedCorrectAnswer = resolvedCorrectAnswer.toUpperCase();
+          if (!["A", "B", "C", "D"].includes(resolvedCorrectAnswer)) {
+            resolvedCorrectAnswer = "";
           }
         }
 
@@ -634,19 +765,20 @@ export function TestImporterContent() {
         extracted.push({
           id: `q_${modKey}_${qNum}_${Date.now()}_${Math.random().toString(36).substring(7)}`,
           module: modKey,
-          format: parsedData?.format === "fill-in" || (!parsedData?.options && isMath) ? "FILL_IN" : "MCQ",
+          format: resolvedFormat,
           questionNumber: qNum,
-          prompt: parsedData?.prompt || `Question ${qNum}`,
-          passage: parsedData?.passage || null,
+          prompt: resolvedPrompt,
+          passage: resolvedPassage,
           imageUrl: savedImageUrl,
           diagramDescription,
-          options: parsedData?.options || (parsedData?.format === "fill-in" || (isMath && !parsedData?.options) ? null : { A: "", B: "", C: "", D: "" }),
-          correctAnswer: parsedData?.correctAnswer || "",
+          options: resolvedOptions,
+          correctAnswer: resolvedCorrectAnswer,
           difficulty: "MEDIUM",
           domain: parsedData?.domain || (isMath ? "Algebra" : "Information and Ideas"),
           skill: parsedData?.skill || (isMath ? "Linear Equations" : "Central Ideas"),
           explanation: parsedData?.explanation || null,
-          requiresReview: !parsedData?.correctAnswer || !parsedData?.prompt,
+          requiresReview: !resolvedCorrectAnswer || !resolvedPrompt || (resolvedFormat === "MCQ" && (!resolvedOptions?.A || !resolvedOptions?.B)),
+          questionCropBase64,
         });
       }
 
@@ -654,8 +786,12 @@ export function TestImporterContent() {
       setProgress((prev) => ({ ...prev, percent: 100, status: "Extraction complete! Ready for verification." }));
 
       // Set initial active tab
-      const firstMod = moduleOrder.find((m) => extracted.some((q) => q.module === m)) || "MODULE_1";
-      setActiveTabModule(firstMod);
+      if (importMode === "SINGLE_MODULE") {
+        setActiveTabModule(singleTargetModule);
+      } else {
+        const firstMod = moduleOrder.find((m) => extracted.some((q) => q.module === m)) || "MODULE_1";
+        setActiveTabModule(firstMod);
+      }
 
       setCurrentStep("VERIFY");
     } catch (err: any) {
@@ -677,16 +813,28 @@ export function TestImporterContent() {
     const updated = [...extractedQuestions];
     let appliedCount = 0;
 
-    // Check if numbered: e.g. "1. A", "1: A", "1 A"
+    // Check if numbered: e.g. "1. A", "1: A", "1 A", "18. 42", "19. 3/4"
     const numberedMatches = Array.from(text.matchAll(/(?:^|\s)(\d{1,2})[\.\:\-\s]+([A-D]|[0-9\/\.\-]+)/gi));
 
     if (numberedMatches.length > 0) {
       for (const m of numberedMatches) {
         const qNum = parseInt(m[1], 10);
-        const ans = m[2].toUpperCase().trim();
+        const ans = m[2].trim();
         const targetQ = updated.find((q) => q.module === activeTabModule && q.questionNumber === qNum);
         if (targetQ) {
-          targetQ.correctAnswer = ans;
+          const isLetter = /^[A-D]$/i.test(ans);
+          if (isLetter) {
+            targetQ.correctAnswer = ans.toUpperCase();
+            targetQ.format = "MCQ";
+            if (!targetQ.options) {
+              targetQ.options = { A: "", B: "", C: "", D: "" };
+            }
+          } else {
+            // Numeric or fractional answer -> must be FILL_IN (Grid-In)
+            targetQ.correctAnswer = ans;
+            targetQ.format = "FILL_IN";
+            targetQ.options = null;
+          }
           targetQ.requiresReview = false;
           appliedCount++;
         }
@@ -719,10 +867,12 @@ export function TestImporterContent() {
   // --- VERIFICATION ACTIONS ---
   const handleUpdateQuestion = (qId: string, patch: Partial<ExtractedQuestion>) => {
     setExtractedQuestions((prev) => prev.map((q) => (q.id === qId ? { ...q, ...patch } : q)));
+    setExistingQuestions((prev) => prev.map((q) => (q.id === qId ? { ...q, ...patch } : q)));
   };
 
   const handleDeleteQuestion = (qId: string) => {
     setExtractedQuestions((prev) => prev.filter((q) => q.id !== qId));
+    setExistingQuestions((prev) => prev.filter((q) => q.id !== qId));
   };
 
   const handleManualImageUpload = async (qId: string, file: File) => {
@@ -746,7 +896,7 @@ export function TestImporterContent() {
   };
 
   const handleAddNewQuestion = (targetMod: SatModuleKey) => {
-    const modQuestions = extractedQuestions.filter((q) => q.module === targetMod);
+    const modQuestions = combinedQuestions.filter((q) => q.module === targetMod);
     const maxQNum = modQuestions.reduce((max, q) => Math.max(max, q.questionNumber), 0);
     const newQ: ExtractedQuestion = {
       id: `q_manual_${Date.now()}`,
@@ -781,9 +931,35 @@ export function TestImporterContent() {
         ? existingTests.find((t) => t.id === selectedTestId)?.name || "Updated SAT Mock Test"
         : testName.trim();
 
+      let sourceFileUrl: string | null = null;
+      let sourceFileName: string | null = null;
+      let sourceFileType: string | null = null;
+
+      if (file) {
+        try {
+          const sourceFormData = new FormData();
+          sourceFormData.append("file", file);
+          const uploadRes = await fetch("/api/uploads/test-sources", {
+            method: "POST",
+            body: sourceFormData,
+          });
+          const uploadData = await uploadRes.json();
+          if (uploadData.success && uploadData.url) {
+            sourceFileUrl = uploadData.url;
+            sourceFileName = uploadData.fileName || file.name;
+            sourceFileType = uploadData.fileType || file.type || "application/pdf";
+          }
+        } catch (uploadErr) {
+          console.warn("Failed to upload source file:", uploadErr);
+        }
+      }
+
       const payload = {
         testId: selectedTestId || undefined,
         testName: finalTestName,
+        sourceFileUrl,
+        sourceFileName,
+        sourceFileType,
         questions: extractedQuestions.map((q) => ({
           module: q.module,
           format: q.format,
@@ -792,12 +968,14 @@ export function TestImporterContent() {
           passage: q.passage || null,
           imageUrl: q.imageUrl || null,
           options: q.format === "MCQ" ? q.options : null,
-          correctAnswer: q.correctAnswer || "A",
+          correctAnswer: q.correctAnswer || (q.format === "MCQ" ? "A" : ""),
           difficulty: q.difficulty,
           domain: q.domain,
           skill: q.skill,
           explanation: q.explanation || null,
           requiresReview: q.requiresReview || false,
+          sourceFileUrl,
+          sourceFileName,
         })),
       };
 
@@ -825,8 +1003,22 @@ export function TestImporterContent() {
     }
   };
 
+  // Combined questions list:
+  // When importing a single module into an existing test, preserve and display existing questions for other modules
+  const combinedQuestions = useMemo(() => {
+    if (importMode === "SINGLE_MODULE" && selectedTestId && existingQuestions.length > 0) {
+      // Keep existing questions for modules other than singleTargetModule
+      const otherModuleExisting = existingQuestions.filter((q) => q.module !== singleTargetModule);
+      // For singleTargetModule: use newly extracted questions if any, otherwise fall back to existing
+      const targetExtracted = extractedQuestions.filter((q) => q.module === singleTargetModule);
+      const targetQuestions = targetExtracted.length > 0 ? targetExtracted : existingQuestions.filter((q) => q.module === singleTargetModule);
+      return [...otherModuleExisting, ...targetQuestions];
+    }
+    return extractedQuestions;
+  }, [importMode, selectedTestId, existingQuestions, singleTargetModule, extractedQuestions]);
+
   // Filter questions for active module
-  const currentModuleQuestions = extractedQuestions
+  const currentModuleQuestions = combinedQuestions
     .filter((q) => q.module === activeTabModule)
     .filter((q) => {
       if (filterMode === "WITH_IMAGES") return !!q.imageUrl;
@@ -835,12 +1027,15 @@ export function TestImporterContent() {
       return true;
     });
 
-  // Counts for tabs
+  // Counts and status for tabs
   const getModuleStats = (mod: SatModuleKey) => {
-    const questions = extractedQuestions.filter((q) => q.module === mod);
+    const questions = combinedQuestions.filter((q) => q.module === mod);
     const withImages = questions.filter((q) => q.imageUrl).length;
     const needsReview = questions.filter((q) => q.requiresReview || !q.correctAnswer).length;
-    return { count: questions.length, withImages, needsReview };
+    const isTarget = importMode === "SINGLE_MODULE" && singleTargetModule === mod;
+    const isExisting = questions.length > 0 && questions.every((q) => q.isExisting);
+    const isNewlyExtracted = questions.length > 0 && questions.some((q) => !q.isExisting);
+    return { count: questions.length, withImages, needsReview, isTarget, isExisting, isNewlyExtracted };
   };
 
   return (
@@ -942,6 +1137,29 @@ export function TestImporterContent() {
                     placeholder="e.g. Official SAT Practice Test 11"
                     className="w-full px-4 py-3 rounded-xl border border-slate-200 dark:border-white/10 bg-white dark:bg-[#181818] text-slate-900 dark:text-white outline-none focus:border-[#EBFF00] text-sm"
                   />
+                  {testName.trim().length > 0 && (() => {
+                    const match = existingTests.find(
+                      (t) => t.name.trim().toLowerCase() === testName.trim().toLowerCase()
+                    );
+                    if (match) {
+                      return (
+                        <div className="mt-2 p-2.5 rounded-xl bg-amber-500/10 border border-amber-500/20 text-xs text-amber-600 dark:text-amber-400 flex items-center justify-between gap-2">
+                          <span>⚠️ <strong>&quot;{match.name}&quot;</strong> already exists ({match.modules.length} module{match.modules.length === 1 ? "" : "s"}).</span>
+                          <button
+                            type="button"
+                            onClick={() => {
+                              setSelectedTestId(match.id);
+                              setTestName("");
+                            }}
+                            className="px-2.5 py-1 rounded-lg bg-amber-500 text-black font-bold hover:bg-amber-400 transition-colors shrink-0"
+                          >
+                            Attach to this test
+                          </button>
+                        </div>
+                      );
+                    }
+                    return null;
+                  })()}
                 </div>
               )}
 
@@ -963,6 +1181,49 @@ export function TestImporterContent() {
                 </div>
               )}
             </div>
+
+            {/* Target Test Module Status Overview */}
+            {selectedTestId && existingTestDetails && (
+              <div className="p-4 rounded-xl bg-slate-50 dark:bg-[#181818] border border-slate-200 dark:border-white/10 space-y-2">
+                <div className="flex items-center justify-between text-xs font-semibold text-slate-700 dark:text-slate-300">
+                  <span className="flex items-center gap-1.5">
+                    <Layers className="w-3.5 h-3.5 text-amber-500 dark:text-[#EBFF00]" />
+                    <span>Existing modules in &quot;{existingTestDetails.name}&quot;:</span>
+                  </span>
+                  <span className="text-emerald-600 dark:text-emerald-400 font-bold">
+                    {existingTestDetails.questions.length} questions in test
+                  </span>
+                </div>
+                <div className="grid grid-cols-2 sm:grid-cols-4 gap-2 pt-1">
+                  {(["MODULE_1", "MODULE_2", "MODULE_3", "MODULE_4"] as SatModuleKey[]).map((modKey) => {
+                    const qCount = existingTestDetails.questions.filter((q: any) => q.module === modKey).length;
+                    const isTarget = importMode === "SINGLE_MODULE" && singleTargetModule === modKey;
+                    return (
+                      <div
+                        key={modKey}
+                        className={`p-2.5 rounded-lg border text-xs transition-all ${
+                          isTarget
+                            ? "bg-[#EBFF00]/10 border-[#EBFF00] text-slate-900 dark:text-white font-bold ring-1 ring-[#EBFF00]"
+                            : qCount > 0
+                            ? "bg-white dark:bg-white/5 border-slate-200 dark:border-white/10 text-slate-700 dark:text-slate-300"
+                            : "bg-slate-100/50 dark:bg-white/[0.02] border-dashed border-slate-200 dark:border-white/10 text-slate-400"
+                        }`}
+                      >
+                        <div className="font-semibold truncate">{MODULE_LABELS[modKey].title}</div>
+                        <div className="text-[11px] mt-1 text-slate-500 dark:text-slate-400 flex items-center justify-between">
+                          <span>{qCount > 0 ? `${qCount} questions` : "Empty"}</span>
+                          {isTarget && (
+                            <span className="px-1.5 py-0.5 rounded bg-amber-500/20 text-amber-600 dark:text-[#EBFF00] text-[10px] font-bold">
+                              {qCount > 0 ? "Will update" : "Will import"}
+                            </span>
+                          )}
+                        </div>
+                      </div>
+                    );
+                  })}
+                </div>
+              </div>
+            )}
 
             {/* Drag & Drop PDF Box */}
             <div>
@@ -1122,24 +1383,30 @@ export function TestImporterContent() {
           {/* Top Bar Summary */}
           <div className="flex flex-col lg:flex-row lg:items-center justify-between gap-4 p-5 rounded-2xl bg-white dark:bg-[#131313] border border-slate-200 dark:border-white/10 shadow-sm">
             <div>
-              <div className="flex items-center gap-2">
+              <div className="flex items-center gap-2 flex-wrap">
                 <span className="px-2.5 py-1 rounded-md text-xs font-semibold bg-emerald-500/10 text-emerald-600 dark:text-emerald-400 border border-emerald-500/20">
                   Ready for Review
                 </span>
                 <h2 className="text-xl font-bold text-slate-900 dark:text-white">
                   {selectedTestId
-                    ? existingTests.find((t) => t.id === selectedTestId)?.name
+                    ? existingTests.find((t) => t.id === selectedTestId)?.name || existingTestDetails?.name
                     : testName}
                 </h2>
+                {importMode === "SINGLE_MODULE" && (
+                  <span className="px-2.5 py-1 rounded-md text-xs font-bold bg-[#EBFF00]/15 text-slate-900 dark:text-[#EBFF00] border border-[#EBFF00]/30">
+                    {MODULE_LABELS[singleTargetModule].title}
+                  </span>
+                )}
               </div>
-              <p className="text-xs text-slate-500 dark:text-slate-400 mt-1">
-                {extractedQuestions.length} total questions extracted •{" "}
-                {extractedQuestions.filter((q) => q.imageUrl).length} questions with diagrams/figures •{" "}
-                {extractedQuestions.filter((q) => q.requiresReview || !q.correctAnswer).length} flagged for review
+              <p className="text-xs text-slate-500 dark:text-slate-400 mt-1.5">
+                <strong className="text-slate-900 dark:text-white">{combinedQuestions.length} total questions</strong> in test •{" "}
+                <span className="text-emerald-600 dark:text-emerald-400 font-semibold">{extractedQuestions.length} newly extracted</span> •{" "}
+                {combinedQuestions.filter((q) => q.imageUrl).length} with diagrams •{" "}
+                {combinedQuestions.filter((q) => q.requiresReview || !q.correctAnswer).length} flagged for review
               </p>
             </div>
 
-            <div className="flex items-center gap-3">
+            <div className="flex items-center gap-3 flex-wrap">
               <Button
                 variant="outline"
                 onClick={() => setAnswerKeyModalOpen(true)}
@@ -1173,7 +1440,9 @@ export function TestImporterContent() {
                 ) : (
                   <>
                     <Check className="w-4 h-4" />
-                    Save Verified Test ({extractedQuestions.length} Questions)
+                    {importMode === "SINGLE_MODULE"
+                      ? `Save Verified ${MODULE_LABELS[singleTargetModule].title} (${extractedQuestions.length} Qs)`
+                      : `Save Verified Test (${extractedQuestions.length} Questions)`}
                   </>
                 )}
               </Button>
@@ -1198,7 +1467,7 @@ export function TestImporterContent() {
                 >
                   <span>{MODULE_LABELS[modKey].title}</span>
                   <span
-                    className={`px-1.5 py-0.5 rounded-md text-[11px] ${
+                    className={`px-1.5 py-0.5 rounded-md text-[11px] font-bold ${
                       isActive
                         ? "bg-white/20 dark:bg-black/20"
                         : "bg-slate-100 dark:bg-white/10 text-slate-500 dark:text-slate-400"
@@ -1206,6 +1475,16 @@ export function TestImporterContent() {
                   >
                     {stats.count}
                   </span>
+                  {stats.isExisting && (
+                    <span className="text-[10px] px-1.5 py-0.2 rounded bg-blue-500/15 text-blue-600 dark:text-blue-400 font-semibold">
+                      Saved
+                    </span>
+                  )}
+                  {stats.isNewlyExtracted && (
+                    <span className="text-[10px] px-1.5 py-0.2 rounded bg-emerald-500/15 text-emerald-600 dark:text-emerald-400 font-bold">
+                      {importMode === "SINGLE_MODULE" ? "New" : "Extracted"}
+                    </span>
+                  )}
                   {stats.withImages > 0 && (
                     <span className="w-2 h-2 rounded-full bg-emerald-500" title={`${stats.withImages} figures/charts`} />
                   )}
@@ -1307,13 +1586,50 @@ export function TestImporterContent() {
                   >
                     {/* Card Header */}
                     <div className="flex items-center justify-between pb-4 border-b border-slate-100 dark:border-white/5 mb-4">
-                      <div className="flex items-center gap-2">
+                      <div className="flex items-center gap-2 flex-wrap">
                         <span className="w-8 h-8 rounded-lg bg-slate-900 text-white dark:bg-[#EBFF00] dark:text-black font-bold text-sm flex items-center justify-center">
                           {q.questionNumber}
                         </span>
-                        <span className="text-xs font-semibold px-2.5 py-1 rounded-md bg-slate-100 dark:bg-white/10 text-slate-700 dark:text-slate-300">
-                          {q.format === "MCQ" ? "Multiple Choice" : "Grid-In / Student Produced"}
-                        </span>
+                        {q.isExisting ? (
+                          <span className="px-2 py-0.5 rounded text-[10px] font-semibold bg-blue-500/10 text-blue-600 dark:text-blue-400 border border-blue-500/20 flex items-center gap-1">
+                            <CheckCircle2 className="w-3 h-3" />
+                            Saved in Test
+                          </span>
+                        ) : (
+                          <span className="px-2 py-0.5 rounded text-[10px] font-bold bg-[#EBFF00]/15 text-slate-900 dark:text-[#EBFF00] border border-[#EBFF00]/30 flex items-center gap-1">
+                            <Sparkles className="w-3 h-3" />
+                            New from PDF
+                          </span>
+                        )}
+                        {/* Interactive Format Toggle Button */}
+                        <button
+                          type="button"
+                          onClick={() => {
+                            const newFormat = q.format === "MCQ" ? "FILL_IN" : "MCQ";
+                            handleUpdateQuestion(q.id, {
+                              format: newFormat,
+                              options: newFormat === "MCQ" ? (q.options || { A: "", B: "", C: "", D: "" }) : null,
+                              correctAnswer:
+                                newFormat === "MCQ"
+                                  ? ["A", "B", "C", "D"].includes(q.correctAnswer || "")
+                                    ? q.correctAnswer
+                                    : "A"
+                                  : q.correctAnswer && !/^[A-D]$/.test(q.correctAnswer)
+                                  ? q.correctAnswer
+                                  : "",
+                              requiresReview: false,
+                            });
+                          }}
+                          className={`text-xs font-semibold px-2.5 py-1 rounded-md border transition-all cursor-pointer flex items-center gap-1 ${
+                            q.format === "MCQ"
+                              ? "bg-blue-500/10 text-blue-600 dark:text-blue-400 border-blue-500/20 hover:bg-blue-500/20"
+                              : "bg-purple-500/10 text-purple-600 dark:text-purple-400 border-purple-500/20 hover:bg-purple-500/20"
+                          }`}
+                          title="Click to toggle between Multiple Choice (A-D) and Grid-In (Numeric)"
+                        >
+                          <span>{q.format === "MCQ" ? "Multiple Choice" : "Grid-In / Numeric"}</span>
+                          <span className="text-[10px] opacity-70">⇄ Switch</span>
+                        </button>
                         <select
                           value={q.difficulty}
                           onChange={(e) => handleUpdateQuestion(q.id, { difficulty: e.target.value as any })}
@@ -1354,23 +1670,46 @@ export function TestImporterContent() {
                       </div>
                     </div>
 
-                    {/* Passage (if Reading & Writing) */}
-                    {q.passage && (
+                    {/* Passage (if Reading & Writing or user added) */}
+                    {q.passage ? (
                       <div className="mb-4 p-3.5 rounded-xl bg-slate-50 dark:bg-white/5 border border-slate-200/70 dark:border-white/5 text-sm text-slate-700 dark:text-slate-300">
-                        <span className="text-[11px] font-bold uppercase tracking-wider text-slate-400 block mb-1">
-                          Passage / Context
-                        </span>
+                        <div className="flex items-center justify-between mb-1.5">
+                          <span className="text-[11px] font-bold uppercase tracking-wider text-slate-400">
+                            Passage / Stimulus Text
+                          </span>
+                          {isEditing && (
+                            <button
+                              type="button"
+                              onClick={() => handleUpdateQuestion(q.id, { passage: null })}
+                              className="text-xs text-red-500 hover:underline"
+                            >
+                              Remove Passage
+                            </button>
+                          )}
+                        </div>
                         {isEditing ? (
                           <textarea
                             value={q.passage}
                             onChange={(e) => handleUpdateQuestion(q.id, { passage: e.target.value })}
-                            rows={3}
-                            className="w-full text-xs p-2 rounded-lg bg-white dark:bg-[#181818] border border-slate-200 dark:border-white/10 text-slate-900 dark:text-white outline-none"
+                            rows={4}
+                            className="w-full text-xs p-2.5 rounded-lg bg-white dark:bg-[#181818] border border-slate-200 dark:border-white/10 text-slate-900 dark:text-white outline-none focus:border-[#EBFF00]"
                           />
                         ) : (
                           <p className="whitespace-pre-line leading-relaxed">{q.passage}</p>
                         )}
                       </div>
+                    ) : (
+                      isEditing && (
+                        <div className="mb-4">
+                          <button
+                            type="button"
+                            onClick={() => handleUpdateQuestion(q.id, { passage: "Enter reading passage text here..." })}
+                            className="text-xs font-semibold text-blue-600 dark:text-blue-400 hover:underline flex items-center gap-1"
+                          >
+                            + Add Reading Passage
+                          </button>
+                        </div>
+                      )
                     )}
 
                     {/* Question Prompt */}
@@ -1397,12 +1736,37 @@ export function TestImporterContent() {
 
                     {/* Visual Stimulus / Diagram Component */}
                     <div className="mb-4 p-3 rounded-xl bg-slate-50 dark:bg-white/5 border border-slate-200/60 dark:border-white/5">
-                      <div className="flex items-center justify-between mb-2">
+                      <div className="flex items-center justify-between mb-2 flex-wrap gap-2">
                         <span className="text-xs font-semibold text-slate-700 dark:text-slate-300 flex items-center gap-1.5">
                           <ImageIcon className="w-3.5 h-3.5 text-emerald-500" />
                           Visual Diagram / Figure
                         </span>
-                        <div className="flex items-center gap-2">
+                        <div className="flex items-center gap-2 flex-wrap">
+                          {q.questionCropBase64 && !q.imageUrl && (
+                            <button
+                              type="button"
+                              onClick={async () => {
+                                setUploadingImageId(q.id);
+                                try {
+                                  const url = await uploadBase64Image(
+                                    q.questionCropBase64!,
+                                    `q${q.questionNumber}-${q.module}-figure.jpg`
+                                  );
+                                  if (url) {
+                                    handleUpdateQuestion(q.id, {
+                                      imageUrl: url,
+                                      diagramDescription: `Figure for Question ${q.questionNumber}`,
+                                    });
+                                  }
+                                } finally {
+                                  setUploadingImageId(null);
+                                }
+                              }}
+                              className="text-xs font-semibold text-emerald-600 dark:text-[#EBFF00] hover:underline cursor-pointer"
+                            >
+                              + Use Question Crop as Diagram
+                            </button>
+                          )}
                           <label className="cursor-pointer text-xs font-semibold text-blue-600 dark:text-blue-400 hover:underline">
                             <span>{q.imageUrl ? "Replace Image" : "+ Add Diagram Image"}</span>
                             <input

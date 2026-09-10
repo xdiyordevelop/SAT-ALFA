@@ -20,11 +20,13 @@ import { StimulusPane } from "./StimulusPane";
 import { QuestionPane } from "./QuestionPane";
 import { CalculatorWidget } from "./CalculatorWidget";
 import { ReferenceModal } from "./ReferenceModal";
+import { BugReportModal } from "./BugReportModal";
 import { Skeleton } from "@/components/ui/Skeleton";
 import { BreakScreen } from "./BreakScreen";
 import { ModuleTransitionOverlay } from "./ModuleTransitionOverlay";
 import { QuestionNavigatorModal } from "./QuestionNavigatorModal";
 import { FullscreenWarning } from "./FullscreenWarning";
+import { AutoFixNotificationBanner } from "./AutoFixNotificationBanner";
 import { Maximize2, ShieldAlert } from "lucide-react";
 
 interface TestEngineProps {
@@ -32,6 +34,7 @@ interface TestEngineProps {
   studentId: string;
   userId: string;
   studentName?: string;
+  testName?: string;
   proctorCode?: string | null;
 }
 
@@ -40,6 +43,7 @@ export function TestEngine({
   studentId,
   userId,
   studentName = "SAT Student",
+  testName = "SAT Mock Test",
   proctorCode = null,
 }: TestEngineProps): React.ReactElement {
   const [isHydrated, setIsHydrated] = useState(false);
@@ -56,6 +60,8 @@ export function TestEngine({
     isFullscreenActive,
     setFullscreenActive,
     setPaused,
+    isBugReportOpen,
+    setBugReportOpen,
   } = useTestContext();
 
   useAnswerTracking(userId, testId);
@@ -161,11 +167,12 @@ export function TestEngine({
         currentQuestionNumber={currentQuestion.questionNumber}
         totalQuestionsInModule={moduleQuestions.length}
       />
-      <main className="flex-1 flex flex-col lg:flex-row overflow-y-auto lg:overflow-hidden">
+      <main id="test-main-container" className="flex-1 flex flex-col lg:flex-row overflow-y-auto lg:overflow-hidden bg-white dark:bg-[#0a0a0a]">
         {hasStimulus ? (
           <>
-            <div className="w-full lg:w-1/2 min-h-[250px] lg:h-full overflow-y-auto p-6 lg:p-10 border-b lg:border-b-0 lg:border-r border-slate-200 dark:border-white/10 bg-slate-50 dark:bg-[#131313] custom-scrollbar relative">
-              <div className="max-w-2xl mx-auto">
+            {/* Left: Passage / Stimulus Reading Column (Bluebook Clean Reading Canvas) */}
+            <div className="w-full lg:w-1/2 min-h-[250px] lg:h-full overflow-y-auto px-6 py-6 lg:px-12 lg:py-8 border-b lg:border-b-0 lg:border-r border-slate-200 dark:border-zinc-800 bg-white dark:bg-[#0a0a0a] custom-scrollbar relative">
+              <div className="max-w-2xl lg:max-w-3xl mx-auto w-full">
                 <StimulusPane
                   passage={currentQuestion.passage}
                   imageUrl={currentQuestion.imageUrl}
@@ -173,8 +180,10 @@ export function TestEngine({
                 />
               </div>
             </div>
-            <div className="w-full lg:w-1/2 min-h-[350px] lg:h-full overflow-y-auto p-6 lg:p-10 bg-white dark:bg-[#0a0a0a] custom-scrollbar flex flex-col justify-start">
-              <div className="max-w-xl mx-auto w-full my-auto py-4">
+
+            {/* Right: Question & Options Column (Top-aligned, Spacious) */}
+            <div className="w-full lg:w-1/2 min-h-[350px] lg:h-full overflow-y-auto px-6 py-6 lg:px-12 lg:py-8 bg-white dark:bg-[#0a0a0a] custom-scrollbar flex flex-col justify-start">
+              <div className="max-w-2xl lg:max-w-3xl mx-auto w-full">
                 <QuestionPane
                   question={currentQuestion}
                   moduleNumber={currentModule}
@@ -183,8 +192,9 @@ export function TestEngine({
             </div>
           </>
         ) : (
-          <div className="w-full h-full overflow-y-auto p-6 lg:p-10 bg-white dark:bg-[#0a0a0a] custom-scrollbar flex flex-col justify-start">
-            <div className="max-w-3xl mx-auto w-full my-auto py-4">
+          /* Standalone Question (Math or no stimulus) */
+          <div className="w-full h-full overflow-y-auto px-6 py-8 lg:px-16 lg:py-10 bg-white dark:bg-[#0a0a0a] custom-scrollbar flex flex-col justify-start">
+            <div className="max-w-3xl mx-auto w-full">
               <QuestionPane
                 question={currentQuestion}
                 moduleNumber={currentModule}
@@ -194,12 +204,22 @@ export function TestEngine({
         )}
       </main>
       <FullscreenWarning />
+      <AutoFixNotificationBanner />
       <ModuleTransitionOverlay />
       <BreakScreen />
       <QuestionNavigatorModal />
       {/* Floating Tools */}
       <CalculatorWidget />
       <ReferenceModal />
+      <BugReportModal
+        isOpen={isBugReportOpen}
+        onClose={() => setBugReportOpen(false)}
+        question={currentQuestion}
+        testId={testId}
+        testName={testName}
+        moduleNumber={currentModule}
+        studentId={studentId}
+      />
       <TestFooter
         currentQuestionNumber={currentQuestion.questionNumber}
         totalQuestionsInModule={moduleQuestions.length}

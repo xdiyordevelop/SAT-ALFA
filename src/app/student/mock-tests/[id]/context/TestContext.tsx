@@ -6,6 +6,7 @@ import React, {
   useCallback,
   useState,
   useEffect,
+  useRef,
 } from "react";
 
 // ==================== TYPES ====================
@@ -24,6 +25,14 @@ export interface UserAnswer {
   questionId: string;
   answer: string;
   timestamp: number;
+}
+
+export interface SecurityAlertData {
+  isOpen: boolean;
+  exitCount: number;
+  reason?: 'TAB_SWITCH' | 'FULLSCREEN_EXIT' | string;
+  remaining?: number | null;
+  isDisqualified: boolean;
 }
 
 export interface TestContextState {
@@ -55,6 +64,18 @@ export interface TestContextState {
   isCalculatorOpen: boolean;
   isReferenceOpen: boolean;
   isAnnotateActive: boolean;
+  isBugReportOpen: boolean;
+  autoFixNotification: {
+    message: string;
+    type: 'fixing' | 'success';
+    questionNumber?: number;
+  } | null;
+
+  // Security & Proctoring
+  fullscreenExitCount: number;
+  securityAlert: SecurityAlertData | null;
+
+  fontSize: 'standard' | 'large';
 
   // Questions
   realQuestions: any[];
@@ -90,7 +111,16 @@ export interface TestContextActions {
   setCalculatorOpen: (open: boolean) => void;
   setReferenceOpen: (open: boolean) => void;
   setAnnotateActive: (active: boolean) => void;
+  setBugReportOpen: (open: boolean) => void;
   setTestStatus: (status: TestStatus) => void;
+  setFullscreenExitCount: (count: number | ((prev: number) => number)) => void;
+  setSecurityAlert: (
+    alert: SecurityAlertData | null | ((prev: SecurityAlertData | null) => SecurityAlertData | null),
+  ) => void;
+  updateQuestion: (questionId: string, updatedData: Partial<any>) => void;
+  trackBugReport: (reportId: string, questionId: string, questionNumber?: number) => void;
+  clearAutoFixNotification: () => void;
+  setFontSize: (size: 'standard' | 'large') => void;
 
   // Bulk operations
   saveState: () => void;
@@ -118,9 +148,11 @@ interface TestProviderProps {
   studentId: string;
   userId: string;
   proctorCode?: string | null;
+  initialFullscreenExitCount?: number;
   realQuestions: any[];
   totalQuestions: number;
   questionsPerModule: Record<TestModule, number>;
+  isRetake?: boolean;
 }
 
 export function TestProvider({
@@ -129,21 +161,28 @@ export function TestProvider({
   studentId,
   userId,
   proctorCode = null,
+  initialFullscreenExitCount = 0,
   totalQuestions,
   questionsPerModule,
   realQuestions,
+  isRetake = false,
 }: TestProviderProps) {
+  const availableModules = ([1, 2, 3, 4] as TestModule[]).filter(
+    (m) => (questionsPerModule[m] || 0) > 0
+  );
+  const initialModule: TestModule = availableModules[0] || 1;
+
   const [state, setState] = useState<TestContextState>({
     testId,
     studentId,
     userId,
     proctorCode: proctorCode ?? null,
-    currentModule: 1,
+    currentModule: initialModule,
     currentQuestionIndex: 0,
     testStatus: "loading",
     userAnswers: {},
     markedQuestions: {},
-    remainingTimeMs: 1920000, // 32 minutes for Module 1
+    remainingTimeMs: initialModule >= 3 ? 2100000 : 1920000, // 35m for Math, 32m for RW
     isPaused: false,
     isTimerRunning: false,
     isFullscreenActive: false,
@@ -153,6 +192,11 @@ export function TestProvider({
     isCalculatorOpen: false,
     isReferenceOpen: false,
     isAnnotateActive: false,
+    isBugReportOpen: false,
+    autoFixNotification: null,
+    fullscreenExitCount: initialFullscreenExitCount,
+    securityAlert: null,
+    fontSize: 'standard',
     totalQuestions,
     questionsPerModule,
     realQuestions,
@@ -216,18 +260,21 @@ export function TestProvider({
 
   const advanceToNextModule = useCallback(() => {
     setState((prev) => {
-      if (prev.currentModule < 4) {
-        const nextModule = (prev.currentModule + 1) as TestModule;
+      const nextAvailable = ([1, 2, 3, 4] as TestModule[]).find(
+        (m) => m > prev.currentModule && (questionsPerModule[m] || 0) > 0
+      );
+      if (nextAvailable) {
         return {
           ...prev,
-          currentModule: nextModule,
+          currentModule: nextAvailable,
           currentQuestionIndex: 0,
-          isCalculatorOpen: nextModule >= 3, // Auto-open for Math modules
+          isCalculatorOpen: nextAvailable >= 3, // Auto-open for Math modules
+          remainingTimeMs: nextAvailable >= 3 ? 2100000 : 1920000,
         };
       }
       return prev;
     });
-  }, []);
+  }, [questionsPerModule]);
 
   const setAnswer = useCallback((questionId: string, answer: string) => {
     setState((prev) => ({
@@ -339,12 +386,70 @@ export function TestProvider({
     }));
   }, []);
 
+  const setBugReportOpen = useCallback((open: boolean) => {
+    setState((prev) => ({
+      ...prev,
+      isBugReportOpen: open,
+    }));
+  }, []);
+
   const setTestStatus = useCallback((status: TestStatus) => {
     setState((prev) => ({
       ...prev,
       testStatus: status,
     }));
   }, []);
+
+  const setFullscreenExitCount = useCallback(
+    (count: number | ((prev: number) => number)) => {
+      setState((prev) => ({
+        ...prev,
+        fullscreenExitCount:
+          typeof count === "function" ? count(prev.fullscreenExitCount) : count,
+      }));
+    },
+    [],
+  );
+
+  const setSecurityAlert = useCallback(
+    (
+      alert:
+        | SecurityAlertData
+        | null
+        | ((prev: SecurityAlertData | null) => SecurityAlertData | null),
+    ) => {
+      setState((prev) => ({
+        ...prev,
+        securityAlert: typeof alert === "function" ? alert(prev.securityAlert) : alert,
+      }));
+    },
+    [],
+  );
+
+  const updateQuestion = useCallback(
+    (questionId: string, updatedData: Partial<any>) => {
+      setState((prev) => ({
+        ...prev,
+        realQuestions: prev.realQuestions.map((q) => {
+          if (q.id === questionId) {
+            let optionsObj = updatedData.options !== undefined ? updatedData.options : q.options;
+            if (typeof optionsObj === "string") {
+              try {
+                optionsObj = JSON.parse(optionsObj);
+              } catch (e) {}
+            }
+            return {
+              ...q,
+              ...updatedData,
+              options: optionsObj,
+            };
+          }
+          return q;
+        }),
+      }));
+    },
+    [],
+  );
 
   const saveState = useCallback(() => {
     const payload = {
@@ -370,6 +475,14 @@ export function TestProvider({
   ]);
 
   const restoreState = useCallback(async () => {
+    if (isRetake) {
+      try {
+        localStorage.removeItem(`inProgressTest_${userId}_${testId}`);
+        localStorage.removeItem(`completedTest_${userId}_${testId}`);
+      } catch {}
+      return false;
+    }
+
     try {
       const stored = localStorage.getItem(`inProgressTest_${userId}_${testId}`);
       if (!stored) return false;
@@ -389,6 +502,101 @@ export function TestProvider({
       return false;
     }
   }, [userId, testId]);
+
+  // ==================== LIVE BUG REPORT AUTO-FIX SYNC ====================
+  const [trackedReports, setTrackedReports] = useState<
+    Array<{ reportId: string; questionId: string; startedAt: number; questionNumber?: number }>
+  >([]);
+  const notificationTimerRef = useRef<NodeJS.Timeout | null>(null);
+
+  const trackBugReport = useCallback(
+    (reportId: string, questionId: string, questionNumber?: number) => {
+      setTrackedReports((prev) => [
+        ...prev,
+        { reportId, questionId, startedAt: Date.now(), questionNumber },
+      ]);
+      setState((prev) => ({
+        ...prev,
+        autoFixNotification: {
+          message: `🤖 AI ground-truth analysis running for Question #${questionNumber || ""}...`,
+          type: "fixing",
+          questionNumber,
+        },
+      }));
+    },
+    [],
+  );
+
+  const clearAutoFixNotification = useCallback(() => {
+    setState((prev) => ({ ...prev, autoFixNotification: null }));
+  }, []);
+
+  useEffect(() => {
+    if (trackedReports.length === 0) return;
+
+    const intervalId = setInterval(async () => {
+      const now = Date.now();
+      const nextActive: typeof trackedReports = [];
+
+      for (const item of trackedReports) {
+        if (now - item.startedAt > 90000) {
+          // Timeout tracking after 90 seconds
+          continue;
+        }
+
+        try {
+          const res = await fetch(`/api/student/bug-report?reportId=${item.reportId}`);
+          if (res.ok) {
+            const data = await res.json();
+            if (data.status === "resolved" && data.question) {
+              // Real-time in-place update!
+              updateQuestion(item.questionId, data.question);
+
+              setState((prev) => ({
+                ...prev,
+                autoFixNotification: {
+                  message: `✨ Question #${data.question.questionNumber || item.questionNumber || ""} auto-corrected and updated with verified source content!`,
+                  type: "success",
+                  questionNumber: data.question.questionNumber || item.questionNumber,
+                },
+              }));
+
+              if (notificationTimerRef.current) clearTimeout(notificationTimerRef.current);
+              notificationTimerRef.current = setTimeout(() => {
+                setState((prev) => ({ ...prev, autoFixNotification: null }));
+              }, 7000);
+
+              continue; // Resolved, remove from tracking
+            }
+          }
+        } catch (e) {
+          console.warn("[BugReportSync] Error polling report status:", e);
+        }
+
+        nextActive.push(item);
+      }
+
+      setTrackedReports(nextActive);
+    }, 2500);
+
+    return () => clearInterval(intervalId);
+  }, [trackedReports, updateQuestion]);
+
+  const setFontSize = useCallback((size: 'standard' | 'large') => {
+    setState((prev) => ({ ...prev, fontSize: size }));
+    try {
+      localStorage.setItem('sat_alfa_font_size', size);
+    } catch {}
+  }, []);
+
+  useEffect(() => {
+    try {
+      const saved = localStorage.getItem('sat_alfa_font_size');
+      if (saved === 'standard' || saved === 'large') {
+        setState((prev) => ({ ...prev, fontSize: saved }));
+      }
+    } catch {}
+  }, []);
 
   // Computed properties
   const answeredCount = Object.keys(state.userAnswers).length;
@@ -423,7 +631,14 @@ export function TestProvider({
     setCalculatorOpen,
     setReferenceOpen,
     setAnnotateActive,
+    setBugReportOpen,
     setTestStatus,
+    setFullscreenExitCount,
+    setSecurityAlert,
+    updateQuestion,
+    trackBugReport,
+    clearAutoFixNotification,
+    setFontSize,
     saveState,
     restoreState,
     // Computed

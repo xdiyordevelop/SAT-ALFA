@@ -4,7 +4,20 @@ import React, { useState, useEffect } from "react";
 import { useParams, useRouter } from "next/navigation";
 import { Card } from "@/components/ui/Card";
 import { Button } from "@/components/ui/Button";
-import { Save, Upload, X, Plus, Trash2, Eye, EyeOff } from "lucide-react";
+import {
+  Save,
+  Upload,
+  X,
+  Plus,
+  Trash2,
+  Eye,
+  EyeOff,
+  FileText,
+  ExternalLink,
+  CheckCircle2,
+  AlertCircle,
+  Loader2,
+} from "lucide-react";
 import { AdminLayout } from "@/components/admin/AdminLayout";
 import { AccessDeniedView } from "@/components/admin/AccessDeniedView";
 import "katex/dist/katex.min.css";
@@ -33,13 +46,55 @@ interface Question {
   explanation?: string | null;
 }
 
+interface ModuleSourceInfo {
+  url: string;
+  fileName?: string | null;
+  fileType?: string | null;
+  updatedAt?: string;
+}
+
 interface MockTest {
   id: string;
   name: string;
   description?: string;
   questions: Question[];
   status: string;
+  sourceFileUrl?: string | null;
+  sourceFileName?: string | null;
+  sourceFileType?: string | null;
+  moduleSourceFiles?: Record<string, ModuleSourceInfo> | null;
 }
+
+const MODULE_CONFIG = {
+  MODULE_1: {
+    key: "MODULE_1",
+    short: "RW 1",
+    name: "Reading & Writing — Module 1",
+    subject: "Reading & Writing",
+    badgeColor: "bg-sky-500/10 border-sky-500/30 text-sky-600 dark:text-sky-400",
+  },
+  MODULE_2: {
+    key: "MODULE_2",
+    short: "RW 2",
+    name: "Reading & Writing — Module 2",
+    subject: "Reading & Writing",
+    badgeColor: "bg-indigo-500/10 border-indigo-500/30 text-indigo-600 dark:text-indigo-400",
+  },
+  MODULE_3: {
+    key: "MODULE_3",
+    short: "Math 1",
+    name: "Math — Module 1",
+    subject: "Math",
+    badgeColor: "bg-amber-500/10 border-amber-500/30 text-amber-600 dark:text-amber-400",
+  },
+  MODULE_4: {
+    key: "MODULE_4",
+    short: "Math 2",
+    name: "Math — Module 2",
+    subject: "Math",
+    badgeColor: "bg-emerald-500/10 border-emerald-500/30 text-emerald-600 dark:text-emerald-400",
+  },
+} as const;
 
 export default function MockTestEditPage() {
   const params = useParams();
@@ -52,10 +107,132 @@ export default function MockTestEditPage() {
   const [editingQuestionIndex, setEditingQuestionIndex] = useState<
     number | null
   >(null);
+  const [selectedModuleFilter, setSelectedModuleFilter] = useState<
+    "ALL" | "MODULE_1" | "MODULE_2" | "MODULE_3" | "MODULE_4"
+  >("ALL");
   const [showImagePreview, setShowImagePreview] = useState<{
     [key: number]: boolean;
   }>({});
   const [uploading, setUploading] = useState<{ [key: number]: boolean }>({});
+  const [sourceUploadingModule, setSourceUploadingModule] = useState<string | null>(null);
+  const [sourceSuccessMsg, setSourceSuccessMsg] = useState<string | null>(null);
+  const [sourceErrorMsg, setSourceErrorMsg] = useState<string | null>(null);
+
+  const handleSourceFileUpload = async (file: File, targetModule?: string) => {
+    if (!mockTest) return;
+    const uploadKey = targetModule || "MASTER";
+    setSourceUploadingModule(uploadKey);
+    setSourceSuccessMsg(null);
+    setSourceErrorMsg(null);
+    try {
+      const formData = new FormData();
+      formData.append("file", file);
+      const uploadRes = await fetch("/api/uploads/test-sources", {
+        method: "POST",
+        body: formData,
+      });
+      if (!uploadRes.ok) {
+        throw new Error("Failed to upload source file");
+      }
+      const uploadData = await uploadRes.json();
+      
+      const payload: any = {
+        sourceFileUrl: uploadData.url,
+        sourceFileName: uploadData.originalName || file.name,
+        sourceFileType: uploadData.fileType || "pdf",
+      };
+      if (targetModule) {
+        payload.targetModule = targetModule;
+      }
+
+      const putRes = await fetch(`/api/admin/mock-tests/${testId}`, {
+        method: "PUT",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify(payload),
+      });
+      if (!putRes.ok) {
+        throw new Error("Failed to update test source document");
+      }
+
+      setMockTest((prev) => {
+        if (!prev) return prev;
+        if (targetModule) {
+          const currentMap = { ...(prev.moduleSourceFiles || {}) };
+          currentMap[targetModule] = {
+            url: uploadData.url,
+            fileName: uploadData.originalName || file.name,
+            fileType: uploadData.fileType || "pdf",
+            updatedAt: new Date().toISOString(),
+          };
+          return {
+            ...prev,
+            moduleSourceFiles: currentMap,
+          };
+        } else {
+          return {
+            ...prev,
+            sourceFileUrl: uploadData.url,
+            sourceFileName: uploadData.originalName || file.name,
+            sourceFileType: uploadData.fileType || "pdf",
+          };
+        }
+      });
+
+      const label = targetModule
+        ? MODULE_CONFIG[targetModule as keyof typeof MODULE_CONFIG]?.name || targetModule
+        : "Master Exam PDF";
+      setSourceSuccessMsg(
+        `Source document for ${label} saved successfully! AI will cross-verify reported issues against this document.`
+      );
+      setTimeout(() => setSourceSuccessMsg(null), 6000);
+    } catch (err: any) {
+      setSourceErrorMsg(err.message || "Error uploading source file");
+    } finally {
+      setSourceUploadingModule(null);
+    }
+  };
+
+  const handleRemoveSourceFile = async (targetModule?: string) => {
+    if (!mockTest) return;
+    const label = targetModule
+      ? MODULE_CONFIG[targetModule as keyof typeof MODULE_CONFIG]?.name || targetModule
+      : "Master Exam PDF";
+    if (!confirm(`Are you sure you want to remove the source document for ${label}?`)) return;
+
+    setSourceSuccessMsg(null);
+    setSourceErrorMsg(null);
+    try {
+      const payload: any = {
+        sourceFileUrl: null,
+        sourceFileName: null,
+      };
+      if (targetModule) {
+        payload.targetModule = targetModule;
+      }
+
+      const putRes = await fetch(`/api/admin/mock-tests/${testId}`, {
+        method: "PUT",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify(payload),
+      });
+      if (!putRes.ok) throw new Error("Failed to remove source document");
+
+      setMockTest((prev) => {
+        if (!prev) return prev;
+        if (targetModule) {
+          const currentMap = { ...(prev.moduleSourceFiles || {}) };
+          delete currentMap[targetModule];
+          return { ...prev, moduleSourceFiles: currentMap };
+        } else {
+          return { ...prev, sourceFileUrl: null, sourceFileName: null };
+        }
+      });
+      setSourceSuccessMsg(`Source document for ${label} has been removed.`);
+      setTimeout(() => setSourceSuccessMsg(null), 5000);
+    } catch (err: any) {
+      setSourceErrorMsg(err.message || "Failed to remove source document");
+    }
+  };
 
   useEffect(() => {
     async function fetchTest() {
@@ -188,29 +365,338 @@ export default function MockTestEditPage() {
         </div>
       </Card>
 
+      {/* Source PDF Documents Card */}
+      <div id="source-files" className="space-y-4">
+        <Card className="bg-white dark:bg-[#131313] border border-slate-200 dark:border-white/10 p-5 rounded-2xl shadow-sm">
+          <div className="flex flex-col md:flex-row md:items-center justify-between gap-4 border-b border-slate-100 dark:border-white/10 pb-4">
+            <div className="flex items-start gap-3">
+              <div className="w-10 h-10 rounded-xl bg-sky-500/10 border border-sky-500/20 flex items-center justify-center text-sky-600 dark:text-sky-400 shrink-0 mt-0.5">
+                <FileText className="w-5 h-5" />
+              </div>
+              <div>
+                <div className="flex items-center gap-2 flex-wrap">
+                  <h3 className="text-base font-bold text-slate-900 dark:text-white">
+                    Original Source Documents (PDF)
+                  </h3>
+                  <span className="inline-flex items-center gap-1 text-[11px] font-semibold text-[#EBFF00] bg-[#EBFF00]/10 border border-[#EBFF00]/20 px-2.5 py-0.5 rounded-full">
+                    AI Auto-Fix Active
+                  </span>
+                </div>
+                <p className="text-xs text-slate-500 dark:text-slate-400 mt-1 max-w-3xl">
+                  These original exam PDFs provide ground-truth verification for the AI engine when students report bugs during live exams. You can attach a master test PDF and dedicated PDFs for each individual module.
+                </p>
+              </div>
+            </div>
+
+            {/* Master PDF Quick Action */}
+            <div className="flex items-center gap-2 shrink-0">
+              {mockTest.sourceFileUrl ? (
+                <div className="flex items-center gap-2">
+                  <a
+                    href={mockTest.sourceFileUrl}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className="inline-flex items-center gap-1.5 bg-sky-500/10 hover:bg-sky-500/20 text-sky-600 dark:text-sky-400 border border-sky-500/30 px-3 py-1.5 rounded-xl text-xs font-bold transition-all"
+                  >
+                    <FileText className="w-3.5 h-3.5" />
+                    <span>Master PDF</span>
+                    <ExternalLink className="w-3 h-3 opacity-70" />
+                  </a>
+                  <label className="inline-flex items-center gap-1 text-xs text-slate-500 hover:text-slate-900 dark:hover:text-white cursor-pointer px-2 py-1">
+                    {sourceUploadingModule === "MASTER" ? (
+                      <Loader2 className="w-3.5 h-3.5 animate-spin" />
+                    ) : (
+                      <span>Replace Master</span>
+                    )}
+                    <input
+                      type="file"
+                      accept=".pdf,.docx"
+                      disabled={!!sourceUploadingModule}
+                      className="hidden"
+                      onChange={(e) => {
+                        const f = e.target.files?.[0];
+                        if (f) handleSourceFileUpload(f);
+                      }}
+                    />
+                  </label>
+                  <button
+                    type="button"
+                    onClick={() => handleRemoveSourceFile()}
+                    className="text-slate-400 hover:text-red-500 transition-colors p-1"
+                    title="Remove Master PDF"
+                  >
+                    <Trash2 className="w-3.5 h-3.5" />
+                  </button>
+                </div>
+              ) : (
+                <label className="inline-flex items-center gap-1.5 bg-slate-900 dark:bg-white hover:bg-slate-800 dark:hover:bg-slate-100 text-white dark:text-slate-950 font-bold px-3.5 py-2 rounded-xl text-xs cursor-pointer transition-all shadow-sm">
+                  {sourceUploadingModule === "MASTER" ? (
+                    <>
+                      <Loader2 className="w-3.5 h-3.5 animate-spin" />
+                      <span>Uploading...</span>
+                    </>
+                  ) : (
+                    <>
+                      <Upload className="w-3.5 h-3.5" />
+                      <span>Upload Master PDF</span>
+                    </>
+                  )}
+                  <input
+                    type="file"
+                    accept=".pdf,.docx"
+                    disabled={!!sourceUploadingModule}
+                    className="hidden"
+                    onChange={(e) => {
+                      const f = e.target.files?.[0];
+                      if (f) handleSourceFileUpload(f);
+                    }}
+                  />
+                </label>
+              )}
+            </div>
+          </div>
+
+          {/* Module-by-Module PDF Documents Grid */}
+          <div className="mt-4">
+            <h4 className="text-xs font-bold uppercase tracking-wider text-slate-400 dark:text-slate-500 mb-3">
+              Per-Module Source PDFs ({Object.keys(mockTest.moduleSourceFiles || {}).length}/4 Attached)
+            </h4>
+            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-3">
+              {(["MODULE_1", "MODULE_2", "MODULE_3", "MODULE_4"] as const).map((modKey) => {
+                const conf = MODULE_CONFIG[modKey];
+                const modPdf = mockTest.moduleSourceFiles?.[modKey];
+                const modQuestions = mockTest.questions.filter((q) => q.module === modKey);
+                const isUploading = sourceUploadingModule === modKey;
+
+                return (
+                  <div
+                    key={modKey}
+                    className={`p-3.5 rounded-xl border transition-all flex flex-col justify-between ${
+                      modPdf
+                        ? "bg-slate-50 dark:bg-[#1a1a1a] border-emerald-500/30 dark:border-emerald-500/20"
+                        : mockTest.sourceFileUrl
+                        ? "bg-slate-50/50 dark:bg-[#151515] border-slate-200 dark:border-white/10"
+                        : "bg-slate-50/30 dark:bg-[#121212] border-dashed border-slate-200 dark:border-white/10"
+                    }`}
+                  >
+                    <div>
+                      <div className="flex items-center justify-between gap-1 mb-1.5">
+                        <span className={`px-2 py-0.5 rounded-md text-[11px] font-bold border ${conf.badgeColor}`}>
+                          {conf.short}
+                        </span>
+                        <span className="text-[11px] text-slate-500 dark:text-slate-400 font-medium">
+                          {modQuestions.length} Qs
+                        </span>
+                      </div>
+                      <div className="text-xs font-semibold text-slate-800 dark:text-slate-200 truncate">
+                        {conf.name}
+                      </div>
+
+                      {/* PDF Attachment Status */}
+                      <div className="mt-2.5">
+                        {modPdf ? (
+                          <div className="flex items-start gap-1.5 text-emerald-600 dark:text-emerald-400">
+                            <CheckCircle2 className="w-3.5 h-3.5 shrink-0 mt-0.5" />
+                            <div className="min-w-0">
+                              <p className="text-[11px] font-semibold truncate text-slate-800 dark:text-slate-200" title={modPdf.fileName || "Module PDF"}>
+                                {modPdf.fileName || "Module PDF"}
+                              </p>
+                              <p className="text-[10px] text-emerald-600/80 dark:text-emerald-400/80">
+                                Attached for {conf.short}
+                              </p>
+                            </div>
+                          </div>
+                        ) : mockTest.sourceFileUrl ? (
+                          <div className="flex items-center gap-1.5 text-slate-400 text-[11px]">
+                            <FileText className="w-3.5 h-3.5 shrink-0 opacity-60" />
+                            <span className="truncate">Using Master PDF</span>
+                          </div>
+                        ) : (
+                          <div className="flex items-center gap-1.5 text-slate-400 text-[11px]">
+                            <AlertCircle className="w-3.5 h-3.5 shrink-0 opacity-60" />
+                            <span>No PDF attached</span>
+                          </div>
+                        )}
+                      </div>
+                    </div>
+
+                    {/* Action Buttons */}
+                    <div className="mt-3.5 pt-2.5 border-t border-slate-200/60 dark:border-white/5 flex items-center justify-between gap-2">
+                      {modPdf?.url ? (
+                        <>
+                          <a
+                            href={modPdf.url}
+                            target="_blank"
+                            rel="noopener noreferrer"
+                            className="inline-flex items-center gap-1 text-[11px] font-bold text-sky-600 dark:text-sky-400 hover:underline"
+                          >
+                            <FileText className="w-3 h-3" />
+                            <span>View</span>
+                            <ExternalLink className="w-2.5 h-2.5 opacity-70" />
+                          </a>
+                          <div className="flex items-center gap-2">
+                            <label className="text-[11px] font-medium text-slate-500 hover:text-slate-900 dark:hover:text-white cursor-pointer">
+                              {isUploading ? <Loader2 className="w-3 h-3 animate-spin" /> : "Replace"}
+                              <input
+                                type="file"
+                                accept=".pdf,.docx"
+                                disabled={!!sourceUploadingModule}
+                                className="hidden"
+                                onChange={(e) => {
+                                  const f = e.target.files?.[0];
+                                  if (f) handleSourceFileUpload(f, modKey);
+                                }}
+                              />
+                            </label>
+                            <button
+                              type="button"
+                              onClick={() => handleRemoveSourceFile(modKey)}
+                              className="text-slate-400 hover:text-red-500 transition-colors p-0.5"
+                              title="Remove PDF for this module"
+                            >
+                              <Trash2 className="w-3 h-3" />
+                            </button>
+                          </div>
+                        </>
+                      ) : (
+                        <label className="w-full inline-flex items-center justify-center gap-1.5 bg-slate-100 hover:bg-slate-200 dark:bg-white/5 dark:hover:bg-white/10 text-slate-700 dark:text-slate-300 font-semibold py-1.5 px-2 rounded-lg text-[11px] cursor-pointer transition-all border border-slate-200 dark:border-white/10">
+                          {isUploading ? (
+                            <>
+                              <Loader2 className="w-3 h-3 animate-spin" />
+                              <span>Uploading...</span>
+                            </>
+                          ) : (
+                            <>
+                              <Upload className="w-3 h-3 text-slate-500 dark:text-slate-400" />
+                              <span>Upload {conf.short} PDF</span>
+                            </>
+                          )}
+                          <input
+                            type="file"
+                            accept=".pdf,.docx"
+                            disabled={!!sourceUploadingModule}
+                            className="hidden"
+                            onChange={(e) => {
+                              const f = e.target.files?.[0];
+                              if (f) handleSourceFileUpload(f, modKey);
+                            }}
+                          />
+                        </label>
+                      )}
+                    </div>
+                  </div>
+                );
+              })}
+            </div>
+          </div>
+
+          {sourceSuccessMsg && (
+            <div className="mt-4 p-3 bg-emerald-500/10 border border-emerald-500/20 rounded-xl text-xs text-emerald-600 dark:text-emerald-400 font-medium flex items-center gap-2">
+              <CheckCircle2 className="w-4 h-4 shrink-0" />
+              <span>{sourceSuccessMsg}</span>
+            </div>
+          )}
+
+          {sourceErrorMsg && (
+            <div className="mt-4 p-3 bg-red-500/10 border border-red-500/20 rounded-xl text-xs text-red-600 dark:text-red-400 font-medium flex items-center gap-2">
+              <AlertCircle className="w-4 h-4 shrink-0" />
+              <span>{sourceErrorMsg}</span>
+            </div>
+          )}
+        </Card>
+      </div>
+
+      {/* Module Filter Navigation Tabs */}
+      <div className="flex flex-wrap items-center gap-2 border-b border-slate-200 dark:border-white/10 pb-3">
+        <button
+          type="button"
+          onClick={() => setSelectedModuleFilter("ALL")}
+          className={`px-4 py-2 rounded-xl text-xs font-semibold transition-all flex items-center gap-2 ${
+            selectedModuleFilter === "ALL"
+              ? "bg-slate-900 text-white dark:bg-[#EBFF00] dark:text-black shadow-sm"
+              : "bg-white dark:bg-[#181818] text-slate-600 dark:text-slate-400 hover:text-slate-900 dark:hover:text-white border border-slate-200 dark:border-white/10"
+          }`}
+        >
+          <span>All Modules</span>
+          <span className="px-1.5 py-0.5 rounded text-[11px] font-bold bg-white/20 dark:bg-black/20">
+            {mockTest.questions.length}
+          </span>
+        </button>
+
+        {[
+          {
+            key: "MODULE_1",
+            label: "Reading & Writing 1",
+            count: mockTest.questions.filter((q) => q.module === "MODULE_1").length,
+          },
+          {
+            key: "MODULE_2",
+            label: "Reading & Writing 2",
+            count: mockTest.questions.filter((q) => q.module === "MODULE_2").length,
+          },
+          {
+            key: "MODULE_3",
+            label: "Math 1",
+            count: mockTest.questions.filter((q) => q.module === "MODULE_3").length,
+          },
+          {
+            key: "MODULE_4",
+            label: "Math 2",
+            count: mockTest.questions.filter((q) => q.module === "MODULE_4").length,
+          },
+        ].map((tab) => (
+          <button
+            key={tab.key}
+            type="button"
+            onClick={() => setSelectedModuleFilter(tab.key as any)}
+            className={`px-4 py-2 rounded-xl text-xs font-semibold transition-all flex items-center gap-2 ${
+              selectedModuleFilter === tab.key
+                ? "bg-slate-900 text-white dark:bg-[#EBFF00] dark:text-black shadow-sm"
+                : "bg-white dark:bg-[#181818] text-slate-600 dark:text-slate-400 hover:text-slate-900 dark:hover:text-white border border-slate-200 dark:border-white/10"
+            }`}
+          >
+            <span>{tab.label}</span>
+            <span
+              className={`px-1.5 py-0.5 rounded text-[11px] font-bold ${
+                tab.count > 0
+                  ? "bg-emerald-500/15 text-emerald-600 dark:text-emerald-400"
+                  : "bg-slate-100 dark:bg-white/10 text-slate-400"
+              }`}
+            >
+              {tab.count}
+            </span>
+          </button>
+        ))}
+      </div>
+
       {/* Questions List */}
       <div className="space-y-4">
-        {mockTest.questions.map((question, index) => (
-          <QuestionCard
-            key={question.id}
-            question={question}
-            index={index}
-            isEditing={editingQuestionIndex === index}
-            onEdit={() => setEditingQuestionIndex(index)}
-            onCancel={() => setEditingQuestionIndex(null)}
-            onSave={(updated) => handleSaveQuestion(index, updated)}
-            onDelete={() => handleDeleteQuestion(index)}
-            onImageUpload={(file) => handleImageUpload(index, file)}
-            isUploading={uploading[index] || false}
-            showPreview={showImagePreview[index] || false}
-            onTogglePreview={() =>
-              setShowImagePreview({
-                ...showImagePreview,
-                [index]: !showImagePreview[index],
-              })
-            }
-          />
-        ))}
+        {mockTest.questions
+          .filter((q) => selectedModuleFilter === "ALL" || q.module === selectedModuleFilter)
+          .map((question) => {
+            const index = mockTest.questions.findIndex((q) => q.id === question.id);
+            return (
+              <QuestionCard
+                key={question.id}
+                question={question}
+                index={index}
+                isEditing={editingQuestionIndex === index}
+                onEdit={() => setEditingQuestionIndex(index)}
+                onCancel={() => setEditingQuestionIndex(null)}
+                onSave={(updated) => handleSaveQuestion(index, updated)}
+                onDelete={() => handleDeleteQuestion(index)}
+                onImageUpload={(file) => handleImageUpload(index, file)}
+                isUploading={uploading[index] || false}
+                showPreview={showImagePreview[index] || false}
+                onTogglePreview={() =>
+                  setShowImagePreview({
+                    ...showImagePreview,
+                    [index]: !showImagePreview[index],
+                  })
+                }
+              />
+            );
+          })}
       </div>
     </div>
   );
@@ -247,6 +733,31 @@ function QuestionCard({
   const [aiFixInstruction, setAiFixInstruction] = useState("");
   const [aiFixLoading, setAiFixLoading] = useState(false);
   const [aiParseLoading, setAiParseLoading] = useState(false);
+  const [imageUploading, setImageUploading] = useState(false);
+
+  const handleUploadImageFile = async (file: File) => {
+    setImageUploading(true);
+    try {
+      const formData = new FormData();
+      formData.append("file", file);
+      const res = await fetch("/api/uploads/questions", {
+        method: "POST",
+        body: formData,
+      });
+      if (!res.ok) {
+        const data = await res.json().catch(() => ({}));
+        throw new Error(data.error || "Failed to upload image");
+      }
+      const data = await res.json();
+      if (data.url) {
+        setEditData((prev) => ({ ...prev, imageUrl: data.url }));
+      }
+    } catch (err: any) {
+      alert("Image upload error: " + (err.message || String(err)));
+    } finally {
+      setImageUploading(false);
+    }
+  };
 
   const handleAiFix = async () => {
     if (!aiFixInstruction.trim()) return;
@@ -560,43 +1071,76 @@ function QuestionCard({
 
           {/* Image Upload */}
           <div className="bg-slate-100 dark:bg-[#1c1b1b] border border-slate-600 rounded p-4">
-            <label className="block text-slate-900 dark:text-[#EBFF00] font-bold mb-3">
-              Question Image (Optional)
-            </label>
-            {editData.imageUrl && (
-              <div className="mb-3 flex items-center justify-between">
-                <span className="text-slate-500 dark:text-slate-400 text-sm truncate">
-                  {editData.imageUrl}
-                </span>
+            <div className="flex items-center justify-between mb-3">
+              <label className="block text-slate-900 dark:text-[#EBFF00] font-bold">
+                Question Image / Diagram (Optional)
+              </label>
+              {editData.imageUrl && (
                 <Button
+                  type="button"
                   onClick={() => setEditData({ ...editData, imageUrl: null })}
-                  className="bg-red-600 hover:bg-red-700 text-slate-900 dark:text-white px-2 py-1 text-sm"
+                  className="bg-red-600 hover:bg-red-700 text-slate-900 dark:text-white px-2 py-1 text-xs"
                 >
-                  Remove
+                  Remove Image
                 </Button>
+              )}
+            </div>
+
+            {imageUploading ? (
+              <div className="py-8 text-center text-sm text-[#EBFF00] flex flex-col items-center justify-center gap-2">
+                <div className="w-6 h-6 border-2 border-[#EBFF00] border-t-transparent rounded-full animate-spin" />
+                <span>Uploading image to server...</span>
               </div>
+            ) : editData.imageUrl ? (
+              <div className="space-y-3">
+                <div className="p-2 bg-white dark:bg-[#0a0a0a] rounded-lg border border-slate-300 dark:border-white/10 inline-block max-w-full">
+                  <img
+                    src={
+                      editData.imageUrl.startsWith("http") ||
+                      editData.imageUrl.startsWith("/") ||
+                      editData.imageUrl.startsWith("data:")
+                        ? editData.imageUrl
+                        : `/uploads/questions/${editData.imageUrl}`
+                    }
+                    alt="Question preview"
+                    className="max-h-48 max-w-full rounded object-contain"
+                  />
+                </div>
+                <div>
+                  <label className="cursor-pointer text-xs font-semibold text-blue-600 dark:text-[#EBFF00] hover:underline">
+                    <span>Replace Image</span>
+                    <input
+                      type="file"
+                      accept="image/*"
+                      onChange={(e) => {
+                        const file = e.currentTarget.files?.[0];
+                        if (file) handleUploadImageFile(file);
+                      }}
+                      className="hidden"
+                    />
+                  </label>
+                </div>
+              </div>
+            ) : (
+              <label className="flex items-center justify-center w-full px-4 py-6 border-2 border-dashed border-slate-600 rounded cursor-pointer hover:border-[#EBFF00] transition-colors">
+                <div className="text-center">
+                  <Upload className="w-6 h-6 text-slate-500 dark:text-slate-400 mx-auto mb-2" />
+                  <span className="text-slate-500 dark:text-slate-400 text-sm font-medium">
+                    Click or drag & drop to upload diagram image
+                  </span>
+                  <p className="text-[11px] text-slate-400 mt-1">PNG, JPG, WEBP, GIF</p>
+                </div>
+                <input
+                  type="file"
+                  accept="image/*"
+                  onChange={(e) => {
+                    const file = e.currentTarget.files?.[0];
+                    if (file) handleUploadImageFile(file);
+                  }}
+                  className="hidden"
+                />
+              </label>
             )}
-            <label className="flex items-center justify-center w-full px-4 py-6 border-2 border-dashed border-slate-600 rounded cursor-pointer hover:border-[#EBFF00] transition-colors">
-              <div className="text-center">
-                <Upload className="w-6 h-6 text-slate-500 dark:text-slate-400 mx-auto mb-2" />
-                <span className="text-slate-500 dark:text-slate-400 text-sm">
-                  Drag & drop or click to upload
-                </span>
-              </div>
-              <input
-                type="file"
-                accept="image/*"
-                onChange={(e) => {
-                  const file = e.currentTarget.files?.[0];
-                  if (file) {
-                    // For now, just store the file name. In production, upload immediately
-                    setEditData({ ...editData, imageUrl: file.name });
-                  }
-                }}
-                className="hidden"
-                disabled={isUploading}
-              />
-            </label>
           </div>
 
           {/* Actions */}
@@ -679,10 +1223,20 @@ function QuestionCard({
           {question.imageUrl && (
             <div>
               <strong className="text-slate-900 dark:text-[#EBFF00]">
-                Image:
+                Image / Diagram:
               </strong>
-              <div className="mt-1 text-xs text-slate-500 dark:text-slate-400">
-                {question.imageUrl}
+              <div className="mt-2">
+                <img
+                  src={
+                    question.imageUrl.startsWith("http") ||
+                    question.imageUrl.startsWith("/") ||
+                    question.imageUrl.startsWith("data:")
+                      ? question.imageUrl
+                      : `/uploads/questions/${question.imageUrl}`
+                  }
+                  alt="Question diagram"
+                  className="max-h-48 max-w-full rounded border border-slate-300 dark:border-white/10 bg-white dark:bg-[#0a0a0a] object-contain p-1"
+                />
               </div>
             </div>
           )}

@@ -2,6 +2,7 @@
 
 import React, { useEffect, useState } from "react";
 import { useTestContext } from "../context/TestContext";
+import { useRequestFullscreen } from "./hooks/useFullscreenTracking";
 import { Card } from "@/components/ui/Card";
 import { AlertCircle, Play } from "lucide-react";
 
@@ -41,7 +42,14 @@ export function BreakScreen(): React.ReactElement {
     return () => clearInterval(interval);
   }, [isBreakActive]);
 
-  const handleResumeTest = () => {
+  const requestFullscreen = useRequestFullscreen();
+
+  const handleResumeTest = async () => {
+    // Re-enter fullscreen when resuming testing
+    try {
+      await requestFullscreen();
+    } catch (e) {}
+
     // Move to next module (Math)
     setCurrentModule(3);
     resetRemainingTime(3);

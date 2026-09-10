@@ -20,6 +20,7 @@ import {
   X,
   AlertCircle,
   Loader2,
+  ShieldAlert,
   ShieldCheck,
   Radio,
 } from "lucide-react";
@@ -30,14 +31,17 @@ interface StudentMockTestsHubProps {
   availableTests: any[];
   completedAttempts: any[];
   highestScore: number | null;
+  initialError?: string | null;
 }
 
 export function StudentMockTestsHub({
   availableTests,
   completedAttempts,
   highestScore,
+  initialError = null,
 }: StudentMockTestsHubProps) {
   const router = useRouter();
+  const [errorState, setErrorState] = useState<string | null>(initialError);
   // MUST default to 'available' tab!
   const [activeTab, setActiveTab] = useState<"available" | "history">(
     "available",
@@ -131,6 +135,37 @@ export function StudentMockTestsHub({
           </button>
         </div>
       </div>
+
+      {/* Disqualification / Error Notification Banner */}
+      {errorState && (
+        <div className="p-4 sm:p-5 rounded-2xl bg-red-500/10 dark:bg-red-950/40 border-2 border-red-500/50 flex items-start gap-4 animate-fade-in relative overflow-hidden">
+          <div className="p-2.5 bg-red-500/20 rounded-xl text-red-600 dark:text-red-400 flex-shrink-0">
+            <AlertCircle className="w-6 h-6" />
+          </div>
+          <div className="flex-1 pr-6">
+            <h3 className="text-base font-black text-red-600 dark:text-red-400">
+              {errorState === "disqualified"
+                ? "Exam Disqualified (Security Limit Exceeded)"
+                : errorState === "already_completed"
+                  ? "Test Already Completed"
+                  : "Exam Notice"}
+            </h3>
+            <p className="text-sm text-slate-700 dark:text-slate-300 mt-1 leading-relaxed">
+              {errorState === "disqualified"
+                ? "You were automatically removed and disqualified from the exam because you exited fullscreen or switched tabs 5 times. Further attempts for this session are restricted."
+                : errorState === "already_completed"
+                  ? "You have already completed and submitted this exam session."
+                  : "An issue occurred with your test session."}
+            </p>
+          </div>
+          <button
+            onClick={() => setErrorState(null)}
+            className="text-slate-400 hover:text-slate-600 dark:hover:text-white p-1 rounded-lg transition-colors cursor-pointer"
+          >
+            <X className="w-5 h-5" />
+          </button>
+        </div>
+      )}
 
       {/* Enter Exam PIN Modal via Portal */}
       {isMounted && isPinModalOpen && createPortal(
@@ -357,13 +392,16 @@ export function StudentMockTestsHub({
                   {availableTests.map((test) => {
                     const attempts = test.studentAttempts || [];
                     const completedAttempt = attempts.find(
-                      (a: any) => a.totalScore !== null,
+                      (a: any) => a.totalScore !== null && (a.totalScore || 0) > 0,
+                    );
+                    const inProgressAttempt = attempts.find(
+                      (a: any) => a.completedAt === null,
                     );
 
                     return (
                       <div
                         key={test.id}
-                        className="bg-white dark:bg-[#131313] border border-slate-200 dark:border-white/10 rounded-2xl p-6 flex flex-col h-full hover:border-[#EBFF00]/50 transition-all duration-300 relative overflow-hidden group shadow-lg shadow-black/20"
+                        className="bg-white dark:bg-[#131313] border border-slate-200 dark:border-white/10 hover:border-[#EBFF00]/50 rounded-2xl p-6 flex flex-col h-full transition-all duration-300 relative overflow-hidden group shadow-lg shadow-black/20"
                       >
                         <div className="absolute top-0 right-0 w-32 h-32 bg-[#EBFF00]/5 rounded-full blur-2xl -translate-y-1/2 translate-x-1/3 pointer-events-none" />
 
@@ -393,8 +431,12 @@ export function StudentMockTestsHub({
                           <div className="flex items-center gap-2 text-slate-700 dark:text-slate-300 text-sm">
                             <History className="w-4 h-4 text-slate-500 dark:text-slate-400" />
                             {completedAttempt ? (
-                              <span className="text-emerald-600 font-medium">
-                                Last Score: {completedAttempt.totalScore}
+                              <span className="text-emerald-600 dark:text-emerald-400 font-medium">
+                                Last Score: {completedAttempt.totalScore} / 1600
+                              </span>
+                            ) : inProgressAttempt ? (
+                              <span className="text-amber-600 dark:text-amber-400 font-medium">
+                                In Progress
                               </span>
                             ) : (
                               <span className="text-slate-500 dark:text-slate-400">
@@ -406,11 +448,11 @@ export function StudentMockTestsHub({
 
                         <div className="relative z-10 pt-4 border-t border-slate-200 dark:border-white/10">
                           <Link
-                            href={`/student/mock-tests/${test.id}/take`}
+                            href={`/student/mock-tests/${test.id}`}
                             className="w-full py-3 px-4 bg-[#EBFF00] hover:bg-[#d9ff00] text-slate-950 rounded-xl font-bold flex items-center justify-center gap-2 transition-colors group-hover:shadow-[0_0_20px_rgba(245,158,11,0.2)]"
                           >
                             <PlayCircle className="w-5 h-5" />
-                            Start Test
+                            {completedAttempt ? "Retake Test" : inProgressAttempt ? "Resume Test" : "Start Test"}
                           </Link>
                         </div>
                       </div>
@@ -451,41 +493,60 @@ export function StudentMockTestsHub({
                         </tr>
                       </thead>
                       <tbody className="text-sm divide-y divide-slate-800/50">
-                        {completedAttempts.map((attempt) => (
-                          <tr
-                            key={attempt.id}
-                            className="hover:bg-slate-50 dark:bg-[#0a0a0a] transition-colors"
-                          >
-                            <td className="py-4 px-6 font-bold text-slate-900 dark:text-white">
-                              {attempt.satTest?.name || attempt.test?.name || "Digital SAT Practice Test"}
-                            </td>
-                            <td className="py-4 px-6 text-slate-500 dark:text-slate-400">
-                              {new Date(
-                                attempt.completedAt,
-                              ).toLocaleDateString()}
-                            </td>
-                            <td className="py-4 px-6 text-slate-700 dark:text-slate-300">
-                              {attempt.mathScore || 0}
-                            </td>
-                            <td className="py-4 px-6 text-slate-700 dark:text-slate-300">
-                              {attempt.rwScore || 0}
-                            </td>
-                            <td className="py-4 px-6">
-                              <span className="inline-flex px-3 py-1 bg-[#EBFF00]/10 text-slate-900 dark:text-[#EBFF00] font-bold rounded-lg border border-[#EBFF00]/20">
-                                {attempt.totalScore || 0}
-                              </span>
-                            </td>
-                            <td className="py-4 px-6 text-right">
-                              <Link
-                                href={`/student/mock-tests/${attempt.satTestId || attempt.testId}/results?attemptId=${attempt.id}`}
-                                className="inline-flex items-center gap-2 px-4 py-2 bg-slate-100 dark:bg-[#1c1b1b] hover:bg-slate-200 dark:hover:bg-white/10 text-slate-900 dark:text-white rounded-lg font-medium transition-colors border border-slate-200 dark:border-white/10 hover:border-slate-400"
-                              >
-                                <BarChart3 className="w-4 h-4 text-slate-900 dark:text-[#EBFF00]" />
-                                View Full Analysis
-                              </Link>
-                            </td>
-                          </tr>
-                        ))}
+                        {completedAttempts.map((attempt) => {
+                          const isDisq =
+                            (attempt.fullscreenExitCount || 0) >= 5 ||
+                            (attempt.totalScore || 0) === 0;
+
+                          return (
+                            <tr
+                              key={attempt.id}
+                              className="hover:bg-slate-50 dark:bg-[#0a0a0a] transition-colors"
+                            >
+                              <td className="py-4 px-6 font-bold text-slate-900 dark:text-white">
+                                <div className="flex items-center gap-2">
+                                  {attempt.satTest?.name || attempt.test?.name || "Digital SAT Practice Test"}
+                                  {isDisq && (
+                                    <span className="px-2 py-0.5 rounded text-[10px] font-bold bg-red-500/10 text-red-600 border border-red-500/20">
+                                      Disqualified
+                                    </span>
+                                  )}
+                                </div>
+                              </td>
+                              <td className="py-4 px-6 text-slate-500 dark:text-slate-400">
+                                {new Date(
+                                  attempt.completedAt,
+                                ).toLocaleDateString()}
+                              </td>
+                              <td className="py-4 px-6 text-slate-700 dark:text-slate-300">
+                                {isDisq ? 0 : attempt.mathScore || 0}
+                              </td>
+                              <td className="py-4 px-6 text-slate-700 dark:text-slate-300">
+                                {isDisq ? 0 : attempt.rwScore || 0}
+                              </td>
+                              <td className="py-4 px-6">
+                                {isDisq ? (
+                                  <span className="inline-flex px-3 py-1 bg-red-500/15 text-red-600 dark:text-red-400 font-bold rounded-lg border border-red-500/30 text-xs">
+                                    Disqualified (0 / 1600)
+                                  </span>
+                                ) : (
+                                  <span className="inline-flex px-3 py-1 bg-[#EBFF00]/10 text-slate-900 dark:text-[#EBFF00] font-bold rounded-lg border border-[#EBFF00]/20">
+                                    {attempt.totalScore || 0}
+                                  </span>
+                                )}
+                              </td>
+                              <td className="py-4 px-6 text-right">
+                                <Link
+                                  href={`/student/mock-tests/${attempt.satTestId || attempt.testId}/results?attemptId=${attempt.id}`}
+                                  className="inline-flex items-center gap-2 px-4 py-2 bg-slate-100 dark:bg-[#1c1b1b] hover:bg-slate-200 dark:hover:bg-white/10 text-slate-900 dark:text-white rounded-lg font-medium transition-colors border border-slate-200 dark:border-white/10 hover:border-slate-400"
+                                >
+                                  <BarChart3 className="w-4 h-4 text-slate-900 dark:text-[#EBFF00]" />
+                                  View Full Analysis
+                                </Link>
+                              </td>
+                            </tr>
+                          );
+                        })}
                       </tbody>
                     </table>
                   </div>

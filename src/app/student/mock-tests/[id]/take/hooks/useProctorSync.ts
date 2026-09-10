@@ -2,100 +2,127 @@ import { useEffect, useRef } from 'react';
 import { useTestContext } from '../../context/TestContext';
 
 export function useProctorSync(sessionId: string | null) {
- const {
- currentModule,
- currentQuestionIndex,
- testStatus,
- setTestStatus,
- isPaused,
- setPaused,
- remainingTimeMs,
- setRemainingTime
- } = useTestContext();
+  const {
+    currentModule,
+    currentQuestionIndex,
+    testStatus,
+    setTestStatus,
+    isPaused,
+    setPaused,
+    remainingTimeMs,
+    setRemainingTime,
+    setFullscreenExitCount,
+    securityAlert,
+    setSecurityAlert,
+    userId,
+    testId,
+  } = useTestContext();
 
- const lastTimeAddedRef = useRef<number>(0);
+  const lastTimeAddedRef = useRef<number>(0);
 
- useEffect(() => {
- if (!sessionId) return;
- if (testStatus !== 'testing') return;
+  useEffect(() => {
+    if (!sessionId) return;
+    if (testStatus !== 'testing') return;
 
- const sendHeartbeat = async (tabSwitch = false) => {
- try {
- const res = await fetch('/api/student/proctor/heartbeat', {
- method: 'POST',
- headers: { 'Content-Type': 'application/json' },
- body: JSON.stringify({
- sessionId,
- currentModule,
- currentQuestionIndex,
- timeRemaining: Math.floor(remainingTimeMs / 1000),
- tabSwitch
- })
- });
- const data = await res.json();
- if (data.success) {
- if (data.status === 'PAUSED' && !isPaused) {
- setPaused(true);
- } else if (data.status === 'TAKING' && isPaused) {
- setPaused(false);
- } else if (data.status === 'DISQUALIFIED') {
- setTestStatus('completed');
- alert('Your test has been disqualified by the proctor.');
- window.location.href = '/student/dashboard';
- } else if (data.status === 'COMPLETED') {
- setTestStatus('completed');
- }
+    const sendHeartbeat = async () => {
+      try {
+        const res = await fetch('/api/student/proctor/heartbeat', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({
+            sessionId,
+            currentModule,
+            currentQuestionIndex,
+            timeRemaining: Math.floor(remainingTimeMs / 1000),
+            tabSwitch: false,
+          }),
+        });
 
- if (data.timeAdded !== undefined && data.timeAdded > lastTimeAddedRef.current) {
- const timeDiff = data.timeAdded - lastTimeAddedRef.current;
- lastTimeAddedRef.current = data.timeAdded;
- setRemainingTime(prev => prev + timeDiff * 1000);
- }
- }
- } catch (err) {
- console.error('Heartbeat failed:', err);
- }
- };
+        const data = await res.json();
+        if (data.success) {
+          if (
+            data.disqualified ||
+            data.status === 'DISQUALIFIED' ||
+            (typeof data.exitCount === 'number' && data.exitCount >= 5)
+          ) {
+            try {
+              localStorage.removeItem(`inProgressTest_${userId}_${testId}`);
+            } catch (e) {}
+            const count = Math.max(5, data.exitCount || 5);
+            setFullscreenExitCount(count);
+            setPaused(true);
+            setSecurityAlert({
+              isOpen: true,
+              exitCount: count,
+              reason: 'TAB_SWITCH',
+              remaining: 0,
+              isDisqualified: true,
+            });
+            setTestStatus('completed');
+            return;
+          }
 
- // Initial heartbeat
- sendHeartbeat();
+          if (data.status === 'PAUSED' && !isPaused) {
+            setPaused(true);
+          } else if (data.status === 'TAKING' && isPaused) {
+            // NEVER unpause if a local security violation alert modal is open!
+            if (!securityAlert?.isOpen) {
+              const isCurrentlyFullscreen = Boolean(
+                typeof document !== 'undefined' && (
+                  document.fullscreenElement ||
+                  (document as any).webkitFullscreenElement ||
+                  (document as any).mozFullScreenElement ||
+                  (document as any).msFullscreenElement
+                )
+              );
+              if (isCurrentlyFullscreen) {
+                setPaused(false);
+              }
+            }
+          } else if (data.status === 'COMPLETED') {
+            setTestStatus('completed');
+          }
 
- // 10s interval heartbeat
- const intervalId = setInterval(() => {
- sendHeartbeat();
- }, 10000);
+          if (typeof data.exitCount === 'number') {
+            setFullscreenExitCount(data.exitCount);
+          }
 
- // Visibility change (tab switch);
- const handleVisibilityChange = () => {
- if (document.hidden) {
- sendHeartbeat(true);
- // Optionally alert the student locally
- alert('Warning: You have switched tabs. This has been reported to the proctor.');
- }
- };
+          if (data.timeAdded !== undefined && data.timeAdded > lastTimeAddedRef.current) {
+            const timeDiff = data.timeAdded - lastTimeAddedRef.current;
+            lastTimeAddedRef.current = data.timeAdded;
+            setRemainingTime((prev) => prev + timeDiff * 1000);
+          }
+        }
+      } catch (err) {
+        console.error('Heartbeat failed:', err);
+      }
+    };
 
- // Blur event (window focus lost);
- const handleBlur = () => {
- sendHeartbeat(true);
- };
+    // Initial heartbeat
+    sendHeartbeat();
 
- document.addEventListener('visibilitychange', handleVisibilityChange);
- window.addEventListener('blur', handleBlur);
+    // 10s interval heartbeat
+    const intervalId = setInterval(() => {
+      sendHeartbeat();
+    }, 10000);
 
- return () => {
- clearInterval(intervalId);
- document.removeEventListener('visibilitychange', handleVisibilityChange);
- window.removeEventListener('blur', handleBlur);
- };
- }, [
- sessionId,
- currentModule,
- currentQuestionIndex,
- testStatus,
- remainingTimeMs,
- isPaused,
- setPaused,
- setTestStatus,
- setRemainingTime
- ]);
+    return () => {
+      clearInterval(intervalId);
+    };
+  }, [
+    sessionId,
+    currentModule,
+    currentQuestionIndex,
+    testStatus,
+    remainingTimeMs,
+    isPaused,
+    userId,
+    testId,
+    securityAlert,
+    setPaused,
+    setTestStatus,
+    setRemainingTime,
+    setFullscreenExitCount,
+    setSecurityAlert,
+  ]);
 }

@@ -21798,6 +21798,9 @@ export namespace Prisma {
     description: string | null
     createdById: string | null
     status: string | null
+    sourceFileUrl: string | null
+    sourceFileName: string | null
+    sourceFileType: string | null
     createdAt: Date | null
     updatedAt: Date | null
   }
@@ -21808,6 +21811,9 @@ export namespace Prisma {
     description: string | null
     createdById: string | null
     status: string | null
+    sourceFileUrl: string | null
+    sourceFileName: string | null
+    sourceFileType: string | null
     createdAt: Date | null
     updatedAt: Date | null
   }
@@ -21818,6 +21824,10 @@ export namespace Prisma {
     description: number
     createdById: number
     status: number
+    sourceFileUrl: number
+    sourceFileName: number
+    sourceFileType: number
+    moduleSourceFiles: number
     createdAt: number
     updatedAt: number
     _all: number
@@ -21830,6 +21840,9 @@ export namespace Prisma {
     description?: true
     createdById?: true
     status?: true
+    sourceFileUrl?: true
+    sourceFileName?: true
+    sourceFileType?: true
     createdAt?: true
     updatedAt?: true
   }
@@ -21840,6 +21853,9 @@ export namespace Prisma {
     description?: true
     createdById?: true
     status?: true
+    sourceFileUrl?: true
+    sourceFileName?: true
+    sourceFileType?: true
     createdAt?: true
     updatedAt?: true
   }
@@ -21850,6 +21866,10 @@ export namespace Prisma {
     description?: true
     createdById?: true
     status?: true
+    sourceFileUrl?: true
+    sourceFileName?: true
+    sourceFileType?: true
+    moduleSourceFiles?: true
     createdAt?: true
     updatedAt?: true
     _all?: true
@@ -21933,6 +21953,10 @@ export namespace Prisma {
     description: string | null
     createdById: string
     status: string
+    sourceFileUrl: string | null
+    sourceFileName: string | null
+    sourceFileType: string | null
+    moduleSourceFiles: JsonValue | null
     createdAt: Date
     updatedAt: Date
     _count: SATMockTestCountAggregateOutputType | null
@@ -21960,6 +21984,10 @@ export namespace Prisma {
     description?: boolean
     createdById?: boolean
     status?: boolean
+    sourceFileUrl?: boolean
+    sourceFileName?: boolean
+    sourceFileType?: boolean
+    moduleSourceFiles?: boolean
     createdAt?: boolean
     updatedAt?: boolean
     questions?: boolean | SATMockTest$questionsArgs<ExtArgs>
@@ -21974,6 +22002,10 @@ export namespace Prisma {
     description?: boolean
     createdById?: boolean
     status?: boolean
+    sourceFileUrl?: boolean
+    sourceFileName?: boolean
+    sourceFileType?: boolean
+    moduleSourceFiles?: boolean
     createdAt?: boolean
     updatedAt?: boolean
   }, ExtArgs["result"]["sATMockTest"]>
@@ -21984,6 +22016,10 @@ export namespace Prisma {
     description?: boolean
     createdById?: boolean
     status?: boolean
+    sourceFileUrl?: boolean
+    sourceFileName?: boolean
+    sourceFileType?: boolean
+    moduleSourceFiles?: boolean
     createdAt?: boolean
     updatedAt?: boolean
   }, ExtArgs["result"]["sATMockTest"]>
@@ -21994,11 +22030,15 @@ export namespace Prisma {
     description?: boolean
     createdById?: boolean
     status?: boolean
+    sourceFileUrl?: boolean
+    sourceFileName?: boolean
+    sourceFileType?: boolean
+    moduleSourceFiles?: boolean
     createdAt?: boolean
     updatedAt?: boolean
   }
 
-  export type SATMockTestOmit<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetOmit<"id" | "name" | "description" | "createdById" | "status" | "createdAt" | "updatedAt", ExtArgs["result"]["sATMockTest"]>
+  export type SATMockTestOmit<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetOmit<"id" | "name" | "description" | "createdById" | "status" | "sourceFileUrl" | "sourceFileName" | "sourceFileType" | "moduleSourceFiles" | "createdAt" | "updatedAt", ExtArgs["result"]["sATMockTest"]>
   export type SATMockTestInclude<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
     questions?: boolean | SATMockTest$questionsArgs<ExtArgs>
     studentAttempts?: boolean | SATMockTest$studentAttemptsArgs<ExtArgs>
@@ -22021,6 +22061,10 @@ export namespace Prisma {
       description: string | null
       createdById: string
       status: string
+      sourceFileUrl: string | null
+      sourceFileName: string | null
+      sourceFileType: string | null
+      moduleSourceFiles: Prisma.JsonValue | null
       createdAt: Date
       updatedAt: Date
     }, ExtArgs["result"]["sATMockTest"]>
@@ -22454,6 +22498,10 @@ export namespace Prisma {
     readonly description: FieldRef<"SATMockTest", 'String'>
     readonly createdById: FieldRef<"SATMockTest", 'String'>
     readonly status: FieldRef<"SATMockTest", 'String'>
+    readonly sourceFileUrl: FieldRef<"SATMockTest", 'String'>
+    readonly sourceFileName: FieldRef<"SATMockTest", 'String'>
+    readonly sourceFileType: FieldRef<"SATMockTest", 'String'>
+    readonly moduleSourceFiles: FieldRef<"SATMockTest", 'Json'>
     readonly createdAt: FieldRef<"SATMockTest", 'DateTime'>
     readonly updatedAt: FieldRef<"SATMockTest", 'DateTime'>
   }
@@ -22970,6 +23018,8 @@ export namespace Prisma {
     imageUrl: string | null
     imagePosition: string | null
     correctAnswer: string | null
+    sourceFileUrl: string | null
+    sourceFileName: string | null
     answerSource: string | null
     requiresReview: boolean | null
     verificationStatus: string | null
@@ -22992,6 +23042,8 @@ export namespace Prisma {
     imageUrl: string | null
     imagePosition: string | null
     correctAnswer: string | null
+    sourceFileUrl: string | null
+    sourceFileName: string | null
     answerSource: string | null
     requiresReview: boolean | null
     verificationStatus: string | null
@@ -23015,6 +23067,8 @@ export namespace Prisma {
     imagePosition: number
     options: number
     correctAnswer: number
+    sourceFileUrl: number
+    sourceFileName: number
     answerSource: number
     requiresReview: number
     verificationStatus: number
@@ -23047,6 +23101,8 @@ export namespace Prisma {
     imageUrl?: true
     imagePosition?: true
     correctAnswer?: true
+    sourceFileUrl?: true
+    sourceFileName?: true
     answerSource?: true
     requiresReview?: true
     verificationStatus?: true
@@ -23069,6 +23125,8 @@ export namespace Prisma {
     imageUrl?: true
     imagePosition?: true
     correctAnswer?: true
+    sourceFileUrl?: true
+    sourceFileName?: true
     answerSource?: true
     requiresReview?: true
     verificationStatus?: true
@@ -23092,6 +23150,8 @@ export namespace Prisma {
     imagePosition?: true
     options?: true
     correctAnswer?: true
+    sourceFileUrl?: true
+    sourceFileName?: true
     answerSource?: true
     requiresReview?: true
     verificationStatus?: true
@@ -23202,6 +23262,8 @@ export namespace Prisma {
     imagePosition: string
     options: JsonValue
     correctAnswer: string
+    sourceFileUrl: string | null
+    sourceFileName: string | null
     answerSource: string | null
     requiresReview: boolean
     verificationStatus: string | null
@@ -23244,6 +23306,8 @@ export namespace Prisma {
     imagePosition?: boolean
     options?: boolean
     correctAnswer?: boolean
+    sourceFileUrl?: boolean
+    sourceFileName?: boolean
     answerSource?: boolean
     requiresReview?: boolean
     verificationStatus?: boolean
@@ -23268,6 +23332,8 @@ export namespace Prisma {
     imagePosition?: boolean
     options?: boolean
     correctAnswer?: boolean
+    sourceFileUrl?: boolean
+    sourceFileName?: boolean
     answerSource?: boolean
     requiresReview?: boolean
     verificationStatus?: boolean
@@ -23292,6 +23358,8 @@ export namespace Prisma {
     imagePosition?: boolean
     options?: boolean
     correctAnswer?: boolean
+    sourceFileUrl?: boolean
+    sourceFileName?: boolean
     answerSource?: boolean
     requiresReview?: boolean
     verificationStatus?: boolean
@@ -23316,6 +23384,8 @@ export namespace Prisma {
     imagePosition?: boolean
     options?: boolean
     correctAnswer?: boolean
+    sourceFileUrl?: boolean
+    sourceFileName?: boolean
     answerSource?: boolean
     requiresReview?: boolean
     verificationStatus?: boolean
@@ -23327,7 +23397,7 @@ export namespace Prisma {
     updatedAt?: boolean
   }
 
-  export type SATQuestionOmit<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetOmit<"id" | "satTestId" | "module" | "format" | "questionNumber" | "prompt" | "passage" | "imageUrl" | "imagePosition" | "options" | "correctAnswer" | "answerSource" | "requiresReview" | "verificationStatus" | "difficulty" | "domain" | "skill" | "explanation" | "createdAt" | "updatedAt", ExtArgs["result"]["sATQuestion"]>
+  export type SATQuestionOmit<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetOmit<"id" | "satTestId" | "module" | "format" | "questionNumber" | "prompt" | "passage" | "imageUrl" | "imagePosition" | "options" | "correctAnswer" | "sourceFileUrl" | "sourceFileName" | "answerSource" | "requiresReview" | "verificationStatus" | "difficulty" | "domain" | "skill" | "explanation" | "createdAt" | "updatedAt", ExtArgs["result"]["sATQuestion"]>
   export type SATQuestionInclude<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
     satTest?: boolean | SATMockTestDefaultArgs<ExtArgs>
   }
@@ -23355,6 +23425,8 @@ export namespace Prisma {
       imagePosition: string
       options: Prisma.JsonValue
       correctAnswer: string
+      sourceFileUrl: string | null
+      sourceFileName: string | null
       answerSource: string | null
       requiresReview: boolean
       verificationStatus: string | null
@@ -23799,6 +23871,8 @@ export namespace Prisma {
     readonly imagePosition: FieldRef<"SATQuestion", 'String'>
     readonly options: FieldRef<"SATQuestion", 'Json'>
     readonly correctAnswer: FieldRef<"SATQuestion", 'String'>
+    readonly sourceFileUrl: FieldRef<"SATQuestion", 'String'>
+    readonly sourceFileName: FieldRef<"SATQuestion", 'String'>
     readonly answerSource: FieldRef<"SATQuestion", 'String'>
     readonly requiresReview: FieldRef<"SATQuestion", 'Boolean'>
     readonly verificationStatus: FieldRef<"SATQuestion", 'String'>
@@ -35107,6 +35181,10 @@ export namespace Prisma {
     description: 'description',
     createdById: 'createdById',
     status: 'status',
+    sourceFileUrl: 'sourceFileUrl',
+    sourceFileName: 'sourceFileName',
+    sourceFileType: 'sourceFileType',
+    moduleSourceFiles: 'moduleSourceFiles',
     createdAt: 'createdAt',
     updatedAt: 'updatedAt'
   };
@@ -35126,6 +35204,8 @@ export namespace Prisma {
     imagePosition: 'imagePosition',
     options: 'options',
     correctAnswer: 'correctAnswer',
+    sourceFileUrl: 'sourceFileUrl',
+    sourceFileName: 'sourceFileName',
     answerSource: 'answerSource',
     requiresReview: 'requiresReview',
     verificationStatus: 'verificationStatus',
@@ -35324,19 +35404,19 @@ export namespace Prisma {
   export type SortOrder = (typeof SortOrder)[keyof typeof SortOrder]
 
 
-  export const JsonNullValueInput: {
-    JsonNull: typeof JsonNull
-  };
-
-  export type JsonNullValueInput = (typeof JsonNullValueInput)[keyof typeof JsonNullValueInput]
-
-
   export const NullableJsonNullValueInput: {
     DbNull: typeof DbNull,
     JsonNull: typeof JsonNull
   };
 
   export type NullableJsonNullValueInput = (typeof NullableJsonNullValueInput)[keyof typeof NullableJsonNullValueInput]
+
+
+  export const JsonNullValueInput: {
+    JsonNull: typeof JsonNull
+  };
+
+  export type JsonNullValueInput = (typeof JsonNullValueInput)[keyof typeof JsonNullValueInput]
 
 
   export const QueryMode: {
@@ -35517,6 +35597,20 @@ export namespace Prisma {
 
 
   /**
+   * Reference to a field of type 'Json'
+   */
+  export type JsonFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'Json'>
+    
+
+
+  /**
+   * Reference to a field of type 'QueryMode'
+   */
+  export type EnumQueryModeFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'QueryMode'>
+    
+
+
+  /**
    * Reference to a field of type 'MockTestModule'
    */
   export type EnumMockTestModuleFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'MockTestModule'>
@@ -35541,20 +35635,6 @@ export namespace Prisma {
    * Reference to a field of type 'MockTestFormat[]'
    */
   export type ListEnumMockTestFormatFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'MockTestFormat[]'>
-    
-
-
-  /**
-   * Reference to a field of type 'Json'
-   */
-  export type JsonFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'Json'>
-    
-
-
-  /**
-   * Reference to a field of type 'QueryMode'
-   */
-  export type EnumQueryModeFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'QueryMode'>
     
 
 
@@ -36960,6 +37040,10 @@ export namespace Prisma {
     description?: StringNullableFilter<"SATMockTest"> | string | null
     createdById?: StringFilter<"SATMockTest"> | string
     status?: StringFilter<"SATMockTest"> | string
+    sourceFileUrl?: StringNullableFilter<"SATMockTest"> | string | null
+    sourceFileName?: StringNullableFilter<"SATMockTest"> | string | null
+    sourceFileType?: StringNullableFilter<"SATMockTest"> | string | null
+    moduleSourceFiles?: JsonNullableFilter<"SATMockTest">
     createdAt?: DateTimeFilter<"SATMockTest"> | Date | string
     updatedAt?: DateTimeFilter<"SATMockTest"> | Date | string
     questions?: SATQuestionListRelationFilter
@@ -36973,6 +37057,10 @@ export namespace Prisma {
     description?: SortOrderInput | SortOrder
     createdById?: SortOrder
     status?: SortOrder
+    sourceFileUrl?: SortOrderInput | SortOrder
+    sourceFileName?: SortOrderInput | SortOrder
+    sourceFileType?: SortOrderInput | SortOrder
+    moduleSourceFiles?: SortOrderInput | SortOrder
     createdAt?: SortOrder
     updatedAt?: SortOrder
     questions?: SATQuestionOrderByRelationAggregateInput
@@ -36989,6 +37077,10 @@ export namespace Prisma {
     description?: StringNullableFilter<"SATMockTest"> | string | null
     createdById?: StringFilter<"SATMockTest"> | string
     status?: StringFilter<"SATMockTest"> | string
+    sourceFileUrl?: StringNullableFilter<"SATMockTest"> | string | null
+    sourceFileName?: StringNullableFilter<"SATMockTest"> | string | null
+    sourceFileType?: StringNullableFilter<"SATMockTest"> | string | null
+    moduleSourceFiles?: JsonNullableFilter<"SATMockTest">
     createdAt?: DateTimeFilter<"SATMockTest"> | Date | string
     updatedAt?: DateTimeFilter<"SATMockTest"> | Date | string
     questions?: SATQuestionListRelationFilter
@@ -37002,6 +37094,10 @@ export namespace Prisma {
     description?: SortOrderInput | SortOrder
     createdById?: SortOrder
     status?: SortOrder
+    sourceFileUrl?: SortOrderInput | SortOrder
+    sourceFileName?: SortOrderInput | SortOrder
+    sourceFileType?: SortOrderInput | SortOrder
+    moduleSourceFiles?: SortOrderInput | SortOrder
     createdAt?: SortOrder
     updatedAt?: SortOrder
     _count?: SATMockTestCountOrderByAggregateInput
@@ -37018,6 +37114,10 @@ export namespace Prisma {
     description?: StringNullableWithAggregatesFilter<"SATMockTest"> | string | null
     createdById?: StringWithAggregatesFilter<"SATMockTest"> | string
     status?: StringWithAggregatesFilter<"SATMockTest"> | string
+    sourceFileUrl?: StringNullableWithAggregatesFilter<"SATMockTest"> | string | null
+    sourceFileName?: StringNullableWithAggregatesFilter<"SATMockTest"> | string | null
+    sourceFileType?: StringNullableWithAggregatesFilter<"SATMockTest"> | string | null
+    moduleSourceFiles?: JsonNullableWithAggregatesFilter<"SATMockTest">
     createdAt?: DateTimeWithAggregatesFilter<"SATMockTest"> | Date | string
     updatedAt?: DateTimeWithAggregatesFilter<"SATMockTest"> | Date | string
   }
@@ -37037,6 +37137,8 @@ export namespace Prisma {
     imagePosition?: StringFilter<"SATQuestion"> | string
     options?: JsonFilter<"SATQuestion">
     correctAnswer?: StringFilter<"SATQuestion"> | string
+    sourceFileUrl?: StringNullableFilter<"SATQuestion"> | string | null
+    sourceFileName?: StringNullableFilter<"SATQuestion"> | string | null
     answerSource?: StringNullableFilter<"SATQuestion"> | string | null
     requiresReview?: BoolFilter<"SATQuestion"> | boolean
     verificationStatus?: StringNullableFilter<"SATQuestion"> | string | null
@@ -37061,6 +37163,8 @@ export namespace Prisma {
     imagePosition?: SortOrder
     options?: SortOrder
     correctAnswer?: SortOrder
+    sourceFileUrl?: SortOrderInput | SortOrder
+    sourceFileName?: SortOrderInput | SortOrder
     answerSource?: SortOrderInput | SortOrder
     requiresReview?: SortOrder
     verificationStatus?: SortOrderInput | SortOrder
@@ -37088,6 +37192,8 @@ export namespace Prisma {
     imagePosition?: StringFilter<"SATQuestion"> | string
     options?: JsonFilter<"SATQuestion">
     correctAnswer?: StringFilter<"SATQuestion"> | string
+    sourceFileUrl?: StringNullableFilter<"SATQuestion"> | string | null
+    sourceFileName?: StringNullableFilter<"SATQuestion"> | string | null
     answerSource?: StringNullableFilter<"SATQuestion"> | string | null
     requiresReview?: BoolFilter<"SATQuestion"> | boolean
     verificationStatus?: StringNullableFilter<"SATQuestion"> | string | null
@@ -37112,6 +37218,8 @@ export namespace Prisma {
     imagePosition?: SortOrder
     options?: SortOrder
     correctAnswer?: SortOrder
+    sourceFileUrl?: SortOrderInput | SortOrder
+    sourceFileName?: SortOrderInput | SortOrder
     answerSource?: SortOrderInput | SortOrder
     requiresReview?: SortOrder
     verificationStatus?: SortOrderInput | SortOrder
@@ -37143,6 +37251,8 @@ export namespace Prisma {
     imagePosition?: StringWithAggregatesFilter<"SATQuestion"> | string
     options?: JsonWithAggregatesFilter<"SATQuestion">
     correctAnswer?: StringWithAggregatesFilter<"SATQuestion"> | string
+    sourceFileUrl?: StringNullableWithAggregatesFilter<"SATQuestion"> | string | null
+    sourceFileName?: StringNullableWithAggregatesFilter<"SATQuestion"> | string | null
     answerSource?: StringNullableWithAggregatesFilter<"SATQuestion"> | string | null
     requiresReview?: BoolWithAggregatesFilter<"SATQuestion"> | boolean
     verificationStatus?: StringNullableWithAggregatesFilter<"SATQuestion"> | string | null
@@ -39473,6 +39583,10 @@ export namespace Prisma {
     description?: string | null
     createdById: string
     status?: string
+    sourceFileUrl?: string | null
+    sourceFileName?: string | null
+    sourceFileType?: string | null
+    moduleSourceFiles?: NullableJsonNullValueInput | InputJsonValue
     createdAt?: Date | string
     updatedAt?: Date | string
     questions?: SATQuestionCreateNestedManyWithoutSatTestInput
@@ -39486,6 +39600,10 @@ export namespace Prisma {
     description?: string | null
     createdById: string
     status?: string
+    sourceFileUrl?: string | null
+    sourceFileName?: string | null
+    sourceFileType?: string | null
+    moduleSourceFiles?: NullableJsonNullValueInput | InputJsonValue
     createdAt?: Date | string
     updatedAt?: Date | string
     questions?: SATQuestionUncheckedCreateNestedManyWithoutSatTestInput
@@ -39499,6 +39617,10 @@ export namespace Prisma {
     description?: NullableStringFieldUpdateOperationsInput | string | null
     createdById?: StringFieldUpdateOperationsInput | string
     status?: StringFieldUpdateOperationsInput | string
+    sourceFileUrl?: NullableStringFieldUpdateOperationsInput | string | null
+    sourceFileName?: NullableStringFieldUpdateOperationsInput | string | null
+    sourceFileType?: NullableStringFieldUpdateOperationsInput | string | null
+    moduleSourceFiles?: NullableJsonNullValueInput | InputJsonValue
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     questions?: SATQuestionUpdateManyWithoutSatTestNestedInput
@@ -39512,6 +39634,10 @@ export namespace Prisma {
     description?: NullableStringFieldUpdateOperationsInput | string | null
     createdById?: StringFieldUpdateOperationsInput | string
     status?: StringFieldUpdateOperationsInput | string
+    sourceFileUrl?: NullableStringFieldUpdateOperationsInput | string | null
+    sourceFileName?: NullableStringFieldUpdateOperationsInput | string | null
+    sourceFileType?: NullableStringFieldUpdateOperationsInput | string | null
+    moduleSourceFiles?: NullableJsonNullValueInput | InputJsonValue
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     questions?: SATQuestionUncheckedUpdateManyWithoutSatTestNestedInput
@@ -39525,6 +39651,10 @@ export namespace Prisma {
     description?: string | null
     createdById: string
     status?: string
+    sourceFileUrl?: string | null
+    sourceFileName?: string | null
+    sourceFileType?: string | null
+    moduleSourceFiles?: NullableJsonNullValueInput | InputJsonValue
     createdAt?: Date | string
     updatedAt?: Date | string
   }
@@ -39535,6 +39665,10 @@ export namespace Prisma {
     description?: NullableStringFieldUpdateOperationsInput | string | null
     createdById?: StringFieldUpdateOperationsInput | string
     status?: StringFieldUpdateOperationsInput | string
+    sourceFileUrl?: NullableStringFieldUpdateOperationsInput | string | null
+    sourceFileName?: NullableStringFieldUpdateOperationsInput | string | null
+    sourceFileType?: NullableStringFieldUpdateOperationsInput | string | null
+    moduleSourceFiles?: NullableJsonNullValueInput | InputJsonValue
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
   }
@@ -39545,6 +39679,10 @@ export namespace Prisma {
     description?: NullableStringFieldUpdateOperationsInput | string | null
     createdById?: StringFieldUpdateOperationsInput | string
     status?: StringFieldUpdateOperationsInput | string
+    sourceFileUrl?: NullableStringFieldUpdateOperationsInput | string | null
+    sourceFileName?: NullableStringFieldUpdateOperationsInput | string | null
+    sourceFileType?: NullableStringFieldUpdateOperationsInput | string | null
+    moduleSourceFiles?: NullableJsonNullValueInput | InputJsonValue
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
   }
@@ -39560,6 +39698,8 @@ export namespace Prisma {
     imagePosition?: string
     options: JsonNullValueInput | InputJsonValue
     correctAnswer: string
+    sourceFileUrl?: string | null
+    sourceFileName?: string | null
     answerSource?: string | null
     requiresReview?: boolean
     verificationStatus?: string | null
@@ -39584,6 +39724,8 @@ export namespace Prisma {
     imagePosition?: string
     options: JsonNullValueInput | InputJsonValue
     correctAnswer: string
+    sourceFileUrl?: string | null
+    sourceFileName?: string | null
     answerSource?: string | null
     requiresReview?: boolean
     verificationStatus?: string | null
@@ -39606,6 +39748,8 @@ export namespace Prisma {
     imagePosition?: StringFieldUpdateOperationsInput | string
     options?: JsonNullValueInput | InputJsonValue
     correctAnswer?: StringFieldUpdateOperationsInput | string
+    sourceFileUrl?: NullableStringFieldUpdateOperationsInput | string | null
+    sourceFileName?: NullableStringFieldUpdateOperationsInput | string | null
     answerSource?: NullableStringFieldUpdateOperationsInput | string | null
     requiresReview?: BoolFieldUpdateOperationsInput | boolean
     verificationStatus?: NullableStringFieldUpdateOperationsInput | string | null
@@ -39630,6 +39774,8 @@ export namespace Prisma {
     imagePosition?: StringFieldUpdateOperationsInput | string
     options?: JsonNullValueInput | InputJsonValue
     correctAnswer?: StringFieldUpdateOperationsInput | string
+    sourceFileUrl?: NullableStringFieldUpdateOperationsInput | string | null
+    sourceFileName?: NullableStringFieldUpdateOperationsInput | string | null
     answerSource?: NullableStringFieldUpdateOperationsInput | string | null
     requiresReview?: BoolFieldUpdateOperationsInput | boolean
     verificationStatus?: NullableStringFieldUpdateOperationsInput | string | null
@@ -39653,6 +39799,8 @@ export namespace Prisma {
     imagePosition?: string
     options: JsonNullValueInput | InputJsonValue
     correctAnswer: string
+    sourceFileUrl?: string | null
+    sourceFileName?: string | null
     answerSource?: string | null
     requiresReview?: boolean
     verificationStatus?: string | null
@@ -39675,6 +39823,8 @@ export namespace Prisma {
     imagePosition?: StringFieldUpdateOperationsInput | string
     options?: JsonNullValueInput | InputJsonValue
     correctAnswer?: StringFieldUpdateOperationsInput | string
+    sourceFileUrl?: NullableStringFieldUpdateOperationsInput | string | null
+    sourceFileName?: NullableStringFieldUpdateOperationsInput | string | null
     answerSource?: NullableStringFieldUpdateOperationsInput | string | null
     requiresReview?: BoolFieldUpdateOperationsInput | boolean
     verificationStatus?: NullableStringFieldUpdateOperationsInput | string | null
@@ -39698,6 +39848,8 @@ export namespace Prisma {
     imagePosition?: StringFieldUpdateOperationsInput | string
     options?: JsonNullValueInput | InputJsonValue
     correctAnswer?: StringFieldUpdateOperationsInput | string
+    sourceFileUrl?: NullableStringFieldUpdateOperationsInput | string | null
+    sourceFileName?: NullableStringFieldUpdateOperationsInput | string | null
     answerSource?: NullableStringFieldUpdateOperationsInput | string | null
     requiresReview?: BoolFieldUpdateOperationsInput | boolean
     verificationStatus?: NullableStringFieldUpdateOperationsInput | string | null
@@ -41991,6 +42143,29 @@ export namespace Prisma {
     _min?: NestedEnumSmsStatusFilter<$PrismaModel>
     _max?: NestedEnumSmsStatusFilter<$PrismaModel>
   }
+  export type JsonNullableFilter<$PrismaModel = never> =
+    | PatchUndefined<
+        Either<Required<JsonNullableFilterBase<$PrismaModel>>, Exclude<keyof Required<JsonNullableFilterBase<$PrismaModel>>, 'path'>>,
+        Required<JsonNullableFilterBase<$PrismaModel>>
+      >
+    | OptionalFlat<Omit<Required<JsonNullableFilterBase<$PrismaModel>>, 'path'>>
+
+  export type JsonNullableFilterBase<$PrismaModel = never> = {
+    equals?: InputJsonValue | JsonFieldRefInput<$PrismaModel> | JsonNullValueFilter
+    path?: string[]
+    mode?: QueryMode | EnumQueryModeFieldRefInput<$PrismaModel>
+    string_contains?: string | StringFieldRefInput<$PrismaModel>
+    string_starts_with?: string | StringFieldRefInput<$PrismaModel>
+    string_ends_with?: string | StringFieldRefInput<$PrismaModel>
+    array_starts_with?: InputJsonValue | JsonFieldRefInput<$PrismaModel> | null
+    array_ends_with?: InputJsonValue | JsonFieldRefInput<$PrismaModel> | null
+    array_contains?: InputJsonValue | JsonFieldRefInput<$PrismaModel> | null
+    lt?: InputJsonValue | JsonFieldRefInput<$PrismaModel>
+    lte?: InputJsonValue | JsonFieldRefInput<$PrismaModel>
+    gt?: InputJsonValue | JsonFieldRefInput<$PrismaModel>
+    gte?: InputJsonValue | JsonFieldRefInput<$PrismaModel>
+    not?: InputJsonValue | JsonFieldRefInput<$PrismaModel> | JsonNullValueFilter
+  }
 
   export type SATQuestionListRelationFilter = {
     every?: SATQuestionWhereInput
@@ -42018,6 +42193,10 @@ export namespace Prisma {
     description?: SortOrder
     createdById?: SortOrder
     status?: SortOrder
+    sourceFileUrl?: SortOrder
+    sourceFileName?: SortOrder
+    sourceFileType?: SortOrder
+    moduleSourceFiles?: SortOrder
     createdAt?: SortOrder
     updatedAt?: SortOrder
   }
@@ -42028,6 +42207,9 @@ export namespace Prisma {
     description?: SortOrder
     createdById?: SortOrder
     status?: SortOrder
+    sourceFileUrl?: SortOrder
+    sourceFileName?: SortOrder
+    sourceFileType?: SortOrder
     createdAt?: SortOrder
     updatedAt?: SortOrder
   }
@@ -42038,8 +42220,37 @@ export namespace Prisma {
     description?: SortOrder
     createdById?: SortOrder
     status?: SortOrder
+    sourceFileUrl?: SortOrder
+    sourceFileName?: SortOrder
+    sourceFileType?: SortOrder
     createdAt?: SortOrder
     updatedAt?: SortOrder
+  }
+  export type JsonNullableWithAggregatesFilter<$PrismaModel = never> =
+    | PatchUndefined<
+        Either<Required<JsonNullableWithAggregatesFilterBase<$PrismaModel>>, Exclude<keyof Required<JsonNullableWithAggregatesFilterBase<$PrismaModel>>, 'path'>>,
+        Required<JsonNullableWithAggregatesFilterBase<$PrismaModel>>
+      >
+    | OptionalFlat<Omit<Required<JsonNullableWithAggregatesFilterBase<$PrismaModel>>, 'path'>>
+
+  export type JsonNullableWithAggregatesFilterBase<$PrismaModel = never> = {
+    equals?: InputJsonValue | JsonFieldRefInput<$PrismaModel> | JsonNullValueFilter
+    path?: string[]
+    mode?: QueryMode | EnumQueryModeFieldRefInput<$PrismaModel>
+    string_contains?: string | StringFieldRefInput<$PrismaModel>
+    string_starts_with?: string | StringFieldRefInput<$PrismaModel>
+    string_ends_with?: string | StringFieldRefInput<$PrismaModel>
+    array_starts_with?: InputJsonValue | JsonFieldRefInput<$PrismaModel> | null
+    array_ends_with?: InputJsonValue | JsonFieldRefInput<$PrismaModel> | null
+    array_contains?: InputJsonValue | JsonFieldRefInput<$PrismaModel> | null
+    lt?: InputJsonValue | JsonFieldRefInput<$PrismaModel>
+    lte?: InputJsonValue | JsonFieldRefInput<$PrismaModel>
+    gt?: InputJsonValue | JsonFieldRefInput<$PrismaModel>
+    gte?: InputJsonValue | JsonFieldRefInput<$PrismaModel>
+    not?: InputJsonValue | JsonFieldRefInput<$PrismaModel> | JsonNullValueFilter
+    _count?: NestedIntNullableFilter<$PrismaModel>
+    _min?: NestedJsonNullableFilter<$PrismaModel>
+    _max?: NestedJsonNullableFilter<$PrismaModel>
   }
 
   export type EnumMockTestModuleFilter<$PrismaModel = never> = {
@@ -42103,6 +42314,8 @@ export namespace Prisma {
     imagePosition?: SortOrder
     options?: SortOrder
     correctAnswer?: SortOrder
+    sourceFileUrl?: SortOrder
+    sourceFileName?: SortOrder
     answerSource?: SortOrder
     requiresReview?: SortOrder
     verificationStatus?: SortOrder
@@ -42129,6 +42342,8 @@ export namespace Prisma {
     imageUrl?: SortOrder
     imagePosition?: SortOrder
     correctAnswer?: SortOrder
+    sourceFileUrl?: SortOrder
+    sourceFileName?: SortOrder
     answerSource?: SortOrder
     requiresReview?: SortOrder
     verificationStatus?: SortOrder
@@ -42151,6 +42366,8 @@ export namespace Prisma {
     imageUrl?: SortOrder
     imagePosition?: SortOrder
     correctAnswer?: SortOrder
+    sourceFileUrl?: SortOrder
+    sourceFileName?: SortOrder
     answerSource?: SortOrder
     requiresReview?: SortOrder
     verificationStatus?: SortOrder
@@ -42220,29 +42437,6 @@ export namespace Prisma {
     _count?: NestedIntFilter<$PrismaModel>
     _min?: NestedEnumQuestionDifficultyFilter<$PrismaModel>
     _max?: NestedEnumQuestionDifficultyFilter<$PrismaModel>
-  }
-  export type JsonNullableFilter<$PrismaModel = never> =
-    | PatchUndefined<
-        Either<Required<JsonNullableFilterBase<$PrismaModel>>, Exclude<keyof Required<JsonNullableFilterBase<$PrismaModel>>, 'path'>>,
-        Required<JsonNullableFilterBase<$PrismaModel>>
-      >
-    | OptionalFlat<Omit<Required<JsonNullableFilterBase<$PrismaModel>>, 'path'>>
-
-  export type JsonNullableFilterBase<$PrismaModel = never> = {
-    equals?: InputJsonValue | JsonFieldRefInput<$PrismaModel> | JsonNullValueFilter
-    path?: string[]
-    mode?: QueryMode | EnumQueryModeFieldRefInput<$PrismaModel>
-    string_contains?: string | StringFieldRefInput<$PrismaModel>
-    string_starts_with?: string | StringFieldRefInput<$PrismaModel>
-    string_ends_with?: string | StringFieldRefInput<$PrismaModel>
-    array_starts_with?: InputJsonValue | JsonFieldRefInput<$PrismaModel> | null
-    array_ends_with?: InputJsonValue | JsonFieldRefInput<$PrismaModel> | null
-    array_contains?: InputJsonValue | JsonFieldRefInput<$PrismaModel> | null
-    lt?: InputJsonValue | JsonFieldRefInput<$PrismaModel>
-    lte?: InputJsonValue | JsonFieldRefInput<$PrismaModel>
-    gt?: InputJsonValue | JsonFieldRefInput<$PrismaModel>
-    gte?: InputJsonValue | JsonFieldRefInput<$PrismaModel>
-    not?: InputJsonValue | JsonFieldRefInput<$PrismaModel> | JsonNullValueFilter
   }
 
   export type EnumScoringStatusFilter<$PrismaModel = never> = {
@@ -42347,32 +42541,6 @@ export namespace Prisma {
     rwTotal?: SortOrder
     mathTotal?: SortOrder
     fullscreenExitCount?: SortOrder
-  }
-  export type JsonNullableWithAggregatesFilter<$PrismaModel = never> =
-    | PatchUndefined<
-        Either<Required<JsonNullableWithAggregatesFilterBase<$PrismaModel>>, Exclude<keyof Required<JsonNullableWithAggregatesFilterBase<$PrismaModel>>, 'path'>>,
-        Required<JsonNullableWithAggregatesFilterBase<$PrismaModel>>
-      >
-    | OptionalFlat<Omit<Required<JsonNullableWithAggregatesFilterBase<$PrismaModel>>, 'path'>>
-
-  export type JsonNullableWithAggregatesFilterBase<$PrismaModel = never> = {
-    equals?: InputJsonValue | JsonFieldRefInput<$PrismaModel> | JsonNullValueFilter
-    path?: string[]
-    mode?: QueryMode | EnumQueryModeFieldRefInput<$PrismaModel>
-    string_contains?: string | StringFieldRefInput<$PrismaModel>
-    string_starts_with?: string | StringFieldRefInput<$PrismaModel>
-    string_ends_with?: string | StringFieldRefInput<$PrismaModel>
-    array_starts_with?: InputJsonValue | JsonFieldRefInput<$PrismaModel> | null
-    array_ends_with?: InputJsonValue | JsonFieldRefInput<$PrismaModel> | null
-    array_contains?: InputJsonValue | JsonFieldRefInput<$PrismaModel> | null
-    lt?: InputJsonValue | JsonFieldRefInput<$PrismaModel>
-    lte?: InputJsonValue | JsonFieldRefInput<$PrismaModel>
-    gt?: InputJsonValue | JsonFieldRefInput<$PrismaModel>
-    gte?: InputJsonValue | JsonFieldRefInput<$PrismaModel>
-    not?: InputJsonValue | JsonFieldRefInput<$PrismaModel> | JsonNullValueFilter
-    _count?: NestedIntNullableFilter<$PrismaModel>
-    _min?: NestedJsonNullableFilter<$PrismaModel>
-    _max?: NestedJsonNullableFilter<$PrismaModel>
   }
 
   export type EnumScoringStatusWithAggregatesFilter<$PrismaModel = never> = {
@@ -44908,6 +45076,29 @@ export namespace Prisma {
     _min?: NestedEnumSmsStatusFilter<$PrismaModel>
     _max?: NestedEnumSmsStatusFilter<$PrismaModel>
   }
+  export type NestedJsonNullableFilter<$PrismaModel = never> =
+    | PatchUndefined<
+        Either<Required<NestedJsonNullableFilterBase<$PrismaModel>>, Exclude<keyof Required<NestedJsonNullableFilterBase<$PrismaModel>>, 'path'>>,
+        Required<NestedJsonNullableFilterBase<$PrismaModel>>
+      >
+    | OptionalFlat<Omit<Required<NestedJsonNullableFilterBase<$PrismaModel>>, 'path'>>
+
+  export type NestedJsonNullableFilterBase<$PrismaModel = never> = {
+    equals?: InputJsonValue | JsonFieldRefInput<$PrismaModel> | JsonNullValueFilter
+    path?: string[]
+    mode?: QueryMode | EnumQueryModeFieldRefInput<$PrismaModel>
+    string_contains?: string | StringFieldRefInput<$PrismaModel>
+    string_starts_with?: string | StringFieldRefInput<$PrismaModel>
+    string_ends_with?: string | StringFieldRefInput<$PrismaModel>
+    array_starts_with?: InputJsonValue | JsonFieldRefInput<$PrismaModel> | null
+    array_ends_with?: InputJsonValue | JsonFieldRefInput<$PrismaModel> | null
+    array_contains?: InputJsonValue | JsonFieldRefInput<$PrismaModel> | null
+    lt?: InputJsonValue | JsonFieldRefInput<$PrismaModel>
+    lte?: InputJsonValue | JsonFieldRefInput<$PrismaModel>
+    gt?: InputJsonValue | JsonFieldRefInput<$PrismaModel>
+    gte?: InputJsonValue | JsonFieldRefInput<$PrismaModel>
+    not?: InputJsonValue | JsonFieldRefInput<$PrismaModel> | JsonNullValueFilter
+  }
 
   export type NestedEnumMockTestModuleFilter<$PrismaModel = never> = {
     equals?: $Enums.MockTestModule | EnumMockTestModuleFieldRefInput<$PrismaModel>
@@ -44988,29 +45179,6 @@ export namespace Prisma {
     in?: $Enums.ScoringStatus[] | ListEnumScoringStatusFieldRefInput<$PrismaModel>
     notIn?: $Enums.ScoringStatus[] | ListEnumScoringStatusFieldRefInput<$PrismaModel>
     not?: NestedEnumScoringStatusFilter<$PrismaModel> | $Enums.ScoringStatus
-  }
-  export type NestedJsonNullableFilter<$PrismaModel = never> =
-    | PatchUndefined<
-        Either<Required<NestedJsonNullableFilterBase<$PrismaModel>>, Exclude<keyof Required<NestedJsonNullableFilterBase<$PrismaModel>>, 'path'>>,
-        Required<NestedJsonNullableFilterBase<$PrismaModel>>
-      >
-    | OptionalFlat<Omit<Required<NestedJsonNullableFilterBase<$PrismaModel>>, 'path'>>
-
-  export type NestedJsonNullableFilterBase<$PrismaModel = never> = {
-    equals?: InputJsonValue | JsonFieldRefInput<$PrismaModel> | JsonNullValueFilter
-    path?: string[]
-    mode?: QueryMode | EnumQueryModeFieldRefInput<$PrismaModel>
-    string_contains?: string | StringFieldRefInput<$PrismaModel>
-    string_starts_with?: string | StringFieldRefInput<$PrismaModel>
-    string_ends_with?: string | StringFieldRefInput<$PrismaModel>
-    array_starts_with?: InputJsonValue | JsonFieldRefInput<$PrismaModel> | null
-    array_ends_with?: InputJsonValue | JsonFieldRefInput<$PrismaModel> | null
-    array_contains?: InputJsonValue | JsonFieldRefInput<$PrismaModel> | null
-    lt?: InputJsonValue | JsonFieldRefInput<$PrismaModel>
-    lte?: InputJsonValue | JsonFieldRefInput<$PrismaModel>
-    gt?: InputJsonValue | JsonFieldRefInput<$PrismaModel>
-    gte?: InputJsonValue | JsonFieldRefInput<$PrismaModel>
-    not?: InputJsonValue | JsonFieldRefInput<$PrismaModel> | JsonNullValueFilter
   }
 
   export type NestedEnumScoringStatusWithAggregatesFilter<$PrismaModel = never> = {
@@ -48749,6 +48917,8 @@ export namespace Prisma {
     imagePosition?: string
     options: JsonNullValueInput | InputJsonValue
     correctAnswer: string
+    sourceFileUrl?: string | null
+    sourceFileName?: string | null
     answerSource?: string | null
     requiresReview?: boolean
     verificationStatus?: string | null
@@ -48771,6 +48941,8 @@ export namespace Prisma {
     imagePosition?: string
     options: JsonNullValueInput | InputJsonValue
     correctAnswer: string
+    sourceFileUrl?: string | null
+    sourceFileName?: string | null
     answerSource?: string | null
     requiresReview?: boolean
     verificationStatus?: string | null
@@ -48925,6 +49097,8 @@ export namespace Prisma {
     imagePosition?: StringFilter<"SATQuestion"> | string
     options?: JsonFilter<"SATQuestion">
     correctAnswer?: StringFilter<"SATQuestion"> | string
+    sourceFileUrl?: StringNullableFilter<"SATQuestion"> | string | null
+    sourceFileName?: StringNullableFilter<"SATQuestion"> | string | null
     answerSource?: StringNullableFilter<"SATQuestion"> | string | null
     requiresReview?: BoolFilter<"SATQuestion"> | boolean
     verificationStatus?: StringNullableFilter<"SATQuestion"> | string | null
@@ -48994,6 +49168,10 @@ export namespace Prisma {
     description?: string | null
     createdById: string
     status?: string
+    sourceFileUrl?: string | null
+    sourceFileName?: string | null
+    sourceFileType?: string | null
+    moduleSourceFiles?: NullableJsonNullValueInput | InputJsonValue
     createdAt?: Date | string
     updatedAt?: Date | string
     studentAttempts?: StudentTestAttemptCreateNestedManyWithoutSatTestInput
@@ -49006,6 +49184,10 @@ export namespace Prisma {
     description?: string | null
     createdById: string
     status?: string
+    sourceFileUrl?: string | null
+    sourceFileName?: string | null
+    sourceFileType?: string | null
+    moduleSourceFiles?: NullableJsonNullValueInput | InputJsonValue
     createdAt?: Date | string
     updatedAt?: Date | string
     studentAttempts?: StudentTestAttemptUncheckedCreateNestedManyWithoutSatTestInput
@@ -49034,6 +49216,10 @@ export namespace Prisma {
     description?: NullableStringFieldUpdateOperationsInput | string | null
     createdById?: StringFieldUpdateOperationsInput | string
     status?: StringFieldUpdateOperationsInput | string
+    sourceFileUrl?: NullableStringFieldUpdateOperationsInput | string | null
+    sourceFileName?: NullableStringFieldUpdateOperationsInput | string | null
+    sourceFileType?: NullableStringFieldUpdateOperationsInput | string | null
+    moduleSourceFiles?: NullableJsonNullValueInput | InputJsonValue
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     studentAttempts?: StudentTestAttemptUpdateManyWithoutSatTestNestedInput
@@ -49046,6 +49232,10 @@ export namespace Prisma {
     description?: NullableStringFieldUpdateOperationsInput | string | null
     createdById?: StringFieldUpdateOperationsInput | string
     status?: StringFieldUpdateOperationsInput | string
+    sourceFileUrl?: NullableStringFieldUpdateOperationsInput | string | null
+    sourceFileName?: NullableStringFieldUpdateOperationsInput | string | null
+    sourceFileType?: NullableStringFieldUpdateOperationsInput | string | null
+    moduleSourceFiles?: NullableJsonNullValueInput | InputJsonValue
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     studentAttempts?: StudentTestAttemptUncheckedUpdateManyWithoutSatTestNestedInput
@@ -49119,6 +49309,10 @@ export namespace Prisma {
     description?: string | null
     createdById: string
     status?: string
+    sourceFileUrl?: string | null
+    sourceFileName?: string | null
+    sourceFileType?: string | null
+    moduleSourceFiles?: NullableJsonNullValueInput | InputJsonValue
     createdAt?: Date | string
     updatedAt?: Date | string
     questions?: SATQuestionCreateNestedManyWithoutSatTestInput
@@ -49131,6 +49325,10 @@ export namespace Prisma {
     description?: string | null
     createdById: string
     status?: string
+    sourceFileUrl?: string | null
+    sourceFileName?: string | null
+    sourceFileType?: string | null
+    moduleSourceFiles?: NullableJsonNullValueInput | InputJsonValue
     createdAt?: Date | string
     updatedAt?: Date | string
     questions?: SATQuestionUncheckedCreateNestedManyWithoutSatTestInput
@@ -49226,6 +49424,10 @@ export namespace Prisma {
     description?: NullableStringFieldUpdateOperationsInput | string | null
     createdById?: StringFieldUpdateOperationsInput | string
     status?: StringFieldUpdateOperationsInput | string
+    sourceFileUrl?: NullableStringFieldUpdateOperationsInput | string | null
+    sourceFileName?: NullableStringFieldUpdateOperationsInput | string | null
+    sourceFileType?: NullableStringFieldUpdateOperationsInput | string | null
+    moduleSourceFiles?: NullableJsonNullValueInput | InputJsonValue
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     questions?: SATQuestionUpdateManyWithoutSatTestNestedInput
@@ -49238,6 +49440,10 @@ export namespace Prisma {
     description?: NullableStringFieldUpdateOperationsInput | string | null
     createdById?: StringFieldUpdateOperationsInput | string
     status?: StringFieldUpdateOperationsInput | string
+    sourceFileUrl?: NullableStringFieldUpdateOperationsInput | string | null
+    sourceFileName?: NullableStringFieldUpdateOperationsInput | string | null
+    sourceFileType?: NullableStringFieldUpdateOperationsInput | string | null
+    moduleSourceFiles?: NullableJsonNullValueInput | InputJsonValue
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     questions?: SATQuestionUncheckedUpdateManyWithoutSatTestNestedInput
@@ -49250,6 +49456,10 @@ export namespace Prisma {
     description?: string | null
     createdById: string
     status?: string
+    sourceFileUrl?: string | null
+    sourceFileName?: string | null
+    sourceFileType?: string | null
+    moduleSourceFiles?: NullableJsonNullValueInput | InputJsonValue
     createdAt?: Date | string
     updatedAt?: Date | string
     questions?: SATQuestionCreateNestedManyWithoutSatTestInput
@@ -49262,6 +49472,10 @@ export namespace Prisma {
     description?: string | null
     createdById: string
     status?: string
+    sourceFileUrl?: string | null
+    sourceFileName?: string | null
+    sourceFileType?: string | null
+    moduleSourceFiles?: NullableJsonNullValueInput | InputJsonValue
     createdAt?: Date | string
     updatedAt?: Date | string
     questions?: SATQuestionUncheckedCreateNestedManyWithoutSatTestInput
@@ -49338,6 +49552,10 @@ export namespace Prisma {
     description?: NullableStringFieldUpdateOperationsInput | string | null
     createdById?: StringFieldUpdateOperationsInput | string
     status?: StringFieldUpdateOperationsInput | string
+    sourceFileUrl?: NullableStringFieldUpdateOperationsInput | string | null
+    sourceFileName?: NullableStringFieldUpdateOperationsInput | string | null
+    sourceFileType?: NullableStringFieldUpdateOperationsInput | string | null
+    moduleSourceFiles?: NullableJsonNullValueInput | InputJsonValue
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     questions?: SATQuestionUpdateManyWithoutSatTestNestedInput
@@ -49350,6 +49568,10 @@ export namespace Prisma {
     description?: NullableStringFieldUpdateOperationsInput | string | null
     createdById?: StringFieldUpdateOperationsInput | string
     status?: StringFieldUpdateOperationsInput | string
+    sourceFileUrl?: NullableStringFieldUpdateOperationsInput | string | null
+    sourceFileName?: NullableStringFieldUpdateOperationsInput | string | null
+    sourceFileType?: NullableStringFieldUpdateOperationsInput | string | null
+    moduleSourceFiles?: NullableJsonNullValueInput | InputJsonValue
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     questions?: SATQuestionUncheckedUpdateManyWithoutSatTestNestedInput
@@ -50991,6 +51213,8 @@ export namespace Prisma {
     imagePosition?: string
     options: JsonNullValueInput | InputJsonValue
     correctAnswer: string
+    sourceFileUrl?: string | null
+    sourceFileName?: string | null
     answerSource?: string | null
     requiresReview?: boolean
     verificationStatus?: string | null
@@ -51053,6 +51277,8 @@ export namespace Prisma {
     imagePosition?: StringFieldUpdateOperationsInput | string
     options?: JsonNullValueInput | InputJsonValue
     correctAnswer?: StringFieldUpdateOperationsInput | string
+    sourceFileUrl?: NullableStringFieldUpdateOperationsInput | string | null
+    sourceFileName?: NullableStringFieldUpdateOperationsInput | string | null
     answerSource?: NullableStringFieldUpdateOperationsInput | string | null
     requiresReview?: BoolFieldUpdateOperationsInput | boolean
     verificationStatus?: NullableStringFieldUpdateOperationsInput | string | null
@@ -51075,6 +51301,8 @@ export namespace Prisma {
     imagePosition?: StringFieldUpdateOperationsInput | string
     options?: JsonNullValueInput | InputJsonValue
     correctAnswer?: StringFieldUpdateOperationsInput | string
+    sourceFileUrl?: NullableStringFieldUpdateOperationsInput | string | null
+    sourceFileName?: NullableStringFieldUpdateOperationsInput | string | null
     answerSource?: NullableStringFieldUpdateOperationsInput | string | null
     requiresReview?: BoolFieldUpdateOperationsInput | boolean
     verificationStatus?: NullableStringFieldUpdateOperationsInput | string | null
@@ -51097,6 +51325,8 @@ export namespace Prisma {
     imagePosition?: StringFieldUpdateOperationsInput | string
     options?: JsonNullValueInput | InputJsonValue
     correctAnswer?: StringFieldUpdateOperationsInput | string
+    sourceFileUrl?: NullableStringFieldUpdateOperationsInput | string | null
+    sourceFileName?: NullableStringFieldUpdateOperationsInput | string | null
     answerSource?: NullableStringFieldUpdateOperationsInput | string | null
     requiresReview?: BoolFieldUpdateOperationsInput | boolean
     verificationStatus?: NullableStringFieldUpdateOperationsInput | string | null

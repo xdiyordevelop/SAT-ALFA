@@ -22,6 +22,8 @@ import {
   FileText,
   HelpCircle,
   Bell,
+  Bug,
+  User,
 } from "lucide-react";
 import { logoutAction } from "@/server/actions/auth.actions";
 
@@ -54,6 +56,7 @@ export function Sidebar({ username, role }: SidebarProps) {
             { href: "/admin/dashboard", icon: LayoutDashboard, label: "Dashboard" },
             { href: "/admin/topics", icon: BookOpen, label: "Topics & Lessons" },
             { href: "/admin/mock-tests", icon: PenTool, label: "Test Bank" },
+            { href: "/admin/mock-tests/bugs", icon: Bug, label: "Bug Reports & AI" },
             { href: "/admin/mock-tests/proctor", icon: Target, label: "Proctoring" },
             { href: "/admin/mock-tests/analytics", icon: FileBarChart, label: "Analytics" },
           ],
@@ -109,6 +112,7 @@ export function Sidebar({ username, role }: SidebarProps) {
         items: [
           { href: "/admin/topics", icon: BookOpen, label: "Topics & Lessons" },
           { href: "/admin/mock-tests", icon: PenTool, label: "Test Bank" },
+          { href: "/admin/mock-tests/bugs", icon: Bug, label: "Bug Reports & AI" },
           { href: "/admin/mock-tests/proctor", icon: Target, label: "Proctoring" },
           { href: "/admin/mock-tests/analytics", icon: FileBarChart, label: "Analytics" },
         ],
@@ -137,6 +141,7 @@ export function Sidebar({ username, role }: SidebarProps) {
   ];
 
   const menuGroups = role === "STUDENT" ? studentMenu : getStaffMenu();
+  const allHrefs = menuGroups.flatMap((g) => g.items.map((i) => i.href));
 
   return (
     <>
@@ -180,14 +185,18 @@ export function Sidebar({ username, role }: SidebarProps) {
             </h1>
           </Link>
 
-          <div className="flex items-center gap-2 px-2.5 py-2 rounded-lg bg-slate-50 dark:bg-slate-900/30 border border-slate-200 dark:border-slate-800">
-            <div className="w-8 h-8 rounded-full border-2 border-slate-300 dark:border-slate-600 bg-slate-100 dark:bg-slate-800 flex items-center justify-center overflow-hidden shrink-0">
-              <span className="text-xs font-bold text-slate-700 dark:text-slate-200">
+          <Link
+            href={role === "STUDENT" ? "/student/profile" : "/admin/settings"}
+            className="flex items-center gap-2.5 px-2.5 py-2 rounded-xl bg-slate-50 dark:bg-slate-900/40 hover:bg-slate-100 dark:hover:bg-slate-800/60 border border-slate-200 dark:border-slate-800 hover:border-[#EBFF00]/40 transition-all group/user"
+            title={role === "STUDENT" ? "View Student Profile" : "Settings"}
+          >
+            <div className="w-8 h-8 rounded-full border-2 border-slate-300 dark:border-slate-600 group-hover/user:border-[#EBFF00] bg-slate-100 dark:bg-slate-800 flex items-center justify-center overflow-hidden shrink-0 transition-colors">
+              <span className="text-xs font-bold text-slate-700 dark:text-slate-200 group-hover/user:text-slate-900 dark:group-hover/user:text-white">
                 {username.charAt(0).toUpperCase()}
               </span>
             </div>
             <div className="flex-1 min-w-0">
-              <p className="font-semibold text-xs text-slate-900 dark:text-white truncate">
+              <p className="font-semibold text-xs text-slate-900 dark:text-white group-hover/user:text-[#EBFF00] transition-colors truncate">
                 {username}
               </p>
               <p className="text-[10px] text-slate-500 dark:text-slate-400 font-medium">
@@ -200,7 +209,7 @@ export function Sidebar({ username, role }: SidebarProps) {
                   : "Student"}
               </p>
             </div>
-          </div>
+          </Link>
 
         </div>
 
@@ -213,10 +222,24 @@ export function Sidebar({ username, role }: SidebarProps) {
               </h3>
               <div className="flex flex-col gap-1 mt-2">
                 {group.items.map((item) => {
-                  const active =
-                    pathname.startsWith(item.href) &&
-                    ((item.href !== "/admin/dashboard" && item.href !== "/student/dashboard") ||
-                      pathname === item.href);
+                  const isDashboard = item.href === "/admin/dashboard" || item.href === "/student/dashboard";
+                  let active = false;
+
+                  if (isDashboard) {
+                    active = pathname === item.href;
+                  } else if (pathname === item.href) {
+                    active = true;
+                  } else if (pathname.startsWith(item.href + "/")) {
+                    // Only active if no other sidebar item has a longer matching prefix for current pathname
+                    const hasMoreSpecific = allHrefs.some(
+                      (other) =>
+                        other !== item.href &&
+                        other.startsWith(item.href) &&
+                        (pathname === other || pathname.startsWith(other + "/"))
+                    );
+                    active = !hasMoreSpecific;
+                  }
+
                   const Icon = item.icon;
 
                   return (
@@ -248,6 +271,23 @@ export function Sidebar({ username, role }: SidebarProps) {
             >
               <Settings className="w-5 h-5 flex-shrink-0" />
               <span>Settings</span>
+            </Link>
+          )}
+          {role === "STUDENT" && (
+            <Link
+              href="/student/profile"
+              className={`px-4 py-2.5 flex items-center gap-3 rounded-lg transition-colors font-medium text-sm ${
+                pathname === "/student/profile"
+                  ? "bg-[#EBFF00]/10 text-slate-900 dark:text-[#EBFF00] font-semibold"
+                  : "text-slate-600 dark:text-slate-400 hover:text-slate-900 dark:hover:text-slate-200 hover:bg-slate-50 dark:hover:bg-slate-900/20"
+              }`}
+            >
+              <User
+                className={`w-5 h-5 flex-shrink-0 ${
+                  pathname === "/student/profile" ? "text-slate-900 dark:text-[#EBFF00]" : ""
+                }`}
+              />
+              <span>Profile</span>
             </Link>
           )}
           {(() => {

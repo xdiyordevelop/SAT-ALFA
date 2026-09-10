@@ -290,10 +290,13 @@ export async function verifyProctoredCodeAction(codeRaw: string) {
         where: { id: proctoredSession.id },
         data: { totalParticipants: { increment: 1 } },
       })
-    } else if (existingParticipant.status === 'DISQUALIFIED') {
+    } else if (
+      existingParticipant.status === 'DISQUALIFIED' ||
+      existingParticipant.fullscreenExitCount >= 5
+    ) {
       return {
         success: false,
-        error: 'You have been disqualified from this live exam by the proctor.',
+        error: 'You have been disqualified from this live exam session due to 5 exit violations.',
       }
     } else if (existingParticipant.status === 'COMPLETED') {
       return {

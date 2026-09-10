@@ -113,13 +113,18 @@ export async function POST(request: NextRequest) {
  }
  })
 
- // Convert raw to scaled scores (Simple estimation for now)
- const rwScore = convertRawToScaled(rwRaw, rwTotal, 200, 800)
- const mathScore = convertRawToScaled(mathRaw, mathTotal, 200, 800)
- const totalScore = rwScore + mathScore
+  // Check if student was disqualified or reached 5 exits
+  const disqualifiedParticipant = await prisma.proctoredParticipant.findFirst({
+    where: {
+      studentId: studentProfile.id,
+      session: { satTestId: testId },
+      OR: [
+        { status: "DISQUALIFIED" },
+        { fullscreenExitCount: { gte: 5 } },
+      ],
+    },
+  });
 
-  // Find or create test attempt
-  // In our take/page.tsx we didn't create an attempt on start, so we upsert or create here.
   const attempt = await prisma.studentTestAttempt.findFirst({
     where: {
       satTestId: testId,
@@ -127,9 +132,28 @@ export async function POST(request: NextRequest) {
       completedAt: null,
       ...(resolvedProctorCode ? { proctorCode: resolvedProctorCode } : {}),
     },
-  })
+    orderBy: { createdAt: "desc" },
+  });
 
-  let finalAttemptId
+  const isDisqualified = Boolean(
+    disqualifiedParticipant || (attempt && attempt.fullscreenExitCount >= 5)
+  );
+
+  // If disqualified, NO scores/points are awarded (0 points)
+  let rwScore = 0;
+  let mathScore = 0;
+  let totalScore = 0;
+
+  if (!isDisqualified) {
+    rwScore = convertRawToScaled(rwRaw, rwTotal, 200, 800);
+    mathScore = convertRawToScaled(mathRaw, mathTotal, 200, 800);
+    totalScore = rwScore + mathScore;
+  } else {
+    rwRaw = 0;
+    mathRaw = 0;
+  }
+
+  let finalAttemptId;
   if (attempt) {
     const updated = await prisma.studentTestAttempt.update({
       where: { id: attempt.id },
@@ -142,18 +166,18 @@ export async function POST(request: NextRequest) {
         rwScore,
         mathScore,
         totalScore,
-        scoringStatus: 'PUBLISHED',
+        scoringStatus: "PUBLISHED",
         reviewIndex: reviewIndex,
         proctorCode: resolvedProctorCode || attempt.proctorCode,
       },
-    })
-    finalAttemptId = updated.id
+    });
+    finalAttemptId = updated.id;
   } else {
     const created = await prisma.studentTestAttempt.create({
       data: {
         satTestId: testId,
         studentId: studentProfile.id,
-        startedAt: new Date(Date.now() - 2 * 60 * 60 * 1000), // Approximate if missing
+        startedAt: new Date(Date.now() - 2 * 60 * 60 * 1000),
         completedAt: new Date(timestamp || Date.now()),
         userAnswers: userAnswers,
         markedQuestions: markedQuestions || {},
@@ -162,16 +186,16 @@ export async function POST(request: NextRequest) {
         rwScore,
         mathScore,
         totalScore,
-        scoringStatus: 'PUBLISHED',
+        scoringStatus: "PUBLISHED",
         reviewIndex: reviewIndex,
         proctorCode: resolvedProctorCode,
       },
-    })
-    finalAttemptId = created.id
+    });
+    finalAttemptId = created.id;
   }
 
   try {
-    // If student is part of an active or recent proctored session for this test, mark them completed
+    // If student is part of an active or recent proctored session for this test
     if (resolvedProctorCode) {
       await prisma.proctoredParticipant.updateMany({
         where: {
@@ -181,9 +205,9 @@ export async function POST(request: NextRequest) {
           },
         },
         data: {
-          status: "COMPLETED",
+          status: isDisqualified ? "DISQUALIFIED" : "COMPLETED",
           completedAt: new Date(timestamp || Date.now()),
-          score: totalScore,
+          score: isDisqualified ? 0 : totalScore,
         },
       });
     } else {
@@ -197,24 +221,26 @@ export async function POST(request: NextRequest) {
           status: { in: ["TAKING", "WAITING", "PAUSED"] },
         },
         data: {
-          status: "COMPLETED",
+          status: isDisqualified ? "DISQUALIFIED" : "COMPLETED",
           completedAt: new Date(timestamp || Date.now()),
-          score: totalScore,
+          score: isDisqualified ? 0 : totalScore,
         },
       });
     }
 
-    const test = await prisma.sATMockTest.findUnique({
-      where: { id: testId },
-      select: { name: true },
-    });
-    const { createNotification } = await import("@/server/actions/notification.actions");
-    await createNotification(session.userId, {
-      title: "Mock Test Completed!",
-      message: `Your results for ${test?.name || "Mock Test"} are ready. Score: ${totalScore} (RW: ${rwScore}, Math: ${mathScore}).`,
-      type: "RESULT",
-      link: `/student/mock-tests/${testId}/results`,
-    });
+    if (!isDisqualified) {
+      const test = await prisma.sATMockTest.findUnique({
+        where: { id: testId },
+        select: { name: true },
+      });
+      const { createNotification } = await import("@/server/actions/notification.actions");
+      await createNotification(session.userId, {
+        title: "Mock Test Completed!",
+        message: `Your results for ${test?.name || "Mock Test"} are ready. Score: ${totalScore} (RW: ${rwScore}, Math: ${mathScore}).`,
+        type: "RESULT",
+        link: `/student/mock-tests/${testId}/results`,
+      });
+    }
   } catch (notifErr) {
     console.error("Failed to update proctor status or send test result notification:", notifErr);
   }

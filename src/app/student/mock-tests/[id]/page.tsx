@@ -61,13 +61,15 @@ export default async function MockTestLobbyPage({ params }: PageProps) {
     notFound();
   }
 
-  const m1Count = test.questions.filter((q) => q.module === "MODULE_1").length || 27;
-  const m2Count = test.questions.filter((q) => q.module === "MODULE_2").length || 27;
-  const m3Count = test.questions.filter((q) => q.module === "MODULE_3").length || 22;
-  const m4Count = test.questions.filter((q) => q.module === "MODULE_4").length || 22;
-  const totalQuestions = test.questions.length || m1Count + m2Count + m3Count + m4Count;
+  const m1Count = test.questions.filter((q) => q.module === "MODULE_1").length;
+  const m2Count = test.questions.filter((q) => q.module === "MODULE_2").length;
+  const m3Count = test.questions.filter((q) => q.module === "MODULE_3").length;
+  const m4Count = test.questions.filter((q) => q.module === "MODULE_4").length;
+  const totalQuestions = test.questions.length;
 
-  const previousAttempts = test.studentAttempts.filter((a) => a.completedAt !== null);
+  const previousAttempts = test.studentAttempts.filter(
+    (a) => a.completedAt !== null && (a.totalScore || 0) > 0
+  );
   const bestScore = previousAttempts.length > 0
     ? Math.max(...previousAttempts.map((a) => a.totalScore || 0))
     : null;
@@ -160,6 +162,7 @@ export default async function MockTestLobbyPage({ params }: PageProps) {
             </div>
           </div>
         </div>
+
 
         {/* Test Structure Breakdown */}
         <div className="space-y-4">
@@ -324,11 +327,11 @@ export default async function MockTestLobbyPage({ params }: PageProps) {
               Cancel
             </Link>
             <Link
-              href={`/student/mock-tests/${test.id}/take`}
+              href={`/student/mock-tests/${test.id}/take${test.studentAttempts.length > 0 ? "?retake=true" : ""}`}
               className="w-full sm:w-auto px-8 py-3.5 bg-[#EBFF00] hover:bg-[#d9ff00] text-slate-950 rounded-xl font-black text-sm flex items-center justify-center gap-2 transition-all shadow-[0_0_20px_rgba(235,255,0,0.25)] hover:shadow-[0_0_25px_rgba(235,255,0,0.4)] whitespace-nowrap"
             >
               <Play className="w-4 h-4 fill-current" />
-              Enter Testing Room & Begin
+              {test.studentAttempts.length > 0 ? "Retake Test" : "Enter Testing Room & Begin"}
             </Link>
           </div>
         </div>

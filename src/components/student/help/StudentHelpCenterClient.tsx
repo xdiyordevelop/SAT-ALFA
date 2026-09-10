@@ -22,6 +22,7 @@ import {
   Sparkles,
 } from "lucide-react";
 import { createPortal } from "react-dom";
+import { AuthorProfileCard } from "./AuthorProfileCard";
 
 type CategoryKey =
   | "all"
@@ -514,6 +515,9 @@ export function StudentHelpCenterClient({
 
         {/* Right Sidebar: Shortcuts & Support Action Cards */}
         <div className="space-y-4">
+          {/* Creator & Lead Developer Profile Card */}
+          <AuthorProfileCard variant="sidebar" />
+
           {/* Desmos Cheat Sheet Card */}
           <div className="p-5 rounded-2xl bg-white dark:bg-[#131313] border border-slate-200 dark:border-white/10 space-y-3">
             <div className="flex items-center gap-2 text-slate-900 dark:text-white font-bold text-sm">
@@ -594,6 +598,9 @@ export function StudentHelpCenterClient({
           </div>
         </div>
       </div>
+
+      {/* Featured Platform Creator & Engineering Spotlight Banner */}
+      <AuthorProfileCard variant="banner" />
 
       {/* Bug Report Modal (Portaled) */}
       {isBugModalOpen &&

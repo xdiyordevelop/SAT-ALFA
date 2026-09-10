@@ -25,12 +25,6 @@ export default function LoginPage() {
         <div className="absolute top-[-20%] left-[-10%] w-[50%] h-[50%] bg-[#EBFF00]/10 rounded-full blur-[120px] pointer-events-none" />
         <div className="absolute bottom-[-10%] right-[-10%] w-[60%] h-[60%] bg-blue-600/10 rounded-full blur-[150px] pointer-events-none" />
 
-        {/* Status Indicator */}
-        <div className="absolute top-8 left-8 flex items-center gap-2 bg-[#1c1b1b]/80 backdrop-blur-sm border border-white/10 px-4 py-2 rounded-md z-20 shadow-lg">
-          <div className="w-2 h-2 rounded-full bg-[#EBFF00] animate-pulse"></div>
-          <span className="text-[11px] font-bold text-slate-300 uppercase tracking-widest">System Status: Online</span>
-        </div>
-
         {/* Branding Content */}
         <div className="relative z-10 flex flex-col items-center max-w-md text-center mt-[-10%]">
 
@@ -54,7 +48,7 @@ export default function LoginPage() {
           {/* Subtitle */}
           <p className="text-xl text-slate-300 font-medium">
             Your Path to Success <br/>
-            <span className="text-slate-500 text-base mt-2 block">Premium SAT Preparation Center</span>
+            <span className="text-slate-400 text-base mt-2 block font-normal">Students Platform</span>
           </p>
         </div>
 
@@ -86,13 +80,6 @@ export default function LoginPage() {
         {/* Login Form */}
         <div className="w-full flex justify-center z-10">
           <NeonLoginForm />
-        </div>
-
-        {/* Footer */}
-        <div className="absolute bottom-6 left-0 w-full text-center z-10">
-          <p className="text-[11px] font-bold text-slate-400 dark:text-slate-600 uppercase tracking-widest">
-            Secure Connection • Unauthorized Access Prohibited
-          </p>
         </div>
       </div>
 

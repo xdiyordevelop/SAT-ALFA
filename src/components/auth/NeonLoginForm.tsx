@@ -121,19 +121,9 @@ export function NeonLoginForm() {
 
         {/* Password Field */}
         <div className="flex flex-col gap-2">
-          <div className="flex justify-between items-center">
-            <label htmlFor="password" className="text-sm font-semibold text-slate-700 dark:text-slate-300">
-              Password
-            </label>
-            <a
-              href="#"
-              className="text-xs text-slate-500 hover:text-[#EBFF00] transition-colors font-medium"
-              onClick={(e) => e.preventDefault()}
-              title="Coming soon"
-            >
-              Forgot password?
-            </a>
-          </div>
+          <label htmlFor="password" className="text-sm font-semibold text-slate-700 dark:text-slate-300">
+            Password
+          </label>
           <div className="relative">
             <input
               id="password"
@@ -170,11 +160,6 @@ export function NeonLoginForm() {
           )}
         </button>
       </form>
-
-      {/* Footer Text */}
-      <p className="text-[11px] text-slate-600 text-center mt-8 font-medium">
-        🔒 Secure connection • Unauthorized access prohibited
-      </p>
     </div>
   );
 }

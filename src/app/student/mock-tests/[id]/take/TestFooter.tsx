@@ -46,10 +46,10 @@ export function TestFooter({
   return (
     <>
       <footer className="sticky bottom-0 z-40 bg-white dark:bg-[#131313] border-t border-slate-200 dark:border-white/10 h-16 flex items-center shrink-0">
-        <div className="w-full px-6 flex items-center justify-between">
+        <div className="w-full px-8 flex items-center justify-between">
           {/* Left: Student Name */}
           <div className="flex-1 flex items-center min-w-0">
-            <div className="text-slate-700 dark:text-slate-300 font-semibold text-sm truncate pr-4">
+            <div className="text-slate-800 dark:text-slate-200 font-semibold text-[15px] truncate pr-4 pl-8">
               {studentName}
             </div>
           </div>

@@ -5,9 +5,12 @@ export interface AiGenerateRequest {
  temperature?: number;
  maxTokens?: number;
  pdfBase64?: string;
+ pdfFileUri?: string;
+ pdfBuffer?: Buffer;
  imageBase64?: string;
  imageMimeType?: string;
  imagesBase64?: { mimeType: string; data: string }[];
+ apiKey?: string;
  signal?: AbortSignal;
 }
 export interface AiGenerateResponse {

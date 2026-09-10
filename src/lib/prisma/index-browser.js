@@ -318,6 +318,10 @@ exports.Prisma.SATMockTestScalarFieldEnum = {
   description: 'description',
   createdById: 'createdById',
   status: 'status',
+  sourceFileUrl: 'sourceFileUrl',
+  sourceFileName: 'sourceFileName',
+  sourceFileType: 'sourceFileType',
+  moduleSourceFiles: 'moduleSourceFiles',
   createdAt: 'createdAt',
   updatedAt: 'updatedAt'
 };
@@ -334,6 +338,8 @@ exports.Prisma.SATQuestionScalarFieldEnum = {
   imagePosition: 'imagePosition',
   options: 'options',
   correctAnswer: 'correctAnswer',
+  sourceFileUrl: 'sourceFileUrl',
+  sourceFileName: 'sourceFileName',
   answerSource: 'answerSource',
   requiresReview: 'requiresReview',
   verificationStatus: 'verificationStatus',
@@ -499,12 +505,12 @@ exports.Prisma.SortOrder = {
   desc: 'desc'
 };
 
-exports.Prisma.JsonNullValueInput = {
+exports.Prisma.NullableJsonNullValueInput = {
+  DbNull: Prisma.DbNull,
   JsonNull: Prisma.JsonNull
 };
 
-exports.Prisma.NullableJsonNullValueInput = {
-  DbNull: Prisma.DbNull,
+exports.Prisma.JsonNullValueInput = {
   JsonNull: Prisma.JsonNull
 };
 

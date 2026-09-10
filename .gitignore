@@ -41,3 +41,9 @@ yarn-error.log*
 next-env.d.ts
 
 /src/generated/prisma
+
+# local scratch and external dumps
+/scratch/
+/ALFA_SAT2/
+*.png
+!public/**/*.png

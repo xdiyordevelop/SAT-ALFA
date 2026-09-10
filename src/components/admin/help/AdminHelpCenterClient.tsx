@@ -20,6 +20,7 @@ import {
   X,
   FileText,
 } from "lucide-react";
+import { AuthorProfileCard } from "@/components/student/help/AuthorProfileCard";
 
 type StaffCategoryKey =
   | "all"
@@ -429,8 +430,10 @@ export function AdminHelpCenterClient() {
           )}
         </div>
 
-        {/* Sidebar: KaTeX Cheat Sheet & Technical Hotline */}
+        {/* Sidebar: Author Profile, KaTeX Cheat Sheet & Technical Hotline */}
         <div className="space-y-4">
+          <AuthorProfileCard variant="sidebar" />
+
           {/* KaTeX Copyable Cheat Sheet */}
           <div className="p-5 rounded-2xl bg-white dark:bg-[#131313] border border-slate-200 dark:border-white/10 space-y-3">
             <div className="flex items-center gap-2 text-slate-900 dark:text-white font-bold text-sm">
@@ -487,6 +490,9 @@ export function AdminHelpCenterClient() {
           </div>
         </div>
       </div>
+
+      {/* Creator & Platform Architect Spotlight Banner */}
+      <AuthorProfileCard variant="banner" />
     </div>
   );
 }

@@ -22,13 +22,18 @@ interface SaveQuestionPayload {
  domain?: string;
  skill?: string;
  explanation?: string | null;
+ sourceFileUrl?: string | null;
+ sourceFileName?: string | null;
 }
 
 interface ImportPayload {
- testId?: string;
- testName: string;
- description?: string;
- questions: SaveQuestionPayload[];
+  testId?: string;
+  testName: string;
+  description?: string;
+  sourceFileUrl?: string | null;
+  sourceFileName?: string | null;
+  sourceFileType?: string | null;
+  questions: SaveQuestionPayload[];
 }
 
 
@@ -69,8 +74,8 @@ export async function POST(request: NextRequest) {
  );
  }
 
- const body: ImportPayload = await request.json();
- const { testName, description, questions } = body;
+  const body: ImportPayload = await request.json();
+  const { testName, description, questions, sourceFileUrl, sourceFileName, sourceFileType } = body;
 
  if (!testName || typeof testName !== "string" || !testName.trim()) {
  return NextResponse.json(
@@ -125,6 +130,8 @@ export async function POST(request: NextRequest) {
  domain: q.domain || "General",
  skill: q.skill || "General Skills",
  explanation: q.explanation || null,
+ sourceFileUrl: q.sourceFileUrl || sourceFileUrl || null,
+ sourceFileName: q.sourceFileName || sourceFileName || null,
  answerSource: isMissingAnswer ? "missing" : (q.answerSource || 'missing'),
  requiresReview: isMissingAnswer || (q.requiresReview ?? true),
  verificationStatus: q.verificationStatus || null,
@@ -132,9 +139,22 @@ export async function POST(request: NextRequest) {
  });
 
  
-    const existingTest = body.testId ? await prisma.sATMockTest.findUnique({ where: { id: body.testId } }) : null;
+    let existingTest = body.testId ? await prisma.sATMockTest.findUnique({ where: { id: body.testId } }) : null;
 
-    let satTest;
+    // Safety fallback: if testId wasn't passed, check if a test with this exact name already exists
+    if (!existingTest && testName) {
+      const match = await prisma.sATMockTest.findFirst({
+        where: { name: { equals: testName.trim(), mode: "insensitive" } },
+        orderBy: { updatedAt: "desc" },
+      });
+      const modulesInUpload = new Set(questionsToCreate.map((q) => q.module));
+      // If found and we are updating 1 or 2 modules, attach to the existing test
+      if (match && modulesInUpload.size <= 2) {
+        existingTest = match;
+      }
+    }
+
+    let satTest: any;
     if (existingTest) {
       // Delete existing questions only for the modules included in this upload
       const modulesToReplace = Array.from(new Set(questionsToCreate.map(q => q.module)));
@@ -145,39 +165,92 @@ export async function POST(request: NextRequest) {
         }
       });
       
+      // Update per-module source file mapping
+      const currentModuleFiles = ((existingTest.moduleSourceFiles as any) || {});
+      const updatedModuleFiles = { ...currentModuleFiles };
+
+      if (sourceFileUrl) {
+        for (const mod of modulesToReplace) {
+          updatedModuleFiles[mod] = {
+            url: sourceFileUrl,
+            fileName: sourceFileName || null,
+            fileType: sourceFileType || "application/pdf",
+            updatedAt: new Date().toISOString(),
+          };
+        }
+      }
+
+      const updateData: any = {
+        questions: {
+          create: questionsToCreate
+        },
+        moduleSourceFiles: updatedModuleFiles,
+      };
+
+      // If uploading all modules or no fallback source file exists yet, update top-level sourceFileUrl as fallback
+      if (sourceFileUrl && (!existingTest.sourceFileUrl || modulesToReplace.length >= 4)) {
+        updateData.sourceFileUrl = sourceFileUrl;
+        updateData.sourceFileName = sourceFileName || null;
+        updateData.sourceFileType = sourceFileType || "application/pdf";
+      }
+
       satTest = await prisma.sATMockTest.update({
         where: { id: existingTest.id },
-        data: {
-          questions: {
-            create: questionsToCreate
-          }
-        },
+        data: updateData,
         include: { questions: { select: { id: true, module: true, questionNumber: true } } }
       });
     } else {
+      const modulesToCreate = Array.from(new Set(questionsToCreate.map(q => q.module)));
+      const initialModuleFiles: Record<string, any> = {};
+      if (sourceFileUrl) {
+        for (const mod of modulesToCreate) {
+          initialModuleFiles[mod] = {
+            url: sourceFileUrl,
+            fileName: sourceFileName || null,
+            fileType: sourceFileType || "application/pdf",
+            createdAt: new Date().toISOString(),
+          };
+        }
+      }
+
       satTest = await prisma.sATMockTest.create({
         data: {
           name: testName.trim().substring(0, 255),
           description: description || `Imported on ${new Date().toLocaleDateString()}`,
           createdById: session.userId,
           status: "draft",
+          sourceFileUrl: sourceFileUrl || null,
+          sourceFileName: sourceFileName || null,
+          sourceFileType: sourceFileType || (sourceFileUrl ? "application/pdf" : null),
+          moduleSourceFiles: Object.keys(initialModuleFiles).length > 0 ? initialModuleFiles : undefined,
           questions: { create: questionsToCreate }
         },
         include: { questions: { select: { id: true, module: true, questionNumber: true } } }
       });
     }
 
+    // Tally module counts across the entire test
+    const moduleCounts: Record<string, number> = {
+      MODULE_1: 0,
+      MODULE_2: 0,
+      MODULE_3: 0,
+      MODULE_4: 0,
+    };
+    for (const q of satTest.questions) {
+      moduleCounts[q.module] = (moduleCounts[q.module] || 0) + 1;
+    }
 
- return NextResponse.json(
- {
- success: true,
- testId: satTest.id,
- testName: satTest.name,
- questionCount: satTest.questions.length,
- message: `Successfully imported ${satTest.questions.length} questions into draft test "${satTest.name}"`,
- },
- { status: 201 }
- );
+    return NextResponse.json(
+      {
+        success: true,
+        testId: satTest.id,
+        testName: satTest.name,
+        questionCount: satTest.questions.length,
+        modules: moduleCounts,
+        message: `Successfully saved ${questionsToCreate.length} questions into "${satTest.name}". Test now has ${satTest.questions.length} total questions.`,
+      },
+      { status: 201 }
+    );
  } catch (error) {
  const errorMsg = error instanceof Error ? error.message : String(error);
  console.error("[IMPORT_SAVER_ERROR]", errorMsg);

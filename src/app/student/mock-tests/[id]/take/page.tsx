@@ -6,13 +6,14 @@ import { TestEngine } from "./TestEngine";
 
 interface PageProps {
   params: Promise<{ id: string }>;
-  searchParams?: Promise<{ proctorSessionId?: string; proctorCode?: string; code?: string }>;
+  searchParams?: Promise<{ proctorSessionId?: string; proctorCode?: string; code?: string; retake?: string }>;
 }
 
 export default async function TakeTestPage({ params, searchParams }: PageProps) {
   const { id } = await params;
   const sParams = searchParams ? await searchParams : {};
   const proctorParam = sParams.proctorSessionId || sParams.proctorCode || sParams.code || null;
+  const isRetake = sParams.retake === "true";
   const session = await getSession();
   if (!session || session.role !== "STUDENT") {
     redirect("/login");
@@ -70,14 +71,17 @@ export default async function TakeTestPage({ params, searchParams }: PageProps) 
     difficulty: q.difficulty.toLowerCase(),
   }));
 
-  // Resolve proctor session if provided
+  // Resolve proctor session ONLY if proctorParam is provided in URL
+  const effectiveProctorParam = proctorParam;
   let resolvedSessionId: string | null = null;
-  if (proctorParam) {
+  let initialExitCount = 0;
+
+  if (effectiveProctorParam) {
     const proctorSession = await prisma.proctoredSession.findFirst({
       where: {
         OR: [
-          { id: proctorParam },
-          { code: proctorParam },
+          { id: effectiveProctorParam },
+          { code: effectiveProctorParam },
         ],
         satTestId: test.id,
         status: "ACTIVE",
@@ -86,29 +90,72 @@ export default async function TakeTestPage({ params, searchParams }: PageProps) 
 
     if (proctorSession) {
       resolvedSessionId = proctorSession.id;
-      // Register or update participant to TAKING
-      await prisma.proctoredParticipant.upsert({
+
+      const existingParticipant = await prisma.proctoredParticipant.findUnique({
         where: {
           sessionId_studentId: {
             sessionId: proctorSession.id,
             studentId: studentProfile.id,
           },
         },
-        update: {
-          status: "TAKING",
-          startedAt: new Date(),
-          lastHeartbeat: new Date(),
-        },
-        create: {
-          sessionId: proctorSession.id,
-          studentId: studentProfile.id,
-          userName: `${studentProfile.firstName} ${studentProfile.lastName}`.trim() || session.username,
-          email: studentProfile.user?.username || `${session.username}@student.alfa`,
-          status: "TAKING",
-          startedAt: new Date(),
-          lastHeartbeat: new Date(),
-        },
       });
+
+      if (existingParticipant) {
+        if (
+          existingParticipant.status === "DISQUALIFIED" ||
+          existingParticipant.fullscreenExitCount >= 5
+        ) {
+          redirect("/student/mock-tests?error=disqualified");
+        }
+        if (existingParticipant.status === "COMPLETED") {
+          redirect("/student/mock-tests?error=already_completed");
+        }
+
+        initialExitCount = existingParticipant.fullscreenExitCount;
+
+        await prisma.proctoredParticipant.update({
+          where: { id: existingParticipant.id },
+          data: {
+            status: "TAKING",
+            lastHeartbeat: new Date(),
+          },
+        });
+      } else {
+        await prisma.proctoredParticipant.create({
+          data: {
+            sessionId: proctorSession.id,
+            studentId: studentProfile.id,
+            userName: `${studentProfile.firstName} ${studentProfile.lastName}`.trim() || session.username,
+            email: studentProfile.user?.username || `${session.username}@student.alfa`,
+            status: "TAKING",
+            startedAt: new Date(),
+            lastHeartbeat: new Date(),
+          },
+        });
+      }
+    }
+  }
+
+  // Check attempt status (proctored or self-paced)
+  const existingAttempt = await prisma.studentTestAttempt.findFirst({
+    where: {
+      studentId: studentProfile.id,
+      satTestId: test.id,
+      ...(resolvedSessionId ? { proctorCode: resolvedSessionId } : {}),
+    },
+    orderBy: { createdAt: "desc" },
+  });
+
+  if (existingAttempt) {
+    // Only live proctored sessions lock out for exit violations
+    if (resolvedSessionId && existingAttempt.fullscreenExitCount >= 5) {
+      redirect("/student/mock-tests?error=disqualified");
+    }
+    if (!isRetake && existingAttempt.completedAt) {
+      redirect(`/student/mock-tests/${test.id}/results`);
+    }
+    if (!isRetake) {
+      initialExitCount = Math.max(initialExitCount, existingAttempt.fullscreenExitCount);
     }
   }
 
@@ -118,6 +165,8 @@ export default async function TakeTestPage({ params, searchParams }: PageProps) 
       studentId={studentProfile.id}
       userId={session.userId}
       proctorCode={resolvedSessionId}
+      isRetake={isRetake}
+      initialFullscreenExitCount={isRetake ? 0 : initialExitCount}
       totalQuestions={questions.length}
       questionsPerModule={{
         1: questions.filter((q) => q.module === 1).length,
@@ -132,6 +181,7 @@ export default async function TakeTestPage({ params, searchParams }: PageProps) 
         studentId={studentProfile.id}
         userId={session.userId}
         studentName={`${studentProfile.firstName} ${studentProfile.lastName}`}
+        testName={test.name}
         proctorCode={resolvedSessionId}
       />
     </TestProvider>

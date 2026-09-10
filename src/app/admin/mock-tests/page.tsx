@@ -68,6 +68,8 @@ export default async function AdminMockTestsPage() {
       name: t.name,
       description: t.description,
       status: t.status,
+      sourceFileUrl: t.sourceFileUrl,
+      sourceFileName: t.sourceFileName,
       questionCount: t.questions.length,
       activeSessionsCount: t.proctorSessions.length,
       createdAt: t.createdAt.toISOString(),

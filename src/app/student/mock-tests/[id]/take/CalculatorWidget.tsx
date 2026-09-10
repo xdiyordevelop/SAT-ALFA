@@ -140,6 +140,7 @@ export function CalculatorWidget(): React.ReactElement {
 
   return (
     <div
+      data-calculator-widget="true"
       className="fixed z-50 shadow-2xl rounded-xl overflow-hidden border border-slate-200 dark:border-white/10 flex flex-col"
       style={containerStyle}
     >
@@ -201,6 +202,7 @@ export function CalculatorWidget(): React.ReactElement {
           <iframe
             src="https://www.desmos.com/calculator"
             title="Desmos Graphing Calculator"
+            data-desmos-calculator="true"
             className="w-full h-full"
             style={{ border: "none", display: "block" }}
             allow="fullscreen"
