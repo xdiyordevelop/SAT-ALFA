@@ -10,7 +10,7 @@ export const metadata: Metadata = {
 
 export default function LoginPage() {
   return (
-    <div className="min-h-screen flex bg-slate-50 dark:bg-[#0a0a0a] text-slate-900 dark:text-white transition-colors duration-500 font-sans">
+    <div className="min-h-screen flex bg-slate-50 dark:bg-[#0a0a0a] text-slate-900 dark:text-white transition-colors duration-500 font-sans relative overflow-hidden">
 
       {/* Theme Toggle - Top Right */}
       <div className="absolute top-6 right-6 z-50">
@@ -29,26 +29,28 @@ export default function LoginPage() {
         <div className="relative z-10 flex flex-col items-center max-w-md text-center mt-[-10%]">
 
           {/* Logo */}
-          <div className="w-40 h-40 relative mb-8">
+          <div className="w-32 h-32 relative mb-6 rounded-3xl overflow-hidden shadow-2xl border border-white/10">
             <Image
               src="/images/sat-alfa.jpg"
               alt="SAT ALFA Logo"
               fill
-              className="object-contain drop-shadow-[0_0_15px_rgba(255,255,255,0.1)]"
+              className="object-cover"
               priority
-              sizes="160px"
+              sizes="128px"
             />
           </div>
 
           {/* Title */}
-          <h1 className="text-5xl font-black text-[#EBFF00] tracking-tighter mb-4 leading-tight drop-shadow-[0_0_20px_rgba(235,255,0,0.2)]">
+          <h1 className="text-5xl font-black text-[#EBFF00] tracking-tighter mb-3 leading-tight drop-shadow-[0_0_20px_rgba(235,255,0,0.2)]">
             SAT-ALFA
           </h1>
 
           {/* Subtitle */}
           <p className="text-xl text-slate-300 font-medium">
-            Your Path to Success <br/>
-            <span className="text-slate-400 text-base mt-2 block font-normal">Students Platform</span>
+            Your Path to Success
+            <span className="text-slate-400 text-sm mt-2 block font-normal tracking-wide">
+              Digital SAT Learning & Testing Platform
+            </span>
           </p>
         </div>
 
@@ -59,27 +61,40 @@ export default function LoginPage() {
       </div>
 
       {/* Right Side - Form Area (Mobile: 100%, Desktop: 50%) */}
-      <div className="w-full lg:w-1/2 flex flex-col justify-center items-center p-6 sm:p-12 relative bg-white dark:bg-[#0a0a0a] transition-colors duration-500">
+      <div className="w-full lg:w-1/2 flex flex-col justify-center items-center p-6 sm:p-12 relative bg-slate-50 dark:bg-[#0a0a0a] transition-colors duration-500">
+        
+        {/* Subtle Ambient Glow for Mobile */}
+        <div className="absolute top-[-10%] left-1/2 -translate-x-1/2 w-[320px] h-[320px] bg-[#EBFF00]/10 rounded-full blur-[100px] pointer-events-none" />
 
         {/* Mobile Header */}
-        <div className="lg:hidden flex flex-col items-center gap-4 mb-10 z-10">
-          <div className="w-20 h-20 relative">
+        <div className="lg:hidden flex flex-col items-center gap-3 mb-8 z-10 text-center">
+          <div className="w-20 h-20 relative rounded-2xl overflow-hidden shadow-xl border border-slate-200 dark:border-white/10">
             <Image
               src="/images/sat-alfa.jpg"
               alt="SAT ALFA Logo"
               fill
-              className="object-contain"
+              className="object-cover"
               sizes="80px"
+              priority
             />
           </div>
-          <h1 className="text-3xl font-black text-slate-900 dark:text-[#EBFF00] tracking-tighter">
-            SAT-ALFA
-          </h1>
+          <div>
+            <h1 className="text-3xl font-black text-slate-900 dark:text-[#EBFF00] tracking-tighter">
+              SAT-ALFA
+            </h1>
+            <p className="text-xs text-slate-500 dark:text-slate-400 font-medium mt-1">
+              Digital SAT Learning Platform
+            </p>
+          </div>
         </div>
 
         {/* Login Form */}
-        <div className="w-full flex justify-center z-10">
+        <div className="w-full flex flex-col items-center justify-center z-10">
           <NeonLoginForm />
+
+          <p className="mt-8 text-[11px] text-slate-400 dark:text-slate-500 text-center">
+            © {new Date().getFullYear()} SAT ALFA. All rights reserved.
+          </p>
         </div>
       </div>
 

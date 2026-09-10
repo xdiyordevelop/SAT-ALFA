@@ -47,3 +47,4 @@ next-env.d.ts
 /ALFA_SAT2/
 *.png
 !public/**/*.png
+!src/app/*.png

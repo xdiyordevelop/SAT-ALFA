@@ -1,5 +1,6 @@
 import { redirect } from "next/navigation";
 import { getSession } from "@/lib/auth/session";
+import LoginPage from "@/app/login/page";
 
 export default async function Home() {
   const session = await getSession();
@@ -12,5 +13,6 @@ export default async function Home() {
     }
   }
 
-  redirect("/login");
+  return <LoginPage />;
 }
+
