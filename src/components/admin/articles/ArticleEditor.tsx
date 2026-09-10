@@ -45,6 +45,7 @@ export function ArticleEditor({ initialData }: { initialData: any }) {
   const router = useRouter();
   const textareaRef = useRef<HTMLTextAreaElement>(null);
   const fileInputRef = useRef<HTMLInputElement>(null);
+  const inlineImageInputRef = useRef<HTMLInputElement>(null);
 
   const [formData, setFormData] = useState({
     id: initialData?.id || undefined,
@@ -61,6 +62,7 @@ export function ArticleEditor({ initialData }: { initialData: any }) {
   const [isPreview, setIsPreview] = useState(false);
   const [loading, setLoading] = useState(false);
   const [uploadingImage, setUploadingImage] = useState(false);
+  const [uploadingInlineImage, setUploadingInlineImage] = useState(false);
   const [statusMsg, setStatusMsg] = useState<{
     type: "success" | "error";
     text: string;
@@ -165,6 +167,78 @@ export function ArticleEditor({ initialData }: { initialData: any }) {
       });
     } finally {
       setUploadingImage(false);
+    }
+  };
+
+  const handleInlineImageUpload = async (file: File) => {
+    if (!file) return;
+
+    setUploadingInlineImage(true);
+    const body = new FormData();
+    body.append("file", file);
+    body.append("type", "image");
+
+    try {
+      const res = await fetch("/api/upload", { method: "POST", body });
+      const data = await res.json();
+      if (res.ok && data.url) {
+        const cleanName = file.name.replace(/\.[^/.]+$/, "").replace(/[\[\]]/g, "") || "Figure";
+        const imageMarkdown = `\n\n![${cleanName}](${data.url})\n\n`;
+
+        const textarea = textareaRef.current;
+        if (textarea) {
+          const start = textarea.selectionStart;
+          const end = textarea.selectionEnd;
+          const newContent =
+            textarea.value.substring(0, start) +
+            imageMarkdown +
+            textarea.value.substring(end);
+          setFormData((prev) => ({ ...prev, content: newContent }));
+          setTimeout(() => {
+            textarea.focus();
+            textarea.setSelectionRange(
+              start + imageMarkdown.length,
+              start + imageMarkdown.length
+            );
+          }, 0);
+        } else {
+          setFormData((prev) => ({
+            ...prev,
+            content: (prev.content || "") + imageMarkdown,
+          }));
+        }
+
+        setStatusMsg({
+          type: "success",
+          text: "Rasm yuklandi va maqolaga joylashtirildi!",
+        });
+      } else {
+        throw new Error(data.error || "Rasm yuklashda xatolik yuz berdi");
+      }
+    } catch (err: any) {
+      setStatusMsg({
+        type: "error",
+        text: err.message || "Rasm yuklanmadi",
+      });
+    } finally {
+      setUploadingInlineImage(false);
+    }
+  };
+
+  const handleTextareaPaste = async (
+    e: React.ClipboardEvent<HTMLTextAreaElement>
+  ) => {
+    const items = e.clipboardData?.items;
+    if (!items) return;
+    for (let i = 0; i < items.length; i++) {
+      if (items[i].type.indexOf("image") !== -1) {
+        const file = items[i].getAsFile();
+        if (file) {
+          e.preventDefault();
+          await handleInlineImageUpload(file);
+          break;
+        }
+      }
     }
   };
 
@@ -372,13 +446,36 @@ export function ArticleEditor({ initialData }: { initialData: any }) {
                     >
                       $$E=mc^2$$
                     </button>
+                    <input
+                      type="file"
+                      ref={inlineImageInputRef}
+                      onChange={(e) => {
+                        const file = e.target.files?.[0];
+                        if (file) {
+                          handleInlineImageUpload(file);
+                          e.target.value = "";
+                        }
+                      }}
+                      accept="image/*"
+                      className="hidden"
+                    />
                     <button
                       type="button"
-                      title="Insert Image"
-                      onClick={() => insertFormatting("![Figure description](", ")", "https://...")}
-                      className="px-2 py-1 rounded hover:bg-slate-200 dark:hover:bg-white/10 text-xs font-bold text-blue-600 dark:text-blue-400 flex items-center gap-1"
+                      title="Kompyuterdan rasm yuklash va maqolaga joylashtirish"
+                      disabled={uploadingInlineImage}
+                      onClick={() => inlineImageInputRef.current?.click()}
+                      className="px-2 py-1 rounded bg-blue-500/10 hover:bg-blue-500/20 text-xs font-bold text-blue-600 dark:text-blue-400 flex items-center gap-1.5 transition-colors disabled:opacity-50 cursor-pointer"
                     >
-                      <ImageIcon className="w-3.5 h-3.5" /> Image
+                      <Upload className="w-3.5 h-3.5" />
+                      {uploadingInlineImage ? "Yuklanmoqda..." : "Rasm yuklash"}
+                    </button>
+                    <button
+                      type="button"
+                      title="URL orqali rasm joylashtirish"
+                      onClick={() => insertFormatting("![Figure description](", ")", "https://...")}
+                      className="px-2 py-1 rounded hover:bg-slate-200 dark:hover:bg-white/10 text-xs font-medium text-slate-500 dark:text-slate-400 flex items-center gap-1 hover:text-slate-900 dark:hover:text-white transition-colors cursor-pointer"
+                    >
+                      <ImageIcon className="w-3.5 h-3.5" /> Rasm URL
                     </button>
                   </div>
 
@@ -388,8 +485,9 @@ export function ArticleEditor({ initialData }: { initialData: any }) {
                     onChange={(e) =>
                       setFormData({ ...formData, content: e.target.value })
                     }
+                    onPaste={handleTextareaPaste}
                     className="w-full bg-slate-50 dark:bg-[#0a0a0a] border border-t-0 border-slate-200 dark:border-white/10 rounded-b-xl p-4 text-slate-800 dark:text-slate-200 focus:outline-none focus:border-[#EBFF00] h-[550px] font-mono text-xs sm:text-sm leading-relaxed"
-                    placeholder="Write article in Markdown. Wrap math formulas in $...$ and $$...$$. Use ## for sections..."
+                    placeholder="Maqolani Markdown formatida yozing. Formulalarni $...$ va $$...$$ ga oling. Rasmlarni yuklang yoki to'g'ridan-to'g'ri Ctrl+V qilib tashlang..."
                   />
                 </div>
               </div>

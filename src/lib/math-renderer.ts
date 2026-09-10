@@ -17,7 +17,7 @@ export function cleanMathText(text: string): string {
     // Normalize control characters decoded from LaTeX backslash commands
     .replace(/\t(ext|imes|heta|au)/g, '\\t$1')
     .replace(/\f(rac)/g, '\\f$1')
-    .replace(/\b(eta|ar)/g, '\\b$1')
+    .replace(/[\b](eta|ar)/g, '\\b$1')
     .replace(/\r(ight|ho)/g, '\\r$1')
     // Fix AI wrapped currency like $$25,740$ -> $\$25,740$
     .replace(/\$\$([0-9,]+(?:\.[0-9]+)?)\$/g, '$\\$$1$')
