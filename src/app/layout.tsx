@@ -26,12 +26,13 @@ export const metadata: Metadata = {
     "SAT ALFA — O'zbekistondagi nufuzli Digital SAT tayyorgarlik platformasi. Real Bluebook mock testlar, AI tahlil va professional ta'lim.",
   keywords: [
     "SAT ALFA",
-    "SAT ALFA Toshkent",
     "Digital SAT Uzbekistan",
     "Digital SAT mock test",
-    "SAT tayyorgarlik kursi",
-    "SAT imtihoni Toshkent",
+    "SAT tayyorgarlik",
+    "SAT kurslari",
+    "SAT imtihoni",
     "Bluebook mock test",
+    "Digital SAT practice test",
     "SAT Math",
     "SAT Reading and Writing",
   ],
@@ -90,11 +91,10 @@ const jsonLd = {
   url: baseUrl,
   logo: `${baseUrl}/images/sat-alfa.jpg`,
   description:
-    "O'zbekistondagi nufuzli Digital SAT tayyorgarlik platformasi va o'quv markazi.",
+    "Digital SAT tayyorgarlik platformasi va o'quv markazi.",
   address: {
     "@type": "PostalAddress",
     addressCountry: "UZ",
-    addressLocality: "Tashkent",
   },
 };
 
