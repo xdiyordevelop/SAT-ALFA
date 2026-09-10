@@ -19,20 +19,19 @@ const baseUrl = "https://sat-alfa.uz";
 export const metadata: Metadata = {
   metadataBase: new URL(baseUrl),
   title: {
-    default: "SAT ALFA — Digital SAT Tayyorgarlik Markazi",
+    default: "SAT ALFA — Digital SAT Preparation Platform",
     template: "%s | SAT ALFA",
   },
   description:
-    "SAT ALFA — O'zbekistondagi nufuzli Digital SAT tayyorgarlik platformasi. Real Bluebook mock testlar, AI tahlil va professional ta'lim.",
+    "SAT ALFA is a premier Digital SAT preparation platform. Experience realistic Bluebook-style mock tests, AI score analytics, and comprehensive SAT strategy.",
   keywords: [
     "SAT ALFA",
-    "Digital SAT Uzbekistan",
-    "Digital SAT mock test",
-    "SAT tayyorgarlik",
-    "SAT kurslari",
-    "SAT imtihoni",
-    "Bluebook mock test",
-    "Digital SAT practice test",
+    "Digital SAT",
+    "Digital SAT Mock Test",
+    "SAT Preparation",
+    "SAT Practice Test",
+    "Bluebook Mock Test",
+    "SAT Online Exam",
     "SAT Math",
     "SAT Reading and Writing",
   ],
@@ -52,12 +51,12 @@ export const metadata: Metadata = {
   },
   openGraph: {
     type: "website",
-    locale: "uz_UZ",
+    locale: "en_US",
     url: baseUrl,
     siteName: "SAT ALFA",
-    title: "SAT ALFA — Digital SAT Tayyorgarlik Platformasi",
+    title: "SAT ALFA — Digital SAT Preparation Platform",
     description:
-      "O'zbekistondagi eng zamonaviy Digital SAT platformasi. Haqiqiy Bluebook formatidagi mock testlar va AI tahlil.",
+      "Premier Digital SAT preparation platform with realistic Bluebook mock exams, AI score analytics, and expert strategies.",
     images: [
       {
         url: "/images/sat-alfa.jpg",
@@ -69,8 +68,8 @@ export const metadata: Metadata = {
   },
   twitter: {
     card: "summary_large_image",
-    title: "SAT ALFA — Digital SAT Tayyorgarlik",
-    description: "Premium Digital SAT tayyorgarlik va mock testlar.",
+    title: "SAT ALFA — Digital SAT Preparation Platform",
+    description: "Premier Digital SAT preparation platform with realistic Bluebook mock exams and AI analysis.",
     images: ["/images/sat-alfa.jpg"],
   },
   icons: {
@@ -102,7 +101,7 @@ const jsonLd = {
   url: baseUrl,
   logo: `${baseUrl}/images/sat-alfa.jpg`,
   description:
-    "Digital SAT tayyorgarlik platformasi va o'quv markazi.",
+    "Premier Digital SAT preparation and testing platform.",
   address: {
     "@type": "PostalAddress",
     addressCountry: "UZ",
@@ -116,7 +115,7 @@ export default function RootLayout({
 }) {
   return (
     <html
-      lang="uz"
+      lang="en"
       className={`${geistSans.variable} ${geistMono.variable} h-full antialiased`}
       suppressHydrationWarning
     >

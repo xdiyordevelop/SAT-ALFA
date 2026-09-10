@@ -4,9 +4,9 @@ import { NeonLoginForm } from "@/components/auth/NeonLoginForm";
 import { ThemeToggle } from "@/components/layout/ThemeToggle";
 
 export const metadata: Metadata = {
-  title: "SAT ALFA — Digital SAT Tayyorgarlik Platformasi",
+  title: "SAT ALFA — Digital SAT Preparation Platform",
   description:
-    "SAT ALFA — Digital SAT tayyorgarlik platformasi. Real Bluebook mock testlar, AI ball hisoblash va natijalar tahlili.",
+    "SAT ALFA is a premier Digital SAT preparation platform. Experience realistic Bluebook-style mock tests, AI score analytics, and comprehensive SAT strategy.",
 };
 
 export default function LoginPage() {
