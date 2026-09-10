@@ -4,8 +4,9 @@ import { NeonLoginForm } from "@/components/auth/NeonLoginForm";
 import { ThemeToggle } from "@/components/layout/ThemeToggle";
 
 export const metadata: Metadata = {
-  title: "Sign In | SAT ALFA",
-  description: "SAT ALFA Learning Platform - Sign in to your account",
+  title: "SAT ALFA — Digital SAT Tayyorgarlik Platformasi",
+  description:
+    "SAT ALFA — Digital SAT tayyorgarlik platformasi. Real Bluebook mock testlar, AI ball hisoblash va natijalar tahlili.",
 };
 
 export default function LoginPage() {
