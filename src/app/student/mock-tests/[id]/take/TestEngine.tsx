@@ -57,6 +57,7 @@ export function TestEngine({
     setTestStatus,
     restoreState,
     realQuestions,
+    questionsPerModule,
     isFullscreenActive,
     setFullscreenActive,
     setPaused,
@@ -230,8 +231,16 @@ export function TestEngine({
           currentQuestionIndex === moduleQuestions.length - 1
         }
         isLastQuestionOfTest={
-          currentModule === 4 &&
-          currentQuestionIndex === moduleQuestions.length - 1
+          (() => {
+            const availableModules = ([1, 2, 3, 4] as const).filter(
+              (m) => (questionsPerModule?.[m] || 0) > 0,
+            );
+            const lastAvailableModule = availableModules[availableModules.length - 1] || 4;
+            return (
+              currentModule === lastAvailableModule &&
+              currentQuestionIndex === moduleQuestions.length - 1
+            );
+          })()
         }
       />
     </div>

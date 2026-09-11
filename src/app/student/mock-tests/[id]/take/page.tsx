@@ -141,7 +141,7 @@ export default async function TakeTestPage({ params, searchParams }: PageProps) 
     where: {
       studentId: studentProfile.id,
       satTestId: test.id,
-      ...(resolvedSessionId ? { proctorCode: resolvedSessionId } : {}),
+      ...(resolvedSessionId ? { proctorCode: resolvedSessionId } : { proctorCode: null }),
     },
     orderBy: { createdAt: "desc" },
   });
@@ -154,8 +154,8 @@ export default async function TakeTestPage({ params, searchParams }: PageProps) 
     if (!isRetake && existingAttempt.completedAt) {
       redirect(`/student/mock-tests/${test.id}/results`);
     }
-    if (!isRetake) {
-      initialExitCount = Math.max(initialExitCount, existingAttempt.fullscreenExitCount);
+    if (!isRetake && !existingAttempt.completedAt) {
+      initialExitCount = existingAttempt.fullscreenExitCount || 0;
     }
   }
 

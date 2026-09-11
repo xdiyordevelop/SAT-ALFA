@@ -36,8 +36,21 @@ export async function POST(request: Request) {
       orderBy: { createdAt: 'desc' },
     });
 
-    // Session is proctored ONLY if explicitly provided or recorded on the attempt
-    const activeSessionId = sessionId || attempt?.proctorCode || null;
+    // Session is proctored ONLY if an ACTIVE proctored session exists
+    let activeSessionId: string | null = null;
+    const candidateSession = sessionId || attempt?.proctorCode || null;
+    if (candidateSession) {
+      const liveSession = await prisma.proctoredSession.findFirst({
+        where: {
+          OR: [{ id: candidateSession }, { code: candidateSession }],
+          satTestId: testId,
+          status: "ACTIVE",
+        },
+      });
+      if (liveSession) {
+        activeSessionId = liveSession.id;
+      }
+    }
     const isProctored = Boolean(activeSessionId);
 
     // 1. Live Proctored Session Handling

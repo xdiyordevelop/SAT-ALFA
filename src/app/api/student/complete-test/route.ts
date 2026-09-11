@@ -34,129 +34,138 @@ export async function POST(request: NextRequest) {
     )
   }
 
-  // Resolve proctor code if student is part of a proctored exam session
-  let resolvedProctorCode: string | null = null
+  // Resolve proctor code ONLY if student is part of an active proctored exam session
+  let resolvedProctorCode: string | null = null;
   if (rawProctorCode) {
     const sessionByCodeOrId = await prisma.proctoredSession.findFirst({
       where: {
         OR: [{ id: rawProctorCode }, { code: rawProctorCode }],
         satTestId: testId,
+        status: "ACTIVE",
       },
-    })
+    });
     if (sessionByCodeOrId) {
-      resolvedProctorCode = sessionByCodeOrId.code
-    } else {
-      resolvedProctorCode = rawProctorCode
+      resolvedProctorCode = sessionByCodeOrId.code;
     }
   }
 
-  if (!resolvedProctorCode) {
-    const activeParticipant = await prisma.proctoredParticipant.findFirst({
+  // Find all real questions for this test from the database
+  const dbQuestions = await prisma.sATQuestion.findMany({
+    where: { satTestId: testId },
+  });
+
+  if (!dbQuestions || dbQuestions.length === 0) {
+    return NextResponse.json(
+      { success: false, error: "No questions found for this test" },
+      { status: 404 },
+    );
+  }
+
+  // Calculate raw scores
+  let rwRaw = 0;
+  let mathRaw = 0;
+  let rwTotal = 0;
+  let mathTotal = 0;
+
+  // Build review index
+  const reviewIndex = dbQuestions.map((q) => {
+    const isRW = q.module === "MODULE_1" || q.module === "MODULE_2";
+    if (isRW) rwTotal++;
+    else mathTotal++;
+
+    const userAns = userAnswers[q.id] || "";
+    const correctAns = q.correctAnswer;
+
+    const isCorrect = areAnswersEquivalent(
+      userAns,
+      correctAns,
+      q.format === "FILL_IN",
+    );
+
+    if (isCorrect) {
+      if (isRW) rwRaw++;
+      else mathRaw++;
+    }
+
+    return {
+      questionId: q.id,
+      module: q.module,
+      questionNumber: q.questionNumber,
+      userAnswer: userAns,
+      correctAnswer: correctAns,
+      isCorrect,
+      domain: q.domain,
+      skill: q.skill,
+    };
+  });
+
+  // Disqualification ONLY applies to live proctored sessions.
+  // Practice/self-paced tests NEVER disqualify or zero out student scores.
+  let isDisqualified = false;
+  if (resolvedProctorCode) {
+    const participant = await prisma.proctoredParticipant.findFirst({
       where: {
         studentId: studentProfile.id,
         session: {
+          code: resolvedProctorCode,
           satTestId: testId,
-          status: { in: ['ACTIVE', 'COMPLETED'] },
+          status: "ACTIVE",
         },
       },
-      include: { session: true },
-      orderBy: { createdAt: 'desc' },
-    })
-    if (activeParticipant?.session) {
-      resolvedProctorCode = activeParticipant.session.code
+    });
+    if (
+      participant &&
+      (participant.status === "DISQUALIFIED" ||
+        participant.fullscreenExitCount >= 5)
+    ) {
+      isDisqualified = true;
     }
   }
-
- // Find all real questions for this test from the database
- const dbQuestions = await prisma.sATQuestion.findMany({
- where: { satTestId: testId },
- })
-
- if (!dbQuestions || dbQuestions.length === 0) {
- return NextResponse.json(
- { success: false, error: 'No questions found for this test' },
- { status: 404 }
- )
- }
-
- // Calculate raw scores
- let rwRaw = 0
- let mathRaw = 0
- let rwTotal = 0
- let mathTotal = 0
-
- // Build review index
- const reviewIndex = dbQuestions.map((q) => {
- const isRW = q.module === 'MODULE_1' || q.module === 'MODULE_2'
- if (isRW) rwTotal++
- else mathTotal++
-
- const userAns = userAnswers[q.id] || ''
- const correctAns = q.correctAnswer
- 
- const isCorrect = areAnswersEquivalent(userAns, correctAns, q.format === 'FILL_IN')
-
- if (isCorrect) {
- if (isRW) rwRaw++
- else mathRaw++
- }
-
- return {
- questionId: q.id,
- module: q.module,
- questionNumber: q.questionNumber,
- userAnswer: userAns,
- correctAnswer: correctAns,
- isCorrect,
- domain: q.domain,
- skill: q.skill,
- }
- })
-
-  // Check if student was disqualified or reached 5 exits
-  const disqualifiedParticipant = await prisma.proctoredParticipant.findFirst({
-    where: {
-      studentId: studentProfile.id,
-      session: { satTestId: testId },
-      OR: [
-        { status: "DISQUALIFIED" },
-        { fullscreenExitCount: { gte: 5 } },
-      ],
-    },
-  });
 
   const attempt = await prisma.studentTestAttempt.findFirst({
     where: {
       satTestId: testId,
       studentId: studentProfile.id,
       completedAt: null,
-      ...(resolvedProctorCode ? { proctorCode: resolvedProctorCode } : {}),
+      ...(resolvedProctorCode ? { proctorCode: resolvedProctorCode } : { proctorCode: null }),
     },
     orderBy: { createdAt: "desc" },
   });
 
-  const isDisqualified = Boolean(
-    disqualifiedParticipant || (attempt && attempt.fullscreenExitCount >= 5)
-  );
+  const activeAttempt =
+    attempt ||
+    (await prisma.studentTestAttempt.findFirst({
+      where: {
+        satTestId: testId,
+        studentId: studentProfile.id,
+        completedAt: null,
+      },
+      orderBy: { createdAt: "desc" },
+    }));
 
-  // If disqualified, NO scores/points are awarded (0 points)
+  // If disqualified in a live proctored session, NO scores/points are awarded (0 points)
   let rwScore = 0;
   let mathScore = 0;
   let totalScore = 0;
 
   if (!isDisqualified) {
-    rwScore = convertRawToScaled(rwRaw, rwTotal, 200, 800);
-    mathScore = convertRawToScaled(mathRaw, mathTotal, 200, 800);
-    totalScore = rwScore + mathScore;
+    rwScore = rwTotal > 0 ? convertRawToScaled(rwRaw, rwTotal, 200, 800) : 0;
+    mathScore = mathTotal > 0 ? convertRawToScaled(mathRaw, mathTotal, 200, 800) : 0;
+
+    if (rwTotal > 0 && mathTotal > 0) {
+      totalScore = rwScore + mathScore;
+    } else {
+      totalScore = rwScore || mathScore;
+    }
   } else {
     rwRaw = 0;
     mathRaw = 0;
   }
 
   let finalAttemptId;
-  if (attempt) {
+  if (activeAttempt) {
     const updated = await prisma.studentTestAttempt.update({
-      where: { id: attempt.id },
+      where: { id: activeAttempt.id },
       data: {
         completedAt: new Date(timestamp || Date.now()),
         userAnswers: userAnswers,
@@ -168,7 +177,7 @@ export async function POST(request: NextRequest) {
         totalScore,
         scoringStatus: "PUBLISHED",
         reviewIndex: reviewIndex,
-        proctorCode: resolvedProctorCode || attempt.proctorCode,
+        proctorCode: resolvedProctorCode || activeAttempt.proctorCode,
       },
     });
     finalAttemptId = updated.id;
@@ -195,30 +204,15 @@ export async function POST(request: NextRequest) {
   }
 
   try {
-    // If student is part of an active or recent proctored session for this test
+    // If student is part of an active proctored session for this test
     if (resolvedProctorCode) {
       await prisma.proctoredParticipant.updateMany({
         where: {
           studentId: studentProfile.id,
           session: {
-            OR: [{ code: resolvedProctorCode }, { id: resolvedProctorCode }],
-          },
-        },
-        data: {
-          status: isDisqualified ? "DISQUALIFIED" : "COMPLETED",
-          completedAt: new Date(timestamp || Date.now()),
-          score: isDisqualified ? 0 : totalScore,
-        },
-      });
-    } else {
-      await prisma.proctoredParticipant.updateMany({
-        where: {
-          studentId: studentProfile.id,
-          session: {
-            satTestId: testId,
+            code: resolvedProctorCode,
             status: "ACTIVE",
           },
-          status: { in: ["TAKING", "WAITING", "PAUSED"] },
         },
         data: {
           status: isDisqualified ? "DISQUALIFIED" : "COMPLETED",

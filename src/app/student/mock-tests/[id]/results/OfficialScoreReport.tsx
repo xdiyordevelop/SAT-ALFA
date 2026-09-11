@@ -36,9 +36,10 @@ export function OfficialScoreReport({
   questions,
   student,
 }: OfficialScoreReportProps) {
-  const totalScore = attempt.totalScore || 400;
-  const rwScore = attempt.rwScore || 200;
-  const mathScore = attempt.mathScore || 200;
+  const isDisqualified = attempt.totalScore === 0 && Boolean(attempt.fullscreenExitCount >= 5);
+  const totalScore = attempt.totalScore !== null && attempt.totalScore !== undefined ? attempt.totalScore : (isDisqualified ? 0 : 400);
+  const rwScore = attempt.rwScore !== null && attempt.rwScore !== undefined ? attempt.rwScore : (isDisqualified ? 0 : 200);
+  const mathScore = attempt.mathScore !== null && attempt.mathScore !== undefined ? attempt.mathScore : (isDisqualified ? 0 : 200);
   const percentile = getSATPercentile(totalScore);
 
   const reviewIndex: any[] = attempt.reviewIndex || [];

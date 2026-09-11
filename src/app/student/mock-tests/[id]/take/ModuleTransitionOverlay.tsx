@@ -13,6 +13,7 @@ export function ModuleTransitionOverlay(): React.ReactElement {
     currentModule,
     resetRemainingTime,
     setBreakActive,
+    questionsPerModule,
   } = useTestContext();
 
   const { getModuleProgress, advanceToNextModule } = useTestState();
@@ -23,7 +24,10 @@ export function ModuleTransitionOverlay(): React.ReactElement {
 
   const handleContinue = () => {
     setTransitionActive(false);
-    if (currentModule === 2) {
+    const hasMathModules =
+      (questionsPerModule?.[3] || 0) > 0 || (questionsPerModule?.[4] || 0) > 0;
+
+    if (currentModule === 2 && hasMathModules) {
       setBreakActive(true); // Start the break screen between RW and Math
     } else {
       advanceToNextModule();

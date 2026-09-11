@@ -495,8 +495,9 @@ export function StudentMockTestsHub({
                       <tbody className="text-sm divide-y divide-slate-800/50">
                         {completedAttempts.map((attempt) => {
                           const isDisq =
-                            (attempt.fullscreenExitCount || 0) >= 5 ||
-                            (attempt.totalScore || 0) === 0;
+                            Boolean(attempt.proctorCode) &&
+                            ((attempt.fullscreenExitCount || 0) >= 5 ||
+                              (attempt.totalScore || 0) === 0);
 
                           return (
                             <tr
