@@ -2,6 +2,7 @@
 
 import React from "react";
 import { CheckCircle2, Award, ShieldCheck, BookOpen, Calculator } from "lucide-react";
+import { calculateSatScaledScores } from "@/lib/sat/scoring-calc";
 
 interface OfficialScoreReportProps {
   attempt: any;
@@ -36,17 +37,40 @@ export function OfficialScoreReport({
   questions,
   student,
 }: OfficialScoreReportProps) {
-  const isDisqualified = attempt.totalScore === 0 && Boolean(attempt.fullscreenExitCount >= 5);
-  const totalScore = attempt.totalScore !== null && attempt.totalScore !== undefined ? attempt.totalScore : (isDisqualified ? 0 : 400);
-  const rwScore = attempt.rwScore !== null && attempt.rwScore !== undefined ? attempt.rwScore : (isDisqualified ? 0 : 200);
-  const mathScore = attempt.mathScore !== null && attempt.mathScore !== undefined ? attempt.mathScore : (isDisqualified ? 0 : 200);
-  const percentile = getSATPercentile(totalScore);
+  const isDisqualified = Boolean(attempt.proctorCode) && attempt.totalScore === 0 && Boolean((attempt.fullscreenExitCount || 0) >= 5);
 
   const reviewIndex: any[] = attempt.reviewIndex || [];
   const correctCount = reviewIndex.filter((r) => r.isCorrect).length;
-  const totalCount = questions.length || reviewIndex.length || 98;
+  const totalCount = questions?.length || reviewIndex.length || 98;
   const unansweredCount = reviewIndex.filter((r) => !r.userAnswer).length;
   const incorrectCount = Math.max(0, totalCount - correctCount - unansweredCount);
+
+  let fallbackScores = {
+    totalScore: attempt.totalScore || 400,
+    rwScore: attempt.rwScore || 200,
+    mathScore: attempt.mathScore || 200,
+  };
+
+  if (!isDisqualified && (!attempt.totalScore || attempt.totalScore === 0) && reviewIndex.length > 0) {
+    let rwC = 0, mathC = 0, rwT = 0, mathT = 0;
+    reviewIndex.forEach((r: any) => {
+      const isRW =
+        r.module === "MODULE_1" ||
+        r.module === "MODULE_2" ||
+        r.module === 1 ||
+        r.module === 2 ||
+        String(r.module).includes("1") ||
+        String(r.module).includes("2");
+      if (isRW) { rwT++; if (r.isCorrect) rwC++; }
+      else { mathT++; if (r.isCorrect) mathC++; }
+    });
+    fallbackScores = calculateSatScaledScores(rwC, mathC, rwT || 54, mathT || 44);
+  }
+
+  const totalScore = isDisqualified ? 0 : (attempt.totalScore && attempt.totalScore > 0 ? attempt.totalScore : fallbackScores.totalScore);
+  const rwScore = isDisqualified ? 0 : (attempt.rwScore && attempt.rwScore > 0 ? attempt.rwScore : fallbackScores.rwScore);
+  const mathScore = isDisqualified ? 0 : (attempt.mathScore && attempt.mathScore > 0 ? attempt.mathScore : fallbackScores.mathScore);
+  const percentile = getSATPercentile(totalScore);
 
   // Benchmarks according to College Board
   const rwBenchmark = 480;

@@ -1,6 +1,6 @@
 'use server'
 
-import { prisma } from '@/lib/prisma'
+import { prisma } from '@/lib/db/prisma'
 import { getSession } from '@/lib/auth'
 
 export async function logFullscreenViolation(testId: string) {

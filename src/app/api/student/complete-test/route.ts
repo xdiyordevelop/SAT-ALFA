@@ -1,6 +1,8 @@
 import { NextRequest, NextResponse } from 'next/server'
 import { prisma } from '@/lib/db/prisma'
 import { getSession } from '@/lib/auth/session'
+import { calculateSatScaledScores } from '@/lib/sat/scoring'
+import { scoreSingleAttemptWithAI } from '@/lib/ai/scoring-engine'
 
 export async function POST(request: NextRequest) {
  try {
@@ -149,14 +151,10 @@ export async function POST(request: NextRequest) {
   let totalScore = 0;
 
   if (!isDisqualified) {
-    rwScore = rwTotal > 0 ? convertRawToScaled(rwRaw, rwTotal, 200, 800) : 0;
-    mathScore = mathTotal > 0 ? convertRawToScaled(mathRaw, mathTotal, 200, 800) : 0;
-
-    if (rwTotal > 0 && mathTotal > 0) {
-      totalScore = rwScore + mathScore;
-    } else {
-      totalScore = rwScore || mathScore;
-    }
+    const scaled = calculateSatScaledScores(rwRaw, mathRaw, rwTotal || 54, mathTotal || 44);
+    rwScore = scaled.rwScore;
+    mathScore = scaled.mathScore;
+    totalScore = scaled.totalScore;
   } else {
     rwRaw = 0;
     mathRaw = 0;
@@ -172,12 +170,14 @@ export async function POST(request: NextRequest) {
         markedQuestions: markedQuestions || {},
         rwRaw,
         mathRaw,
+        rwTotal: rwTotal || 54,
+        mathTotal: mathTotal || 44,
         rwScore,
         mathScore,
         totalScore,
         scoringStatus: "PUBLISHED",
         reviewIndex: reviewIndex,
-        proctorCode: resolvedProctorCode || activeAttempt.proctorCode,
+        proctorCode: resolvedProctorCode || null,
       },
     });
     finalAttemptId = updated.id;
@@ -192,15 +192,24 @@ export async function POST(request: NextRequest) {
         markedQuestions: markedQuestions || {},
         rwRaw,
         mathRaw,
+        rwTotal: rwTotal || 54,
+        mathTotal: mathTotal || 44,
         rwScore,
         mathScore,
         totalScore,
         scoringStatus: "PUBLISHED",
         reviewIndex: reviewIndex,
-        proctorCode: resolvedProctorCode,
+        proctorCode: resolvedProctorCode || null,
       },
     });
     finalAttemptId = created.id;
+  }
+
+  // Trigger AI IRT scoring in background for this attempt so AI analysis is generated automatically
+  if (finalAttemptId && !isDisqualified) {
+    scoreSingleAttemptWithAI(finalAttemptId).catch((aiErr) => {
+      console.warn("Background AI IRT scoring error on test completion:", aiErr?.message || aiErr);
+    });
   }
 
   try {

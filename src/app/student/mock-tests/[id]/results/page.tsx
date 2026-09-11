@@ -4,6 +4,7 @@ import { prisma } from "@/lib/db/prisma";
 import { getSession } from "@/lib/auth/session";
 import { ResultsDashboard } from "./ResultsDashboard";
 import { AIAnalysisLoader } from "./AIAnalysisLoader";
+import { repairAndScoreAttempt } from "@/lib/sat/scoring";
 
 interface ResultsPageProps {
   params: Promise<{ id: string }>;
@@ -65,6 +66,9 @@ export default async function ResultsPage({
     where: { satTestId: testId },
     orderBy: [{ module: "asc" }, { questionNumber: "asc" }],
   });
+
+  // Auto-repair missing or zero scores
+  attempt = await repairAndScoreAttempt(attempt, questions);
 
   return (
     <div className="min-h-screen bg-slate-50 dark:bg-[#0a0a0a] print:bg-white print:dark:bg-white text-slate-900 dark:text-white print:text-black print:dark:text-black">

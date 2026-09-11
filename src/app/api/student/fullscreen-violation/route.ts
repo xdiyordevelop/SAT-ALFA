@@ -36,9 +36,15 @@ export async function POST(request: Request) {
       orderBy: { createdAt: 'desc' },
     });
 
-    // Session is proctored ONLY if an ACTIVE proctored session exists
+    // Session is proctored ONLY if an ACTIVE proctored session exists AND student is an enrolled participant
     let activeSessionId: string | null = null;
-    const candidateSession = sessionId || attempt?.proctorCode || null;
+    let participant: any = null;
+    const candidateSession = (sessionId && sessionId !== "undefined" && sessionId !== "null")
+      ? sessionId
+      : (attempt?.proctorCode && attempt.proctorCode !== "undefined" && attempt.proctorCode !== "null")
+        ? attempt.proctorCode
+        : null;
+
     if (candidateSession) {
       const liveSession = await prisma.proctoredSession.findFirst({
         where: {
@@ -49,22 +55,20 @@ export async function POST(request: Request) {
       });
       if (liveSession) {
         activeSessionId = liveSession.id;
+        participant = await prisma.proctoredParticipant.findFirst({
+          where: {
+            sessionId: liveSession.id,
+            studentId: profile.id,
+          },
+        });
       }
     }
-    const isProctored = Boolean(activeSessionId);
+    const isProctored = Boolean(activeSessionId && participant);
 
     // 1. Live Proctored Session Handling
-    if (isProctored && activeSessionId) {
-      const participant = await prisma.proctoredParticipant.findFirst({
-        where: {
-          sessionId: activeSessionId,
-          studentId: profile.id,
-        },
-      });
-
-      if (participant) {
-        finalCount = participant.fullscreenExitCount + 1;
-        isDisqualified = finalCount >= 5 || participant.status === 'DISQUALIFIED';
+    if (isProctored && activeSessionId && participant) {
+      finalCount = participant.fullscreenExitCount + 1;
+      isDisqualified = finalCount >= 5 || participant.status === 'DISQUALIFIED';
 
         await prisma.proctoredParticipant.update({
           where: { id: participant.id },
@@ -75,7 +79,6 @@ export async function POST(request: Request) {
             lastHeartbeat: new Date(),
           },
         });
-      }
 
       if (attempt) {
         finalCount = Math.max(finalCount, attempt.fullscreenExitCount + 1);

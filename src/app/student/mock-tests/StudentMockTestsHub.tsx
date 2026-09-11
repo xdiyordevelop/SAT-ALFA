@@ -392,7 +392,7 @@ export function StudentMockTestsHub({
                   {availableTests.map((test) => {
                     const attempts = test.studentAttempts || [];
                     const completedAttempt = attempts.find(
-                      (a: any) => a.totalScore !== null && (a.totalScore || 0) > 0,
+                      (a: any) => a.completedAt !== null,
                     );
                     const inProgressAttempt = attempts.find(
                       (a: any) => a.completedAt === null,
@@ -432,7 +432,9 @@ export function StudentMockTestsHub({
                             <History className="w-4 h-4 text-slate-500 dark:text-slate-400" />
                             {completedAttempt ? (
                               <span className="text-emerald-600 dark:text-emerald-400 font-medium">
-                                Last Score: {completedAttempt.totalScore} / 1600
+                                {completedAttempt.totalScore && completedAttempt.totalScore > 0
+                                  ? `Last Score: ${completedAttempt.totalScore} / 1600`
+                                  : "Completed • View Results"}
                               </span>
                             ) : inProgressAttempt ? (
                               <span className="text-amber-600 dark:text-amber-400 font-medium">
@@ -496,8 +498,8 @@ export function StudentMockTestsHub({
                         {completedAttempts.map((attempt) => {
                           const isDisq =
                             Boolean(attempt.proctorCode) &&
-                            ((attempt.fullscreenExitCount || 0) >= 5 ||
-                              (attempt.totalScore || 0) === 0);
+                            (attempt.fullscreenExitCount || 0) >= 5 &&
+                            (attempt.totalScore || 0) === 0;
 
                           return (
                             <tr

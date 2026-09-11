@@ -1,4 +1,4 @@
-import { prisma } from '@/lib/prisma';
+import { prisma } from '@/lib/db/prisma';
 import { geminiProvider } from '@/lib/ai/providers/gemini';
 import { ScoringStatus } from '@/lib/prisma';
 
@@ -370,4 +370,115 @@ const attempt = testAttempts.find(t => t.id === student.id);
  } catch (e: any) {
  console.error('[SCORING] Normalization parse error:', e.message);
  }
+}
+
+/**
+ * Score a single student attempt with AI (usable for both practice and proctored tests).
+ * Generates an adaptive IRT score, confidence level, diagnostic explanation, strengths,
+ * weaknesses, and personalized study roadmap.
+ */
+export async function scoreSingleAttemptWithAI(attemptId: string) {
+  try {
+    const attempt = await prisma.studentTestAttempt.findUnique({
+      where: { id: attemptId },
+      include: {
+        satTest: {
+          include: { questions: true },
+        },
+      },
+    });
+
+    if (!attempt || !attempt.satTest || !attempt.satTest.questions) {
+      return null;
+    }
+
+    const testName = attempt.satTest.name;
+    const allQuestions = [...attempt.satTest.questions];
+
+    allQuestions.sort((a, b) => {
+      const modMap: Record<string, number> = {
+        MODULE_1: 1,
+        MODULE_2: 2,
+        MODULE_3: 3,
+        MODULE_4: 4,
+      };
+      if (a.module !== b.module) {
+        return (modMap[a.module] || 0) - (modMap[b.module] || 0);
+      }
+      return a.questionNumber - b.questionNumber;
+    });
+
+    const groupRawScores = [
+      {
+        name: attempt.studentId,
+        rwRaw: attempt.rwRaw || 0,
+        mathRaw: attempt.mathRaw || 0,
+        rwTotal: attempt.rwTotal || 54,
+        mathTotal: attempt.mathTotal || 44,
+      },
+    ];
+
+    const aiScore = await scoreStudentWithAI(
+      attempt,
+      allQuestions,
+      groupRawScores,
+      testName
+    );
+
+    if (aiScore) {
+      const rwScore =
+        typeof aiScore.rwScore === "number" && aiScore.rwScore >= 200 && aiScore.rwScore <= 800
+          ? Math.round(aiScore.rwScore / 10) * 10
+          : attempt.rwScore || 200;
+      const mathScore =
+        typeof aiScore.mathScore === "number" && aiScore.mathScore >= 200 && aiScore.mathScore <= 800
+          ? Math.round(aiScore.mathScore / 10) * 10
+          : attempt.mathScore || 200;
+      const totalScore = rwScore + mathScore;
+
+      const structuredScore = {
+        rwScore,
+        mathScore,
+        totalScore,
+        confidence: aiScore.confidence || "high",
+        explanation: aiScore.explanation || `Digital SAT performance scored with AI IRT model.`,
+        strengths: [
+          ...(aiScore.rwStrengths || []),
+          ...(aiScore.mathStrengths || []),
+        ].filter(Boolean),
+        weaknesses: [
+          ...(aiScore.rwWeaknesses || []),
+          ...(aiScore.mathWeaknesses || []),
+        ].filter(Boolean),
+        roadmap: Array.isArray(aiScore.studyRecommendation)
+          ? aiScore.studyRecommendation
+          : [aiScore.studyRecommendation].filter(Boolean),
+        rwStrengths: aiScore.rwStrengths || [],
+        rwWeaknesses: aiScore.rwWeaknesses || [],
+        mathStrengths: aiScore.mathStrengths || [],
+        mathWeaknesses: aiScore.mathWeaknesses || [],
+        studyRecommendation: aiScore.studyRecommendation || "",
+      };
+
+      await prisma.studentTestAttempt.update({
+        where: { id: attempt.id },
+        data: {
+          aiEstimatedScore: structuredScore,
+          scoringStatus: ScoringStatus.SCORED,
+          ...((!attempt.totalScore || attempt.totalScore === 0)
+            ? {
+                totalScore,
+                rwScore,
+                mathScore,
+              }
+            : {}),
+        },
+      });
+
+      return structuredScore;
+    }
+  } catch (err: any) {
+    console.error("[SCORING] Single attempt AI scoring failed:", err?.message || err);
+  }
+  return null;
 }

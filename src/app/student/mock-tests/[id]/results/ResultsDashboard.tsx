@@ -23,21 +23,48 @@ import { useRouter } from "next/navigation";
 import { QuestionReviewPane } from "./QuestionReviewPane";
 import { AIAnalysisLoader } from "./AIAnalysisLoader";
 import { OfficialScoreReport } from "./OfficialScoreReport";
+import { calculateSatScaledScores } from "@/lib/sat/scoring-calc";
 
 export function ResultsDashboard({ attempt, questions, student }: any) {
   const router = useRouter();
   const [showReportPreview, setShowReportPreview] = useState(false);
-  const isDisqualified = attempt.totalScore === 0 && Boolean(attempt.fullscreenExitCount >= 5);
-  const totalScore = attempt.totalScore !== null && attempt.totalScore !== undefined ? attempt.totalScore : (isDisqualified ? 0 : 400);
-  const rwScore = attempt.rwScore !== null && attempt.rwScore !== undefined ? attempt.rwScore : (isDisqualified ? 0 : 200);
-  const mathScore = attempt.mathScore !== null && attempt.mathScore !== undefined ? attempt.mathScore : (isDisqualified ? 0 : 200);
+  const isDisqualified = Boolean(attempt.proctorCode) && attempt.totalScore === 0 && Boolean((attempt.fullscreenExitCount || 0) >= 5);
 
   // Metrics
   const reviewIndex = attempt.reviewIndex || [];
   const correctCount = reviewIndex.filter((r: any) => r.isCorrect).length;
-  const totalCount = questions.length || reviewIndex.length || 98;
+  const totalCount = questions?.length || reviewIndex.length || 98;
   const unansweredCount = reviewIndex.filter((r: any) => !r.userAnswer).length;
   const incorrectCount = Math.max(0, totalCount - correctCount - unansweredCount);
+
+  // Fallback calculation if attempt had 0 score but was not disqualified
+  const fallbackScores = useMemo(() => {
+    if (isDisqualified) return { totalScore: 0, rwScore: 0, mathScore: 0 };
+    if (attempt.totalScore && attempt.totalScore > 0) {
+      return {
+        totalScore: attempt.totalScore,
+        rwScore: attempt.rwScore || 200,
+        mathScore: attempt.mathScore || 200,
+      };
+    }
+    let rwC = 0, mathC = 0, rwT = 0, mathT = 0;
+    reviewIndex.forEach((r: any) => {
+      const isRW =
+        r.module === "MODULE_1" ||
+        r.module === "MODULE_2" ||
+        r.module === 1 ||
+        r.module === 2 ||
+        String(r.module).includes("1") ||
+        String(r.module).includes("2");
+      if (isRW) { rwT++; if (r.isCorrect) rwC++; }
+      else { mathT++; if (r.isCorrect) mathC++; }
+    });
+    return calculateSatScaledScores(rwC, mathC, rwT || 54, mathT || 44);
+  }, [attempt, isDisqualified, reviewIndex]);
+
+  const totalScore = fallbackScores.totalScore;
+  const rwScore = fallbackScores.rwScore;
+  const mathScore = fallbackScores.mathScore;
 
   // Compute Domain Performance
   const domainBreakdown = useMemo(() => {
