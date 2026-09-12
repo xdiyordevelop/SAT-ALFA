@@ -13,6 +13,14 @@ export default async function StudentArticlesPage({
   const session = await getSession();
   if (!session || session.role !== "STUDENT") redirect("/login");
 
+  const student = await prisma.studentProfile.findUnique({
+    where: { userId: session.userId },
+  });
+  const studentName = student
+    ? `${student.firstName} ${student.lastName}`.trim() || session.username
+    : session.username;
+  const studentEmail = student?.phone || `${session.username}@student.alfa`;
+
   const { q, category } = await searchParams;
 
   const whereClause: any = { published: true };
@@ -41,6 +49,8 @@ export default async function StudentArticlesPage({
     <StudentLayout
       title="Reading Room"
       breadcrumbs={[{ label: "Student" }, { label: "Articles" }]}
+      userName={studentName}
+      userEmail={studentEmail}
     >
       <div className="mb-10 text-center max-w-2xl mx-auto">
         <h1 className="text-4xl font-bold text-slate-900 dark:text-white mb-4">

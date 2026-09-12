@@ -2,7 +2,7 @@
 
 import { useState } from "react";
 import { useRouter } from "next/navigation";
-import { Loader2, Lock, User as UserIcon, ArrowRight, AlertCircle } from "lucide-react";
+import { Loader2, Lock, User as UserIcon, ArrowRight, AlertCircle, Eye, EyeOff } from "lucide-react";
 import { loginAction } from "@/server/actions/auth.actions";
 
 export function NeonLoginForm() {
@@ -10,6 +10,7 @@ export function NeonLoginForm() {
   const [role, setRole] = useState<"STUDENT" | "ADMIN">("STUDENT");
   const [username, setUsername] = useState("");
   const [password, setPassword] = useState("");
+  const [showPassword, setShowPassword] = useState(false);
   const [error, setError] = useState("");
   const [loading, setLoading] = useState(false);
 
@@ -127,16 +128,30 @@ export function NeonLoginForm() {
           <div className="relative">
             <input
               id="password"
-              type="password"
+              type={showPassword ? "text" : "password"}
               required
               value={password}
               onChange={(e) => setPassword(e.target.value)}
               disabled={loading}
               placeholder="Enter your password"
-              className="w-full px-10 py-3 bg-white dark:bg-[#1c1b1b] border border-slate-300 dark:border-white/10 rounded-lg text-sm text-slate-900 dark:text-white placeholder-slate-500 focus:outline-none focus:border-[#EBFF00] focus:ring-2 focus:ring-[#EBFF00] focus:ring-offset-2 dark:focus:ring-offset-[#0a0a0a] transition-all duration-200 disabled:opacity-50 disabled:cursor-not-allowed"
+              className="w-full pl-10 pr-11 py-3 bg-white dark:bg-[#1c1b1b] border border-slate-300 dark:border-white/10 rounded-lg text-sm text-slate-900 dark:text-white placeholder-slate-500 focus:outline-none focus:border-[#EBFF00] focus:ring-2 focus:ring-[#EBFF00] focus:ring-offset-2 dark:focus:ring-offset-[#0a0a0a] transition-all duration-200 disabled:opacity-50 disabled:cursor-not-allowed"
               aria-label="Password"
             />
             <Lock className="absolute left-3 top-3.5 w-5 h-5 text-slate-400 dark:text-slate-500 pointer-events-none" />
+            <button
+              type="button"
+              onClick={() => setShowPassword(!showPassword)}
+              disabled={loading}
+              className="absolute right-3 top-1/2 -translate-y-1/2 p-1 text-slate-400 hover:text-slate-600 dark:hover:text-slate-200 focus:outline-none transition-colors"
+              title={showPassword ? "Hide password" : "Show password"}
+              aria-label={showPassword ? "Hide password" : "Show password"}
+            >
+              {showPassword ? (
+                <EyeOff className="w-4 h-4 text-slate-500 dark:text-slate-400 hover:text-slate-700 dark:hover:text-white" />
+              ) : (
+                <Eye className="w-4 h-4 text-slate-400 dark:text-slate-500 hover:text-slate-700 dark:hover:text-white" />
+              )}
+            </button>
           </div>
         </div>
 
@@ -144,18 +159,18 @@ export function NeonLoginForm() {
         <button
           type="submit"
           disabled={loading || !username || !password}
-          className="btn-primary mt-2 w-full flex justify-center items-center gap-2"
+          className="group relative w-full mt-3 py-3.5 px-6 rounded-xl font-black text-sm tracking-wider uppercase text-slate-950 bg-[#EBFF00] hover:bg-[#d4e600] active:scale-[0.98] transition-all duration-200 shadow-lg shadow-[#EBFF00]/20 hover:shadow-xl hover:shadow-[#EBFF00]/40 flex items-center justify-center gap-2.5 disabled:opacity-40 disabled:cursor-not-allowed disabled:hover:scale-100 disabled:shadow-none select-none cursor-pointer"
           aria-busy={loading}
         >
           {loading ? (
             <>
-              <Loader2 className="w-5 h-5 animate-spin" />
+              <Loader2 className="w-4 h-4 animate-spin text-slate-950" />
               <span>Signing in...</span>
             </>
           ) : (
             <>
               <span>Sign In</span>
-              <ArrowRight className="w-5 h-5" />
+              <ArrowRight className="w-4 h-4 transition-transform duration-200 group-hover:translate-x-1" />
             </>
           )}
         </button>

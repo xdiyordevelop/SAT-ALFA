@@ -10,6 +10,15 @@ export default async function ArticleReadingRoom({
 }) {
   const session = await getSession();
   if (!session || session.role !== "STUDENT") redirect("/login");
+
+  const student = await prisma.studentProfile.findUnique({
+    where: { userId: session.userId },
+  });
+  const studentName = student
+    ? `${student.firstName} ${student.lastName}`.trim() || session.username
+    : session.username;
+  const studentEmail = student?.phone || `${session.username}@student.alfa`;
+
   const { slug } = await params; // Auto-increment views
   let article;
   try {
@@ -40,6 +49,8 @@ export default async function ArticleReadingRoom({
         { label: "Reading Room", href: "/student/articles" },
         { label: article.category },
       ]}
+      userName={studentName}
+      userEmail={studentEmail}
     >
       <div className="flex-1 w-full min-w-0">
         <ArticleReader article={article} relatedArticles={relatedArticles} />
