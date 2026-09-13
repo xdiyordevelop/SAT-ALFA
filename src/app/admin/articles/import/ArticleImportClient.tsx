@@ -61,7 +61,7 @@ export function ArticleImportClient({
 
   const steps = [
     { title: "Prepare Document", desc: "Loading pages & rendering canvas" },
-    { title: "Gemini 3.7 Flash", desc: "Extracting sections, math & SAT vocab" },
+    { title: "Gemini AI", desc: "Analyzing deep structure, quotes & SAT vocab" },
     { title: "Process Figures", desc: "Cropping diagrams & cover image" },
     { title: "Save & Finalize", desc: "Saving to reading room" },
   ];
@@ -136,7 +136,7 @@ export function ArticleImportClient({
 
       // 2. Send both raw PDF and page base64 images to API
       setActiveStep(2);
-      setProgressMsg("Analyzing document with Gemini 3.7 Flash...");
+      setProgressMsg("Deep analyzing document with Gemini AI...");
 
       const apiFormData = new FormData();
       apiFormData.append("pdf", file);
@@ -186,28 +186,32 @@ export function ArticleImportClient({
         const xmax = parseInt(match[5]);
         const caption = match[6]?.trim() || "Illustration";
 
-        const pageData = pages.find((p) => p.pageNum === pageNum);
-        if (pageData && pageData.canvas) {
-          const url = await cropAndUploadCanvas(pageData.canvas, {
-            ymin,
-            xmin,
-            ymax,
-            xmax,
-          });
-          if (url) {
-            if (!firstExtractedUrl) firstExtractedUrl = url;
-            markdownContent = markdownContent.replace(
-              fullTag,
-              `\n\n![${caption}](${url})\n\n`
-            );
-          } else {
-            markdownContent = markdownContent.replace(
-              fullTag,
-              `\n\n*(Figure extraction skipped)*\n\n`
-            );
+        let url: string | null = null;
+        try {
+          const pageData = pages.find((p) => p.pageNum === pageNum);
+          if (pageData && pageData.canvas) {
+            url = await cropAndUploadCanvas(pageData.canvas, {
+              ymin: Math.max(0, Math.min(1000, ymin)),
+              xmin: Math.max(0, Math.min(1000, xmin)),
+              ymax: Math.max(0, Math.min(1000, ymax)),
+              xmax: Math.max(0, Math.min(1000, xmax)),
+            });
           }
+        } catch (cropErr) {
+          console.warn("[import] Figure extraction skipped for", fullTag, cropErr);
+        }
+
+        if (url) {
+          if (!firstExtractedUrl) firstExtractedUrl = url;
+          markdownContent = markdownContent.replace(
+            fullTag,
+            `\n\n![${caption}](${url})\n\n`
+          );
         } else {
-          markdownContent = markdownContent.replace(fullTag, "");
+          markdownContent = markdownContent.replace(
+            fullTag,
+            `\n\n*(Figure extraction skipped)*\n\n`
+          );
         }
       }
 

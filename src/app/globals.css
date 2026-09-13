@@ -215,32 +215,135 @@ body {
 }
 
 .article-passage-content h2 {
-  font-size: calc(var(--passage-font-size, 18px) * 1.5) !important;
-  line-height: 1.3 !important;
+  font-size: calc(var(--passage-font-size, 18px) * 1.45) !important;
+  line-height: 1.25 !important;
   font-family: inherit !important;
-  margin-top: 1.6em !important;
-  margin-bottom: 0.7em !important;
-  font-weight: 800 !important;
+  margin-top: 2.4em !important;
+  margin-bottom: 0.8em !important;
+  font-weight: 900 !important;
+  letter-spacing: 0.05em !important;
+  text-transform: uppercase !important;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+  padding-bottom: 0.4em;
+}
+
+:root:not(.dark) .article-passage-content h2 {
+  border-bottom: 1px solid rgba(0, 0, 0, 0.08);
 }
 
 .article-passage-content h3 {
   font-size: calc(var(--passage-font-size, 18px) * 1.25) !important;
   line-height: 1.35 !important;
   font-family: inherit !important;
-  margin-top: 1.4em !important;
+  margin-top: 1.6em !important;
   margin-bottom: 0.6em !important;
-  font-weight: 700 !important;
+  font-weight: 800 !important;
 }
 
+/* Magazine Drop Cap for first paragraph */
+.article-passage-content > div > p:first-of-type::first-letter,
+.article-passage-content > p:first-of-type::first-letter {
+  float: left;
+  font-size: 3.8em;
+  line-height: 0.82;
+  padding-top: 0.08em;
+  padding-right: 0.15em;
+  padding-bottom: 0.02em;
+  font-weight: 900;
+  font-family: Charter, "Bitstream Charter", "Sitka Text", Cambria, Georgia, "Times New Roman", serif !important;
+  color: #EBFF00;
+  text-shadow: 0 0 20px rgba(235, 255, 0, 0.35);
+}
+
+:root:not(.dark) .article-passage-content > div > p:first-of-type::first-letter,
+:root:not(.dark) .article-passage-content > p:first-of-type::first-letter {
+  color: #0f172a;
+  text-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+}
+
+/* Standard Historical & Case Study Blockquotes */
 .article-passage-content blockquote {
-  font-size: var(--passage-font-size, 18px) !important;
+  font-size: calc(var(--passage-font-size, 18px) * 1.02) !important;
   line-height: var(--passage-line-height, 1.85) !important;
   font-family: inherit !important;
   border-left: 4px solid #EBFF00 !important;
-  padding-left: 1.2em !important;
-  margin: 1.6em 0 !important;
+  background: rgba(255, 255, 255, 0.03) !important;
+  padding: 1.25rem 1.75rem !important;
+  margin: 2.2rem 0 !important;
+  border-radius: 0 1rem 1rem 0;
   font-style: italic !important;
   opacity: 0.95;
+}
+
+:root:not(.dark) .article-passage-content blockquote {
+  background: rgba(15, 23, 42, 0.03) !important;
+  border-left-color: #0f172a !important;
+}
+
+/* Pull Quotes - Centered, Highlighted Editorial Callouts */
+.article-passage-content blockquote.pull-quote {
+  border-left: none !important;
+  border-top: 2px solid #EBFF00 !important;
+  border-bottom: 2px solid #EBFF00 !important;
+  background: rgba(235, 255, 0, 0.03) !important;
+  padding: 2.2rem 1.8rem !important;
+  margin: 3.2rem auto !important;
+  text-align: center !important;
+  font-size: calc(var(--passage-font-size, 18px) * 1.35) !important;
+  line-height: 1.45 !important;
+  font-weight: 800 !important;
+  font-style: italic !important;
+  max-width: 90%;
+  color: #EBFF00 !important;
+  text-shadow: 0 0 24px rgba(235, 255, 0, 0.25);
+  border-radius: 0.5rem !important;
+}
+
+:root:not(.dark) .article-passage-content blockquote.pull-quote {
+  border-top-color: #0f172a !important;
+  border-bottom-color: #0f172a !important;
+  background: rgba(15, 23, 42, 0.03) !important;
+  color: #0f172a !important;
+  text-shadow: none;
+}
+
+.article-passage-content blockquote.pull-quote p {
+  font-size: inherit !important;
+  line-height: inherit !important;
+  color: inherit !important;
+  margin-bottom: 0 !important;
+  text-align: center !important;
+  font-family: inherit !important;
+}
+
+/* Author Box & Credits */
+.article-passage-content .article-author-card {
+  margin-top: 3.5rem !important;
+  padding: 1.5rem 1.75rem !important;
+  background: rgba(255, 255, 255, 0.03);
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  border-left: 4px solid #EBFF00 !important;
+  border-radius: 1rem;
+}
+
+:root:not(.dark) .article-passage-content .article-author-card {
+  background: rgba(0, 0, 0, 0.02);
+  border: 1px solid rgba(0, 0, 0, 0.08);
+  border-left: 4px solid #0f172a !important;
+}
+
+.article-passage-content .article-author-card h3 {
+  margin-top: 0 !important;
+  margin-bottom: 0.5rem !important;
+  font-size: 0.85rem !important;
+  font-weight: 900 !important;
+  letter-spacing: 0.08em !important;
+  text-transform: uppercase !important;
+  color: #EBFF00 !important;
+}
+
+:root:not(.dark) .article-passage-content .article-author-card h3 {
+  color: #0f172a !important;
 }
 
 .article-passage-content a {

@@ -62,6 +62,8 @@ export const ArticleSchema = z.object({
  slug: z.string().min(3),
  category: z.preprocess((val) => typeof val === 'string' ? val.toUpperCase() : val, z.enum(['SCIENCE', 'HISTORY', 'LITERATURE', 'STRATEGY', 'VOCABULARY'])),
  summary: z.string().min(10),
+ authorName: z.string().optional().nullable(),
+ authorBio: z.string().optional().nullable(),
  readTimeMin: z.preprocess((val) => Number(val), z.number().int().positive()),
  content: z.string().min(50),
  vocabulary: z.array(ArticleVocabularySchema).min(0).max(50),

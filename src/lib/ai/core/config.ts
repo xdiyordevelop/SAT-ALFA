@@ -1,12 +1,12 @@
 export const AI_CONFIG = {
   gemini: {
-    primaryModel: 'gemini-3.5-flash-lite',
-    fallbackModels: ['gemini-flash-latest', 'gemini-3.1-flash-lite', 'gemini-3.6-flash'],
-    maxRetries: 1,
-    initialRetryDelayMs: 400,
-    maxRetryDelayMs: 2000,
+    primaryModel: 'gemini-3.5-flash',
+    fallbackModels: ['gemini-3.6-flash', 'gemini-flash-latest', 'gemini-3.7-flash'],
+    maxRetries: 2,
+    initialRetryDelayMs: 800,
+    maxRetryDelayMs: 3000,
   },
   timeouts: {
-    generateTimeoutMs: 60000, 
+    generateTimeoutMs: 120000, 
   }
 }

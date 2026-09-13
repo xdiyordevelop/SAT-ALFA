@@ -38,6 +38,14 @@ export class GeminiProvider implements AiProvider {
  return res;
  } catch (error: any) {
  lastError = error;
+
+  if (
+    error.message?.toLowerCase().includes('high demand') ||
+    error.message?.toLowerCase().includes('overloaded')
+  ) {
+    console.warn(`[Gemini] Model ${model} is experiencing high demand. Immediately switching to next fallback model.`);
+    break;
+  }
  
  if (error instanceof AiRateLimitError || error instanceof AiUnavailableError) {
  attempt++;
