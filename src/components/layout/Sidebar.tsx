@@ -170,7 +170,7 @@ export function Sidebar({ username, role }: SidebarProps) {
       >
         {/* Top Header & Profile Area */}
         <div className="px-6 py-4 border-b border-slate-200 dark:border-white/5 flex flex-col gap-3">
-          <Link href={role !== "STUDENT" ? "/admin/dashboard" : "/student/dashboard"} className="flex items-center gap-3 group">
+          <Link href={role !== "STUDENT" ? "/admin/dashboard" : "/student/dashboard"} prefetch={false} className="flex items-center gap-3 group">
              <div className="w-10 h-10 rounded-lg overflow-hidden bg-white dark:bg-slate-900 shadow-sm flex items-center justify-center shrink-0 border border-slate-200 dark:border-white/10 relative">
               <Image
                 src="/images/sat-alfa.jpg"
@@ -187,6 +187,7 @@ export function Sidebar({ username, role }: SidebarProps) {
 
           <Link
             href={role === "STUDENT" ? "/student/profile" : "/admin/settings"}
+            prefetch={false}
             className="flex items-center gap-2.5 px-2.5 py-2 rounded-xl bg-slate-50 dark:bg-slate-900/40 hover:bg-slate-100 dark:hover:bg-slate-800/60 border border-slate-200 dark:border-slate-800 hover:border-[#EBFF00]/40 transition-all group/user"
             title={role === "STUDENT" ? "View Student Profile" : "Settings"}
           >
@@ -246,6 +247,7 @@ export function Sidebar({ username, role }: SidebarProps) {
                     <Link
                       key={item.href}
                       href={item.href}
+                      prefetch={false}
                       className={`mx-3 px-4 py-2.5 flex items-center gap-3 rounded-lg transition-all duration-150 ${
                         active
                           ? "bg-slate-100 dark:bg-slate-800/50 text-slate-900 dark:text-[#EBFF00] border-l-2 border-[#EBFF00] font-semibold pl-[14px]"
@@ -267,6 +269,7 @@ export function Sidebar({ username, role }: SidebarProps) {
           {isSuperAdmin && (
             <Link
               href="/admin/settings"
+              prefetch={false}
               className="px-4 py-2.5 flex items-center gap-3 text-slate-600 dark:text-slate-400 hover:text-slate-900 dark:hover:text-slate-200 hover:bg-slate-50 dark:hover:bg-slate-900/20 rounded-lg transition-colors font-medium text-sm"
             >
               <Settings className="w-5 h-5 flex-shrink-0" />
@@ -276,6 +279,7 @@ export function Sidebar({ username, role }: SidebarProps) {
           {role === "STUDENT" && (
             <Link
               href="/student/profile"
+              prefetch={false}
               className={`px-4 py-2.5 flex items-center gap-3 rounded-lg transition-colors font-medium text-sm ${
                 pathname === "/student/profile"
                   ? "bg-[#EBFF00]/10 text-slate-900 dark:text-[#EBFF00] font-semibold"
@@ -296,6 +300,7 @@ export function Sidebar({ username, role }: SidebarProps) {
             return (
               <Link
                 href={helpHref}
+                prefetch={false}
                 className={`px-4 py-2.5 flex items-center gap-3 rounded-lg transition-colors font-medium text-sm ${
                   isHelpActive
                     ? "bg-[#EBFF00]/10 text-slate-900 dark:text-[#EBFF00] font-semibold"

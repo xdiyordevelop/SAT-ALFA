@@ -51,6 +51,7 @@ function SettingsSidebarInner() {
           <Link
             key={item.href}
             href={item.href}
+            prefetch={false}
             className={`flex items-center gap-3 px-4 py-3 rounded-xl text-sm font-medium transition-all ${
               item.active
                 ? "bg-white dark:bg-[#1C1C1E] text-slate-900 dark:text-white shadow-sm border-l-4 border-amber-500 font-semibold"

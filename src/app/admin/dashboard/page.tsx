@@ -423,30 +423,35 @@ export default async function AdminDashboard() {
                 <>
                   <Link
                     href="/admin/payments"
+                    prefetch={false}
                     className="block px-4 py-2.5 bg-[#EBFF00] hover:bg-[#d4e600] text-black text-xs font-bold rounded-xl transition-colors shadow-sm text-center"
                   >
                     Record Student Payment
                   </Link>
                   <Link
                     href="/admin/attendance"
+                    prefetch={false}
                     className="block px-4 py-2.5 bg-neutral-100 dark:bg-[#1C1B1B] hover:bg-neutral-200 dark:hover:bg-white/10 text-neutral-800 dark:text-neutral-200 hover:text-neutral-900 dark:hover:text-white border border-transparent dark:border-white/5 hover:border-neutral-300 dark:hover:border-white/10 text-xs font-semibold rounded-xl transition-all"
                   >
                     Mark Attendance
                   </Link>
                   <Link
                     href="/admin/students/create"
+                    prefetch={false}
                     className="block px-4 py-2.5 bg-neutral-100 dark:bg-[#1C1B1B] hover:bg-neutral-200 dark:hover:bg-white/10 text-neutral-800 dark:text-neutral-200 hover:text-neutral-900 dark:hover:text-white border border-transparent dark:border-white/5 hover:border-neutral-300 dark:hover:border-white/10 text-xs font-semibold rounded-xl transition-all"
                   >
                     + Add Student
                   </Link>
                   <Link
                     href="/admin/groups/create"
+                    prefetch={false}
                     className="block px-4 py-2.5 bg-neutral-100 dark:bg-[#1C1B1B] hover:bg-neutral-200 dark:hover:bg-white/10 text-neutral-800 dark:text-neutral-200 hover:text-neutral-900 dark:hover:text-white border border-transparent dark:border-white/5 hover:border-neutral-300 dark:hover:border-white/10 text-xs font-semibold rounded-xl transition-all"
                   >
                     + Create Group
                   </Link>
                   <Link
                     href="/admin/sms-notifications"
+                    prefetch={false}
                     className="block px-4 py-2.5 bg-neutral-100 dark:bg-[#1C1B1B] hover:bg-neutral-200 dark:hover:bg-white/10 text-neutral-800 dark:text-neutral-200 hover:text-neutral-900 dark:hover:text-white border border-transparent dark:border-white/5 hover:border-neutral-300 dark:hover:border-white/10 text-xs font-semibold rounded-xl transition-all"
                   >
                     SMS Notifications
@@ -456,30 +461,35 @@ export default async function AdminDashboard() {
                 <>
                   <Link
                     href="/admin/mock-tests/proctor"
+                    prefetch={false}
                     className="block px-4 py-2.5 bg-[#EBFF00] hover:bg-[#d4e600] text-black text-xs font-bold rounded-xl transition-colors shadow-sm text-center"
                   >
                     Launch Exam Proctoring
                   </Link>
                   <Link
                     href="/admin/attendance"
+                    prefetch={false}
                     className="block px-4 py-2.5 bg-neutral-100 dark:bg-[#1C1B1B] hover:bg-neutral-200 dark:hover:bg-white/10 text-neutral-800 dark:text-neutral-200 hover:text-neutral-900 dark:hover:text-white border border-transparent dark:border-white/5 hover:border-neutral-300 dark:hover:border-white/10 text-xs font-semibold rounded-xl transition-all"
                   >
                     Mark Attendance
                   </Link>
                   <Link
                     href="/admin/students/create"
+                    prefetch={false}
                     className="block px-4 py-2.5 bg-neutral-100 dark:bg-[#1C1B1B] hover:bg-neutral-200 dark:hover:bg-white/10 text-neutral-800 dark:text-neutral-200 hover:text-neutral-900 dark:hover:text-white border border-transparent dark:border-white/5 hover:border-neutral-300 dark:hover:border-white/10 text-xs font-semibold rounded-xl transition-all"
                   >
                     + Add Student
                   </Link>
                   <Link
                     href="/admin/groups/create"
+                    prefetch={false}
                     className="block px-4 py-2.5 bg-neutral-100 dark:bg-[#1C1B1B] hover:bg-neutral-200 dark:hover:bg-white/10 text-neutral-800 dark:text-neutral-200 hover:text-neutral-900 dark:hover:text-white border border-transparent dark:border-white/5 hover:border-neutral-300 dark:hover:border-white/10 text-xs font-semibold rounded-xl transition-all"
                   >
                     + Create Group
                   </Link>
                   <Link
                     href="/admin/mock-tests/analytics"
+                    prefetch={false}
                     className="block px-4 py-2.5 bg-neutral-100 dark:bg-[#1C1B1B] hover:bg-neutral-200 dark:hover:bg-white/10 text-neutral-800 dark:text-neutral-200 hover:text-neutral-900 dark:hover:text-white border border-transparent dark:border-white/5 hover:border-neutral-300 dark:hover:border-white/10 text-xs font-semibold rounded-xl transition-all"
                   >
                     All Mock Tests Analytics
