@@ -32,7 +32,7 @@ import {
 } from "@/components/admin/dashboard/ManagerOperationsSection";
 
 export const dynamic = "force-dynamic";
-export const revalidate = 0;
+export const revalidate = 15;
 
 export default async function AdminDashboard() {
   const session = await getSession();
