@@ -128,7 +128,7 @@ export async function getPaymentsData(selectedMonth: string) {
     groups: formattedGroups,
     totalExpected,
     totalCollected,
-    totalDebt: totalExpected - totalCollected,
+    totalDebt,
     selectedMonth
   };
 }
