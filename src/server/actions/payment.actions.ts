@@ -51,11 +51,8 @@ export async function getPaymentsData(selectedMonth: string) {
         const amountPaid = payment?.amountPaid || 0;
         const enrollmentDate = student.enrollmentDate ? new Date(student.enrollmentDate) : new Date(0);
 
-        // Filter: If student enrolled after this month AND has no payment record in this month, exclude them
         const hasPayment = Boolean(payment && payment.amountPaid > 0);
-        if (enrollmentDate > endOfSelectedMonth && !hasPayment) {
-          return null;
-        }
+        const isBeforeEnrollment = enrollmentDate > endOfSelectedMonth && !hasPayment;
 
         // Check if student enrolled in this selected month mid-month
         const enrollYear = enrollmentDate.getFullYear();
@@ -70,18 +67,20 @@ export async function getPaymentsData(selectedMonth: string) {
           : standardGroupFee;
 
         const isCustomFee = student.customMonthlyFee !== null && student.customMonthlyFee !== undefined;
-        // Effective fee: use custom fee if set; otherwise use prorated fee if mid-month; otherwise standard group fee
-        const fee = isCustomFee
+        
+        // Fee defaults to full standard group fee unless admin explicitly set a custom fee or student has not enrolled yet
+        const fee = isBeforeEnrollment
+          ? (amountPaid > 0 ? amountPaid : 0)
+          : isCustomFee
           ? student.customMonthlyFee!
-          : isMidMonthEnrollment
-          ? calculatedProratedFee
           : standardGroupFee;
 
-        const isProrated = !isCustomFee && isMidMonthEnrollment;
-        const debt = Math.max(0, fee - amountPaid);
+        const isProrated = isCustomFee && (Boolean(student.customFeeReason?.toLowerCase().includes("prorat")) || student.customMonthlyFee === calculatedProratedFee);
+        const debt = isBeforeEnrollment ? 0 : Math.max(0, fee - amountPaid);
         
         let status = "UNPAID";
-        if (amountPaid >= fee && fee > 0) status = "PAID";
+        if (isBeforeEnrollment && amountPaid === 0) status = "NOT_ENROLLED";
+        else if (amountPaid >= fee && fee > 0) status = "PAID";
         else if (amountPaid > 0) status = "PARTIAL";
         else if (fee === 0) status = "PAID";
 
@@ -167,16 +166,6 @@ export async function recordStudentPayment({
 
   if (student?.customMonthlyFee !== null && student?.customMonthlyFee !== undefined) {
     monthlyFee = student.customMonthlyFee;
-  } else if (student?.enrollmentDate) {
-    const [yStr, mStr] = month.split("-");
-    const y = parseInt(yStr, 10);
-    const m = parseInt(mStr, 10);
-    const enrollDate = new Date(student.enrollmentDate);
-    if (enrollDate.getFullYear() === y && enrollDate.getMonth() + 1 === m && enrollDate.getDate() > 1) {
-      const daysInM = new Date(y, m, 0).getDate();
-      const activeDays = Math.max(1, daysInM - enrollDate.getDate() + 1);
-      monthlyFee = Math.round((standardGroupFee * activeDays) / daysInM / 1000) * 1000;
-    }
   }
 
   let status = "UNPAID";

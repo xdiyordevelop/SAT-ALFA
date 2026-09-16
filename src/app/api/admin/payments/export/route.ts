@@ -121,30 +121,20 @@ export async function GET(request: NextRequest) {
         const amountPaid = payment?.amountPaid || 0;
         const enrollmentDate = student.enrollmentDate ? new Date(student.enrollmentDate) : new Date(0);
 
-        // Filter: exclude students who enrolled after this month and haven't paid
-        if (enrollmentDate > endOfSelectedMonth && amountPaid === 0) {
-          continue;
-        }
+        const isBeforeEnrollment = enrollmentDate > endOfSelectedMonth && amountPaid === 0;
 
         const isCustomFee = student.customMonthlyFee !== null && student.customMonthlyFee !== undefined;
-        let fee = defaultGroupFee;
+        let fee = isBeforeEnrollment
+          ? 0
+          : isCustomFee
+          ? student.customMonthlyFee!
+          : defaultGroupFee;
 
-        if (isCustomFee) {
-          fee = student.customMonthlyFee!;
-        } else {
-          const enrollYear = enrollmentDate.getFullYear();
-          const enrollMonth = enrollmentDate.getMonth() + 1;
-          const enrollDay = enrollmentDate.getDate();
-          if (enrollYear === selectedYear && enrollMonth === selectedMonthNum && enrollDay > 1) {
-            const activeDays = Math.max(1, daysInMonth - enrollDay + 1);
-            fee = Math.round((defaultGroupFee * activeDays) / daysInMonth / 1000) * 1000;
-          }
-        }
-
-        const debt = Math.max(0, fee - amountPaid);
+        const debt = isBeforeEnrollment ? 0 : Math.max(0, fee - amountPaid);
 
         let status = "UNPAID";
-        if (amountPaid >= fee && fee > 0) status = "PAID";
+        if (isBeforeEnrollment) status = "NOT_ENROLLED";
+        else if (amountPaid >= fee && fee > 0) status = "PAID";
         else if (amountPaid > 0) status = "PARTIAL";
         else if (fee === 0) status = "PAID";
 

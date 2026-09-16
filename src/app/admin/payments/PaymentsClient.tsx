@@ -845,6 +845,11 @@ export function PaymentsClient({
                               UNPAID
                             </span>
                           )}
+                          {student.status === "NOT_ENROLLED" && (
+                            <span className="inline-block px-2.5 py-1 bg-slate-500/10 text-slate-500 dark:text-slate-400 border border-slate-500/20 rounded-md text-[11px] font-bold tracking-wider" title={`Enrolled on ${student.enrollmentDate ? new Date(student.enrollmentDate).toLocaleDateString() : 'later date'}`}>
+                              NOT ENROLLED
+                            </span>
+                          )}
                         </td>
 
                         {/* Actions */}
