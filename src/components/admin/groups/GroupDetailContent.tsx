@@ -155,7 +155,7 @@ export function GroupDetailContent({
 
         <div className="flex flex-wrap items-center gap-3 z-10">
           <Link
-            href={`/admin/groups/${group.id}/curriculum`}
+            href={`/admin/topics?tab=roadmap&groupId=${group.id}`}
             className="flex items-center gap-2 px-4 py-2 bg-slate-100 dark:bg-[#1c1b1b] hover:bg-slate-700 text-slate-900 dark:text-white rounded-lg font-medium transition-colors"
           >
             <BookOpen className="w-4 h-4 text-slate-900 dark:text-[#EBFF00]" />

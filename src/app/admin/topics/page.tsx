@@ -8,7 +8,9 @@ import { Plus } from "lucide-react";
 import Link from "next/link";
 import TopicsDashboardClient from "./TopicsDashboardClient";
 
-export default async function TopicsPage() {
+export default async function TopicsPage(props: {
+  searchParams: Promise<{ tab?: string; groupId?: string }>;
+}) {
   const session = await getSession();
 
   if (!session || session.role === "STUDENT") {
@@ -36,6 +38,8 @@ export default async function TopicsPage() {
       </AdminLayout>
     );
   }
+
+  const searchParams = await props.searchParams;
 
   // Fetch all topics
   const topics = await prisma.topic.findMany({
@@ -68,25 +72,30 @@ export default async function TopicsPage() {
       userRole={session.role}
     >
       {/* Page Header */}
-          <div className="mb-8 animate-fade-in flex flex-col md:flex-row md:items-center md:justify-between gap-4">
-            <div>
-              <h1 className="text-3xl font-bold text-slate-900 dark:text-white mb-2">
-                Topics
-              </h1>
-              <p className="text-slate-600 dark:text-slate-400 ">
-                Manage topic repository and group-specific learning roadmaps.
-              </p>
-            </div>
-            <Link
-              href="/admin/topics/create"
-              className="px-6 py-3 bg-[#EBFF00] hover:bg-[#d9ff00] text-slate-900 rounded-lg font-medium transition-colors w-full md:w-auto flex items-center justify-center gap-2 shadow-sm"
-            >
-              <Plus className="w-5 h-5" />
-              Create Topic
-            </Link>
-          </div>
+      <div className="mb-8 animate-fade-in flex flex-col md:flex-row md:items-center md:justify-between gap-4">
+        <div>
+          <h1 className="text-3xl font-bold text-slate-900 dark:text-white mb-2">
+            Topics & Curriculum
+          </h1>
+          <p className="text-slate-600 dark:text-slate-400">
+            Manage topic repository and group-specific learning roadmaps in one place.
+          </p>
+        </div>
+        <Link
+          href="/admin/topics/create"
+          className="px-6 py-3 bg-[#EBFF00] hover:bg-[#d9ff00] text-slate-900 rounded-lg font-medium transition-colors w-full md:w-auto flex items-center justify-center gap-2 shadow-sm"
+        >
+          <Plus className="w-5 h-5" />
+          Create Topic
+        </Link>
+      </div>
 
-          <TopicsDashboardClient topics={topics} groups={groups} />
+      <TopicsDashboardClient
+        topics={topics}
+        groups={groups}
+        initialTab={searchParams.tab}
+        initialGroupId={searchParams.groupId}
+      />
     </AdminLayout>
   );
 }

@@ -137,7 +137,7 @@ export default async function GroupsPage() {
                           View Settings
                         </Link>
                         <Link
-                          href={`/admin/groups/${group.id}/curriculum`}
+                          href={`/admin/topics?tab=roadmap&groupId=${group.id}`}
                           className="w-full text-center py-2 px-4 bg-slate-100 dark:bg-[#1c1b1b] hover:bg-slate-700 text-slate-900 dark:text-[#EBFF00] rounded-lg font-medium text-sm transition-colors flex items-center justify-center gap-2"
                         >
                           <BookOpen className="w-4 h-4" /> Curriculum

@@ -122,3 +122,89 @@ export async function PATCH(
     );
   }
 }
+
+// Reorder topic progression in group syllabus
+export async function PUT(
+  request: NextRequest,
+  { params }: { params: Promise<{ id: string }> },
+) {
+  try {
+    const session = await getSession();
+    if (!session || !canManageAcademics(session)) {
+      return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
+    }
+    const { id: groupId } = await params;
+    const body = await request.json();
+    const { items } = body;
+    if (!Array.isArray(items)) {
+      return NextResponse.json(
+        { error: "Items array is required" },
+        { status: 400 },
+      );
+    }
+
+    await prisma.$transaction(
+      items.map((item: { id?: string; topicId?: string; order: number }) => {
+        if (item.id) {
+          return prisma.groupTopicProgress.update({
+            where: { id: item.id },
+            data: { order: item.order },
+          });
+        }
+        return prisma.groupTopicProgress.update({
+          where: { groupId_topicId: { groupId, topicId: item.topicId! } },
+          data: { order: item.order },
+        });
+      }),
+    );
+
+    return NextResponse.json({ success: true });
+  } catch (error) {
+    console.error("Error reordering curriculum:", error);
+    return NextResponse.json(
+      { error: "Internal Server Error" },
+      { status: 500 },
+    );
+  }
+}
+
+// Remove topic from group roadmap
+export async function DELETE(
+  request: NextRequest,
+  { params }: { params: Promise<{ id: string }> },
+) {
+  try {
+    const session = await getSession();
+    if (!session || !canManageAcademics(session)) {
+      return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
+    }
+    const { id: groupId } = await params;
+    const { searchParams } = new URL(request.url);
+    const progressId = searchParams.get("progressId");
+    const topicId = searchParams.get("topicId");
+
+    if (progressId) {
+      await prisma.groupTopicProgress.delete({
+        where: { id: progressId },
+      });
+    } else if (topicId) {
+      await prisma.groupTopicProgress.delete({
+        where: { groupId_topicId: { groupId, topicId } },
+      });
+    } else {
+      return NextResponse.json(
+        { error: "progressId or topicId is required" },
+        { status: 400 },
+      );
+    }
+
+    return NextResponse.json({ success: true });
+  } catch (error) {
+    console.error("Error removing topic from group:", error);
+    return NextResponse.json(
+      { error: "Internal Server Error" },
+      { status: 500 },
+    );
+  }
+}
+
