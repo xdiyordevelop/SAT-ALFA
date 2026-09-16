@@ -6,6 +6,7 @@ import {
   getPaymentsData,
   recordStudentPayment,
   updateStudentAgreedFee,
+  toggleStudentMonthlyProrate,
 } from "@/server/actions/payment.actions";
 import { AccessDeniedView } from "@/components/admin/AccessDeniedView";
 import {
@@ -50,7 +51,7 @@ export function PaymentsClient({
   const [statusFilter, setStatusFilter] = useState<string>("ALL");
   const [showExportMenu, setShowExportMenu] = useState(false);
 
-  // Payment Recording Modal
+  // Payment Recording Modal State
   const [paymentModal, setPaymentModal] = useState<{
     studentId: string;
     studentName: string;
@@ -64,7 +65,7 @@ export function PaymentsClient({
     notes: string;
   } | null>(null);
 
-  // Edit Agreed Fee Modal State
+  // Edit Agreed Fee Modal State (Strictly for custom agreed monthly fees)
   const [feeModal, setFeeModal] = useState<{
     studentId: string;
     studentName: string;
@@ -76,13 +77,6 @@ export function PaymentsClient({
     feeType: "STANDARD" | "CUSTOM";
     customAmountInput: string;
     reason: string;
-    isProrated?: boolean;
-    isMidMonthEnrollment?: boolean;
-    proratedFee?: number;
-    enrollmentDay?: number | null;
-    activeDays?: number;
-    daysInMonth?: number;
-    enrollmentDate?: string | null;
   } | null>(null);
   const [savingFee, setSavingFee] = useState(false);
 
@@ -239,6 +233,23 @@ export function PaymentsClient({
     const [year, mo] = month.split("-").map(Number);
     const next = new Date(year, mo, 1);
     setMonth(`${next.getFullYear()}-${String(next.getMonth() + 1).padStart(2, "0")}`);
+  };
+
+  // Toggle per-month prorated fee for mid-month enrollees
+  const handleToggleProrate = (student: any) => {
+    startTransition(async () => {
+      try {
+        await toggleStudentMonthlyProrate({
+          studentId: student.id,
+          groupId: student.groupId,
+          month,
+        });
+        await loadData();
+      } catch (err: any) {
+        console.error("Failed to toggle prorate:", err);
+        alert(err?.message || "Failed to toggle monthly prorated fee.");
+      }
+    });
   };
 
   // Group stats calculation
@@ -744,6 +755,33 @@ export function PaymentsClient({
                                   {formatUZS(student.standardFee)}
                                 </p>
                               )}
+
+                              {/* Only visible for mid-month enrollees */}
+                              {student.isMidMonthEnrollment && (
+                                <div className="mt-1">
+                                  {student.isProrated ? (
+                                    <button
+                                      type="button"
+                                      onClick={() => handleToggleProrate(student)}
+                                      disabled={isPending}
+                                      className="inline-flex items-center gap-1 text-[10px] font-semibold text-sky-700 dark:text-sky-300 bg-sky-100/70 hover:bg-sky-200/70 dark:bg-sky-950/60 dark:hover:bg-sky-900/70 px-2 py-0.5 rounded border border-sky-300 dark:border-sky-800 transition-colors"
+                                      title="Click to revert to standard full fee"
+                                    >
+                                      <span>↩ Revert to Full</span>
+                                    </button>
+                                  ) : (
+                                    <button
+                                      type="button"
+                                      onClick={() => handleToggleProrate(student)}
+                                      disabled={isPending}
+                                      className="inline-flex items-center gap-1 text-[10px] font-semibold text-slate-700 hover:text-sky-700 dark:text-slate-300 dark:hover:text-sky-300 bg-slate-100 hover:bg-sky-50 dark:bg-white/5 dark:hover:bg-sky-950/40 px-2 py-0.5 rounded border border-slate-200 dark:border-white/10 hover:border-sky-300 transition-colors"
+                                      title={`Joined on day ${student.enrollmentDay} (${student.activeDays} days active). Click to switch this month to prorated daily fee.`}
+                                    >
+                                      <span>⚡ Prorate: {formatUZS(student.proratedFee)}</span>
+                                    </button>
+                                  )}
+                                </div>
+                              )}
                             </div>
 
                             <button
@@ -759,16 +797,9 @@ export function PaymentsClient({
                                   feeType: student.isCustomFee ? "CUSTOM" : "STANDARD",
                                   customAmountInput: (student.isCustomFee ? student.fee : student.standardFee).toLocaleString(),
                                   reason: student.customFeeReason || "",
-                                  isProrated: student.isProrated,
-                                  isMidMonthEnrollment: student.isMidMonthEnrollment,
-                                  proratedFee: student.proratedFee,
-                                  enrollmentDay: student.enrollmentDay,
-                                  activeDays: student.activeDays,
-                                  daysInMonth: student.daysInMonth,
-                                  enrollmentDate: student.enrollmentDate,
                                 })
                               }
-                              className="p-1.5 rounded-lg text-slate-400 hover:text-slate-700 dark:hover:text-white hover:bg-slate-100 dark:hover:bg-white/10 transition-colors"
+                              className="p-1.5 rounded-lg text-slate-400 hover:text-slate-700 dark:hover:text-white hover:bg-slate-100 dark:hover:bg-white/10 transition-colors shrink-0"
                               title="Edit agreed monthly fee"
                             >
                               <Pencil className="w-3.5 h-3.5" />
@@ -1112,28 +1143,6 @@ export function PaymentsClient({
                 </div>
               </div>
 
-              {/* Mid-Month Enrollment Banner */}
-              {feeModal.isMidMonthEnrollment && (
-                <div className="bg-sky-50 dark:bg-sky-950/30 border border-sky-200 dark:border-sky-800/50 rounded-xl p-3 text-xs text-sky-900 dark:text-sky-200 flex items-start justify-between gap-3">
-                  <div>
-                    <p className="font-bold flex items-center gap-1.5 text-xs">
-                      📅 Mid-Month Enrollment: Day {feeModal.enrollmentDay}
-                    </p>
-                    <p className="text-[11px] text-sky-600 dark:text-sky-400 mt-0.5">
-                      Active for {feeModal.activeDays} of {feeModal.daysInMonth} days in this billing month.
-                    </p>
-                  </div>
-                  <div className="text-right shrink-0">
-                    <span className="text-[10px] uppercase font-semibold text-sky-500 block">
-                      Prorated Fee
-                    </span>
-                    <span className="font-bold text-sky-700 dark:text-sky-300">
-                      {formatUZS(feeModal.proratedFee || 0)}
-                    </span>
-                  </div>
-                </div>
-              )}
-
               {/* Mode Selector: Standard vs Custom */}
               <div>
                 <label className="text-xs font-semibold text-slate-700 dark:text-slate-300 block mb-2">
@@ -1185,25 +1194,6 @@ export function PaymentsClient({
                         Agreed Fee Amount (UZS) *
                       </label>
                       <div className="flex items-center gap-1.5 flex-wrap">
-                        {feeModal.isMidMonthEnrollment && feeModal.proratedFee && (
-                          <>
-                            <button
-                              type="button"
-                              onClick={() =>
-                                setFeeModal({
-                                  ...feeModal,
-                                  customAmountInput: feeModal.proratedFee!.toLocaleString(),
-                                  reason: feeModal.reason || `Prorated for ${feeModal.activeDays} days`,
-                                })
-                              }
-                              className="text-[11px] font-bold text-sky-600 hover:text-sky-700 underline"
-                              title={`Apply prorated calculation for ${feeModal.activeDays} days`}
-                            >
-                              Prorata ({formatUZS(feeModal.proratedFee)})
-                            </button>
-                            <span className="text-slate-300 dark:text-slate-700">|</span>
-                          </>
-                        )}
                         <button
                           type="button"
                           onClick={() =>

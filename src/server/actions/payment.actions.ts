@@ -61,21 +61,23 @@ export async function getPaymentsData(selectedMonth: string) {
         const isEnrolledInSelectedMonth = enrollYear === selectedYear && enrollMonth === selectedMonthNum;
         const isMidMonthEnrollment = isEnrolledInSelectedMonth && enrollDay > 1;
 
-        const activeDays = isMidMonthEnrollment ? Math.max(1, daysInMonth - enrollDay + 1) : daysInMonth;
-        const calculatedProratedFee = isMidMonthEnrollment && standardGroupFee > 0
-          ? Math.round((standardGroupFee * activeDays) / daysInMonth / 1000) * 1000
-          : standardGroupFee;
-
         const isCustomFee = student.customMonthlyFee !== null && student.customMonthlyFee !== undefined;
-        
-        // Fee defaults to full standard group fee unless admin explicitly set a custom fee or student has not enrolled yet
+        const baseFee = isCustomFee ? student.customMonthlyFee! : standardGroupFee;
+
+        const activeDays = isMidMonthEnrollment ? Math.max(1, daysInMonth - enrollDay + 1) : daysInMonth;
+        const calculatedProratedFee = isMidMonthEnrollment && baseFee > 0
+          ? Math.round((baseFee * activeDays) / daysInMonth / 1000) * 1000
+          : baseFee;
+
+        // Monthly prorate flag is stored on the specific month payment record
+        const isProrated = Boolean(isMidMonthEnrollment && payment?.notes?.includes("[PRORATED]"));
+
         const fee = isBeforeEnrollment
           ? (amountPaid > 0 ? amountPaid : 0)
-          : isCustomFee
-          ? student.customMonthlyFee!
-          : standardGroupFee;
+          : isProrated
+          ? calculatedProratedFee
+          : baseFee;
 
-        const isProrated = isCustomFee && (Boolean(student.customFeeReason?.toLowerCase().includes("prorat")) || student.customMonthlyFee === calculatedProratedFee);
         const debt = isBeforeEnrollment ? 0 : Math.max(0, fee - amountPaid);
         
         let status = "UNPAID";
@@ -87,6 +89,9 @@ export async function getPaymentsData(selectedMonth: string) {
         totalExpected += fee;
         totalCollected += amountPaid;
         totalDebt += debt;
+
+        // Strip internal [PRORATED] tag from visible notes
+        const cleanNotes = (payment?.notes || "").replace(/\[PRORATED\]\s*/g, "").trim();
 
         return {
           id: student.id,
@@ -110,7 +115,7 @@ export async function getPaymentsData(selectedMonth: string) {
           debt,
           status,
           paymentId: payment?.id || null,
-          notes: payment?.notes || ""
+          notes: cleanNotes
         };
       })
       .filter((s): s is NonNullable<typeof s> => s !== null);
@@ -161,17 +166,44 @@ export async function recordStudentPayment({
     throw new Error("Group not found");
   }
 
-  const standardGroupFee = group.monthlyFee || 0;
-  let monthlyFee = standardGroupFee;
+  const existing = await prisma.payment.findUnique({
+    where: {
+      studentId_groupId_month: {
+        studentId,
+        groupId,
+        month
+      }
+    }
+  });
 
-  if (student?.customMonthlyFee !== null && student?.customMonthlyFee !== undefined) {
-    monthlyFee = student.customMonthlyFee;
+  const isPaymentProrated = Boolean(existing?.notes?.includes("[PRORATED]"));
+  const standardGroupFee = group.monthlyFee || 0;
+  const baseFee = student?.customMonthlyFee !== null && student?.customMonthlyFee !== undefined
+    ? student.customMonthlyFee
+    : standardGroupFee;
+
+  let monthlyFee = baseFee;
+  if (isPaymentProrated && student?.enrollmentDate) {
+    const [yStr, mStr] = month.split("-");
+    const y = parseInt(yStr, 10);
+    const m = parseInt(mStr, 10);
+    const daysInM = new Date(y, m, 0).getDate();
+    const enrollDate = new Date(student.enrollmentDate);
+    if (enrollDate.getFullYear() === y && enrollDate.getMonth() + 1 === m && enrollDate.getDate() > 1) {
+      const activeDays = Math.max(1, daysInM - enrollDate.getDate() + 1);
+      monthlyFee = Math.round((baseFee * activeDays) / daysInM / 1000) * 1000;
+    }
   }
 
   let status = "UNPAID";
   if (amountPaid >= monthlyFee && monthlyFee > 0) status = "PAID";
   else if (amountPaid > 0) status = "PARTIAL";
   else if (monthlyFee === 0) status = "PAID";
+
+  const cleanUserNotes = (notes !== undefined ? notes : existing?.notes || "").replace(/\[PRORATED\]\s*/g, "").trim();
+  const finalNotes = isPaymentProrated
+    ? (cleanUserNotes ? `[PRORATED] ${cleanUserNotes}` : "[PRORATED]")
+    : cleanUserNotes;
 
   await prisma.payment.upsert({
     where: {
@@ -184,7 +216,7 @@ export async function recordStudentPayment({
     update: {
       amountPaid,
       status,
-      notes,
+      notes: finalNotes,
       updatedAt: new Date()
     },
     create: {
@@ -193,7 +225,7 @@ export async function recordStudentPayment({
       month,
       amountPaid,
       status,
-      notes
+      notes: finalNotes
     }
   });
 
@@ -215,6 +247,96 @@ export async function recordStudentPayment({
 
   revalidatePath("/admin/payments");
   return { success: true };
+}
+
+export async function toggleStudentMonthlyProrate({
+  studentId,
+  groupId,
+  month,
+}: {
+  studentId: string;
+  groupId: string;
+  month: string;
+}) {
+  const session = await getSession();
+  if (!session || !canManagePayments(session)) throw new Error("Unauthorized");
+
+  const student = await prisma.studentProfile.findUnique({
+    where: { id: studentId },
+    select: { customMonthlyFee: true, enrollmentDate: true }
+  });
+  if (!student) throw new Error("Student not found");
+
+  const group = await prisma.group.findUnique({
+    where: { id: groupId }
+  });
+  if (!group) throw new Error("Group not found");
+
+  const existing = await prisma.payment.findUnique({
+    where: {
+      studentId_groupId_month: {
+        studentId,
+        groupId,
+        month
+      }
+    }
+  });
+
+  const currentlyProrated = Boolean(existing?.notes?.includes("[PRORATED]"));
+  const nextProrated = !currentlyProrated;
+
+  const baseNotes = (existing?.notes || "").replace(/\[PRORATED\]\s*/g, "").trim();
+  const finalNotes = nextProrated
+    ? (baseNotes ? `[PRORATED] ${baseNotes}` : "[PRORATED]")
+    : baseNotes;
+
+  const baseFee = student.customMonthlyFee !== null && student.customMonthlyFee !== undefined
+    ? student.customMonthlyFee
+    : (group.monthlyFee || 0);
+
+  // Calculate effective fee
+  const [yStr, mStr] = month.split("-");
+  const y = parseInt(yStr, 10);
+  const m = parseInt(mStr, 10);
+  const daysInM = new Date(y, m, 0).getDate();
+  const enrollDate = student.enrollmentDate ? new Date(student.enrollmentDate) : new Date();
+  const enrollDay = enrollDate.getDate();
+  const activeDays = Math.max(1, daysInM - enrollDay + 1);
+
+  const proratedFee = Math.round((baseFee * activeDays) / daysInM / 1000) * 1000;
+  const effectiveFee = nextProrated ? proratedFee : baseFee;
+  const amountPaid = existing?.amountPaid || 0;
+
+  let newStatus = "UNPAID";
+  if (amountPaid >= effectiveFee && effectiveFee > 0) newStatus = "PAID";
+  else if (amountPaid > 0) newStatus = "PARTIAL";
+  else if (effectiveFee === 0) newStatus = "PAID";
+
+  await prisma.payment.upsert({
+    where: {
+      studentId_groupId_month: {
+        studentId,
+        groupId,
+        month
+      }
+    },
+    update: {
+      notes: finalNotes,
+      status: newStatus,
+      updatedAt: new Date()
+    },
+    create: {
+      studentId,
+      groupId,
+      month,
+      amountPaid: 0,
+      status: newStatus,
+      notes: finalNotes
+    }
+  });
+
+  revalidatePath("/admin/payments");
+  return { success: true, isProrated: nextProrated };
 }
 
 export async function updateStudentAgreedFee({
@@ -254,7 +376,21 @@ export async function updateStudentAgreedFee({
   // If there is an existing payment record for the current month, update its status based on the new fee
   if (currentMonth && student.payments && student.payments.length > 0) {
     const payment = student.payments[0];
-    const effectiveFee = customMonthlyFee !== null ? customMonthlyFee : (student.group?.monthlyFee || 0);
+    const isPaymentProrated = Boolean(payment.notes?.includes("[PRORATED]"));
+    let effectiveFee = customMonthlyFee !== null ? customMonthlyFee : (student.group?.monthlyFee || 0);
+
+    if (isPaymentProrated && student.enrollmentDate && currentMonth) {
+      const [yStr, mStr] = currentMonth.split("-");
+      const y = parseInt(yStr, 10);
+      const m = parseInt(mStr, 10);
+      const daysInM = new Date(y, m, 0).getDate();
+      const enrollDate = new Date(student.enrollmentDate);
+      if (enrollDate.getFullYear() === y && enrollDate.getMonth() + 1 === m && enrollDate.getDate() > 1) {
+        const activeDays = Math.max(1, daysInM - enrollDate.getDate() + 1);
+        effectiveFee = Math.round((effectiveFee * activeDays) / daysInM / 1000) * 1000;
+      }
+    }
+
     let newStatus = "UNPAID";
     if (payment.amountPaid >= effectiveFee && effectiveFee > 0) newStatus = "PAID";
     else if (payment.amountPaid > 0) newStatus = "PARTIAL";

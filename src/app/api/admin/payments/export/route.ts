@@ -122,13 +122,16 @@ export async function GET(request: NextRequest) {
         const enrollmentDate = student.enrollmentDate ? new Date(student.enrollmentDate) : new Date(0);
 
         const isBeforeEnrollment = enrollmentDate > endOfSelectedMonth && amountPaid === 0;
+        const isPaymentProrated = Boolean(payment?.notes?.includes("[PRORATED]"));
 
         const isCustomFee = student.customMonthlyFee !== null && student.customMonthlyFee !== undefined;
+        const baseFee = isCustomFee ? student.customMonthlyFee! : defaultGroupFee;
+
         let fee = isBeforeEnrollment
           ? 0
-          : isCustomFee
-          ? student.customMonthlyFee!
-          : defaultGroupFee;
+          : isPaymentProrated
+          ? Math.round((baseFee * Math.max(1, daysInMonth - enrollmentDate.getDate() + 1)) / daysInMonth / 1000) * 1000
+          : baseFee;
 
         const debt = isBeforeEnrollment ? 0 : Math.max(0, fee - amountPaid);
 
@@ -137,6 +140,8 @@ export async function GET(request: NextRequest) {
         else if (amountPaid >= fee && fee > 0) status = "PAID";
         else if (amountPaid > 0) status = "PARTIAL";
         else if (fee === 0) status = "PAID";
+
+        const cleanNotes = (payment?.notes || "").replace(/\[PRORATED\]\s*/g, "").trim();
 
         rows.push([
           month,
@@ -149,7 +154,7 @@ export async function GET(request: NextRequest) {
           amountPaid,
           debt,
           status,
-          payment?.notes || "",
+          cleanNotes,
           payment ? new Date(payment.updatedAt).toLocaleDateString("en-US") : "—",
         ]);
       }
