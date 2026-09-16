@@ -147,19 +147,21 @@ model Group {
 }
 
 model StudentProfile {
-  id             String        @id @default(uuid())
-  userId         String        @unique
-  user           User          @relation(fields: [userId], references: [id], onDelete: Cascade)
-  firstName      String
-  lastName       String
-  phone          String
-  groupId        String?
-  group          Group?        @relation(fields: [groupId], references: [id], onDelete: SetNull)
-  enrollmentDate DateTime      @default(now())
-  status         StudentStatus @default(ACTIVE)
-  monthlyFee     Float         @default(0)
-  paid           Float         @default(0)
-  debt           Float         @default(0)
+  id               String        @id @default(uuid())
+  userId           String        @unique
+  user             User          @relation(fields: [userId], references: [id], onDelete: Cascade)
+  firstName        String
+  lastName         String
+  phone            String
+  groupId          String?
+  group            Group?        @relation(fields: [groupId], references: [id], onDelete: SetNull)
+  enrollmentDate   DateTime      @default(now())
+  status           StudentStatus @default(ACTIVE)
+  monthlyFee       Float         @default(0)
+  customMonthlyFee Float?
+  customFeeReason  String?
+  paid             Float         @default(0)
+  debt             Float         @default(0)
 
   parent         ParentGuardian?
   mockTests      MockTest[]

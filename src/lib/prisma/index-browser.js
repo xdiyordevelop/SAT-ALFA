@@ -168,6 +168,8 @@ exports.Prisma.StudentProfileScalarFieldEnum = {
   enrollmentDate: 'enrollmentDate',
   status: 'status',
   monthlyFee: 'monthlyFee',
+  customMonthlyFee: 'customMonthlyFee',
+  customFeeReason: 'customFeeReason',
   paid: 'paid',
   debt: 'debt',
   referralCode: 'referralCode',

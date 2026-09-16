@@ -7389,12 +7389,14 @@ export namespace Prisma {
 
   export type StudentProfileAvgAggregateOutputType = {
     monthlyFee: number | null
+    customMonthlyFee: number | null
     paid: number | null
     debt: number | null
   }
 
   export type StudentProfileSumAggregateOutputType = {
     monthlyFee: number | null
+    customMonthlyFee: number | null
     paid: number | null
     debt: number | null
   }
@@ -7409,6 +7411,8 @@ export namespace Prisma {
     enrollmentDate: Date | null
     status: $Enums.StudentStatus | null
     monthlyFee: number | null
+    customMonthlyFee: number | null
+    customFeeReason: string | null
     paid: number | null
     debt: number | null
     referralCode: string | null
@@ -7427,6 +7431,8 @@ export namespace Prisma {
     enrollmentDate: Date | null
     status: $Enums.StudentStatus | null
     monthlyFee: number | null
+    customMonthlyFee: number | null
+    customFeeReason: string | null
     paid: number | null
     debt: number | null
     referralCode: string | null
@@ -7445,6 +7451,8 @@ export namespace Prisma {
     enrollmentDate: number
     status: number
     monthlyFee: number
+    customMonthlyFee: number
+    customFeeReason: number
     paid: number
     debt: number
     referralCode: number
@@ -7457,12 +7465,14 @@ export namespace Prisma {
 
   export type StudentProfileAvgAggregateInputType = {
     monthlyFee?: true
+    customMonthlyFee?: true
     paid?: true
     debt?: true
   }
 
   export type StudentProfileSumAggregateInputType = {
     monthlyFee?: true
+    customMonthlyFee?: true
     paid?: true
     debt?: true
   }
@@ -7477,6 +7487,8 @@ export namespace Prisma {
     enrollmentDate?: true
     status?: true
     monthlyFee?: true
+    customMonthlyFee?: true
+    customFeeReason?: true
     paid?: true
     debt?: true
     referralCode?: true
@@ -7495,6 +7507,8 @@ export namespace Prisma {
     enrollmentDate?: true
     status?: true
     monthlyFee?: true
+    customMonthlyFee?: true
+    customFeeReason?: true
     paid?: true
     debt?: true
     referralCode?: true
@@ -7513,6 +7527,8 @@ export namespace Prisma {
     enrollmentDate?: true
     status?: true
     monthlyFee?: true
+    customMonthlyFee?: true
+    customFeeReason?: true
     paid?: true
     debt?: true
     referralCode?: true
@@ -7618,6 +7634,8 @@ export namespace Prisma {
     enrollmentDate: Date
     status: $Enums.StudentStatus
     monthlyFee: number
+    customMonthlyFee: number | null
+    customFeeReason: string | null
     paid: number
     debt: number
     referralCode: string | null
@@ -7655,6 +7673,8 @@ export namespace Prisma {
     enrollmentDate?: boolean
     status?: boolean
     monthlyFee?: boolean
+    customMonthlyFee?: boolean
+    customFeeReason?: boolean
     paid?: boolean
     debt?: boolean
     referralCode?: boolean
@@ -7687,6 +7707,8 @@ export namespace Prisma {
     enrollmentDate?: boolean
     status?: boolean
     monthlyFee?: boolean
+    customMonthlyFee?: boolean
+    customFeeReason?: boolean
     paid?: boolean
     debt?: boolean
     referralCode?: boolean
@@ -7707,6 +7729,8 @@ export namespace Prisma {
     enrollmentDate?: boolean
     status?: boolean
     monthlyFee?: boolean
+    customMonthlyFee?: boolean
+    customFeeReason?: boolean
     paid?: boolean
     debt?: boolean
     referralCode?: boolean
@@ -7727,6 +7751,8 @@ export namespace Prisma {
     enrollmentDate?: boolean
     status?: boolean
     monthlyFee?: boolean
+    customMonthlyFee?: boolean
+    customFeeReason?: boolean
     paid?: boolean
     debt?: boolean
     referralCode?: boolean
@@ -7735,7 +7761,7 @@ export namespace Prisma {
     updatedAt?: boolean
   }
 
-  export type StudentProfileOmit<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetOmit<"id" | "userId" | "firstName" | "lastName" | "phone" | "groupId" | "enrollmentDate" | "status" | "monthlyFee" | "paid" | "debt" | "referralCode" | "referredByUserId" | "createdAt" | "updatedAt", ExtArgs["result"]["studentProfile"]>
+  export type StudentProfileOmit<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetOmit<"id" | "userId" | "firstName" | "lastName" | "phone" | "groupId" | "enrollmentDate" | "status" | "monthlyFee" | "customMonthlyFee" | "customFeeReason" | "paid" | "debt" | "referralCode" | "referredByUserId" | "createdAt" | "updatedAt", ExtArgs["result"]["studentProfile"]>
   export type StudentProfileInclude<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
     user?: boolean | UserDefaultArgs<ExtArgs>
     group?: boolean | StudentProfile$groupArgs<ExtArgs>
@@ -7788,6 +7814,8 @@ export namespace Prisma {
       enrollmentDate: Date
       status: $Enums.StudentStatus
       monthlyFee: number
+      customMonthlyFee: number | null
+      customFeeReason: string | null
       paid: number
       debt: number
       referralCode: string | null
@@ -8239,6 +8267,8 @@ export namespace Prisma {
     readonly enrollmentDate: FieldRef<"StudentProfile", 'DateTime'>
     readonly status: FieldRef<"StudentProfile", 'StudentStatus'>
     readonly monthlyFee: FieldRef<"StudentProfile", 'Float'>
+    readonly customMonthlyFee: FieldRef<"StudentProfile", 'Float'>
+    readonly customFeeReason: FieldRef<"StudentProfile", 'String'>
     readonly paid: FieldRef<"StudentProfile", 'Float'>
     readonly debt: FieldRef<"StudentProfile", 'Float'>
     readonly referralCode: FieldRef<"StudentProfile", 'String'>
@@ -34995,6 +35025,8 @@ export namespace Prisma {
     enrollmentDate: 'enrollmentDate',
     status: 'status',
     monthlyFee: 'monthlyFee',
+    customMonthlyFee: 'customMonthlyFee',
+    customFeeReason: 'customFeeReason',
     paid: 'paid',
     debt: 'debt',
     referralCode: 'referralCode',
@@ -36004,6 +36036,8 @@ export namespace Prisma {
     enrollmentDate?: DateTimeFilter<"StudentProfile"> | Date | string
     status?: EnumStudentStatusFilter<"StudentProfile"> | $Enums.StudentStatus
     monthlyFee?: FloatFilter<"StudentProfile"> | number
+    customMonthlyFee?: FloatNullableFilter<"StudentProfile"> | number | null
+    customFeeReason?: StringNullableFilter<"StudentProfile"> | string | null
     paid?: FloatFilter<"StudentProfile"> | number
     debt?: FloatFilter<"StudentProfile"> | number
     referralCode?: StringNullableFilter<"StudentProfile"> | string | null
@@ -36035,6 +36069,8 @@ export namespace Prisma {
     enrollmentDate?: SortOrder
     status?: SortOrder
     monthlyFee?: SortOrder
+    customMonthlyFee?: SortOrderInput | SortOrder
+    customFeeReason?: SortOrderInput | SortOrder
     paid?: SortOrder
     debt?: SortOrder
     referralCode?: SortOrderInput | SortOrder
@@ -36069,6 +36105,8 @@ export namespace Prisma {
     enrollmentDate?: DateTimeFilter<"StudentProfile"> | Date | string
     status?: EnumStudentStatusFilter<"StudentProfile"> | $Enums.StudentStatus
     monthlyFee?: FloatFilter<"StudentProfile"> | number
+    customMonthlyFee?: FloatNullableFilter<"StudentProfile"> | number | null
+    customFeeReason?: StringNullableFilter<"StudentProfile"> | string | null
     paid?: FloatFilter<"StudentProfile"> | number
     debt?: FloatFilter<"StudentProfile"> | number
     referralCode?: StringNullableFilter<"StudentProfile"> | string | null
@@ -36100,6 +36138,8 @@ export namespace Prisma {
     enrollmentDate?: SortOrder
     status?: SortOrder
     monthlyFee?: SortOrder
+    customMonthlyFee?: SortOrderInput | SortOrder
+    customFeeReason?: SortOrderInput | SortOrder
     paid?: SortOrder
     debt?: SortOrder
     referralCode?: SortOrderInput | SortOrder
@@ -36126,6 +36166,8 @@ export namespace Prisma {
     enrollmentDate?: DateTimeWithAggregatesFilter<"StudentProfile"> | Date | string
     status?: EnumStudentStatusWithAggregatesFilter<"StudentProfile"> | $Enums.StudentStatus
     monthlyFee?: FloatWithAggregatesFilter<"StudentProfile"> | number
+    customMonthlyFee?: FloatNullableWithAggregatesFilter<"StudentProfile"> | number | null
+    customFeeReason?: StringNullableWithAggregatesFilter<"StudentProfile"> | string | null
     paid?: FloatWithAggregatesFilter<"StudentProfile"> | number
     debt?: FloatWithAggregatesFilter<"StudentProfile"> | number
     referralCode?: StringNullableWithAggregatesFilter<"StudentProfile"> | string | null
@@ -38457,6 +38499,8 @@ export namespace Prisma {
     enrollmentDate?: Date | string
     status?: $Enums.StudentStatus
     monthlyFee?: number
+    customMonthlyFee?: number | null
+    customFeeReason?: string | null
     paid?: number
     debt?: number
     referralCode?: string | null
@@ -38488,6 +38532,8 @@ export namespace Prisma {
     enrollmentDate?: Date | string
     status?: $Enums.StudentStatus
     monthlyFee?: number
+    customMonthlyFee?: number | null
+    customFeeReason?: string | null
     paid?: number
     debt?: number
     referralCode?: string | null
@@ -38515,6 +38561,8 @@ export namespace Prisma {
     enrollmentDate?: DateTimeFieldUpdateOperationsInput | Date | string
     status?: EnumStudentStatusFieldUpdateOperationsInput | $Enums.StudentStatus
     monthlyFee?: FloatFieldUpdateOperationsInput | number
+    customMonthlyFee?: NullableFloatFieldUpdateOperationsInput | number | null
+    customFeeReason?: NullableStringFieldUpdateOperationsInput | string | null
     paid?: FloatFieldUpdateOperationsInput | number
     debt?: FloatFieldUpdateOperationsInput | number
     referralCode?: NullableStringFieldUpdateOperationsInput | string | null
@@ -38546,6 +38594,8 @@ export namespace Prisma {
     enrollmentDate?: DateTimeFieldUpdateOperationsInput | Date | string
     status?: EnumStudentStatusFieldUpdateOperationsInput | $Enums.StudentStatus
     monthlyFee?: FloatFieldUpdateOperationsInput | number
+    customMonthlyFee?: NullableFloatFieldUpdateOperationsInput | number | null
+    customFeeReason?: NullableStringFieldUpdateOperationsInput | string | null
     paid?: FloatFieldUpdateOperationsInput | number
     debt?: FloatFieldUpdateOperationsInput | number
     referralCode?: NullableStringFieldUpdateOperationsInput | string | null
@@ -38575,6 +38625,8 @@ export namespace Prisma {
     enrollmentDate?: Date | string
     status?: $Enums.StudentStatus
     monthlyFee?: number
+    customMonthlyFee?: number | null
+    customFeeReason?: string | null
     paid?: number
     debt?: number
     referralCode?: string | null
@@ -38591,6 +38643,8 @@ export namespace Prisma {
     enrollmentDate?: DateTimeFieldUpdateOperationsInput | Date | string
     status?: EnumStudentStatusFieldUpdateOperationsInput | $Enums.StudentStatus
     monthlyFee?: FloatFieldUpdateOperationsInput | number
+    customMonthlyFee?: NullableFloatFieldUpdateOperationsInput | number | null
+    customFeeReason?: NullableStringFieldUpdateOperationsInput | string | null
     paid?: FloatFieldUpdateOperationsInput | number
     debt?: FloatFieldUpdateOperationsInput | number
     referralCode?: NullableStringFieldUpdateOperationsInput | string | null
@@ -38609,6 +38663,8 @@ export namespace Prisma {
     enrollmentDate?: DateTimeFieldUpdateOperationsInput | Date | string
     status?: EnumStudentStatusFieldUpdateOperationsInput | $Enums.StudentStatus
     monthlyFee?: FloatFieldUpdateOperationsInput | number
+    customMonthlyFee?: NullableFloatFieldUpdateOperationsInput | number | null
+    customFeeReason?: NullableStringFieldUpdateOperationsInput | string | null
     paid?: FloatFieldUpdateOperationsInput | number
     debt?: FloatFieldUpdateOperationsInput | number
     referralCode?: NullableStringFieldUpdateOperationsInput | string | null
@@ -41428,6 +41484,8 @@ export namespace Prisma {
     enrollmentDate?: SortOrder
     status?: SortOrder
     monthlyFee?: SortOrder
+    customMonthlyFee?: SortOrder
+    customFeeReason?: SortOrder
     paid?: SortOrder
     debt?: SortOrder
     referralCode?: SortOrder
@@ -41438,6 +41496,7 @@ export namespace Prisma {
 
   export type StudentProfileAvgOrderByAggregateInput = {
     monthlyFee?: SortOrder
+    customMonthlyFee?: SortOrder
     paid?: SortOrder
     debt?: SortOrder
   }
@@ -41452,6 +41511,8 @@ export namespace Prisma {
     enrollmentDate?: SortOrder
     status?: SortOrder
     monthlyFee?: SortOrder
+    customMonthlyFee?: SortOrder
+    customFeeReason?: SortOrder
     paid?: SortOrder
     debt?: SortOrder
     referralCode?: SortOrder
@@ -41470,6 +41531,8 @@ export namespace Prisma {
     enrollmentDate?: SortOrder
     status?: SortOrder
     monthlyFee?: SortOrder
+    customMonthlyFee?: SortOrder
+    customFeeReason?: SortOrder
     paid?: SortOrder
     debt?: SortOrder
     referralCode?: SortOrder
@@ -41480,6 +41543,7 @@ export namespace Prisma {
 
   export type StudentProfileSumOrderByAggregateInput = {
     monthlyFee?: SortOrder
+    customMonthlyFee?: SortOrder
     paid?: SortOrder
     debt?: SortOrder
   }
@@ -45284,6 +45348,8 @@ export namespace Prisma {
     enrollmentDate?: Date | string
     status?: $Enums.StudentStatus
     monthlyFee?: number
+    customMonthlyFee?: number | null
+    customFeeReason?: string | null
     paid?: number
     debt?: number
     referralCode?: string | null
@@ -45313,6 +45379,8 @@ export namespace Prisma {
     enrollmentDate?: Date | string
     status?: $Enums.StudentStatus
     monthlyFee?: number
+    customMonthlyFee?: number | null
+    customFeeReason?: string | null
     paid?: number
     debt?: number
     referralCode?: string | null
@@ -45409,6 +45477,8 @@ export namespace Prisma {
     enrollmentDate?: DateTimeFieldUpdateOperationsInput | Date | string
     status?: EnumStudentStatusFieldUpdateOperationsInput | $Enums.StudentStatus
     monthlyFee?: FloatFieldUpdateOperationsInput | number
+    customMonthlyFee?: NullableFloatFieldUpdateOperationsInput | number | null
+    customFeeReason?: NullableStringFieldUpdateOperationsInput | string | null
     paid?: FloatFieldUpdateOperationsInput | number
     debt?: FloatFieldUpdateOperationsInput | number
     referralCode?: NullableStringFieldUpdateOperationsInput | string | null
@@ -45438,6 +45508,8 @@ export namespace Prisma {
     enrollmentDate?: DateTimeFieldUpdateOperationsInput | Date | string
     status?: EnumStudentStatusFieldUpdateOperationsInput | $Enums.StudentStatus
     monthlyFee?: FloatFieldUpdateOperationsInput | number
+    customMonthlyFee?: NullableFloatFieldUpdateOperationsInput | number | null
+    customFeeReason?: NullableStringFieldUpdateOperationsInput | string | null
     paid?: FloatFieldUpdateOperationsInput | number
     debt?: FloatFieldUpdateOperationsInput | number
     referralCode?: NullableStringFieldUpdateOperationsInput | string | null
@@ -45584,6 +45656,8 @@ export namespace Prisma {
     enrollmentDate?: Date | string
     status?: $Enums.StudentStatus
     monthlyFee?: number
+    customMonthlyFee?: number | null
+    customFeeReason?: string | null
     paid?: number
     debt?: number
     referralCode?: string | null
@@ -45613,6 +45687,8 @@ export namespace Prisma {
     enrollmentDate?: Date | string
     status?: $Enums.StudentStatus
     monthlyFee?: number
+    customMonthlyFee?: number | null
+    customFeeReason?: string | null
     paid?: number
     debt?: number
     referralCode?: string | null
@@ -45763,6 +45839,8 @@ export namespace Prisma {
     enrollmentDate?: DateTimeFilter<"StudentProfile"> | Date | string
     status?: EnumStudentStatusFilter<"StudentProfile"> | $Enums.StudentStatus
     monthlyFee?: FloatFilter<"StudentProfile"> | number
+    customMonthlyFee?: FloatNullableFilter<"StudentProfile"> | number | null
+    customFeeReason?: StringNullableFilter<"StudentProfile"> | string | null
     paid?: FloatFilter<"StudentProfile"> | number
     debt?: FloatFilter<"StudentProfile"> | number
     referralCode?: StringNullableFilter<"StudentProfile"> | string | null
@@ -46803,6 +46881,8 @@ export namespace Prisma {
     enrollmentDate?: Date | string
     status?: $Enums.StudentStatus
     monthlyFee?: number
+    customMonthlyFee?: number | null
+    customFeeReason?: string | null
     paid?: number
     debt?: number
     referralCode?: string | null
@@ -46833,6 +46913,8 @@ export namespace Prisma {
     enrollmentDate?: Date | string
     status?: $Enums.StudentStatus
     monthlyFee?: number
+    customMonthlyFee?: number | null
+    customFeeReason?: string | null
     paid?: number
     debt?: number
     referralCode?: string | null
@@ -46875,6 +46957,8 @@ export namespace Prisma {
     enrollmentDate?: DateTimeFieldUpdateOperationsInput | Date | string
     status?: EnumStudentStatusFieldUpdateOperationsInput | $Enums.StudentStatus
     monthlyFee?: FloatFieldUpdateOperationsInput | number
+    customMonthlyFee?: NullableFloatFieldUpdateOperationsInput | number | null
+    customFeeReason?: NullableStringFieldUpdateOperationsInput | string | null
     paid?: FloatFieldUpdateOperationsInput | number
     debt?: FloatFieldUpdateOperationsInput | number
     referralCode?: NullableStringFieldUpdateOperationsInput | string | null
@@ -46905,6 +46989,8 @@ export namespace Prisma {
     enrollmentDate?: DateTimeFieldUpdateOperationsInput | Date | string
     status?: EnumStudentStatusFieldUpdateOperationsInput | $Enums.StudentStatus
     monthlyFee?: FloatFieldUpdateOperationsInput | number
+    customMonthlyFee?: NullableFloatFieldUpdateOperationsInput | number | null
+    customFeeReason?: NullableStringFieldUpdateOperationsInput | string | null
     paid?: FloatFieldUpdateOperationsInput | number
     debt?: FloatFieldUpdateOperationsInput | number
     referralCode?: NullableStringFieldUpdateOperationsInput | string | null
@@ -46931,6 +47017,8 @@ export namespace Prisma {
     enrollmentDate?: Date | string
     status?: $Enums.StudentStatus
     monthlyFee?: number
+    customMonthlyFee?: number | null
+    customFeeReason?: string | null
     paid?: number
     debt?: number
     referralCode?: string | null
@@ -46961,6 +47049,8 @@ export namespace Prisma {
     enrollmentDate?: Date | string
     status?: $Enums.StudentStatus
     monthlyFee?: number
+    customMonthlyFee?: number | null
+    customFeeReason?: string | null
     paid?: number
     debt?: number
     referralCode?: string | null
@@ -47052,6 +47142,8 @@ export namespace Prisma {
     enrollmentDate?: DateTimeFieldUpdateOperationsInput | Date | string
     status?: EnumStudentStatusFieldUpdateOperationsInput | $Enums.StudentStatus
     monthlyFee?: FloatFieldUpdateOperationsInput | number
+    customMonthlyFee?: NullableFloatFieldUpdateOperationsInput | number | null
+    customFeeReason?: NullableStringFieldUpdateOperationsInput | string | null
     paid?: FloatFieldUpdateOperationsInput | number
     debt?: FloatFieldUpdateOperationsInput | number
     referralCode?: NullableStringFieldUpdateOperationsInput | string | null
@@ -47082,6 +47174,8 @@ export namespace Prisma {
     enrollmentDate?: DateTimeFieldUpdateOperationsInput | Date | string
     status?: EnumStudentStatusFieldUpdateOperationsInput | $Enums.StudentStatus
     monthlyFee?: FloatFieldUpdateOperationsInput | number
+    customMonthlyFee?: NullableFloatFieldUpdateOperationsInput | number | null
+    customFeeReason?: NullableStringFieldUpdateOperationsInput | string | null
     paid?: FloatFieldUpdateOperationsInput | number
     debt?: FloatFieldUpdateOperationsInput | number
     referralCode?: NullableStringFieldUpdateOperationsInput | string | null
@@ -47163,6 +47257,8 @@ export namespace Prisma {
     enrollmentDate?: Date | string
     status?: $Enums.StudentStatus
     monthlyFee?: number
+    customMonthlyFee?: number | null
+    customFeeReason?: string | null
     paid?: number
     debt?: number
     referralCode?: string | null
@@ -47193,6 +47289,8 @@ export namespace Prisma {
     enrollmentDate?: Date | string
     status?: $Enums.StudentStatus
     monthlyFee?: number
+    customMonthlyFee?: number | null
+    customFeeReason?: string | null
     paid?: number
     debt?: number
     referralCode?: string | null
@@ -47284,6 +47382,8 @@ export namespace Prisma {
     enrollmentDate?: DateTimeFieldUpdateOperationsInput | Date | string
     status?: EnumStudentStatusFieldUpdateOperationsInput | $Enums.StudentStatus
     monthlyFee?: FloatFieldUpdateOperationsInput | number
+    customMonthlyFee?: NullableFloatFieldUpdateOperationsInput | number | null
+    customFeeReason?: NullableStringFieldUpdateOperationsInput | string | null
     paid?: FloatFieldUpdateOperationsInput | number
     debt?: FloatFieldUpdateOperationsInput | number
     referralCode?: NullableStringFieldUpdateOperationsInput | string | null
@@ -47314,6 +47414,8 @@ export namespace Prisma {
     enrollmentDate?: DateTimeFieldUpdateOperationsInput | Date | string
     status?: EnumStudentStatusFieldUpdateOperationsInput | $Enums.StudentStatus
     monthlyFee?: FloatFieldUpdateOperationsInput | number
+    customMonthlyFee?: NullableFloatFieldUpdateOperationsInput | number | null
+    customFeeReason?: NullableStringFieldUpdateOperationsInput | string | null
     paid?: FloatFieldUpdateOperationsInput | number
     debt?: FloatFieldUpdateOperationsInput | number
     referralCode?: NullableStringFieldUpdateOperationsInput | string | null
@@ -47395,6 +47497,8 @@ export namespace Prisma {
     enrollmentDate?: Date | string
     status?: $Enums.StudentStatus
     monthlyFee?: number
+    customMonthlyFee?: number | null
+    customFeeReason?: string | null
     paid?: number
     debt?: number
     referralCode?: string | null
@@ -47425,6 +47529,8 @@ export namespace Prisma {
     enrollmentDate?: Date | string
     status?: $Enums.StudentStatus
     monthlyFee?: number
+    customMonthlyFee?: number | null
+    customFeeReason?: string | null
     paid?: number
     debt?: number
     referralCode?: string | null
@@ -47467,6 +47573,8 @@ export namespace Prisma {
     enrollmentDate?: DateTimeFieldUpdateOperationsInput | Date | string
     status?: EnumStudentStatusFieldUpdateOperationsInput | $Enums.StudentStatus
     monthlyFee?: FloatFieldUpdateOperationsInput | number
+    customMonthlyFee?: NullableFloatFieldUpdateOperationsInput | number | null
+    customFeeReason?: NullableStringFieldUpdateOperationsInput | string | null
     paid?: FloatFieldUpdateOperationsInput | number
     debt?: FloatFieldUpdateOperationsInput | number
     referralCode?: NullableStringFieldUpdateOperationsInput | string | null
@@ -47497,6 +47605,8 @@ export namespace Prisma {
     enrollmentDate?: DateTimeFieldUpdateOperationsInput | Date | string
     status?: EnumStudentStatusFieldUpdateOperationsInput | $Enums.StudentStatus
     monthlyFee?: FloatFieldUpdateOperationsInput | number
+    customMonthlyFee?: NullableFloatFieldUpdateOperationsInput | number | null
+    customFeeReason?: NullableStringFieldUpdateOperationsInput | string | null
     paid?: FloatFieldUpdateOperationsInput | number
     debt?: FloatFieldUpdateOperationsInput | number
     referralCode?: NullableStringFieldUpdateOperationsInput | string | null
@@ -47799,6 +47909,8 @@ export namespace Prisma {
     enrollmentDate?: Date | string
     status?: $Enums.StudentStatus
     monthlyFee?: number
+    customMonthlyFee?: number | null
+    customFeeReason?: string | null
     paid?: number
     debt?: number
     referralCode?: string | null
@@ -47829,6 +47941,8 @@ export namespace Prisma {
     enrollmentDate?: Date | string
     status?: $Enums.StudentStatus
     monthlyFee?: number
+    customMonthlyFee?: number | null
+    customFeeReason?: string | null
     paid?: number
     debt?: number
     referralCode?: string | null
@@ -47961,6 +48075,8 @@ export namespace Prisma {
     enrollmentDate?: DateTimeFieldUpdateOperationsInput | Date | string
     status?: EnumStudentStatusFieldUpdateOperationsInput | $Enums.StudentStatus
     monthlyFee?: FloatFieldUpdateOperationsInput | number
+    customMonthlyFee?: NullableFloatFieldUpdateOperationsInput | number | null
+    customFeeReason?: NullableStringFieldUpdateOperationsInput | string | null
     paid?: FloatFieldUpdateOperationsInput | number
     debt?: FloatFieldUpdateOperationsInput | number
     referralCode?: NullableStringFieldUpdateOperationsInput | string | null
@@ -47991,6 +48107,8 @@ export namespace Prisma {
     enrollmentDate?: DateTimeFieldUpdateOperationsInput | Date | string
     status?: EnumStudentStatusFieldUpdateOperationsInput | $Enums.StudentStatus
     monthlyFee?: FloatFieldUpdateOperationsInput | number
+    customMonthlyFee?: NullableFloatFieldUpdateOperationsInput | number | null
+    customFeeReason?: NullableStringFieldUpdateOperationsInput | string | null
     paid?: FloatFieldUpdateOperationsInput | number
     debt?: FloatFieldUpdateOperationsInput | number
     referralCode?: NullableStringFieldUpdateOperationsInput | string | null
@@ -48418,6 +48536,8 @@ export namespace Prisma {
     enrollmentDate?: Date | string
     status?: $Enums.StudentStatus
     monthlyFee?: number
+    customMonthlyFee?: number | null
+    customFeeReason?: string | null
     paid?: number
     debt?: number
     referralCode?: string | null
@@ -48448,6 +48568,8 @@ export namespace Prisma {
     enrollmentDate?: Date | string
     status?: $Enums.StudentStatus
     monthlyFee?: number
+    customMonthlyFee?: number | null
+    customFeeReason?: string | null
     paid?: number
     debt?: number
     referralCode?: string | null
@@ -48526,6 +48648,8 @@ export namespace Prisma {
     enrollmentDate?: DateTimeFieldUpdateOperationsInput | Date | string
     status?: EnumStudentStatusFieldUpdateOperationsInput | $Enums.StudentStatus
     monthlyFee?: FloatFieldUpdateOperationsInput | number
+    customMonthlyFee?: NullableFloatFieldUpdateOperationsInput | number | null
+    customFeeReason?: NullableStringFieldUpdateOperationsInput | string | null
     paid?: FloatFieldUpdateOperationsInput | number
     debt?: FloatFieldUpdateOperationsInput | number
     referralCode?: NullableStringFieldUpdateOperationsInput | string | null
@@ -48556,6 +48680,8 @@ export namespace Prisma {
     enrollmentDate?: DateTimeFieldUpdateOperationsInput | Date | string
     status?: EnumStudentStatusFieldUpdateOperationsInput | $Enums.StudentStatus
     monthlyFee?: FloatFieldUpdateOperationsInput | number
+    customMonthlyFee?: NullableFloatFieldUpdateOperationsInput | number | null
+    customFeeReason?: NullableStringFieldUpdateOperationsInput | string | null
     paid?: FloatFieldUpdateOperationsInput | number
     debt?: FloatFieldUpdateOperationsInput | number
     referralCode?: NullableStringFieldUpdateOperationsInput | string | null
@@ -48623,6 +48749,8 @@ export namespace Prisma {
     enrollmentDate?: Date | string
     status?: $Enums.StudentStatus
     monthlyFee?: number
+    customMonthlyFee?: number | null
+    customFeeReason?: string | null
     paid?: number
     debt?: number
     referralCode?: string | null
@@ -48653,6 +48781,8 @@ export namespace Prisma {
     enrollmentDate?: Date | string
     status?: $Enums.StudentStatus
     monthlyFee?: number
+    customMonthlyFee?: number | null
+    customFeeReason?: string | null
     paid?: number
     debt?: number
     referralCode?: string | null
@@ -48789,6 +48919,8 @@ export namespace Prisma {
     enrollmentDate?: DateTimeFieldUpdateOperationsInput | Date | string
     status?: EnumStudentStatusFieldUpdateOperationsInput | $Enums.StudentStatus
     monthlyFee?: FloatFieldUpdateOperationsInput | number
+    customMonthlyFee?: NullableFloatFieldUpdateOperationsInput | number | null
+    customFeeReason?: NullableStringFieldUpdateOperationsInput | string | null
     paid?: FloatFieldUpdateOperationsInput | number
     debt?: FloatFieldUpdateOperationsInput | number
     referralCode?: NullableStringFieldUpdateOperationsInput | string | null
@@ -48819,6 +48951,8 @@ export namespace Prisma {
     enrollmentDate?: DateTimeFieldUpdateOperationsInput | Date | string
     status?: EnumStudentStatusFieldUpdateOperationsInput | $Enums.StudentStatus
     monthlyFee?: FloatFieldUpdateOperationsInput | number
+    customMonthlyFee?: NullableFloatFieldUpdateOperationsInput | number | null
+    customFeeReason?: NullableStringFieldUpdateOperationsInput | string | null
     paid?: FloatFieldUpdateOperationsInput | number
     debt?: FloatFieldUpdateOperationsInput | number
     referralCode?: NullableStringFieldUpdateOperationsInput | string | null
@@ -49250,6 +49384,8 @@ export namespace Prisma {
     enrollmentDate?: Date | string
     status?: $Enums.StudentStatus
     monthlyFee?: number
+    customMonthlyFee?: number | null
+    customFeeReason?: string | null
     paid?: number
     debt?: number
     referralCode?: string | null
@@ -49280,6 +49416,8 @@ export namespace Prisma {
     enrollmentDate?: Date | string
     status?: $Enums.StudentStatus
     monthlyFee?: number
+    customMonthlyFee?: number | null
+    customFeeReason?: string | null
     paid?: number
     debt?: number
     referralCode?: string | null
@@ -49359,6 +49497,8 @@ export namespace Prisma {
     enrollmentDate?: DateTimeFieldUpdateOperationsInput | Date | string
     status?: EnumStudentStatusFieldUpdateOperationsInput | $Enums.StudentStatus
     monthlyFee?: FloatFieldUpdateOperationsInput | number
+    customMonthlyFee?: NullableFloatFieldUpdateOperationsInput | number | null
+    customFeeReason?: NullableStringFieldUpdateOperationsInput | string | null
     paid?: FloatFieldUpdateOperationsInput | number
     debt?: FloatFieldUpdateOperationsInput | number
     referralCode?: NullableStringFieldUpdateOperationsInput | string | null
@@ -49389,6 +49529,8 @@ export namespace Prisma {
     enrollmentDate?: DateTimeFieldUpdateOperationsInput | Date | string
     status?: EnumStudentStatusFieldUpdateOperationsInput | $Enums.StudentStatus
     monthlyFee?: FloatFieldUpdateOperationsInput | number
+    customMonthlyFee?: NullableFloatFieldUpdateOperationsInput | number | null
+    customFeeReason?: NullableStringFieldUpdateOperationsInput | string | null
     paid?: FloatFieldUpdateOperationsInput | number
     debt?: FloatFieldUpdateOperationsInput | number
     referralCode?: NullableStringFieldUpdateOperationsInput | string | null
@@ -49641,6 +49783,8 @@ export namespace Prisma {
     enrollmentDate?: Date | string
     status?: $Enums.StudentStatus
     monthlyFee?: number
+    customMonthlyFee?: number | null
+    customFeeReason?: string | null
     paid?: number
     debt?: number
     referralCode?: string | null
@@ -49671,6 +49815,8 @@ export namespace Prisma {
     enrollmentDate?: Date | string
     status?: $Enums.StudentStatus
     monthlyFee?: number
+    customMonthlyFee?: number | null
+    customFeeReason?: string | null
     paid?: number
     debt?: number
     referralCode?: string | null
@@ -49758,6 +49904,8 @@ export namespace Prisma {
     enrollmentDate?: DateTimeFieldUpdateOperationsInput | Date | string
     status?: EnumStudentStatusFieldUpdateOperationsInput | $Enums.StudentStatus
     monthlyFee?: FloatFieldUpdateOperationsInput | number
+    customMonthlyFee?: NullableFloatFieldUpdateOperationsInput | number | null
+    customFeeReason?: NullableStringFieldUpdateOperationsInput | string | null
     paid?: FloatFieldUpdateOperationsInput | number
     debt?: FloatFieldUpdateOperationsInput | number
     referralCode?: NullableStringFieldUpdateOperationsInput | string | null
@@ -49788,6 +49936,8 @@ export namespace Prisma {
     enrollmentDate?: DateTimeFieldUpdateOperationsInput | Date | string
     status?: EnumStudentStatusFieldUpdateOperationsInput | $Enums.StudentStatus
     monthlyFee?: FloatFieldUpdateOperationsInput | number
+    customMonthlyFee?: NullableFloatFieldUpdateOperationsInput | number | null
+    customFeeReason?: NullableStringFieldUpdateOperationsInput | string | null
     paid?: FloatFieldUpdateOperationsInput | number
     debt?: FloatFieldUpdateOperationsInput | number
     referralCode?: NullableStringFieldUpdateOperationsInput | string | null
@@ -49814,6 +49964,8 @@ export namespace Prisma {
     enrollmentDate?: Date | string
     status?: $Enums.StudentStatus
     monthlyFee?: number
+    customMonthlyFee?: number | null
+    customFeeReason?: string | null
     paid?: number
     debt?: number
     referralCode?: string | null
@@ -49844,6 +49996,8 @@ export namespace Prisma {
     enrollmentDate?: Date | string
     status?: $Enums.StudentStatus
     monthlyFee?: number
+    customMonthlyFee?: number | null
+    customFeeReason?: string | null
     paid?: number
     debt?: number
     referralCode?: string | null
@@ -49886,6 +50040,8 @@ export namespace Prisma {
     enrollmentDate?: DateTimeFieldUpdateOperationsInput | Date | string
     status?: EnumStudentStatusFieldUpdateOperationsInput | $Enums.StudentStatus
     monthlyFee?: FloatFieldUpdateOperationsInput | number
+    customMonthlyFee?: NullableFloatFieldUpdateOperationsInput | number | null
+    customFeeReason?: NullableStringFieldUpdateOperationsInput | string | null
     paid?: FloatFieldUpdateOperationsInput | number
     debt?: FloatFieldUpdateOperationsInput | number
     referralCode?: NullableStringFieldUpdateOperationsInput | string | null
@@ -49916,6 +50072,8 @@ export namespace Prisma {
     enrollmentDate?: DateTimeFieldUpdateOperationsInput | Date | string
     status?: EnumStudentStatusFieldUpdateOperationsInput | $Enums.StudentStatus
     monthlyFee?: FloatFieldUpdateOperationsInput | number
+    customMonthlyFee?: NullableFloatFieldUpdateOperationsInput | number | null
+    customFeeReason?: NullableStringFieldUpdateOperationsInput | string | null
     paid?: FloatFieldUpdateOperationsInput | number
     debt?: FloatFieldUpdateOperationsInput | number
     referralCode?: NullableStringFieldUpdateOperationsInput | string | null
@@ -49942,6 +50100,8 @@ export namespace Prisma {
     enrollmentDate?: Date | string
     status?: $Enums.StudentStatus
     monthlyFee?: number
+    customMonthlyFee?: number | null
+    customFeeReason?: string | null
     paid?: number
     debt?: number
     referralCode?: string | null
@@ -49972,6 +50132,8 @@ export namespace Prisma {
     enrollmentDate?: Date | string
     status?: $Enums.StudentStatus
     monthlyFee?: number
+    customMonthlyFee?: number | null
+    customFeeReason?: string | null
     paid?: number
     debt?: number
     referralCode?: string | null
@@ -50014,6 +50176,8 @@ export namespace Prisma {
     enrollmentDate?: DateTimeFieldUpdateOperationsInput | Date | string
     status?: EnumStudentStatusFieldUpdateOperationsInput | $Enums.StudentStatus
     monthlyFee?: FloatFieldUpdateOperationsInput | number
+    customMonthlyFee?: NullableFloatFieldUpdateOperationsInput | number | null
+    customFeeReason?: NullableStringFieldUpdateOperationsInput | string | null
     paid?: FloatFieldUpdateOperationsInput | number
     debt?: FloatFieldUpdateOperationsInput | number
     referralCode?: NullableStringFieldUpdateOperationsInput | string | null
@@ -50044,6 +50208,8 @@ export namespace Prisma {
     enrollmentDate?: DateTimeFieldUpdateOperationsInput | Date | string
     status?: EnumStudentStatusFieldUpdateOperationsInput | $Enums.StudentStatus
     monthlyFee?: FloatFieldUpdateOperationsInput | number
+    customMonthlyFee?: NullableFloatFieldUpdateOperationsInput | number | null
+    customFeeReason?: NullableStringFieldUpdateOperationsInput | string | null
     paid?: FloatFieldUpdateOperationsInput | number
     debt?: FloatFieldUpdateOperationsInput | number
     referralCode?: NullableStringFieldUpdateOperationsInput | string | null
@@ -50171,6 +50337,8 @@ export namespace Prisma {
     enrollmentDate?: Date | string
     status?: $Enums.StudentStatus
     monthlyFee?: number
+    customMonthlyFee?: number | null
+    customFeeReason?: string | null
     paid?: number
     debt?: number
     referralCode?: string | null
@@ -50218,6 +50386,8 @@ export namespace Prisma {
     enrollmentDate?: DateTimeFieldUpdateOperationsInput | Date | string
     status?: EnumStudentStatusFieldUpdateOperationsInput | $Enums.StudentStatus
     monthlyFee?: FloatFieldUpdateOperationsInput | number
+    customMonthlyFee?: NullableFloatFieldUpdateOperationsInput | number | null
+    customFeeReason?: NullableStringFieldUpdateOperationsInput | string | null
     paid?: FloatFieldUpdateOperationsInput | number
     debt?: FloatFieldUpdateOperationsInput | number
     referralCode?: NullableStringFieldUpdateOperationsInput | string | null
@@ -50247,6 +50417,8 @@ export namespace Prisma {
     enrollmentDate?: DateTimeFieldUpdateOperationsInput | Date | string
     status?: EnumStudentStatusFieldUpdateOperationsInput | $Enums.StudentStatus
     monthlyFee?: FloatFieldUpdateOperationsInput | number
+    customMonthlyFee?: NullableFloatFieldUpdateOperationsInput | number | null
+    customFeeReason?: NullableStringFieldUpdateOperationsInput | string | null
     paid?: FloatFieldUpdateOperationsInput | number
     debt?: FloatFieldUpdateOperationsInput | number
     referralCode?: NullableStringFieldUpdateOperationsInput | string | null
@@ -50275,6 +50447,8 @@ export namespace Prisma {
     enrollmentDate?: DateTimeFieldUpdateOperationsInput | Date | string
     status?: EnumStudentStatusFieldUpdateOperationsInput | $Enums.StudentStatus
     monthlyFee?: FloatFieldUpdateOperationsInput | number
+    customMonthlyFee?: NullableFloatFieldUpdateOperationsInput | number | null
+    customFeeReason?: NullableStringFieldUpdateOperationsInput | string | null
     paid?: FloatFieldUpdateOperationsInput | number
     debt?: FloatFieldUpdateOperationsInput | number
     referralCode?: NullableStringFieldUpdateOperationsInput | string | null

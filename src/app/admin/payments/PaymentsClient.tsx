@@ -5,6 +5,7 @@ import { AdminLayout } from "@/components/admin/AdminLayout";
 import {
   getPaymentsData,
   recordStudentPayment,
+  updateStudentAgreedFee,
 } from "@/server/actions/payment.actions";
 import { AccessDeniedView } from "@/components/admin/AccessDeniedView";
 import {
@@ -19,6 +20,7 @@ import {
   Calendar,
   Download,
   ChevronDown,
+  Pencil,
 } from "lucide-react";
 
 interface PaymentsClientProps {
@@ -61,6 +63,21 @@ export function PaymentsClient({
     amountInput: string;
     notes: string;
   } | null>(null);
+
+  // Edit Agreed Fee Modal State
+  const [feeModal, setFeeModal] = useState<{
+    studentId: string;
+    studentName: string;
+    username?: string;
+    groupName: string;
+    standardFee: number;
+    currentFee: number;
+    isCustomFee: boolean;
+    feeType: "STANDARD" | "CUSTOM";
+    customAmountInput: string;
+    reason: string;
+  } | null>(null);
+  const [savingFee, setSavingFee] = useState(false);
 
   useEffect(() => {
     loadData();
@@ -160,6 +177,34 @@ export function PaymentsClient({
       await loadData();
       setPaymentModal(null);
     });
+  };
+
+  const handleSaveStudentFee = async (e: React.FormEvent) => {
+    e.preventDefault();
+    if (!feeModal) return;
+
+    setSavingFee(true);
+    try {
+      const customMonthlyFee =
+        feeModal.feeType === "STANDARD"
+          ? null
+          : parseInt(feeModal.customAmountInput.replace(/[^0-9]/g, "") || "0", 10);
+
+      await updateStudentAgreedFee({
+        studentId: feeModal.studentId,
+        customMonthlyFee,
+        customFeeReason: feeModal.reason,
+        currentMonth: month,
+      });
+
+      setFeeModal(null);
+      await loadData();
+    } catch (err: any) {
+      console.error("Failed to update agreed fee:", err);
+      alert(err?.message || "Failed to update agreed tuition fee.");
+    } finally {
+      setSavingFee(false);
+    }
   };
 
   // Quick 1-click Full Pay
@@ -590,9 +635,51 @@ export function PaymentsClient({
                           </td>
                         )}
 
-                        {/* Fee */}
-                        <td className="py-4 px-6 text-slate-600 dark:text-slate-400 font-medium">
-                          {formatUZS(student.fee)}
+                        {/* Fee with Agreed badge and edit button */}
+                        <td className="py-4 px-6">
+                          <div className="flex items-center gap-2">
+                            <div>
+                              <div className="flex items-center gap-1.5">
+                                <span className="font-semibold text-slate-900 dark:text-slate-200 text-sm">
+                                  {student.fee === 0 ? "Free (0 UZS)" : formatUZS(student.fee)}
+                                </span>
+                                {student.isCustomFee && (
+                                  <span
+                                    className="px-1.5 py-0.5 rounded text-[10px] font-bold bg-amber-500/10 text-amber-600 dark:text-amber-400 border border-amber-500/20"
+                                    title={student.customFeeReason ? `Agreed: ${student.customFeeReason}` : "Custom agreed fee"}
+                                  >
+                                    Agreed
+                                  </span>
+                                )}
+                              </div>
+                              {student.isCustomFee && (
+                                <p className="text-[11px] text-slate-400 line-through">
+                                  {formatUZS(student.standardFee)}
+                                </p>
+                              )}
+                            </div>
+
+                            <button
+                              onClick={() =>
+                                setFeeModal({
+                                  studentId: student.id,
+                                  studentName: student.name,
+                                  username: student.username,
+                                  groupName: student.groupName,
+                                  standardFee: student.standardFee,
+                                  currentFee: student.fee,
+                                  isCustomFee: student.isCustomFee,
+                                  feeType: student.isCustomFee ? "CUSTOM" : "STANDARD",
+                                  customAmountInput: (student.isCustomFee ? student.fee : student.standardFee).toLocaleString(),
+                                  reason: student.customFeeReason || "",
+                                })
+                              }
+                              className="p-1.5 rounded-lg text-slate-400 hover:text-slate-700 dark:hover:text-white hover:bg-slate-100 dark:hover:bg-white/10 transition-colors"
+                              title="Edit agreed monthly fee"
+                            >
+                              <Pencil className="w-3.5 h-3.5" />
+                            </button>
+                          </div>
                         </td>
 
                         {/* Amount Paid with Mini Progress */}
@@ -869,6 +956,200 @@ export function PaymentsClient({
                 {isPending ? "Saving..." : "Save Payment"}
               </button>
             </div>
+          </div>
+        </div>
+      )}
+
+      {/* Edit Agreed Tuition Fee Modal */}
+      {feeModal && (
+        <div className="fixed inset-0 bg-black/60 backdrop-blur-sm z-50 flex items-center justify-center p-4">
+          <div className="bg-white dark:bg-[#131313] border border-slate-200 dark:border-white/10 rounded-2xl max-w-md w-full p-6 shadow-2xl animate-in fade-in zoom-in duration-150">
+            {/* Modal Header */}
+            <div className="flex items-center justify-between pb-4 mb-4 border-b border-slate-100 dark:border-white/10">
+              <div>
+                <h3 className="text-lg font-bold text-slate-900 dark:text-white flex items-center gap-2">
+                  <Pencil className="w-4 h-4 text-amber-500" />
+                  Edit Agreed Monthly Fee
+                </h3>
+                <p className="text-xs text-slate-500 dark:text-slate-400 mt-0.5">
+                  Set a custom tuition fee agreed with {feeModal.studentName}.
+                </p>
+              </div>
+              <button
+                onClick={() => setFeeModal(null)}
+                className="p-1 rounded-lg text-slate-400 hover:text-slate-600 dark:hover:text-white hover:bg-slate-100 dark:hover:bg-[#1c1b1b] transition-colors"
+              >
+                <X className="w-5 h-5" />
+              </button>
+            </div>
+
+            <form onSubmit={handleSaveStudentFee} className="space-y-4">
+              {/* Student & Group Info Card */}
+              <div className="bg-slate-50 dark:bg-[#0a0a0a] border border-slate-200 dark:border-white/5 rounded-xl p-3 flex items-center justify-between">
+                <div>
+                  <p className="font-semibold text-xs text-slate-900 dark:text-white">
+                    {feeModal.studentName}
+                  </p>
+                  <p className="text-[11px] text-slate-500 dark:text-slate-400">
+                    Group: {feeModal.groupName}
+                  </p>
+                </div>
+                <div className="text-right">
+                  <p className="text-[10px] uppercase font-semibold text-slate-400 tracking-wider">
+                    Standard Group Fee
+                  </p>
+                  <p className="text-xs font-bold text-slate-700 dark:text-slate-300">
+                    {formatUZS(feeModal.standardFee)}
+                  </p>
+                </div>
+              </div>
+
+              {/* Mode Selector: Standard vs Custom */}
+              <div>
+                <label className="text-xs font-semibold text-slate-700 dark:text-slate-300 block mb-2">
+                  Fee Type:
+                </label>
+                <div className="grid grid-cols-2 gap-2">
+                  <button
+                    type="button"
+                    onClick={() =>
+                      setFeeModal({
+                        ...feeModal,
+                        feeType: "STANDARD",
+                      })
+                    }
+                    className={`px-3 py-2 text-xs font-semibold rounded-xl border transition-all ${
+                      feeModal.feeType === "STANDARD"
+                        ? "bg-slate-900 dark:bg-white text-white dark:text-slate-950 border-transparent shadow-sm"
+                        : "bg-slate-50 dark:bg-[#1c1b1b] text-slate-700 dark:text-slate-300 border-slate-200 dark:border-white/10 hover:border-slate-300"
+                    }`}
+                  >
+                    Standard Group Fee
+                  </button>
+                  <button
+                    type="button"
+                    onClick={() =>
+                      setFeeModal({
+                        ...feeModal,
+                        feeType: "CUSTOM",
+                      })
+                    }
+                    className={`px-3 py-2 text-xs font-semibold rounded-xl border transition-all ${
+                      feeModal.feeType === "CUSTOM"
+                        ? "bg-[#EBFF00] text-slate-950 border-transparent font-bold shadow-sm"
+                        : "bg-slate-50 dark:bg-[#1c1b1b] text-slate-700 dark:text-slate-300 border-slate-200 dark:border-white/10 hover:border-slate-300"
+                    }`}
+                  >
+                    Custom Agreed Fee
+                  </button>
+                </div>
+              </div>
+
+              {/* Custom Fee Inputs (Only when CUSTOM is selected) */}
+              {feeModal.feeType === "CUSTOM" && (
+                <div className="space-y-3 pt-1">
+                  {/* Quick presets */}
+                  <div>
+                    <div className="flex items-center justify-between mb-1.5">
+                      <label className="text-xs font-semibold text-slate-700 dark:text-slate-300">
+                        Agreed Fee Amount (UZS) *
+                      </label>
+                      <div className="flex gap-1.5">
+                        <button
+                          type="button"
+                          onClick={() =>
+                            setFeeModal({
+                              ...feeModal,
+                              customAmountInput: feeModal.standardFee.toLocaleString(),
+                            })
+                          }
+                          className="text-[11px] font-medium text-slate-500 hover:text-slate-900 dark:hover:text-white"
+                        >
+                          Group ({formatUZS(feeModal.standardFee)})
+                        </button>
+                        <span className="text-slate-300 dark:text-slate-700">|</span>
+                        <button
+                          type="button"
+                          onClick={() =>
+                            setFeeModal({
+                              ...feeModal,
+                              customAmountInput: "0",
+                            })
+                          }
+                          className="text-[11px] font-medium text-emerald-600 hover:text-emerald-700"
+                        >
+                          Free (0 UZS)
+                        </button>
+                      </div>
+                    </div>
+
+                    <div className="relative">
+                      <input
+                        type="text"
+                        value={feeModal.customAmountInput}
+                        onChange={(e) => {
+                          const raw = e.target.value.replace(/[^0-9]/g, "");
+                          setFeeModal({
+                            ...feeModal,
+                            customAmountInput: raw ? parseInt(raw, 10).toLocaleString() : "",
+                          });
+                        }}
+                        placeholder="e.g. 750,000"
+                        className="w-full px-4 py-2.5 bg-slate-50 dark:bg-[#0a0a0a] border border-slate-200 dark:border-white/10 rounded-xl text-slate-900 dark:text-white font-bold text-base focus:outline-none focus:border-[#EBFF00] focus:ring-1 focus:ring-[#EBFF00] transition-all pr-14"
+                        required
+                      />
+                      <span className="absolute right-4 top-1/2 -translate-y-1/2 text-xs font-bold text-slate-400">
+                        UZS
+                      </span>
+                    </div>
+                  </div>
+
+                  {/* Reason / Note Input */}
+                  <div>
+                    <label className="text-xs font-semibold text-slate-700 dark:text-slate-300 block mb-1.5">
+                      Note / Reason <span className="text-slate-400 font-normal">(Optional)</span>
+                    </label>
+                    <input
+                      type="text"
+                      value={feeModal.reason}
+                      onChange={(e) =>
+                        setFeeModal({
+                          ...feeModal,
+                          reason: e.target.value,
+                        })
+                      }
+                      placeholder="e.g. Sibling discount, special agreement"
+                      className="w-full px-3.5 py-2 bg-slate-50 dark:bg-[#0a0a0a] border border-slate-200 dark:border-white/10 rounded-xl text-slate-900 dark:text-white text-xs focus:outline-none focus:border-[#EBFF00] focus:ring-1 focus:ring-[#EBFF00] transition-all"
+                    />
+                  </div>
+                </div>
+              )}
+
+              {/* Modal Actions */}
+              <div className="flex items-center justify-end gap-3 pt-4 border-t border-slate-100 dark:border-white/10">
+                <button
+                  type="button"
+                  onClick={() => setFeeModal(null)}
+                  className="px-4 py-2 rounded-xl text-xs font-semibold text-slate-600 dark:text-slate-400 hover:text-slate-900 dark:hover:text-white hover:bg-slate-100 dark:hover:bg-[#1c1b1b] transition-colors"
+                >
+                  Cancel
+                </button>
+                <button
+                  type="submit"
+                  disabled={savingFee}
+                  className="flex items-center gap-2 px-5 py-2.5 rounded-xl text-xs font-bold bg-[#EBFF00] text-slate-950 hover:bg-[#d6e800] disabled:opacity-50 transition-all shadow-sm"
+                >
+                  {savingFee ? (
+                    <>
+                      <Loader2 className="w-3.5 h-3.5 animate-spin" />
+                      Saving...
+                    </>
+                  ) : (
+                    "Save Fee"
+                  )}
+                </button>
+              </div>
+            </form>
           </div>
         </div>
       )}

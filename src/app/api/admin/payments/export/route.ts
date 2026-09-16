@@ -109,10 +109,12 @@ export async function GET(request: NextRequest) {
     const rows: (string | number)[][] = [];
 
     for (const group of groups) {
-      const fee = group.monthlyFee || 0;
+      const defaultGroupFee = group.monthlyFee || 0;
       for (const student of group.studentProfiles) {
         const payment = student.payments[0];
         const amountPaid = payment?.amountPaid || 0;
+        const isCustomFee = student.customMonthlyFee !== null && student.customMonthlyFee !== undefined;
+        const fee = isCustomFee ? student.customMonthlyFee! : defaultGroupFee;
         const debt = Math.max(0, fee - amountPaid);
 
         let status = "UNPAID";

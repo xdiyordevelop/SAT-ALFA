@@ -158,6 +158,8 @@ model StudentProfile {
   enrollmentDate DateTime      @default(now())
   status         StudentStatus @default(ACTIVE)
   monthlyFee     Float         @default(0)
+  customMonthlyFee Float?
+  customFeeReason  String?
   paid           Float         @default(0)
   debt           Float         @default(0)
 
