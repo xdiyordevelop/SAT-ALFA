@@ -16,24 +16,58 @@ export async function POST(
     }
     const { id: groupId } = await params;
     const body = await request.json();
-    const { topicId } = body;
-    if (!topicId) {
+    const rawTopicIds = body.topicIds || (body.topicId ? [body.topicId] : []);
+    
+    if (!Array.isArray(rawTopicIds) || rawTopicIds.length === 0) {
       return NextResponse.json(
-        { error: "Topic ID is required" },
+        { error: "At least one Topic ID is required" },
         { status: 400 },
       );
     }
+
+    // Check existing progress to avoid duplicate key conflicts
+    const existing = await prisma.groupTopicProgress.findMany({
+      where: { groupId },
+      select: { topicId: true },
+    });
+    const existingSet = new Set(existing.map((e) => e.topicId));
+    
+    // Preserve selection order, filtering out any already added
+    const toAdd = rawTopicIds.filter((tId: string) => !existingSet.has(tId));
+    if (toAdd.length === 0) {
+      return NextResponse.json(
+        { error: "Selected topics are already added to this roadmap" },
+        { status: 400 },
+      );
+    }
+
     const maxOrderRes = await prisma.groupTopicProgress.findFirst({
       where: { groupId },
       orderBy: { order: "desc" },
       select: { order: true },
     });
-    const maxOrder = maxOrderRes?.order ?? -1;
-    const progress = await prisma.groupTopicProgress.create({
-      data: { groupId, topicId, order: maxOrder + 1 },
-      include: { topic: true },
-    });
-    return NextResponse.json(progress);
+    const startOrder = (maxOrderRes?.order ?? -1) + 1;
+
+    // Create in batch transaction preserving exact selection order
+    const createdProgress = await prisma.$transaction(
+      toAdd.map((tId: string, idx: number) =>
+        prisma.groupTopicProgress.create({
+          data: {
+            groupId,
+            topicId: tId,
+            order: startOrder + idx,
+          },
+          include: { topic: true },
+        }),
+      ),
+    );
+
+    // If caller passed single topicId, return single object for backward compatibility
+    if (body.topicId && !body.topicIds) {
+      return NextResponse.json(createdProgress[0]);
+    }
+
+    return NextResponse.json(createdProgress);
   } catch (error) {
     console.error("Error adding topic to group:", error);
     return NextResponse.json(
