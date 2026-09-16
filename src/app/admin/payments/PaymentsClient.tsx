@@ -243,9 +243,39 @@ export function PaymentsClient({
 
   // Group stats calculation
   const totalStudentsCount = allStudents.length;
+
+  const selectedGroupObj = useMemo(() => {
+    if (selectedGroupId === "ALL" || !data?.groups) return null;
+    return data.groups.find((g: any) => g.id === selectedGroupId) || null;
+  }, [data, selectedGroupId]);
+
+  const activeGroupStudents = useMemo(() => {
+    if (selectedGroupId === "ALL") return allStudents;
+    return allStudents.filter((s: any) => s.groupId === selectedGroupId);
+  }, [allStudents, selectedGroupId]);
+
+  const summaryExpected = useMemo(() => {
+    return activeGroupStudents.reduce((acc: number, s: any) => acc + (s.fee || 0), 0);
+  }, [activeGroupStudents]);
+
+  const summaryCollected = useMemo(() => {
+    return activeGroupStudents.reduce((acc: number, s: any) => acc + (s.amountPaid || 0), 0);
+  }, [activeGroupStudents]);
+
+  const summaryDebt = useMemo(() => {
+    return activeGroupStudents.reduce((acc: number, s: any) => acc + (s.debt || 0), 0);
+  }, [activeGroupStudents]);
+
+  const summaryOverpaid = useMemo(() => {
+    return activeGroupStudents.reduce((acc: number, s: any) => {
+      const extra = (s.amountPaid || 0) - (s.fee || 0);
+      return extra > 0 ? acc + extra : acc;
+    }, 0);
+  }, [activeGroupStudents]);
+
   const collectionPercentage =
-    data?.totalExpected > 0
-      ? Math.round((data.totalCollected / data.totalExpected) * 100)
+    summaryExpected > 0
+      ? Math.round((summaryCollected / summaryExpected) * 100)
       : 0;
 
   if (isUnauthorized) {
@@ -383,6 +413,7 @@ export function PaymentsClient({
         <>
           {/* Summary Cards */}
           <div className="grid grid-cols-1 md:grid-cols-3 gap-5 mb-8">
+            {/* Expected Revenue */}
             <div className="bg-white dark:bg-[#131313] border border-slate-200 dark:border-white/10 p-6 rounded-2xl relative overflow-hidden shadow-sm">
               <div className="flex justify-between items-start mb-3">
                 <div>
@@ -390,7 +421,7 @@ export function PaymentsClient({
                     Expected Revenue
                   </p>
                   <h3 className="text-2xl font-bold text-slate-900 dark:text-white">
-                    {formatUZS(data?.totalExpected || 0)}
+                    {formatUZS(summaryExpected)}
                   </h3>
                 </div>
                 <div className="w-12 h-12 rounded-xl bg-[#EBFF00]/10 flex items-center justify-center text-slate-950 dark:text-[#EBFF00] border border-[#EBFF00]/20">
@@ -398,10 +429,13 @@ export function PaymentsClient({
                 </div>
               </div>
               <p className="text-xs text-slate-500 dark:text-slate-400">
-                Total for {formatMonthLabel(month)}
+                {selectedGroupObj
+                  ? `Target for ${selectedGroupObj.name}`
+                  : `Total for ${formatMonthLabel(month)} (All Groups)`}
               </p>
             </div>
 
+            {/* Collected Revenue */}
             <div className="bg-white dark:bg-[#131313] border border-slate-200 dark:border-white/10 p-6 rounded-2xl relative overflow-hidden shadow-sm">
               <div className="flex justify-between items-start mb-3">
                 <div>
@@ -409,42 +443,80 @@ export function PaymentsClient({
                     Collected Revenue
                   </p>
                   <h3 className="text-2xl font-bold text-emerald-600">
-                    {formatUZS(data?.totalCollected || 0)}
+                    {formatUZS(summaryCollected)}
                   </h3>
                 </div>
                 <div className="w-12 h-12 rounded-xl bg-emerald-500/10 flex items-center justify-center text-emerald-600 border border-emerald-500/20">
                   <CheckCircle2 className="w-6 h-6" />
                 </div>
               </div>
-              <div className="flex items-center gap-2">
-                <div className="flex-1 bg-slate-100 dark:bg-white/10 h-1.5 rounded-full overflow-hidden">
-                  <div
-                    className="bg-emerald-500 h-full rounded-full transition-all duration-500"
-                    style={{ width: `${Math.min(100, collectionPercentage)}%` }}
-                  />
+              <div className="space-y-1.5">
+                <div className="flex items-center gap-2">
+                  <div className="flex-1 bg-slate-100 dark:bg-white/10 h-1.5 rounded-full overflow-hidden">
+                    <div
+                      className="bg-emerald-500 h-full rounded-full transition-all duration-500"
+                      style={{ width: `${Math.min(100, collectionPercentage)}%` }}
+                    />
+                  </div>
+                  <span className="text-xs font-bold text-emerald-600">
+                    {collectionPercentage}%
+                  </span>
                 </div>
-                <span className="text-xs font-bold text-emerald-600">
-                  {collectionPercentage}%
-                </span>
+                {summaryOverpaid > 0 && (
+                  <p className="text-[11px] text-emerald-600/90 dark:text-emerald-400/90 font-medium">
+                    Includes {formatUZS(summaryOverpaid)} advance / overpayment
+                  </p>
+                )}
               </div>
             </div>
 
-            <div className="bg-white dark:bg-[#131313] border border-slate-200 dark:border-white/10 p-6 rounded-2xl relative overflow-hidden shadow-sm">
+            {/* Outstanding Debt */}
+            <div
+              className={`bg-white dark:bg-[#131313] border p-6 rounded-2xl relative overflow-hidden shadow-sm transition-colors ${
+                summaryDebt > 0
+                  ? "border-red-500/30 dark:border-red-500/40"
+                  : "border-slate-200 dark:border-white/10"
+              }`}
+            >
               <div className="flex justify-between items-start mb-3">
                 <div>
                   <p className="text-slate-500 dark:text-slate-400 text-xs font-semibold uppercase tracking-wider mb-1">
                     Outstanding Debt
                   </p>
-                  <h3 className="text-2xl font-bold text-red-500">
-                    {formatUZS(data?.totalDebt || 0)}
+                  <h3
+                    className={`text-2xl font-bold ${
+                      summaryDebt > 0
+                        ? "text-red-500"
+                        : "text-emerald-600 dark:text-emerald-400"
+                    }`}
+                  >
+                    {formatUZS(summaryDebt)}
                   </h3>
                 </div>
-                <div className="w-12 h-12 rounded-xl bg-red-500/10 flex items-center justify-center text-red-500 border border-red-500/20">
-                  <AlertCircle className="w-6 h-6" />
+                <div
+                  className={`w-12 h-12 rounded-xl flex items-center justify-center border ${
+                    summaryDebt > 0
+                      ? "bg-red-500/10 text-red-500 border-red-500/20"
+                      : "bg-emerald-500/10 text-emerald-600 border-emerald-500/20"
+                  }`}
+                >
+                  {summaryDebt > 0 ? (
+                    <AlertCircle className="w-6 h-6" />
+                  ) : (
+                    <CheckCircle2 className="w-6 h-6" />
+                  )}
                 </div>
               </div>
-              <p className="text-xs text-slate-500 dark:text-slate-400">
-                Remaining unpaid balance
+              <p
+                className={`text-xs ${
+                  summaryDebt > 0
+                    ? "text-slate-500 dark:text-slate-400"
+                    : "text-emerald-600/90 dark:text-emerald-400/90 font-medium"
+                }`}
+              >
+                {summaryDebt > 0
+                  ? "Remaining unpaid balance"
+                  : "All accounts settled (No unpaid debts)"}
               </p>
             </div>
           </div>
@@ -740,8 +812,17 @@ export function PaymentsClient({
                             <span className="font-bold text-red-500">
                               {formatUZS(student.debt)}
                             </span>
+                          ) : student.amountPaid > student.fee ? (
+                            <div className="flex flex-col">
+                              <span className="text-emerald-600 dark:text-emerald-400 text-xs font-semibold">
+                                No Debt
+                              </span>
+                              <span className="text-[11px] text-emerald-600/90 dark:text-emerald-400/90 font-medium">
+                                +{formatUZS(student.amountPaid - student.fee)} advance
+                              </span>
+                            </div>
                           ) : (
-                            <span className="text-slate-400 dark:text-slate-500 text-xs">
+                            <span className="text-slate-400 dark:text-slate-500 text-xs font-medium">
                               No Debt
                             </span>
                           )}
