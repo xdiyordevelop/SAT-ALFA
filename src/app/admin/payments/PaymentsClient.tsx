@@ -76,6 +76,13 @@ export function PaymentsClient({
     feeType: "STANDARD" | "CUSTOM";
     customAmountInput: string;
     reason: string;
+    isProrated?: boolean;
+    isMidMonthEnrollment?: boolean;
+    proratedFee?: number;
+    enrollmentDay?: number | null;
+    activeDays?: number;
+    daysInMonth?: number;
+    enrollmentDate?: string | null;
   } | null>(null);
   const [savingFee, setSavingFee] = useState(false);
 
@@ -635,11 +642,11 @@ export function PaymentsClient({
                           </td>
                         )}
 
-                        {/* Fee with Agreed badge and edit button */}
+                        {/* Fee with Agreed / Prorated badge and edit button */}
                         <td className="py-4 px-6">
                           <div className="flex items-center gap-2">
                             <div>
-                              <div className="flex items-center gap-1.5">
+                              <div className="flex items-center gap-1.5 flex-wrap">
                                 <span className="font-semibold text-slate-900 dark:text-slate-200 text-sm">
                                   {student.fee === 0 ? "Free (0 UZS)" : formatUZS(student.fee)}
                                 </span>
@@ -651,8 +658,16 @@ export function PaymentsClient({
                                     Agreed
                                   </span>
                                 )}
+                                {student.isProrated && (
+                                  <span
+                                    className="px-1.5 py-0.5 rounded text-[10px] font-bold bg-sky-500/10 text-sky-600 dark:text-sky-400 border border-sky-500/20"
+                                    title={`Joined on day ${student.enrollmentDay} (${student.activeDays} of ${student.daysInMonth} days active)`}
+                                  >
+                                    Prorated ({student.activeDays}d)
+                                  </span>
+                                )}
                               </div>
-                              {student.isCustomFee && (
+                              {(student.isCustomFee || student.isProrated) && (
                                 <p className="text-[11px] text-slate-400 line-through">
                                   {formatUZS(student.standardFee)}
                                 </p>
@@ -672,6 +687,13 @@ export function PaymentsClient({
                                   feeType: student.isCustomFee ? "CUSTOM" : "STANDARD",
                                   customAmountInput: (student.isCustomFee ? student.fee : student.standardFee).toLocaleString(),
                                   reason: student.customFeeReason || "",
+                                  isProrated: student.isProrated,
+                                  isMidMonthEnrollment: student.isMidMonthEnrollment,
+                                  proratedFee: student.proratedFee,
+                                  enrollmentDay: student.enrollmentDay,
+                                  activeDays: student.activeDays,
+                                  daysInMonth: student.daysInMonth,
+                                  enrollmentDate: student.enrollmentDate,
                                 })
                               }
                               className="p-1.5 rounded-lg text-slate-400 hover:text-slate-700 dark:hover:text-white hover:bg-slate-100 dark:hover:bg-white/10 transition-colors"
@@ -1004,6 +1026,28 @@ export function PaymentsClient({
                 </div>
               </div>
 
+              {/* Mid-Month Enrollment Banner */}
+              {feeModal.isMidMonthEnrollment && (
+                <div className="bg-sky-50 dark:bg-sky-950/30 border border-sky-200 dark:border-sky-800/50 rounded-xl p-3 text-xs text-sky-900 dark:text-sky-200 flex items-start justify-between gap-3">
+                  <div>
+                    <p className="font-bold flex items-center gap-1.5 text-xs">
+                      📅 Mid-Month Enrollment: Day {feeModal.enrollmentDay}
+                    </p>
+                    <p className="text-[11px] text-sky-600 dark:text-sky-400 mt-0.5">
+                      Active for {feeModal.activeDays} of {feeModal.daysInMonth} days in this billing month.
+                    </p>
+                  </div>
+                  <div className="text-right shrink-0">
+                    <span className="text-[10px] uppercase font-semibold text-sky-500 block">
+                      Prorated Fee
+                    </span>
+                    <span className="font-bold text-sky-700 dark:text-sky-300">
+                      {formatUZS(feeModal.proratedFee || 0)}
+                    </span>
+                  </div>
+                </div>
+              )}
+
               {/* Mode Selector: Standard vs Custom */}
               <div>
                 <label className="text-xs font-semibold text-slate-700 dark:text-slate-300 block mb-2">
@@ -1050,11 +1094,30 @@ export function PaymentsClient({
                 <div className="space-y-3 pt-1">
                   {/* Quick presets */}
                   <div>
-                    <div className="flex items-center justify-between mb-1.5">
+                    <div className="flex items-center justify-between mb-1.5 flex-wrap gap-1">
                       <label className="text-xs font-semibold text-slate-700 dark:text-slate-300">
                         Agreed Fee Amount (UZS) *
                       </label>
-                      <div className="flex gap-1.5">
+                      <div className="flex items-center gap-1.5 flex-wrap">
+                        {feeModal.isMidMonthEnrollment && feeModal.proratedFee && (
+                          <>
+                            <button
+                              type="button"
+                              onClick={() =>
+                                setFeeModal({
+                                  ...feeModal,
+                                  customAmountInput: feeModal.proratedFee!.toLocaleString(),
+                                  reason: feeModal.reason || `Prorated for ${feeModal.activeDays} days`,
+                                })
+                              }
+                              className="text-[11px] font-bold text-sky-600 hover:text-sky-700 underline"
+                              title={`Apply prorated calculation for ${feeModal.activeDays} days`}
+                            >
+                              Prorata ({formatUZS(feeModal.proratedFee)})
+                            </button>
+                            <span className="text-slate-300 dark:text-slate-700">|</span>
+                          </>
+                        )}
                         <button
                           type="button"
                           onClick={() =>
@@ -1065,7 +1128,7 @@ export function PaymentsClient({
                           }
                           className="text-[11px] font-medium text-slate-500 hover:text-slate-900 dark:hover:text-white"
                         >
-                          Group ({formatUZS(feeModal.standardFee)})
+                          Full ({formatUZS(feeModal.standardFee)})
                         </button>
                         <span className="text-slate-300 dark:text-slate-700">|</span>
                         <button

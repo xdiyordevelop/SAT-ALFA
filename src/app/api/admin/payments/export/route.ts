@@ -108,13 +108,39 @@ export async function GET(request: NextRequest) {
 
     const rows: (string | number)[][] = [];
 
+    const [selectedYearStr, selectedMonthStr] = month.split("-");
+    const selectedYear = parseInt(selectedYearStr, 10);
+    const selectedMonthNum = parseInt(selectedMonthStr, 10);
+    const daysInMonth = new Date(selectedYear, selectedMonthNum, 0).getDate();
+    const endOfSelectedMonth = new Date(selectedYear, selectedMonthNum - 1, daysInMonth, 23, 59, 59, 999);
+
     for (const group of groups) {
       const defaultGroupFee = group.monthlyFee || 0;
       for (const student of group.studentProfiles) {
         const payment = student.payments[0];
         const amountPaid = payment?.amountPaid || 0;
+        const enrollmentDate = student.enrollmentDate ? new Date(student.enrollmentDate) : new Date(0);
+
+        // Filter: exclude students who enrolled after this month and haven't paid
+        if (enrollmentDate > endOfSelectedMonth && amountPaid === 0) {
+          continue;
+        }
+
         const isCustomFee = student.customMonthlyFee !== null && student.customMonthlyFee !== undefined;
-        const fee = isCustomFee ? student.customMonthlyFee! : defaultGroupFee;
+        let fee = defaultGroupFee;
+
+        if (isCustomFee) {
+          fee = student.customMonthlyFee!;
+        } else {
+          const enrollYear = enrollmentDate.getFullYear();
+          const enrollMonth = enrollmentDate.getMonth() + 1;
+          const enrollDay = enrollmentDate.getDate();
+          if (enrollYear === selectedYear && enrollMonth === selectedMonthNum && enrollDay > 1) {
+            const activeDays = Math.max(1, daysInMonth - enrollDay + 1);
+            fee = Math.round((defaultGroupFee * activeDays) / daysInMonth / 1000) * 1000;
+          }
+        }
+
         const debt = Math.max(0, fee - amountPaid);
 
         let status = "UNPAID";
