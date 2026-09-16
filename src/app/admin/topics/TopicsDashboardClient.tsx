@@ -246,42 +246,7 @@ export default function TopicsDashboardClient({
 
       {/* Mode 2: Unified Group Roadmap */}
       {activeMode === "roadmap" && (
-        <div className="animate-slide-up space-y-6">
-          {/* Class / Group Switcher Bar */}
-          <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 bg-white dark:bg-[#131313] p-4 rounded-2xl border border-slate-200 dark:border-white/10 shadow-sm">
-            <div className="flex-1 max-w-md">
-              <label className="block text-xs font-bold text-slate-500 dark:text-slate-400 uppercase tracking-wider mb-2">
-                Select Class / Group
-              </label>
-              <select
-                value={selectedGroupId}
-                onChange={(e) => handleGroupChange(e.target.value)}
-                className="w-full px-4 py-2.5 rounded-xl border border-slate-200 dark:border-white/10 bg-slate-50 dark:bg-[#0a0a0a] text-slate-900 dark:text-white focus:border-[#EBFF00] focus:ring-1 focus:ring-[#EBFF00] outline-none transition-all font-semibold text-sm"
-              >
-                {groups.length === 0 && (
-                  <option value="">No groups available</option>
-                )}
-                {groups.map((g) => (
-                  <option key={g.id} value={g.id}>
-                    {g.name} ({g.groupProgress.length} topics)
-                  </option>
-                ))}
-              </select>
-            </div>
-
-            {activeGroup && (
-              <div className="flex items-center gap-3">
-                <Link
-                  href={`/admin/groups/${activeGroup.id}`}
-                  className="px-4 py-2.5 bg-slate-100 dark:bg-white/5 hover:bg-slate-200 dark:hover:bg-white/10 text-slate-700 dark:text-slate-300 rounded-xl text-xs font-semibold transition-colors flex items-center gap-1.5"
-                >
-                  <span>View Group Overview</span>
-                  <span className="text-[#EBFF00] font-bold">→</span>
-                </Link>
-              </div>
-            )}
-          </div>
-
+        <div className="animate-slide-up">
           {activeGroup ? (
             <GroupCurriculumManager
               key={activeGroup.id}
@@ -289,6 +254,27 @@ export default function TopicsDashboardClient({
               groupName={activeGroup.name}
               initialProgress={activeGroup.groupProgress}
               allTopics={topics}
+              groupSelector={
+                <div className="flex items-center gap-3">
+                  <label className="text-xs font-bold text-slate-500 dark:text-slate-400 uppercase tracking-wider shrink-0">
+                    Class / Group:
+                  </label>
+                  <select
+                    value={selectedGroupId}
+                    onChange={(e) => handleGroupChange(e.target.value)}
+                    className="w-full px-3.5 py-2.5 rounded-xl border border-slate-200 dark:border-white/10 bg-slate-50 dark:bg-[#0a0a0a] text-slate-900 dark:text-white focus:border-[#EBFF00] focus:ring-1 focus:ring-[#EBFF00] outline-none transition-all font-semibold text-sm"
+                  >
+                    {groups.length === 0 && (
+                      <option value="">No groups available</option>
+                    )}
+                    {groups.map((g) => (
+                      <option key={g.id} value={g.id}>
+                        {g.name} ({g.groupProgress.length} topics)
+                      </option>
+                    ))}
+                  </select>
+                </div>
+              }
             />
           ) : (
             <div className="text-center py-16 bg-white dark:bg-[#131313] border border-slate-200 dark:border-white/10 border-dashed rounded-2xl">

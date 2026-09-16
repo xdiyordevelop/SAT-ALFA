@@ -42,6 +42,7 @@ interface Props {
   initialProgress: GroupTopicProgress[];
   allTopics: Topic[];
   onProgressChange?: (newProgress: GroupTopicProgress[]) => void;
+  groupSelector?: React.ReactNode;
 }
 
 export default function GroupCurriculumManager({
@@ -50,6 +51,7 @@ export default function GroupCurriculumManager({
   initialProgress,
   allTopics,
   onProgressChange,
+  groupSelector,
 }: Props) {
   const router = useRouter();
   const [progress, setProgress] = useState<GroupTopicProgress[]>(initialProgress);
@@ -251,16 +253,22 @@ export default function GroupCurriculumManager({
   return (
     <div className="space-y-6">
       {/* Action Header */}
-      <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 bg-white dark:bg-[#131313] p-5 rounded-2xl border border-slate-200 dark:border-white/10 shadow-sm">
-        <div>
-          <h2 className="text-xl font-bold text-slate-900 dark:text-white flex items-center gap-2">
-            <BookOpen className="w-5 h-5 text-[#EBFF00]" />
-            {groupName ? `Curriculum Roadmap: ${groupName}` : "Curriculum Roadmap"}
-          </h2>
-          <p className="text-xs text-slate-500 dark:text-slate-400 mt-1">
-            {sortedProgress.length} lesson steps configured. Topics unlock for students sequentially or upon approval.
-          </p>
-        </div>
+      <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 bg-white dark:bg-[#131313] p-4 sm:p-5 rounded-2xl border border-slate-200 dark:border-white/10 shadow-sm">
+        {groupSelector ? (
+          <div className="flex-1 max-w-md">
+            {groupSelector}
+          </div>
+        ) : (
+          <div>
+            <h2 className="text-xl font-bold text-slate-900 dark:text-white flex items-center gap-2">
+              <BookOpen className="w-5 h-5 text-[#EBFF00]" />
+              {groupName ? `Curriculum Roadmap: ${groupName}` : "Curriculum Roadmap"}
+            </h2>
+            <p className="text-xs text-slate-500 dark:text-slate-400 mt-1">
+              {sortedProgress.length} lesson steps configured. Topics unlock for students sequentially or upon approval.
+            </p>
+          </div>
+        )}
 
         <button
           onClick={() => {
