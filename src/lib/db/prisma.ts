@@ -7,11 +7,12 @@ const globalForPrisma = globalThis as unknown as {
   pgPool: Pool | undefined;
 };
 
-// If cached dev instance doesn't have recently added models, reset it
+// If cached dev instance doesn't have recently added models or fields, reset it
 if (
   globalForPrisma.prisma &&
   (!(globalForPrisma.prisma as any).notification ||
-    !(globalForPrisma.prisma as any).staffProfile)
+    !(globalForPrisma.prisma as any).staffProfile ||
+    (globalForPrisma.prisma as any)._schemaVersion !== "v2_custom_fee")
 ) {
   globalForPrisma.prisma = undefined;
 }
@@ -43,6 +44,7 @@ export const prisma =
 
 // Maintain singleton in both development and production to prevent connection leaks
 if (!globalForPrisma.prisma) {
+  (prisma as any)._schemaVersion = "v2_custom_fee";
   globalForPrisma.prisma = prisma;
 }
 
